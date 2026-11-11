@@ -1,18 +1,11 @@
 import { SERVER_CONFIG } from "~/core/config";
-import type {
-  ChannelMemberInfo,
-  ChannelStateSummary,
-  SessionAttachment,
-  StoredChannelMessage,
-} from "~/core/types";
-import { encodeIRCMessage, encodeNumeric } from "~/protocol/irc/encoder";
+import { hasChannelOp } from "~/core/permissions/authorization";
+import type { SessionAttachment } from "~/core/types";
+import { encodeIRCMessage } from "~/protocol/irc/encoder";
 import { Numerics } from "~/protocol/irc/numerics";
 import { canonicalizeIRCName } from "~/protocol/irc/parser";
-import type { IRCMessage } from "~/protocol/irc/types";
-import { deliverMultilineOrFallback } from "../messaging";
 import type { ISessionDO } from "../types";
 import { sendServiceResponse } from "./helpers";
-import { hasChannelOp } from "~/core/permissions/authorization";
 
 export async function handleFBot(
   session: ISessionDO,
@@ -24,6 +17,17 @@ export async function handleFBot(
   const parts = rawText.trim().split(/\s+/).filter(Boolean);
   const cmd = (parts[0] ?? "HELP").toUpperCase();
   const args = parts.slice(1);
+  if (
+    args[0]?.startsWith("#") &&
+    !(await session.getChannelStub(args[0]).canReadAccount({
+      id: attachment.userId,
+      username: attachment.accountName ?? "",
+      isAdmin: attachment.isOper,
+    }))
+  ) {
+    sendServiceResponse(session, ws, attachment, "F", ["Channel access denied"], labelTags);
+    return;
+  }
 
   if (cmd === "HELP") {
     const topic = (args[0] ?? "").toUpperCase();
@@ -147,12 +151,14 @@ export async function handleFBot(
       );
       return;
     }
+    await session.prepareAccountChange(attachment, authRes.account.id);
     attachment.authenticated = true;
     attachment.userId = authRes.account.id;
+    attachment.credentialVersion = authRes.account.credentialVersion ?? 0;
     attachment.accountName = authRes.account.username;
     attachment.roles = authRes.account.roles;
     if (!(attachment.userModes ?? "").includes("r")) {
-      attachment.userModes = (attachment.userModes ?? "") + "r";
+      attachment.userModes = `${attachment.userModes ?? ""}r`;
     }
     session.sendNumeric(ws, attachment, Numerics.RPL_LOGGEDIN, [
       session.getUserPrefix(attachment),
@@ -521,7 +527,7 @@ export async function handleFBot(
 
     const lines = [
       `Status for channel ${channelName}:`,
-      `  Registered: ${chanInfo.registered ? "Yes (founder: " + chanInfo.founder + ")" : "No"}`,
+      `  Registered: ${chanInfo.registered ? `Yes (founder: ${chanInfo.founder})` : "No"}`,
       `  F Bot Active: ${botConfig.enabled ? "Yes" : "No"}`,
       `  Welcome Greeting: ${
         botConfig.welcomeMessage ? `"${botConfig.welcomeMessage}"` : "(none)"
@@ -541,4 +547,3 @@ export async function handleFBot(
     labelTags,
   );
 }
-

@@ -1,18 +1,9 @@
-import { SERVER_CONFIG } from "~/core/config";
-import type {
-  ChannelMemberInfo,
-  ChannelStateSummary,
-  SessionAttachment,
-  StoredChannelMessage,
-} from "~/core/types";
-import { encodeIRCMessage, encodeNumeric } from "~/protocol/irc/encoder";
+import type { SessionAttachment } from "~/core/types";
 import { Numerics } from "~/protocol/irc/numerics";
 import { canonicalizeIRCName } from "~/protocol/irc/parser";
-import type { IRCMessage } from "~/protocol/irc/types";
-import { deliverMultilineOrFallback } from "../messaging";
+import { handleChghost } from "../oper";
 import type { ISessionDO } from "../types";
 import { sendServiceResponse } from "./helpers";
-import { handleChghost } from "../oper";
 
 export async function handleHostServ(
   session: ISessionDO,
@@ -81,12 +72,19 @@ export async function handleHostServ(
     }
     const newHost = enable ? res.vhost : "irc.client";
     attachment.vhost = enable ? res.vhost : null;
-    await handleChghost(session, ws, attachment, {
-      tags: {},
-      prefix: null,
-      command: "CHGHOST",
-      params: [attachment.username ?? "user", newHost],
-    });
+    await handleChghost(
+      session,
+      ws,
+      attachment,
+      {
+        tags: {},
+        prefix: null,
+        command: "CHGHOST",
+        params: [attachment.username ?? "user", newHost],
+      },
+      undefined,
+      true,
+    );
     if (enable) {
       session.sendNumeric(ws, attachment, Numerics.RPL_HOSTHIDDEN, [
         res.vhost,
@@ -105,6 +103,17 @@ export async function handleHostServ(
   }
 
   if (sub === "SET" || sub === "DEL") {
+    if (!attachment.isOper) {
+      sendServiceResponse(
+        session,
+        ws,
+        attachment,
+        "HostServ",
+        ["Insufficient privileges"],
+        labelTags,
+      );
+      return;
+    }
     const targetAcct = parts[1] ?? attachment.accountName ?? "";
     const vhost = sub === "SET" ? (parts[2] ?? "") : null;
     if (!targetAcct || (sub === "SET" && !vhost)) {
@@ -137,12 +146,19 @@ export async function handleHostServ(
       if (sAtt.accountName && canonicalizeIRCName(sAtt.accountName) === canon) {
         sAtt.vhost = vhost;
         const nextHost = vhost ?? "irc.client";
-        await handleChghost(session, sWs, sAtt, {
-          tags: {},
-          prefix: null,
-          command: "CHGHOST",
-          params: [sAtt.username ?? "user", nextHost],
-        });
+        await handleChghost(
+          session,
+          sWs,
+          sAtt,
+          {
+            tags: {},
+            prefix: null,
+            command: "CHGHOST",
+            params: [sAtt.username ?? "user", nextHost],
+          },
+          undefined,
+          true,
+        );
         if (vhost) {
           session.sendNumeric(sWs, sAtt, Numerics.RPL_HOSTHIDDEN, [
             vhost,
@@ -176,4 +192,3 @@ export async function handleHostServ(
     labelTags,
   );
 }
-

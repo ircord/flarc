@@ -48,7 +48,7 @@ export const webhookExecuteSchema = z
   });
 
 export default defineEventHandler(async (event) => {
-  const token = getRouterParam(event, "token");
+  const token = getRouterParam(event, "token", { decode: true });
   if (!token) {
     throw createError({ statusCode: 400, statusMessage: "Webhook token required" });
   }
@@ -70,12 +70,16 @@ export default defineEventHandler(async (event) => {
   const env = getEnv(event);
   const stub = env.CHANNELS.get(env.CHANNELS.idFromName(`${SERVER_CONFIG.networkId}:${canon}`));
 
-  const result = await (stub as any).executeWebhook(token, {
-    content: parsed.data.content,
-    username: parsed.data.username,
-    avatar_url: parsed.data.avatar_url,
-    embeds: parsed.data.embeds,
-  });
+  const result = await stub.executeWebhook(
+    token,
+    {
+      content: parsed.data.content,
+      username: parsed.data.username,
+      avatar_url: parsed.data.avatar_url,
+      embeds: parsed.data.embeds,
+    },
+    getRouterParam(event, "id", { decode: true }),
+  );
 
   if (!result.ok) {
     throw createError({

@@ -191,7 +191,15 @@ export async function handleWho(
     const stub = session.getChannelStub(mask);
     const summary = await stub.getChannelSummary(mask);
     const isJoined = summary.members.some((m) => m.sessionId === attachment.sessionId);
-    if (!(summary.modes.includes("s") && !isJoined && !attachment.isOper)) {
+    if (
+      !(summary.modes.includes("s") && !isJoined && !attachment.isOper) &&
+      (!SERVER_CONFIG.requireAccounts ||
+        (await stub.canReadAccount({
+          id: attachment.userId,
+          username: attachment.accountName ?? "",
+          isAdmin: attachment.isOper,
+        })))
+    ) {
       for (const m of summary.members) {
         const sess = session.sessionsById.get(m.sessionId);
         const isInvisible = (sess?.attachment.userModes ?? "").includes("i");
@@ -342,7 +350,7 @@ export async function handleWhois(
 
   const targetSessions = session.getAllSessionsForNick(targetNick);
   const targetSess = targetSessions[0];
-  if (!targetSess || !targetSess.attachment.registered) {
+  if (!targetSess?.attachment.registered) {
     session.sendNumeric(ws, attachment, Numerics.ERR_NOSUCHNICK, [
       targetNick,
       "No such nick/channel",
@@ -430,6 +438,15 @@ export async function handleWhois(
     const stub = session.getChannelStub(ch.channelName);
     const summary = await stub.getChannelSummary(ch.channelName);
     const isMember = summary.members.some((m) => m.sessionId === attachment.sessionId);
+    if (
+      SERVER_CONFIG.requireAccounts &&
+      !(await stub.canReadAccount({
+        id: attachment.userId,
+        username: attachment.accountName ?? "",
+        isAdmin: attachment.isOper,
+      }))
+    )
+      continue;
     if (!attachment.isOper && (isTargetInvisible || summary.modes.includes("s")) && !isMember) {
       continue;
     }
@@ -499,7 +516,7 @@ export function handleWhowas(
   let limit = 50;
   if (msg.params[1] !== undefined) {
     const parsedCount = parseInt(msg.params[1], 10);
-    if (!isNaN(parsedCount) && parsedCount > 0) {
+    if (!Number.isNaN(parsedCount) && parsedCount > 0) {
       limit = Math.min(parsedCount, 50);
     }
   }

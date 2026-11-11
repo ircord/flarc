@@ -6,6 +6,8 @@ export function escapeTagValue(val: string): string {
   for (let i = 0; i < val.length; i++) {
     const ch = val[i];
     switch (ch) {
+      case "\x00":
+        break;
       case ";":
         out += "\\:";
         break;
@@ -76,7 +78,7 @@ export function encodeIRCMessage(msg: {
 
   const params = msg.params ?? [];
   for (let i = 0; i < params.length; i++) {
-    const p = params[i].replace(/[\r\n]/g, " ");
+    const p = params[i].replace(/[\x00\r\n]/g, " ");
     const isLast = i === params.length - 1;
     const shouldForceTrailing =
       msg.forceTrailing ||

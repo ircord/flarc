@@ -38,6 +38,10 @@ const server = net.createServer((socket) => {
   });
 
   socket.on("data", (chunk) => {
+    if (buffer.length + chunk.length > 65536 || pendingLines.length > 128) {
+      socket.destroy();
+      return;
+    }
     buffer += chunk.toString("utf-8");
     let nlIdx;
     while ((nlIdx = buffer.indexOf("\n")) !== -1) {
@@ -65,6 +69,6 @@ const server = net.createServer((socket) => {
   });
 });
 
-server.listen(TCP_PORT, "127.0.0.1", () => {
+server.listen(TCP_PORT, "127.0.0.1", "127.0.0.1", () => {
   console.log(`TCP-to-WebSocket IRC Bridge listening on 127.0.0.1:${TCP_PORT} -> ${wsUrl}`);
 });

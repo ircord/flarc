@@ -1,17 +1,18 @@
 import { createError, defineEventHandler, getRouterParam } from "nitro/h3";
 import { SERVER_CONFIG } from "~/core/config";
-import { getEnv, parseChannelParam } from "~/utils/auth";
+import { clientRequest, getEnv, parseChannelParam, requireChannelRead } from "~/utils/auth";
 
 export default defineEventHandler(async (event) => {
-  const rawChan = getRouterParam(event, "channel");
+  const rawChan = getRouterParam(event, "channel", { decode: true });
   if (!rawChan) {
     throw createError({ statusCode: 400, statusMessage: "Channel parameter required" });
   }
 
+  await requireChannelRead(event, rawChan);
   const { canon } = parseChannelParam(rawChan);
   const env = getEnv(event);
   const stub = env.CHANNELS.get(env.CHANNELS.idFromName(`${SERVER_CONFIG.networkId}:${canon}`));
 
-  const roles = await (stub as any).getRoleGroups();
+  const roles = await clientRequest(event, stub, "roles");
   return { ok: true, roles };
 });

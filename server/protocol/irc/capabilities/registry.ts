@@ -15,13 +15,13 @@ export function getSupportedCapabilities(env?: Record<string, any>): Record<stri
     env?.REG_BEFORE_CONNECT ??
     env?.CFCORD_REG_BEFORE_CONNECT ??
     (typeof process !== "undefined"
-      ? process?.env?.REG_BEFORE_CONNECT ?? process?.env?.CFCORD_REG_BEFORE_CONNECT
+      ? (process?.env?.REG_BEFORE_CONNECT ?? process?.env?.CFCORD_REG_BEFORE_CONNECT)
       : undefined);
   const regEmailReq =
     env?.REG_REQUIRES_EMAIL ??
     env?.CFCORD_REG_REQUIRES_EMAIL ??
     (typeof process !== "undefined"
-      ? process?.env?.REG_REQUIRES_EMAIL ?? process?.env?.CFCORD_REG_REQUIRES_EMAIL
+      ? (process?.env?.REG_REQUIRES_EMAIL ?? process?.env?.CFCORD_REG_REQUIRES_EMAIL)
       : undefined);
 
   const regFeatures: string[] = [];

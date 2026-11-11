@@ -8,96 +8,28 @@ import {
   toRequest,
 } from "nitro/h3";
 import { SERVER_CONFIG } from "~/core/config";
-import { checkAdminAuth, getEnv } from "~/utils/auth";
+import { getEnv, getSessionToken, parseChannelParam, requireAuthenticatedUser } from "~/utils/auth";
+import { readBoundedBody } from "~/utils/body";
 
 export default defineEventHandler(async (event) => {
-  // 1. Check if file hosting is enabled
-  if (!SERVER_CONFIG.filehostEnabled) {
+  const env = getEnv(event);
+  const settings = await env.ACCOUNTS.get(
+    env.ACCOUNTS.idFromName(SERVER_CONFIG.networkId),
+  ).getRuntimeConfig();
+  if (!settings.filehostEnabled) {
     setResponseStatus(event, 403);
     return { ok: false, error: "File hosting is disabled on this server" };
   }
-
-  const env = getEnv(event);
   const req = toRequest((event as any).req);
   const accountsStub = env.ACCOUNTS.get(env.ACCOUNTS.idFromName(SERVER_CONFIG.networkId));
-  const sessionStub = env.SESSION.get(env.SESSION.idFromName(SERVER_CONFIG.networkId));
+  const _sessionStub = env.SESSION.get(env.SESSION.idFromName(SERVER_CONFIG.networkId));
 
-  // 2. Authentication and Authorization
-  const isAdmin = await checkAdminAuth(event);
-  let isAuthenticatedUser = false;
-  let isActiveSessionUser = false;
-  let authUsername: string | null = null;
-
-  // Check Authorization: Basic <base64(user:pass)>
-  const authHeader = getHeader(event, "authorization");
-  if (authHeader && authHeader.toLowerCase().startsWith("basic ")) {
-    try {
-      const credentials = atob(authHeader.slice(6).trim());
-      const colonIdx = credentials.indexOf(":");
-      if (colonIdx !== -1) {
-        const u = credentials.slice(0, colonIdx);
-        const p = credentials.slice(colonIdx + 1);
-        const verifyRes = await accountsStub.verifyCredentials(u, p);
-        if (verifyRes.ok) {
-          isAuthenticatedUser = true;
-          authUsername = verifyRes.account.username;
-        }
-      }
-    } catch {
-      // ignore
-    }
-  }
-
-  // Check connected session identification
-  const query = getQuery(event);
-  const sessionNick =
-    getHeader(event, "soju-username") ||
-    getHeader(event, "x-irc-nick") ||
-    (typeof query.nick === "string" ? query.nick : undefined) ||
-    (typeof query.username === "string" ? query.username : undefined);
-  const sessionId =
-    getHeader(event, "x-session-id") ||
-    (typeof query.sessionId === "string" ? query.sessionId : undefined);
-
-  if (sessionNick || sessionId) {
-    const activeCheck = await sessionStub.verifyActiveUser({
-      nick: sessionNick || undefined,
-      sessionId: sessionId || undefined,
-    });
-    if (activeCheck.active) {
-      isActiveSessionUser = true;
-      if (activeCheck.authenticated) {
-        isAuthenticatedUser = true;
-        authUsername = activeCheck.accountName ?? authUsername;
-      }
-    }
-  }
-
-  const requiresRegistration =
-    SERVER_CONFIG.filehostRequireRegistration ||
-    env.REG_BEFORE_CONNECT === "1" ||
-    env.CFCORD_REG_BEFORE_CONNECT === "1";
-
-  if (requiresRegistration) {
-    if (!isAdmin && !isAuthenticatedUser) {
-      setResponseHeader(event, "WWW-Authenticate", 'Basic realm="FlaRC Filehost"');
-      setResponseStatus(event, 401);
-      return {
-        ok: false,
-        error: "This server requires a registered account to upload media",
-      };
-    }
-  } else {
-    if (!isAdmin && !isAuthenticatedUser && !isActiveSessionUser) {
-      setResponseHeader(event, "WWW-Authenticate", 'Basic realm="FlaRC Filehost"');
-      setResponseStatus(event, 401);
-      return {
-        ok: false,
-        error: "Authentication required to upload media",
-      };
-    }
-  }
-
+  const actor = await requireAuthenticatedUser(event);
+  const maxBytes = 10 * 1024 * 1024;
+  const contentLength = Number(getHeader(event, "content-length"));
+  if (contentLength > maxBytes)
+    throw createError({ statusCode: 413, statusMessage: "Upload exceeds 10 MiB" });
+  const bytes = await readBoundedBody(req, maxBytes);
   const contentType = getHeader(event, "content-type") || "";
   let filename = `upload-${Date.now()}`;
   let mimeType = "application/octet-stream";
@@ -105,7 +37,9 @@ export default defineEventHandler(async (event) => {
 
   if (contentType.includes("multipart/form-data")) {
     try {
-      const formData = await req.formData();
+      const formData = await new Response(bytes, {
+        headers: { "Content-Type": contentType },
+      }).formData();
       const fileEntry = formData.get("file") ?? formData.get("media");
       if (!fileEntry || typeof fileEntry === "string") {
         throw createError({
@@ -131,14 +65,17 @@ export default defineEventHandler(async (event) => {
       filename = xFilename.trim();
     } else if (contentDisp) {
       const match = contentDisp.match(/filename="?([^";]+)"?/);
-      if (match && match[1]) filename = match[1];
+      if (match?.[1]) filename = match[1];
     }
-    data = await req.arrayBuffer();
+    data = bytes;
   }
 
   if (!data || data.byteLength === 0) {
     throw createError({ statusCode: 400, statusMessage: "Empty file payload" });
   }
+
+  if (data.byteLength > maxBytes)
+    throw createError({ statusCode: 413, statusMessage: "Upload exceeds 10 MiB" });
 
   let ext = "";
   if (filename.includes(".")) {
@@ -149,20 +86,47 @@ export default defineEventHandler(async (event) => {
     else if (sub === "png" || sub === "gif" || sub === "webp") ext = `.${sub}`;
   }
 
-  const fileId = `${crypto.randomUUID()}${ext}`;
+  // Metadata may retain the original display name; object IDs must remain one
+  // safe path segment regardless of multipart filenames or MIME labels.
+  if (!/^\.[a-zA-Z0-9]{1,10}$/.test(ext)) ext = "";
+  const fileId = `${crypto.randomUUID()}${ext.toLowerCase()}`;
   const size = data.byteLength;
 
-  if (env.MEDIA_BUCKET) {
-    await env.MEDIA_BUCKET.put(fileId, data, {
-      httpMetadata: { contentType: mimeType },
-    });
-  } else {
-    await accountsStub.storeMedia({
-      id: fileId,
-      filename,
-      mimeType,
-      size,
-      data,
+  filename = filename.replace(/[\x00-\x1f\x7f/\\]/g, "_").slice(0, 255);
+  const query = getQuery(event);
+  const scope =
+    typeof query.channel === "string"
+      ? { kind: "channel" as const, target: parseChannelParam(query.channel).name }
+      : typeof query.dm === "string"
+        ? { kind: "dm" as const, target: query.dm }
+        : { kind: "private" as const };
+  const token = getSessionToken(event)!;
+  try {
+    // Reserve quota and persist access metadata before writing external storage.
+    await accountsStub.storePrivateMedia(
+      token,
+      {
+        id: fileId,
+        filename,
+        mimeType,
+        size,
+        data: env.MEDIA_BUCKET ? new ArrayBuffer(0) : data,
+        storageKind: env.MEDIA_BUCKET ? "r2" : "sqlite",
+      },
+      scope,
+    );
+    if (env.MEDIA_BUCKET) {
+      try {
+        await env.MEDIA_BUCKET.put(fileId, data, { httpMetadata: { contentType: mimeType } });
+      } catch (error) {
+        await accountsStub.deletePrivateMedia(token, fileId);
+        throw error;
+      }
+    }
+  } catch {
+    throw createError({
+      statusCode: 403,
+      statusMessage: "Upload denied by scope, quota or storage policy",
     });
   }
 
@@ -177,6 +141,6 @@ export default defineEventHandler(async (event) => {
     filename,
     size,
     mimeType,
-    uploader: authUsername ?? (sessionNick || "guest"),
+    uploader: actor.username,
   };
 });

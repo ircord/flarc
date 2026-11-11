@@ -1,18 +1,10 @@
 import { SERVER_CONFIG } from "~/core/config";
-import type {
-  ChannelMemberInfo,
-  ChannelStateSummary,
-  SessionAttachment,
-  StoredChannelMessage,
-} from "~/core/types";
-import { encodeIRCMessage, encodeNumeric } from "~/protocol/irc/encoder";
-import { Numerics } from "~/protocol/irc/numerics";
+import type { SessionAttachment } from "~/core/types";
+import { encodeIRCMessage } from "~/protocol/irc/encoder";
 import { canonicalizeIRCName } from "~/protocol/irc/parser";
-import type { IRCMessage } from "~/protocol/irc/types";
-import { deliverMultilineOrFallback } from "../messaging";
+import { handleChathistory } from "../extensions";
 import type { ISessionDO } from "../types";
 import { sendServiceResponse } from "./helpers";
-import { handleChathistory } from "../extensions";
 
 export async function handleHistServ(
   session: ISessionDO,
@@ -69,7 +61,15 @@ export async function handleHistServ(
     }
     if (target.startsWith("#") || target.startsWith("&")) {
       const stub = session.getChannelStub(target);
-      const res = await stub.histServDelete(target, msgid);
+      const res = await stub.redactMessage({
+        channelName: target,
+        actorSessionId: attachment.sessionId,
+        actorUserId: attachment.userId,
+        actorAccount: attachment.accountName,
+        actorNick: attachment.nickname!,
+        targetMsgId: msgid,
+        isOper: attachment.isOper,
+      });
       if (!res.ok) {
         sendServiceResponse(
           session,
@@ -86,12 +86,22 @@ export async function handleHistServ(
         command: "REDACT",
         params: [res.channelName, msgid],
       });
-      for (const sid of res.recipientSessionIds) {
+      for (const sid of res.recipientSessionIds ?? []) {
         const sess = session.sessionsById.get(sid);
         if (sess) session.sendLine(sess.ws, sess.attachment, redactLine);
       }
     } else {
-      session.sql.exec("UPDATE direct_messages SET redacted = 1, content = '' WHERE id = ?", msgid);
+      if (!session.redactDirectMessage(msgid, attachment.userId)) {
+        sendServiceResponse(
+          session,
+          ws,
+          attachment,
+          "HistServ",
+          ["Could not delete message"],
+          labelTags,
+        );
+        return;
+      }
     }
     sendServiceResponse(
       session,
@@ -117,6 +127,22 @@ export async function handleHistServ(
       );
       return;
     }
+    if (
+      !attachment.isOper &&
+      canonicalizeIRCName(accountOrNick) !== canonicalizeIRCName(attachment.accountName ?? "")
+    ) {
+      sendServiceResponse(
+        session,
+        ws,
+        attachment,
+        "HistServ",
+        ["Insufficient privileges"],
+        labelTags,
+      );
+      return;
+    }
+    const targetAccount = await session.getAccountsStub().getAccountByUsername(accountOrNick);
+    if (!targetAccount) return;
     let total = 0;
     const rows = session.sql
       .exec<{ channel_name: string }>("SELECT DISTINCT channel_name FROM session_channels")
@@ -124,7 +150,7 @@ export async function handleHistServ(
     for (const r of rows) {
       const res = await session
         .getChannelStub(r.channel_name)
-        .histServForget(r.channel_name, accountOrNick);
+        .histServForget(r.channel_name, targetAccount.id);
       total += res.count;
     }
     sendServiceResponse(
@@ -182,4 +208,3 @@ export async function handleHistServ(
     labelTags,
   );
 }
-

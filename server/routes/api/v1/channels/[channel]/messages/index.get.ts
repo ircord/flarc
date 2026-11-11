@@ -1,9 +1,9 @@
 import { createError, defineEventHandler, getQuery, getRouterParam } from "nitro/h3";
 import { SERVER_CONFIG } from "~/core/config";
-import { canAccessChannelHistory, getEnv, parseChannelParam } from "~/utils/auth";
+import { canAccessChannelHistory, clientRequest, getEnv, parseChannelParam } from "~/utils/auth";
 
 export default defineEventHandler(async (event) => {
-  const rawChan = getRouterParam(event, "channel");
+  const rawChan = getRouterParam(event, "channel", { decode: true });
   if (!rawChan) {
     throw createError({ statusCode: 400, statusMessage: "Channel parameter required" });
   }
@@ -28,7 +28,9 @@ export default defineEventHandler(async (event) => {
   const env = getEnv(event);
   const stub = env.CHANNELS.get(env.CHANNELS.idFromName(`${SERVER_CONFIG.networkId}:${canon}`));
 
-  const messages = await stub.getMessagesForAdmin(limit, before, after, around);
+  const rawMessages = await clientRequest(event, stub, "history", { limit, before, after, around });
+  const hasMore = rawMessages.length > limit;
+  const messages = rawMessages.slice(0, limit);
   const oldest = messages.length > 0 ? messages[messages.length - 1].id : null;
   const newest = messages.length > 0 ? messages[0].id : null;
 
@@ -39,7 +41,7 @@ export default defineEventHandler(async (event) => {
     pagination: {
       count: messages.length,
       limit,
-      has_more: messages.length >= limit,
+      has_more: hasMore,
       oldest_id: oldest,
       newest_id: newest,
       before: before ?? null,

@@ -1,16 +1,17 @@
 import {
   createError,
   defineEventHandler,
+  getHeader,
   getRouterParam,
   readBody,
   setResponseStatus,
 } from "nitro/h3";
 import { SERVER_CONFIG } from "~/core/config";
 import { SendMessageSchema } from "~/schemas/messages";
-import { getEnv, parseChannelParam } from "~/utils/auth";
+import { clientRequest, getEnv, parseChannelParam, requireChannelRead } from "~/utils/auth";
 
 export default defineEventHandler(async (event) => {
-  const rawChan = getRouterParam(event, "channel");
+  const rawChan = getRouterParam(event, "channel", { decode: true });
   if (!rawChan) {
     throw createError({ statusCode: 400, statusMessage: "Channel parameter required" });
   }
@@ -34,12 +35,19 @@ export default defineEventHandler(async (event) => {
   const env = getEnv(event);
   const stub = env.CHANNELS.get(env.CHANNELS.idFromName(`${SERVER_CONFIG.networkId}:${canon}`));
 
-  const senderNick = parsed.data.senderNick || "APIUser";
-  const senderId = `api-${senderNick}`;
+  const actor = await requireChannelRead(event, rawChan);
+  const member = await stub.getAccountMember(actor.id);
+  if (!member)
+    throw createError({
+      statusCode: 403,
+      statusMessage: "Join the channel before sending messages",
+    });
+  const _senderNick = member.nickname;
   const tags: Record<string, string | true> = {};
 
   if (parsed.data.tags) {
     for (const [k, v] of Object.entries(parsed.data.tags)) {
+      if (!/^\+(?:[A-Za-z0-9.-]+\/)?[A-Za-z0-9-]+$/.test(k)) continue;
       if (v === true) tags[k] = true;
       else if (typeof v === "string") tags[k] = v;
     }
@@ -50,18 +58,10 @@ export default defineEventHandler(async (event) => {
     tags["+reply"] = parsed.data.replyToMessageId;
   }
 
-  const res = await stub.appendMessage({
-    channelName: name,
-    sessionId: senderId,
-    userId: senderId,
-    accountName: senderNick,
-    nickname: senderNick,
-    username: "api",
-    hostname: "gateway.api",
-    command: "PRIVMSG",
+  const res = await clientRequest(event, stub, "send", {
     content: parsed.data.content,
     tags,
-    isOper: true,
+    idempotencyKey: getHeader(event, "idempotency-key")?.slice(0, 128),
   });
 
   if (!res.ok) {
@@ -71,6 +71,11 @@ export default defineEventHandler(async (event) => {
     });
   }
 
+  await env.SESSION.get(env.SESSION.idFromName(SERVER_CONFIG.networkId)).deliverApiMessage(
+    name,
+    res.message!,
+    res.recipientSessionIds ?? [],
+  );
   setResponseStatus(event, 201);
   return { ok: true, message: res.message };
 });

@@ -1,21 +1,26 @@
 import type { Miniflare } from "miniflare";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { createMiniflareServer, TestIRCClient } from "../helpers/miniflare-harness";
+import { createProtocolServer, TestIRCClient } from "../helpers/miniflare-harness";
 
-const ADMIN_TOKEN = "super-secret-admin-token";
+let ADMIN_TOKEN = "super-secret-admin-token";
 
 describe("CFCord Durability, Retention & Admin Controls (Miniflare)", () => {
-  let mf: Miniflare;
+  let _mf: Miniflare;
   let httpUrl: URL;
   let wsUrl: string;
   let dispose: () => Promise<void>;
+  let _fixture: Awaited<ReturnType<typeof createProtocolServer>>;
+  let request: Awaited<ReturnType<typeof createProtocolServer>>["request"];
   const clients: TestIRCClient[] = [];
 
   beforeEach(async () => {
-    const srv = await createMiniflareServer({
+    const srv = await createProtocolServer({
       bindings: { ADMIN_TOKEN },
     });
-    mf = srv.mf;
+    _fixture = srv;
+    request = srv.request;
+    ADMIN_TOKEN = srv.adminToken;
+    _mf = srv.mf;
     httpUrl = srv.url;
     wsUrl = srv.wsUrl;
     dispose = srv.dispose;
@@ -75,14 +80,14 @@ describe("CFCord Durability, Retention & Admin Controls (Miniflare)", () => {
 
   it("exposes health, admin stats, channel inspection, and account revocation with live cache invalidation", async () => {
     // 1. Check /health
-    const healthRes = await mf.dispatchFetch(`${httpUrl.origin}/health`);
+    const healthRes = await request(`${httpUrl.origin}/health`);
     expect(healthRes.status).toBe(200);
     const health = (await healthRes.json()) as { ok: boolean; service: string };
     expect(health.ok).toBe(true);
     expect(health.service).toBe("flarc");
 
     // 2. Register account and connect
-    await mf.dispatchFetch(`${httpUrl.origin}/api/accounts/register`, {
+    await request(`${httpUrl.origin}/api/accounts/register`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -110,7 +115,7 @@ describe("CFCord Durability, Retention & Admin Controls (Miniflare)", () => {
     await watcher.waitForLine((l) => l.includes(" 366 ") && l.includes("#sec"));
 
     // 3. Check /admin/stats
-    const statsRes = await mf.dispatchFetch(`${httpUrl.origin}/admin/stats`, {
+    const statsRes = await request(`${httpUrl.origin}/admin/stats`, {
       headers: { Authorization: `Bearer ${ADMIN_TOKEN}` },
     });
     const stats = (await statsRes.json()) as {
@@ -124,7 +129,7 @@ describe("CFCord Durability, Retention & Admin Controls (Miniflare)", () => {
     expect(stats.activeChannels).toBe(1);
 
     // 4. Check /admin/channels/%23sec
-    const chanRes = await mf.dispatchFetch(`${httpUrl.origin}/admin/channels/%23sec`, {
+    const chanRes = await request(`${httpUrl.origin}/admin/channels/%23sec`, {
       headers: { Authorization: `Bearer ${ADMIN_TOKEN}` },
     });
     const chanData = (await chanRes.json()) as {
@@ -139,7 +144,7 @@ describe("CFCord Durability, Retention & Admin Controls (Miniflare)", () => {
     const watcherSeesLogout = watcher.waitForNewLine(
       (l) => l.startsWith(":eve!") && l.includes(" ACCOUNT *"),
     );
-    const disableRes = await mf.dispatchFetch(`${httpUrl.origin}/admin/accounts/disable`, {
+    const disableRes = await request(`${httpUrl.origin}/admin/accounts/disable`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

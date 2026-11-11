@@ -113,7 +113,7 @@ const FILTER_TOKEN_REGEX =
 /**
  * Direct IRC message tag prefix: +key[=val]
  */
-const DIRECT_TAG_REGEX = /(?:^|\s)\+([a-zA-Z0-9_\-\.\/]+)(?:=(?:"([^"]+)"|(\S+)))?/gi;
+const DIRECT_TAG_REGEX = /(?:^|\s)\+([a-zA-Z0-9_\-./]+)(?:=(?:"([^"]+)"|(\S+)))?/gi;
 
 /**
  * Parses search query string into full-text query words and structured filter chips.

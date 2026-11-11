@@ -1,14 +1,15 @@
 import { createError, defineEventHandler, getRouterParam } from "nitro/h3";
 import { SERVER_CONFIG } from "~/core/config";
-import { getEnv, parseChannelParam } from "~/utils/auth";
+import { canAccessChannelHistory, getEnv, parseChannelParam, requireSelf } from "~/utils/auth";
 
 export default defineEventHandler(async (event) => {
-  const rawUser = getRouterParam(event, "username");
-  const username = decodeURIComponent(rawUser || "").trim();
+  const rawUser = getRouterParam(event, "username", { decode: true });
+  const username = (rawUser || "").trim();
   if (!username) {
     throw createError({ statusCode: 400, statusMessage: "Username required" });
   }
 
+  await requireSelf(event, username);
   const env = getEnv(event);
   const accountsStub = env.ACCOUNTS.get(env.ACCOUNTS.idFromName(SERVER_CONFIG.networkId));
   const sessionStub = env.SESSION.get(env.SESSION.idFromName(SERVER_CONFIG.networkId));
@@ -21,6 +22,7 @@ export default defineEventHandler(async (event) => {
 
   const unreadList = [];
   for (const ch of channelNames) {
+    if (!(await canAccessChannelHistory(event, ch)).allowed) continue;
     const { name, canon } = parseChannelParam(ch);
     const stub = env.CHANNELS.get(env.CHANNELS.idFromName(`${SERVER_CONFIG.networkId}:${canon}`));
     const lastReadTimestamp = await accountsStub.getReadMarker(username, name);

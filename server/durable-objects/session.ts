@@ -1,50 +1,22 @@
 import { DurableObject } from "cloudflare:workers";
 import { drizzle } from "drizzle-orm/durable-sqlite";
-import { decodeSaslPlain } from "../core/authentication/passwords";
-import {
-  base64ToUint8Array,
-  hmacSha256,
-  parseClientFinalMessage,
-  parseClientFirstMessage,
-  sha256,
-  uint8ArrayToBase64,
-  xorBytes,
-} from "../core/authentication/scram";
+import { hashSessionToken } from "../core/authentication/tokens";
 import { applyEnvConfig, SERVER_CONFIG } from "../core/config";
 import { IRCProtocolError } from "../core/errors";
-import { domainEvents } from "../core/events/emitter";
-import {
-  formatMemberPrefix,
-  hasChannelOp,
-  matchesWildcard,
-} from "../core/permissions/authorization";
 import { SlidingWindowRateLimiter } from "../core/permissions/rate-limits";
-import {
-  isValidChannelName,
-  isValidNickname,
-  isValidUsername,
-} from "../core/permissions/validation";
-import type {
-  ChannelMemberInfo,
-  ChannelStateSummary,
-  Env,
-  SessionAttachment,
-  StoredChannelMessage,
-  Subprotocol,
-} from "../core/types";
-import { formatCapabilitiesList, isSupportedCapability } from "../protocol/irc/capabilities";
+import { isValidChannelName } from "../core/permissions/validation";
+import type { Env, SessionAttachment, StoredChannelMessage, Subprotocol } from "../core/types";
 import { handleJoin } from "../protocol/irc/commands/channel";
 import { dispatchIRCCommand } from "../protocol/irc/commands/dispatcher";
 import type { ISessionDO, PendingMultilineBatch } from "../protocol/irc/commands/types";
 import { encodeIRCMessage, encodeNumeric, encodeWebSocketFrame } from "../protocol/irc/encoder";
-import { parseSearchCommand } from "../protocol/irc/extensions/search";
 import { Numerics } from "../protocol/irc/numerics";
 import { canonicalizeIRCName, decodeWebSocketFrame, parseIRCMessage } from "../protocol/irc/parser";
 import type { IRCMessage } from "../protocol/irc/types";
 import { initializeSessionSchema } from "../storage/migrations/init";
 import * as sessionSchema from "../storage/schemas/session";
 
-function truncateUtf8(str: string, maxBytes: number): string {
+function _truncateUtf8(str: string, maxBytes: number): string {
   const enc = new TextEncoder();
   const bytes = enc.encode(str);
   if (bytes.length <= maxBytes) return str;
@@ -70,6 +42,15 @@ export class SessionDO extends DurableObject<Env> implements ISessionDO {
   public pendingBatchesBySession = new Map<string, Map<string, PendingMultilineBatch>>();
   public activeBatchRefBySession = new Map<string, string>();
   private sessionMessageQueues = new Map<string, Promise<void>>();
+  private queuedInput = new Map<string, { bytes: number; frames: number }>();
+  private outboundQueues = new Map<
+    WebSocket,
+    {
+      frames: Array<{ line: string; userId: string; accountName: string; version: number }>;
+      bytes: number;
+    }
+  >();
+  private outboundBytes = 0;
   public saslBuffersBySession = new Map<string, string>();
   public maxLocalUsers = 0;
   public maxGlobalUsers = 0;
@@ -153,6 +134,34 @@ export class SessionDO extends DurableObject<Env> implements ISessionDO {
       this.sql.exec("ALTER TABLE direct_messages ADD COLUMN target_account TEXT");
     } catch {}
 
+    const dmColumns = this.sql
+      .exec<{ name: string }>("PRAGMA table_info(direct_messages)")
+      .toArray();
+    for (const column of ["target_id", "multiline_json"])
+      if (!dmColumns.some((c) => c.name === column))
+        this.sql.exec(`ALTER TABLE direct_messages ADD COLUMN ${column} TEXT`);
+    if (
+      !this.sql
+        .exec<{ name: string }>("PRAGMA table_info(session_invites)")
+        .toArray()
+        .some((c) => c.name === "target_user_id")
+    )
+      this.sql.exec("ALTER TABLE session_invites ADD COLUMN target_user_id TEXT");
+    this.sql.exec(`CREATE TABLE IF NOT EXISTS direct_message_edits (message_id TEXT PRIMARY KEY REFERENCES direct_messages(id) ON DELETE CASCADE, root_id TEXT NOT NULL REFERENCES direct_messages(id) ON DELETE CASCADE);
+      CREATE INDEX IF NOT EXISTS idx_dm_edit_root ON direct_message_edits(root_id);`);
+    if (
+      !this.sql
+        .exec<{ name: string }>("PRAGMA table_info(direct_messages)")
+        .toArray()
+        .some((c) => c.name === "expires_at")
+    )
+      this.sql.exec("ALTER TABLE direct_messages ADD COLUMN expires_at INTEGER");
+    this.sql.exec("CREATE INDEX IF NOT EXISTS idx_dm_expiry ON direct_messages(expires_at)");
+    this.sql.exec(
+      "INSERT OR IGNORE INTO schema_migrations (version, applied_at) VALUES (2, ?)",
+      Date.now(),
+    );
+
     this.ctx.setWebSocketAutoResponse(
       new WebSocketRequestResponsePair(
         "PING :keepalive",
@@ -160,6 +169,13 @@ export class SessionDO extends DurableObject<Env> implements ISessionDO {
       ),
     );
 
+    const runtimeConfig = this.sql
+      .exec<{ attachment_json: string }>(
+        "SELECT attachment_json FROM session_state WHERE session_id = 'runtime-config'",
+      )
+      .toArray()[0];
+    if (runtimeConfig)
+      SERVER_CONFIG.zncMaxMessages = JSON.parse(runtimeConfig.attachment_json).zncMaxMessages;
     this.reconstructStateFromHibernation();
   }
 
@@ -169,7 +185,8 @@ export class SessionDO extends DurableObject<Env> implements ISessionDO {
     this.sessionsByNick.clear();
     for (const ws of sockets) {
       const attachment = ws.deserializeAttachment() as SessionAttachment | null;
-      if (!attachment || !attachment.sessionId) continue;
+      if (!attachment?.sessionId) continue;
+      if (!this.acceptSessionAttachment(ws, attachment)) continue;
       this.sessionsById.set(attachment.sessionId, { ws, attachment });
       if (attachment.nickname) {
         this.sessionsByNick.set(canonicalizeIRCName(attachment.nickname), attachment.sessionId);
@@ -186,9 +203,10 @@ export class SessionDO extends DurableObject<Env> implements ISessionDO {
 
     for (const ws of sockets) {
       const attachment = ws.deserializeAttachment() as SessionAttachment | null;
-      if (!attachment || !attachment.sessionId) {
+      if (!attachment?.sessionId) {
         continue;
       }
+      if (!this.acceptSessionAttachment(ws, attachment)) continue;
       activeSessionIds.add(attachment.sessionId);
       this.sessionsById.set(attachment.sessionId, { ws, attachment });
       if (attachment.nickname) {
@@ -210,6 +228,36 @@ export class SessionDO extends DurableObject<Env> implements ISessionDO {
   public saveAttachment(ws: WebSocket, attachment: SessionAttachment): void {
     ws.serializeAttachment(attachment);
     this.sessionsById.set(attachment.sessionId, { ws, attachment });
+  }
+
+  private acceptSessionAttachment(ws: WebSocket, attachment: SessionAttachment): boolean {
+    // Pre-hardening attachments have no credential version and may have been
+    // created through the former EXTERNAL bypass. Require a fresh login.
+    if (
+      SERVER_CONFIG.requireAccounts &&
+      ((attachment.registered && !attachment.authenticated) ||
+        (attachment.authenticated &&
+          (!Number.isSafeInteger(attachment.credentialVersion) ||
+            attachment.credentialVersion! < 0)))
+    ) {
+      try {
+        ws.close(1008, "Account login required");
+      } catch {
+        /* Already closed */
+      }
+      return false;
+    }
+    return true;
+  }
+
+  public setRuntimeConfig(config: { zncMaxMessages: number }): void {
+    SERVER_CONFIG.zncMaxMessages = config.zncMaxMessages;
+    this.sql.exec(
+      "INSERT OR REPLACE INTO session_state (session_id, attachment_json, created_at, updated_at) VALUES ('runtime-config', ?, ?, ?)",
+      JSON.stringify(config),
+      Date.now(),
+      Date.now(),
+    );
   }
 
   public getChannelStub(channelName: string) {
@@ -238,6 +286,66 @@ export class SessionDO extends DurableObject<Env> implements ISessionDO {
     }));
   }
 
+  public async adminRequest(token: string, operation: string, args: unknown[]): Promise<unknown> {
+    const actor = await this.env.ACCOUNTS.get(
+      this.env.ACCOUNTS.idFromName(SERVER_CONFIG.networkId),
+    ).verifyApiSession(token);
+    if (!actor?.roles.includes("admin")) throw new Error("Administrator authorization required");
+    const allowed = new Set<string>([
+      "adminBroadcast",
+      "adminDisconnectSession",
+      "adminGetMetadata",
+      "adminListChannels",
+      "adminListSessions",
+      "adminSetMetadata",
+      "getStats",
+      "invalidateAccountPermissions",
+      "refreshAccountPermissions",
+      "removeChannelRouting",
+      "setRuntimeConfig",
+    ]);
+    if (!allowed.has(operation)) throw new Error("Unknown administrative operation");
+    const method = (this as unknown as Record<string, (...values: unknown[]) => unknown>)[
+      operation
+    ];
+    return method.apply(this, args);
+  }
+
+  public async getSessionActor(
+    sessionId: string,
+  ): Promise<{ id: string; username: string; isOper: boolean } | null> {
+    this.ensureSessionsLoaded();
+    const attachment = this.sessionsById.get(sessionId)?.attachment;
+    if (!attachment?.registered) return null;
+    if (!attachment.authenticated || !attachment.accountName)
+      return SERVER_CONFIG.requireAccounts
+        ? null
+        : { id: attachment.userId, username: attachment.nickname ?? "", isOper: attachment.isOper };
+    const account = await this.getAccountsStub().getAccountByUsername(attachment.accountName);
+    if (
+      !account ||
+      account.id !== attachment.userId ||
+      (account.credentialVersion ?? 0) !== (attachment.credentialVersion ?? 0)
+    )
+      return null;
+    return {
+      id: account.id,
+      username: account.username,
+      isOper:
+        attachment.isOper && account.roles.some((role) => role === "admin" || role === "oper"),
+    };
+  }
+
+  public getLiveAccountSessions(userId: string): string[] {
+    this.ensureSessionsLoaded();
+    return Array.from(this.sessionsById.values())
+      .filter(
+        ({ attachment }) =>
+          attachment.registered && attachment.authenticated && attachment.userId === userId,
+      )
+      .map(({ attachment }) => attachment.sessionId);
+  }
+
   public getAllSessionsForNick(nickname: string): Array<{
     ws: WebSocket;
     attachment: SessionAttachment;
@@ -245,7 +353,12 @@ export class SessionDO extends DurableObject<Env> implements ISessionDO {
     const canon = canonicalizeIRCName(nickname);
     const out: Array<{ ws: WebSocket; attachment: SessionAttachment }> = [];
     for (const entry of this.sessionsById.values()) {
-      if (entry.attachment.nickname && canonicalizeIRCName(entry.attachment.nickname) === canon) {
+      if (
+        entry.attachment.registered &&
+        (!SERVER_CONFIG.requireAccounts || entry.attachment.authenticated) &&
+        entry.attachment.nickname &&
+        canonicalizeIRCName(entry.attachment.nickname) === canon
+      ) {
         out.push(entry);
       }
     }
@@ -253,14 +366,54 @@ export class SessionDO extends DurableObject<Env> implements ISessionDO {
   }
 
   public async broadcastRealtimeEvent(event: any): Promise<void> {
-    const sockets = this.ctx.getWebSockets("events");
+    if (typeof event.channelId !== "string" || !isValidChannelName(event.channelId)) return;
     const payload = JSON.stringify(event);
-    for (const ws of sockets) {
+    for (const ws of this.ctx.getWebSockets("events")) {
+      const auth = ws.deserializeAttachment() as { eventSessionHash?: string } | null;
+      if (!auth?.eventSessionHash) continue;
+      const account = await this.getAccountsStub().verifySessionHash(auth.eventSessionHash);
+      if (!account) {
+        ws.close(1008, "Session expired");
+        continue;
+      }
+      if (
+        !(await this.getChannelStub(event.channelId).canReadAccount({
+          ...account,
+          isAdmin: account.roles.includes("admin"),
+        }))
+      )
+        continue;
       try {
         ws.send(payload);
       } catch {
-        // socket may be closed
+        /* Closed socket */
       }
+    }
+  }
+
+  public async deliverApiMessage(
+    channelName: string,
+    message: StoredChannelMessage,
+    recipients: string[],
+  ): Promise<void> {
+    for (const id of recipients) {
+      const client = this.sessionsById.get(id);
+      if (!client) continue;
+      this.sendLine(
+        client.ws,
+        client.attachment,
+        encodeIRCMessage({
+          tags: this.filterOutgoingTags(client.attachment, {
+            ...message.tags,
+            msgid: message.id,
+            time: new Date(message.createdAt).toISOString(),
+            ...(message.senderAccount ? { account: message.senderAccount } : {}),
+          }),
+          prefix: `${message.senderNick}!${message.senderUser}@${message.senderHost}`,
+          command: message.command,
+          params: [channelName, message.content],
+        }),
+      );
     }
   }
 
@@ -280,16 +433,73 @@ export class SessionDO extends DurableObject<Env> implements ISessionDO {
     }
   }
 
+  public async alarm(): Promise<void> {
+    this.ensureSessionsLoaded();
+    let next: number | null = null;
+    for (const { ws, attachment } of this.sessionsById.values()) {
+      if (!attachment.registered) {
+        const expires = attachment.connectedAt + 60_000;
+        if (expires <= Date.now())
+          await this.disconnectSession(ws, attachment, "Authentication timeout");
+        else next = Math.min(next ?? expires, expires);
+      }
+    }
+    const expired = this.sql
+      .exec<{ id: string }>(
+        "SELECT id FROM direct_messages WHERE COALESCE(expires_at, created_at + ?) <= ? LIMIT 500",
+        SERVER_CONFIG.retentionMs,
+        Date.now(),
+      )
+      .toArray();
+    for (const row of expired) this.sql.exec("DELETE FROM direct_messages WHERE id = ?", row.id);
+    if (expired.length === 500) next = Math.min(next ?? Infinity, Date.now() + 5000);
+    else if (this.sql.exec("SELECT id FROM direct_messages LIMIT 1").toArray().length)
+      next = Math.min(next ?? Infinity, Date.now() + 24 * 60 * 60 * 1000);
+    if (next !== null) await this.ctx.storage.setAlarm(next);
+  }
+
   public async fetch(request: Request): Promise<Response> {
     const url = new URL(request.url);
+    const origin = request.headers.get("Origin");
+    if (
+      origin &&
+      origin !== url.origin &&
+      !(this.env.ALLOWED_ORIGINS ?? "")
+        .split(",")
+        .map((v) => v.trim())
+        .includes(origin)
+    )
+      return new Response("Origin denied", { status: 403 });
+    if (this.ctx.getWebSockets().length >= 2000)
+      return new Response("Connection limit reached", { status: 429 });
     if (request.headers.get("Upgrade")?.toLowerCase() !== "websocket") {
       return new Response("Expected WebSocket upgrade", { status: 426 });
     }
 
     if (url.pathname === "/api/v1/events") {
+      const peerIp = request.headers.get("CF-Connecting-IP") ?? "local";
+      if (!(await this.getAccountsStub().checkRequestLimit(`event-handshake:${peerIp}`, 30)))
+        return new Response("Handshake limit reached", { status: 429 });
+      const bearer = request.headers.get("Authorization");
+      const ticket = url.searchParams.get("ticket");
+      const accounts = this.getAccountsStub();
+      const sessionHash = ticket
+        ? await accounts.consumeEventTicket(ticket)
+        : bearer?.startsWith("Bearer ") && (await accounts.verifyApiSession(bearer.slice(7)))
+          ? await hashSessionToken(bearer.slice(7))
+          : null;
+      if (!sessionHash || !(await accounts.verifySessionHash(sessionHash)))
+        return new Response("A logged-in API session is required", { status: 401 });
+      const eventAccount = await accounts.verifySessionHash(sessionHash);
+      const subscriptions = this.ctx
+        .getWebSockets("events")
+        .filter((socket) => socket.deserializeAttachment()?.accountId === eventAccount?.id);
+      if (subscriptions.length >= 5)
+        return new Response("Subscription limit reached", { status: 429 });
       const pair = new WebSocketPair();
       const [client, server] = Object.values(pair);
       this.ctx.acceptWebSocket(server, ["events"]);
+      server.serializeAttachment({ eventSessionHash: sessionHash, accountId: eventAccount!.id });
       console.log(
         `[FlaRC SessionDO] Real-time events subscriber connected [IP: ${request.headers.get("CF-Connecting-IP") ?? "127.0.0.1"}]`,
       );
@@ -319,22 +529,29 @@ export class SessionDO extends DurableObject<Env> implements ISessionDO {
     const [client, server] = Object.values(pair);
 
     const sessionId = crypto.randomUUID();
-    const clientIp =
-      url.searchParams.get("ip") ??
-      request.headers.get("CF-Connecting-IP") ??
-      request.headers.get("X-Forwarded-For") ??
-      url.searchParams.get("host") ??
-      "irc.client";
+    const trustedGateway = Boolean(
+      this.env.WEBIRC_PASSWORD &&
+        request.headers.get("x-gateway-token") === this.env.WEBIRC_PASSWORD,
+    );
+    const clientIp = trustedGateway
+      ? (url.searchParams.get("ip") ?? "irc.client")
+      : (request.headers.get("CF-Connecting-IP") ?? "irc.client");
+
+    const pendingFromIp = Array.from(this.sessionsById.values()).filter(
+      ({ attachment }) => !attachment.registered && attachment.ip === clientIp,
+    ).length;
+    if (pendingFromIp >= 20) return new Response("Connection limit reached", { status: 429 });
 
     const attachment: SessionAttachment = {
       sessionId,
       userId: `guest:${sessionId}`,
-      isDirectWebSocket: url.searchParams.get("tcp") !== "1",
+      isDirectWebSocket: !trustedGateway || url.searchParams.get("tcp") !== "1",
       accountName: null,
       nickname: null,
       username: null,
       realname: null,
       hostname: clientIp,
+      ip: clientIp,
       registered: false,
       authenticated: false,
       capNegotiating: false,
@@ -356,6 +573,9 @@ export class SessionDO extends DurableObject<Env> implements ISessionDO {
 
     this.ctx.acceptWebSocket(server);
     this.saveAttachment(server, attachment);
+    const alarm = await this.ctx.storage.getAlarm();
+    if (alarm === null || alarm > Date.now() + 60_000)
+      await this.ctx.storage.setAlarm(Date.now() + 60_000);
 
     const transport = attachment.isDirectWebSocket ? "Direct WebSocket" : "TCP (Bridge)";
     console.log(
@@ -376,11 +596,21 @@ export class SessionDO extends DurableObject<Env> implements ISessionDO {
 
   public async webSocketMessage(ws: WebSocket, message: string | ArrayBuffer): Promise<void> {
     const attachment = ws.deserializeAttachment() as SessionAttachment | null;
-    if (!attachment) {
-      ws.close(1008, "Missing session state");
+    if (!attachment?.sessionId) {
+      ws.close(1008, "This socket does not accept IRC commands");
       return;
     }
+    if (!this.acceptSessionAttachment(ws, attachment)) return;
 
+    if (
+      (typeof message === "string"
+        ? new TextEncoder().encode(message).byteLength
+        : message.byteLength) >
+      64 * 1024
+    ) {
+      await this.disconnectSession(ws, attachment, "Input frame too large");
+      return;
+    }
     let isInvalidUtf8 = false;
     let lines: string[];
     if (typeof message === "string") {
@@ -400,6 +630,18 @@ export class SessionDO extends DurableObject<Env> implements ISessionDO {
       }
     }
 
+    const frameBytes =
+      typeof message === "string"
+        ? new TextEncoder().encode(message).byteLength
+        : message.byteLength;
+    const backlog = this.queuedInput.get(attachment.sessionId) ?? { bytes: 0, frames: 0 };
+    if (backlog.frames >= 64 || backlog.bytes + frameBytes > 256 * 1024) {
+      await this.disconnectSession(ws, attachment, "Input queue limit reached");
+      return;
+    }
+    backlog.bytes += frameBytes;
+    backlog.frames++;
+    this.queuedInput.set(attachment.sessionId, backlog);
     const prevTask = this.sessionMessageQueues.get(attachment.sessionId) ?? Promise.resolve();
     const currentTask = prevTask
       .then(async () => {
@@ -413,22 +655,11 @@ export class SessionDO extends DurableObject<Env> implements ISessionDO {
           (ws.deserializeAttachment() as SessionAttachment | null) ?? attachment;
         this.sessionsById.set(currentAttachment.sessionId, { ws, attachment: currentAttachment });
 
-        const isSaslNegotiating = Boolean(currentAttachment.saslMechanism);
-        if (!isSaslNegotiating && !this.commandRateLimiter.check(currentAttachment.sessionId)) {
-          this.sendLine(
-            ws,
-            currentAttachment,
-            encodeIRCMessage({
-              prefix: SERVER_CONFIG.serverName,
-              command: "ERROR",
-              params: ["Closing Link: Excess Flood"],
-            }),
-          );
-          await this.disconnectSession(ws, currentAttachment, "Excess Flood");
-          return;
-        }
-
         for (const rawLine of lines) {
+          if (!this.commandRateLimiter.check(currentAttachment.sessionId)) {
+            await this.disconnectSession(ws, currentAttachment, "Excess Flood");
+            return;
+          }
           if (rawLine.length > 8192) {
             this.sendLine(
               ws,
@@ -470,7 +701,28 @@ export class SessionDO extends DurableObject<Env> implements ISessionDO {
             continue;
           }
 
-          await this.handleIRCCommand(ws, currentAttachment, parsed);
+          try {
+            await this.handleIRCCommand(ws, currentAttachment, parsed);
+          } catch (error) {
+            if (error instanceof IRCProtocolError && error.numeric) {
+              this.saveAttachment(ws, currentAttachment);
+              this.sendNumeric(ws, currentAttachment, error.numeric, [
+                parsed.params[0] ?? "*",
+                error.message,
+              ]);
+            } else {
+              console.error("IRC command failed", parsed.command, error);
+              this.sendLine(
+                ws,
+                currentAttachment,
+                encodeIRCMessage({
+                  prefix: SERVER_CONFIG.serverName,
+                  command: "FAIL",
+                  params: [parsed.command, "INTERNAL_ERROR", "Command could not be completed"],
+                }),
+              );
+            }
+          }
         }
       })
       .catch((err) => {
@@ -478,7 +730,17 @@ export class SessionDO extends DurableObject<Env> implements ISessionDO {
       });
 
     this.sessionMessageQueues.set(attachment.sessionId, currentTask);
-    await currentTask;
+    try {
+      await currentTask;
+    } finally {
+      const pending = this.queuedInput.get(attachment.sessionId);
+      if (pending) {
+        pending.bytes -= frameBytes;
+        if (--pending.frames === 0) this.queuedInput.delete(attachment.sessionId);
+      }
+      if (this.sessionMessageQueues.get(attachment.sessionId) === currentTask)
+        this.sessionMessageQueues.delete(attachment.sessionId);
+    }
   }
 
   public async webSocketClose(
@@ -488,7 +750,7 @@ export class SessionDO extends DurableObject<Env> implements ISessionDO {
     _wasClean: boolean,
   ): Promise<void> {
     const attachment = ws.deserializeAttachment() as SessionAttachment | null;
-    if (attachment) {
+    if (attachment?.sessionId) {
       console.log(
         `[FlaRC SessionDO] Client disconnected: ${attachment.nickname ?? "unregistered"} (session:${attachment.sessionId.slice(0, 8)}, reason: ${reason || "Client closed socket"})`,
       );
@@ -498,7 +760,7 @@ export class SessionDO extends DurableObject<Env> implements ISessionDO {
 
   public async webSocketError(ws: WebSocket, error: unknown): Promise<void> {
     const attachment = ws.deserializeAttachment() as SessionAttachment | null;
-    if (attachment) {
+    if (attachment?.sessionId) {
       console.log(
         `[FlaRC SessionDO] Client socket error: ${attachment.nickname ?? "unregistered"} (session:${attachment.sessionId.slice(0, 8)}, error: ${String(error)})`,
       );
@@ -507,11 +769,126 @@ export class SessionDO extends DurableObject<Env> implements ISessionDO {
   }
 
   public sendLine(ws: WebSocket, attachment: SessionAttachment, line: string): void {
+    if (!this.acceptSessionAttachment(ws, attachment)) return;
+    if (SERVER_CONFIG.requireAccounts && attachment.registered) {
+      const bytes = new TextEncoder().encode(line).byteLength;
+      let queue = this.outboundQueues.get(ws);
+      if (
+        (queue?.frames.length ?? 0) >= 4096 ||
+        (queue?.bytes ?? 0) + bytes > 8 * 1024 * 1024 ||
+        this.outboundBytes + bytes > 16 * 1024 * 1024
+      ) {
+        try {
+          ws.close(1008, "Output queue limit reached");
+        } catch {
+          /* Closed */
+        }
+        return;
+      }
+      const start = !queue;
+      if (!queue) {
+        queue = { frames: [], bytes: 0 };
+        this.outboundQueues.set(ws, queue);
+      }
+      queue.frames.push({
+        line,
+        userId: attachment.userId,
+        accountName: attachment.accountName!,
+        version: attachment.credentialVersion!,
+      });
+      queue.bytes += bytes;
+      this.outboundBytes += bytes;
+      if (start) this.ctx.waitUntil(this.flushOutbound(ws, queue));
+      return;
+    }
     try {
       const frame = encodeWebSocketFrame(line, attachment.subprotocol);
       ws.send(frame);
     } catch {
       // Socket may have closed concurrently
+    }
+  }
+
+  private async flushOutbound(
+    ws: WebSocket,
+    queue: {
+      frames: Array<{ line: string; userId: string; accountName: string; version: number }>;
+      bytes: number;
+    },
+  ): Promise<void> {
+    try {
+      while (queue.frames.length) {
+        const frames = queue.frames.splice(0);
+        const current = ws.deserializeAttachment() as SessionAttachment;
+        if (!this.acceptSessionAttachment(ws, current)) return;
+        const account = current.accountName
+          ? await this.getAccountsStub().getAccountByUsername(current.accountName)
+          : null;
+        if (
+          !account ||
+          account.id !== current.userId ||
+          account.credentialVersion !== current.credentialVersion
+        ) {
+          await this.disconnectSession(ws, current, "Account credentials or permissions revoked");
+          return;
+        }
+        // One authoritative check per channel in a delivery batch, not one RPC
+        // per history line. No permanent timers or idle-object activity.
+        const readable = new Map<string, boolean>();
+        const channels = new Map<string, string>();
+        for (const frame of frames) {
+          if (frame.userId !== account.id || frame.version !== account.credentialVersion) continue;
+          // Outbound lines have already been encoded. Do not apply inbound
+          // parser limits to valid server replies or large history payloads.
+          const message = frame.line.match(/^(?:@\S+ )?(?::\S+ )?(\S+)(?: (.*))?$/s);
+          const command = message?.[1];
+          const params = (message?.[2] ?? "").split(" ", 3);
+          const raw = ["PRIVMSG", "NOTICE", "TAGMSG"].includes(command ?? "")
+            ? params[0]
+            : command === "BATCH" && params[0]?.startsWith("+")
+              ? params[2]
+              : undefined;
+          const channel = raw?.replace(/^[~&@%+]+(?=[#&])/, "");
+          if (channel && isValidChannelName(channel)) channels.set(frame.line, channel);
+        }
+        for (const channel of new Set(channels.values())) {
+          readable.set(
+            channel,
+            await this.getChannelStub(channel).canReadAccount({
+              ...account,
+              isAdmin:
+                account.roles.includes("admin") ||
+                Boolean(current.isOper && account.roles.includes("oper")),
+            }),
+          );
+        }
+        const latest = ws.deserializeAttachment() as SessionAttachment;
+        if (
+          latest.userId !== account.id ||
+          latest.credentialVersion !== account.credentialVersion ||
+          !latest.authenticated
+        )
+          continue;
+        for (const frame of frames) {
+          const bytes = new TextEncoder().encode(frame.line).byteLength;
+          queue.bytes -= bytes;
+          this.outboundBytes -= bytes;
+          if (frame.userId !== latest.userId || frame.version !== latest.credentialVersion)
+            continue;
+          const channel = channels.get(frame.line);
+          if (channel && !readable.get(channel)) continue;
+          ws.send(encodeWebSocketFrame(frame.line, latest.subprotocol));
+        }
+      }
+    } catch {
+      try {
+        ws.close(1008, "Session delivery could not be authorized");
+      } catch {
+        /* Closed */
+      }
+    } finally {
+      this.outboundBytes -= queue.bytes;
+      this.outboundQueues.delete(ws);
     }
   }
 
@@ -657,6 +1034,151 @@ export class SessionDO extends DurableObject<Env> implements ISessionDO {
     return `${nick}!${user}@${host}`;
   }
 
+  public storeDirectMessage(params: {
+    sender: SessionAttachment;
+    target: SessionAttachment;
+    messageId: string;
+    command: "PRIVMSG" | "NOTICE" | "TAGMSG";
+    content: string;
+    tags?: Record<string, string | true>;
+    multilineLines?: Array<{ content: string; concat: boolean }>;
+    displayNick?: string;
+  }): StoredChannelMessage {
+    const sender = this.sessionsById.get(params.sender.sessionId)?.attachment;
+    const target = this.sessionsById.get(params.target.sessionId)?.attachment;
+    if (
+      !sender?.registered ||
+      !target?.registered ||
+      sender.userId !== params.sender.userId ||
+      target.userId !== params.target.userId ||
+      (SERVER_CONFIG.requireAccounts && (!sender.authenticated || !target.authenticated))
+    )
+      throw new IRCProtocolError("Authenticated DM participants required", Numerics.ERR_NOSUCHNICK);
+    const pair = this.getCanonicalDmPair(sender.userId, target.userId);
+    const now = Date.now();
+    const tags = { ...params.tags };
+    delete tags["+role"];
+    delete tags["+badge"];
+    tags["+role"] =
+      sender.roles?.includes("admin") || sender.roles?.includes("oper")
+        ? "admin"
+        : (sender.roles?.[0] ?? "member");
+    tags["+badge"] = tags["+role"];
+    const editId = tags["+ircord/edit"] ?? tags["+draft/edit"] ?? tags["+edit"];
+    let root: string | null = null;
+    let expiresAt = now + SERVER_CONFIG.retentionMs;
+    let originalTags: Record<string, string | true> = {};
+    if (typeof editId === "string") {
+      const original = this.sql
+        .exec<{
+          sender_id: string;
+          peer_pair: string;
+          redacted: number;
+          created_at: number;
+          tags_json: string;
+        }>(
+          "SELECT sender_id, peer_pair, redacted, created_at, tags_json FROM direct_messages WHERE id = ?",
+          editId,
+        )
+        .toArray()[0];
+      if (
+        !original ||
+        original.sender_id !== sender.userId ||
+        original.peer_pair !== pair ||
+        original.redacted ||
+        original.created_at <= now - SERVER_CONFIG.retentionMs
+      )
+        throw new IRCProtocolError(
+          "You can only edit your own messages in this conversation",
+          Numerics.ERR_CANNOTSENDTOCHAN,
+        );
+      root =
+        this.sql
+          .exec<{ root_id: string }>(
+            "SELECT root_id FROM direct_message_edits WHERE message_id = ?",
+            editId,
+          )
+          .toArray()[0]?.root_id ?? editId;
+      const rootRow = this.sql
+        .exec<{ created_at: number }>("SELECT created_at FROM direct_messages WHERE id = ?", root)
+        .toArray()[0];
+      expiresAt = (rootRow?.created_at ?? original.created_at) + SERVER_CONFIG.retentionMs;
+      if (expiresAt <= now)
+        throw new IRCProtocolError("Message has expired", Numerics.ERR_CANNOTSENDTOCHAN);
+      originalTags = JSON.parse(original.tags_json || "{}");
+    }
+    this.ctx.storage.transactionSync(() => {
+      this.sql.exec(
+        `INSERT INTO direct_messages (id, peer_pair, sender_id, sender_account, sender_nick, sender_user, sender_host, target_nick, target_account, target_id, command, content, tags_json, multiline_json, redacted, created_at, expires_at)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, ?, ?)`,
+        params.messageId,
+        pair,
+        sender.userId,
+        sender.accountName,
+        params.displayNick ?? sender.nickname!,
+        sender.username!,
+        sender.hostname,
+        target.nickname!,
+        target.accountName,
+        target.userId,
+        params.command,
+        params.content,
+        JSON.stringify(tags),
+        params.multilineLines ? JSON.stringify(params.multilineLines) : null,
+        now,
+        expiresAt,
+      );
+      if (root && typeof editId === "string") {
+        this.sql.exec(
+          "INSERT INTO direct_message_edits (message_id, root_id) VALUES (?, ?)",
+          params.messageId,
+          root,
+        );
+        this.sql.exec(
+          "UPDATE direct_messages SET content = ?, tags_json = ?, multiline_json = NULL WHERE id = ?",
+          params.content,
+          JSON.stringify({ ...originalTags, ...tags, edited_at: new Date(now).toISOString() }),
+          editId,
+        );
+      }
+    });
+    return {
+      id: params.messageId,
+      sequence: 0,
+      senderId: sender.userId,
+      senderAccount: sender.accountName,
+      senderNick: params.displayNick ?? sender.nickname!,
+      senderUser: sender.username!,
+      senderHost: sender.hostname,
+      command: params.command,
+      content: params.content,
+      tags,
+      multilineLines: params.multilineLines,
+      createdAt: now,
+      expiresAt,
+    };
+  }
+
+  public redactDirectMessage(messageId: string, authorId: string): boolean {
+    const message = this.sql
+      .exec<{ sender_id: string }>("SELECT sender_id FROM direct_messages WHERE id = ?", messageId)
+      .toArray()[0];
+    if (!message || message.sender_id !== authorId) return false;
+    const root =
+      this.sql
+        .exec<{ root_id: string }>(
+          "SELECT root_id FROM direct_message_edits WHERE message_id = ?",
+          messageId,
+        )
+        .toArray()[0]?.root_id ?? messageId;
+    this.sql.exec(
+      "UPDATE direct_messages SET redacted = 1, content = '', tags_json = '{}', multiline_json = NULL WHERE id = ? OR id IN (SELECT message_id FROM direct_message_edits WHERE root_id = ?)",
+      root,
+      root,
+    );
+    return true;
+  }
+
   public getCanonicalDmPair(nick1: string, nick2: string): string {
     const c1 = canonicalizeIRCName(nick1);
     const c2 = canonicalizeIRCName(nick2);
@@ -758,6 +1280,7 @@ export class SessionDO extends DurableObject<Env> implements ISessionDO {
       if (res.ok) {
         attachment.authenticated = true;
         attachment.userId = res.account.id;
+        attachment.credentialVersion = res.account.credentialVersion ?? 0;
         attachment.accountName = res.account.username;
         attachment.roles = res.account.roles;
         attachment.isOper =
@@ -766,6 +1289,13 @@ export class SessionDO extends DurableObject<Env> implements ISessionDO {
         this.sendNumeric(ws, attachment, Numerics.ERR_PASSWDMISMATCH, ["Password incorrect"]);
         return;
       }
+    }
+
+    if (SERVER_CONFIG.requireAccounts && (!attachment.authenticated || !attachment.accountName)) {
+      this.sendNumeric(ws, attachment, Numerics.ERR_NOTREGISTERED, [
+        "Log in using SASL or PASS account:password before connecting",
+      ]);
+      return;
     }
 
     const accountsStub = this.getAccountsStub();
@@ -1104,6 +1634,40 @@ export class SessionDO extends DurableObject<Env> implements ISessionDO {
     return shared;
   }
 
+  public async prepareAccountChange(
+    attachment: SessionAttachment,
+    newUserId: string,
+  ): Promise<void> {
+    if (attachment.registered && attachment.nickname && attachment.userId !== newUserId) {
+      const owner = await this.getAccountsStub().getNickOwner(attachment.nickname);
+      if (owner && owner !== newUserId)
+        throw new IRCProtocolError(
+          "Change nickname before switching accounts",
+          Numerics.ERR_NICKNAMEINUSE,
+        );
+    }
+    if (!attachment.authenticated || attachment.userId === newUserId) return;
+    for (const channel of this.getSessionChannels(attachment.sessionId)) {
+      const stub = this.getChannelStub(channel.channelName);
+      const members = await stub.getMembers();
+      await stub.part(attachment.sessionId);
+      this.sql.exec(
+        "DELETE FROM session_channels WHERE session_id = ? AND canonical_channel = ?",
+        attachment.sessionId,
+        channel.canonicalChannel,
+      );
+      const line = encodeIRCMessage({
+        prefix: this.getUserPrefix(attachment),
+        command: "PART",
+        params: [channel.channelName, "Account changed"],
+      });
+      for (const member of members) {
+        const client = this.sessionsById.get(member.sessionId);
+        if (client) this.sendLine(client.ws, client.attachment, line);
+      }
+    }
+  }
+
   public async broadcastAccountChange(attachment: SessionAttachment): Promise<void> {
     const channels = this.getSessionChannels(attachment.sessionId);
     const shared = await this.getSharedAndMonitoredSessions(attachment, "account-notify");
@@ -1151,6 +1715,7 @@ export class SessionDO extends DurableObject<Env> implements ISessionDO {
       return;
     }
     this.sessionMessageQueues.delete(attachment.sessionId);
+    this.queuedInput.delete(attachment.sessionId);
     this.pendingPassBySession.delete(attachment.sessionId);
     this.pendingBatchesBySession.delete(attachment.sessionId);
     this.activeBatchRefBySession.delete(attachment.sessionId);
@@ -1389,6 +1954,27 @@ export class SessionDO extends DurableObject<Env> implements ISessionDO {
     return list;
   }
 
+  public async removeChannelRouting(channelName: string, recipients: string[]): Promise<void> {
+    const line = encodeIRCMessage({
+      prefix: SERVER_CONFIG.serverName,
+      command: "KICK",
+      params: [channelName, "*", "Channel removed by administrator"],
+    });
+    for (const id of recipients) {
+      const client = this.sessionsById.get(id);
+      if (client)
+        this.sendLine(
+          client.ws,
+          client.attachment,
+          line.replace(" * ", ` ${client.attachment.nickname} `),
+        );
+    }
+    this.sql.exec(
+      "DELETE FROM session_channels WHERE canonical_channel = ?",
+      canonicalizeIRCName(channelName),
+    );
+  }
+
   public async adminListChannels(): Promise<
     Array<{
       channelName: string;
@@ -1519,7 +2105,36 @@ export class SessionDO extends DurableObject<Env> implements ISessionDO {
     return this.getAccountsStub().getMetadata(target, keys);
   }
 
+  public async refreshAccountPermissions(username: string): Promise<void> {
+    this.ensureSessionsLoaded();
+    const account = await this.getAccountsStub().getAccountByUsername(username);
+    if (!account) {
+      await this.invalidateAccountPermissions(username);
+      return;
+    }
+    for (const { ws, attachment } of this.sessionsById.values())
+      if (attachment.userId === account.id) {
+        const wasOper = attachment.isOper;
+        attachment.roles = account.roles;
+        attachment.isOper = Boolean(
+          wasOper && (account.roles.includes("admin") || account.roles.includes("oper")),
+        );
+        this.saveAttachment(ws, attachment);
+        if (wasOper && !attachment.isOper)
+          this.sendLine(
+            ws,
+            attachment,
+            encodeIRCMessage({
+              prefix: this.getUserPrefix(attachment),
+              command: "MODE",
+              params: [attachment.nickname!, "-o"],
+            }),
+          );
+      }
+  }
+
   public async invalidateAccountPermissions(username: string): Promise<number> {
+    this.ensureSessionsLoaded();
     const canonUser = canonicalizeIRCName(username);
     let affected = 0;
     for (const { ws, attachment } of this.sessionsById.values()) {
@@ -1530,6 +2145,7 @@ export class SessionDO extends DurableObject<Env> implements ISessionDO {
         this.saveAttachment(ws, attachment);
         await this.broadcastAccountChange(attachment);
         this.saveAttachment(ws, attachment);
+        await this.disconnectSession(ws, attachment, "Account credentials or permissions revoked");
         affected++;
       }
     }
@@ -1545,7 +2161,12 @@ export class SessionDO extends DurableObject<Env> implements ISessionDO {
     this.ensureSessionsLoaded();
     if (params.sessionId) {
       const sess = this.sessionsById.get(params.sessionId);
-      if (sess && sess.attachment.registered) {
+      if (
+        sess?.attachment.registered &&
+        sess.attachment.authenticated &&
+        (await this.getAccountsStub().getCredentialVersion(sess.attachment.userId)) ===
+          (sess.attachment.credentialVersion ?? 0)
+      ) {
         return {
           active: true,
           authenticated: Boolean(sess.attachment.authenticated),
@@ -1574,6 +2195,25 @@ export class SessionDO extends DurableObject<Env> implements ISessionDO {
     };
   }
 
+  public async clientDirectMessages(
+    token: string,
+    user: string,
+    target: string,
+    limit: number,
+    before?: string,
+    after?: string,
+  ): Promise<any> {
+    const actor = await this.getAccountsStub().verifyApiSession(token);
+    if (
+      !actor ||
+      ![user, target].some(
+        (name) => canonicalizeIRCName(name) === canonicalizeIRCName(actor.username),
+      )
+    )
+      throw new Error("Conversation access denied");
+    return this.getPaginatedDirectMessages(user, target, limit, before, after);
+  }
+
   public async getPaginatedDirectMessages(
     user1: string,
     user2: string,
@@ -1590,37 +2230,46 @@ export class SessionDO extends DurableObject<Env> implements ISessionDO {
       newest_id: string | null;
     };
   }> {
-    const pair = this.getCanonicalDmPair(user1, user2);
-    let sql = "SELECT * FROM direct_messages WHERE peer_pair = ?";
-    const bindings: (string | number)[] = [pair];
-
-    if (before) {
-      const bRow = this.sql
-        .exec<{ created_at: number }>("SELECT created_at FROM direct_messages WHERE id = ?", before)
+    const accounts = this.getAccountsStub();
+    const [first, second] = await Promise.all([
+      accounts.resolveConversationAccount(user1),
+      accounts.resolveConversationAccount(user2),
+    ]);
+    const pair = this.getCanonicalDmPair(first?.id ?? "missing", second?.id ?? "missing");
+    let sql =
+      "SELECT * FROM direct_messages WHERE peer_pair = ? AND redacted = 0 AND COALESCE(expires_at, created_at + ?) > ?";
+    const bindings: (string | number)[] = [pair, SERVER_CONFIG.retentionMs, Date.now()];
+    for (const [reference, operator] of [
+      [before, "<"],
+      [after, ">"],
+    ] as const) {
+      if (!reference) continue;
+      const row = this.sql
+        .exec<{ sequence: number }>(
+          "SELECT sequence FROM direct_messages WHERE id = ? AND peer_pair = ?",
+          reference,
+          pair,
+        )
         .toArray()[0];
-      const bTs = bRow?.created_at ?? Number(before) ?? Date.parse(before);
-      if (bTs && !Number.isNaN(bTs)) {
-        sql += " AND created_at < ?";
-        bindings.push(bTs);
+      if (row) {
+        sql += ` AND sequence ${operator} ?`;
+        bindings.push(row.sequence);
+      } else {
+        const timestamp = /^\d+$/.test(reference) ? Number(reference) : Date.parse(reference);
+        if (!Number.isFinite(timestamp))
+          return {
+            messages: [],
+            pagination: { count: 0, limit, has_more: false, oldest_id: null, newest_id: null },
+          };
+        sql += ` AND created_at ${operator} ?`;
+        bindings.push(timestamp);
       }
     }
-    if (after) {
-      const aRow = this.sql
-        .exec<{ created_at: number }>("SELECT created_at FROM direct_messages WHERE id = ?", after)
-        .toArray()[0];
-      const aTs = aRow?.created_at ?? Number(after) ?? Date.parse(after);
-      if (aTs && !Number.isNaN(aTs)) {
-        sql += " AND created_at > ?";
-        bindings.push(aTs);
-      }
-    }
-
     const effectiveLimit = Math.min(Math.max(limit, 1), 100);
-    sql += " ORDER BY created_at DESC LIMIT ?";
-    bindings.push(effectiveLimit);
-
+    sql += " ORDER BY sequence DESC LIMIT ?";
+    bindings.push(effectiveLimit + 1);
     const rows = this.sql.exec<any>(sql, ...bindings).toArray();
-    const messages = rows.map((r) => ({
+    const messages = rows.slice(0, effectiveLimit).map((r) => ({
       id: r.id,
       sequence: r.sequence,
       senderId: r.sender_id,
@@ -1640,7 +2289,7 @@ export class SessionDO extends DurableObject<Env> implements ISessionDO {
       pagination: {
         count: messages.length,
         limit: effectiveLimit,
-        has_more: messages.length >= effectiveLimit,
+        has_more: rows.length > effectiveLimit,
         oldest_id: messages.length > 0 ? messages[messages.length - 1].id : null,
         newest_id: messages.length > 0 ? messages[0].id : null,
       },

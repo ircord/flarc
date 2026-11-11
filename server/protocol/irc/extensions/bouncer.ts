@@ -21,7 +21,7 @@ export interface BouncerNetworkInfo {
 
 export function formatBouncerNetworkReply(
   serverName: string,
-  clientNick: string,
+  _clientNick: string,
   network: BouncerNetworkInfo,
 ): string {
   // Format: :<server> BOUNCER NETWORK <id> <name> <host> <port> <status>

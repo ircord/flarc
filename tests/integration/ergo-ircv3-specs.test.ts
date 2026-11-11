@@ -1,16 +1,20 @@
 import type { Miniflare } from "miniflare";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { createMiniflareServer, TestIRCClient } from "../helpers/miniflare-harness";
+import { createProtocolServer, TestIRCClient } from "../helpers/miniflare-harness";
 
 describe("Ergo & Full IRCv3 / Draft Specifications Suite", () => {
-  let mf: Miniflare;
+  let _mf: Miniflare;
   let wsUrl: string;
   let dispose: () => Promise<void>;
+  let fixture: Awaited<ReturnType<typeof createProtocolServer>>;
+  let request: Awaited<ReturnType<typeof createProtocolServer>>["request"];
   const clients: TestIRCClient[] = [];
 
   beforeEach(async () => {
-    const srv = await createMiniflareServer();
-    mf = srv.mf;
+    const srv = await createProtocolServer();
+    fixture = srv;
+    request = srv.request;
+    _mf = srv.mf;
     wsUrl = srv.wsUrl;
     dispose = srv.dispose;
   });
@@ -206,6 +210,8 @@ describe("Ergo & Full IRCv3 / Draft Specifications Suite", () => {
     alice.send("SETNAME :Alice Updated Name");
     await bobSeesSetname;
 
+    alice.send("OPER FixtureAdmin fixture-admin-password");
+    await alice.waitForNumeric(381);
     // 4. CHGHOST
     const bobSeesChghost = bob.waitForNewLine((l) =>
       l.includes("CHGHOST alice_dev vhost.cfcord.dev"),
@@ -293,6 +299,13 @@ describe("Ergo & Full IRCv3 / Draft Specifications Suite", () => {
     await alice.waitForLine((l) => l.includes(" 379 ") && l.includes("is using modes"));
     await alice.waitForLine((l) => l.includes(" 317 ") && l.includes("seconds idle"));
 
+    await request(`${fixture.url.origin}/admin/accounts/alice/roles`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ role: "oper", action: "grant" }),
+    });
+    alice.send("OPER alice supersecret123");
+    await alice.waitForNumeric(381);
     // 2. HostServ SET / STATUS / OFF / ON
     alice.send("HS SET alice staff.ergo.chat");
     await alice.waitForLine((l) => l.includes(" 396 ") && l.includes("staff.ergo.chat"));
@@ -367,6 +380,8 @@ describe("Ergo & Full IRCv3 / Draft Specifications Suite", () => {
     await bob.waitForLine((l) => l.includes(" 477 ") && l.includes("alice"));
 
     alice.send("ACCEPT bob");
+    alice.send("ACCEPT *");
+    await alice.waitForLine((l) => l.includes(" 281 ") && l.includes("bob"));
     const aliceSeesDm = alice.waitForNewLine((l) => l.includes("PRIVMSG alice :Now allowed!"));
     bob.send("PRIVMSG alice :Now allowed!");
     await aliceSeesDm;
@@ -473,7 +488,7 @@ describe("Ergo & Full IRCv3 / Draft Specifications Suite", () => {
     await alice.waitForLine((l) => l.includes("Account created"));
 
     alice.send("VERIFY alice code123");
-    await alice.waitForLine((l) => l.includes(" 923 "));
+    await alice.waitForLine((l) => l.includes("FAIL VERIFY INVALID_CODE"));
 
     alice.send("WEBPUSH REGISTER https://push.example.com/sub1 p256dh=abc;auth=def");
     await alice.waitForLine((l) => l.includes("WEBPUSH REGISTER https://push.example.com/sub1"));

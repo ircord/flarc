@@ -1,22 +1,27 @@
 import type { Miniflare } from "miniflare";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { createMiniflareServer, TestIRCClient } from "../helpers/miniflare-harness";
+import { createProtocolServer, TestIRCClient } from "../helpers/miniflare-harness";
 
-const ADMIN_TOKEN = "super-secret-admin-token";
+let ADMIN_TOKEN = "super-secret-admin-token";
 
 describe("Modern Chat Platform Features (Profiles, Replies, Media, Unread & WebPush)", () => {
   let mf: Miniflare;
   let httpUrl: URL;
   let wsUrl: string;
   let dispose: () => Promise<void>;
+  let fixture: Awaited<ReturnType<typeof createProtocolServer>>;
+  let request: Awaited<ReturnType<typeof createProtocolServer>>["request"];
   const clients: TestIRCClient[] = [];
 
   beforeEach(async () => {
-    const srv = await createMiniflareServer({
+    const srv = await createProtocolServer({
       bindings: {
         ADMIN_TOKEN,
       },
     });
+    fixture = srv;
+    request = srv.request;
+    ADMIN_TOKEN = srv.adminToken;
     mf = srv.mf;
     httpUrl = srv.url;
     wsUrl = srv.wsUrl;
@@ -38,7 +43,7 @@ describe("Modern Chat Platform Features (Profiles, Replies, Media, Unread & WebP
 
   it("Phase 1: Canonical user profiles and channel categories with metadata APIs", async () => {
     // 1. Register a user
-    const regRes = await mf.dispatchFetch(`${httpUrl.origin}/api/accounts/register`, {
+    const regRes = await request(`${httpUrl.origin}/admin/accounts`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -54,7 +59,7 @@ describe("Modern Chat Platform Features (Profiles, Replies, Media, Unread & WebP
     expect(regData.account.username).toBe("solomon");
 
     // 2. Fetch initial profile
-    const getRes1 = await mf.dispatchFetch(`${httpUrl.origin}/api/profile/solomon`);
+    const getRes1 = await request(`${httpUrl.origin}/api/profile/solomon`);
     expect(getRes1.status).toBe(200);
     const profData1 = (await getRes1.json()) as any;
     expect(profData1.ok).toBe(true);
@@ -63,7 +68,10 @@ describe("Modern Chat Platform Features (Profiles, Replies, Media, Unread & WebP
     expect(profData1.profile.roles).toContain("admin");
 
     // 3. Update profile via PATCH /api/profile/:username
-    const patchRes = await mf.dispatchFetch(`${httpUrl.origin}/api/profile/solomon`, {
+    const ownRequest = fixture.authenticatedFetch(
+      await fixture.login("solomon", "securepassword123"),
+    );
+    const patchRes = await ownRequest(`${httpUrl.origin}/api/profile/solomon`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -86,21 +94,18 @@ describe("Modern Chat Platform Features (Profiles, Replies, Media, Unread & WebP
     expect(profData2.profile.timezone).toBe("Asia/Jerusalem");
 
     // 4. Channel Categories & Metadata via PATCH /api/channels/:channel/info
-    const chanPatch = await mf.dispatchFetch(
-      `${httpUrl.origin}/api/channels/%23announcements/info`,
-      {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          avatar: "https://example.com/megaphone.png",
-          description: "Official server news and updates",
-          category: "Information",
-          color: "#5865F2",
-          readOnly: true,
-          topic: "Welcome to FlaRC announcements",
-        }),
-      },
-    );
+    const chanPatch = await request(`${httpUrl.origin}/api/channels/%23announcements/info`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        avatar: "https://example.com/megaphone.png",
+        description: "Official server news and updates",
+        category: "Information",
+        color: "#5865F2",
+        readOnly: true,
+        topic: "Welcome to FlaRC announcements",
+      }),
+    });
     expect(chanPatch.status).toBe(200);
     const chanData = (await chanPatch.json()) as any;
     expect(chanData.ok).toBe(true);
@@ -113,7 +118,7 @@ describe("Modern Chat Platform Features (Profiles, Replies, Media, Unread & WebP
     expect(chanData.channel.topic).toBe("Welcome to FlaRC announcements");
 
     // 5. Fetch Channel Info via GET /api/channels/:channel/info
-    const chanGet = await mf.dispatchFetch(`${httpUrl.origin}/api/channels/%23announcements/info`);
+    const chanGet = await request(`${httpUrl.origin}/api/channels/%23announcements/info`);
     expect(chanGet.status).toBe(200);
     const chanGetData = (await chanGet.json()) as any;
     expect(chanGetData.ok).toBe(true);
@@ -122,7 +127,7 @@ describe("Modern Chat Platform Features (Profiles, Replies, Media, Unread & WebP
 
   it("Phase 1 & 2: Automatic role badges and in-reply-to threading (+draft/reply and +reply)", async () => {
     // 1. Register an admin account
-    await mf.dispatchFetch(`${httpUrl.origin}/api/accounts/register`, {
+    await request(`${httpUrl.origin}/admin/accounts`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -184,7 +189,7 @@ describe("Modern Chat Platform Features (Profiles, Replies, Media, Unread & WebP
     expect(replyOnA).toContain(`+reply=${parentMsgId}`);
   });
 
-  it("Phase 3: Media upload pipeline with user authentication, open server guest access, and lockdown", async () => {
+  it("Phase 3: Media upload pipeline requires sessions, protects ownership, and respects lockdown", async () => {
     const fileBytes = new Uint8Array([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 1, 2, 3, 4]);
 
     // 1. Unauthenticated stranger (not on IRC server, no credentials) is rejected with 401
@@ -194,7 +199,7 @@ describe("Modern Chat Platform Features (Profiles, Replies, Media, Unread & WebP
       body: fileBytes,
     });
     expect(unauthRes.status).toBe(401);
-    expect(unauthRes.headers.get("WWW-Authenticate")).toBe('Basic realm="FlaRC Filehost"');
+    expect(unauthRes.headers.get("WWW-Authenticate")).toBe("Bearer");
 
     // 2. Active user on the IRC server (open server mode) can upload via Soju-Username / X-IRC-Nick
     const clientGuest = makeClient();
@@ -211,15 +216,10 @@ describe("Modern Chat Platform Features (Profiles, Replies, Media, Unread & WebP
       headers: { "Soju-Username": "ActiveGuest" },
       body: formData as any,
     });
-    expect(guestUpload.status).toBe(201);
-    expect(guestUpload.headers.get("Location")).toMatch(/^\/media\/[a-f0-9-]+(\.png)?$/i);
-    const guestData = (await guestUpload.json()) as any;
-    expect(guestData.ok).toBe(true);
-    expect(guestData.filename).toBe("flare-logo.png");
-    expect(guestData.uploader).toBe("ActiveGuest");
+    expect(guestUpload.status).toBe(401);
 
     // 3. Registered account can upload using HTTP Basic Auth (SASL username/password)
-    await mf.dispatchFetch(`${httpUrl.origin}/api/accounts/register`, {
+    await request(`${httpUrl.origin}/admin/accounts`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -227,10 +227,20 @@ describe("Modern Chat Platform Features (Profiles, Replies, Media, Unread & WebP
         password: "uploaderPassword",
       }),
     });
-    const basicAuth = `Basic ${btoa("uploaderUser:uploaderPassword")}`;
+    const basicAuth = `Bearer ${await fixture.login("uploaderUser", "uploaderPassword")}`;
+    const uploaderRequest = fixture.authenticatedFetch(basicAuth.slice(7));
+    const multipart = await uploaderRequest(`${httpUrl.origin}/api/media/upload`, {
+      method: "POST",
+      body: formData,
+    });
+    expect(multipart.status).toBe(201);
+    expect(multipart.headers.get("Location")).toMatch(/^\/media\/[a-f0-9-]+(\.png)?$/i);
+    const multipartData = (await multipart.json()) as any;
+    expect(multipartData.filename).toBe("flare-logo.png");
+    expect(multipartData.uploader).toBe("uploaderUser");
 
     const textData = new TextEncoder().encode("Hello FlaRC Raw File Upload");
-    const rawUpload = await mf.dispatchFetch(`${httpUrl.origin}/api/media/upload`, {
+    const rawUpload = await request(`${httpUrl.origin}/api/media/upload`, {
       method: "POST",
       headers: {
         Authorization: basicAuth,
@@ -246,12 +256,12 @@ describe("Modern Chat Platform Features (Profiles, Replies, Media, Unread & WebP
     expect(rawData.uploader).toBe("uploaderUser");
 
     // Fetch raw file
-    const rawFileRes = await mf.dispatchFetch(`${httpUrl.origin}${rawData.url}`);
+    const rawFileRes = await uploaderRequest(`${httpUrl.origin}${rawData.url}`);
     expect(rawFileRes.status).toBe(200);
     expect(await rawFileRes.text()).toBe("Hello FlaRC Raw File Upload");
 
     // 4. Lock down upload: require registered accounts
-    await mf.dispatchFetch(`${httpUrl.origin}/admin/config`, {
+    await request(`${httpUrl.origin}/admin/config`, {
       method: "POST",
       headers: { Authorization: `Bearer ${ADMIN_TOKEN}`, "Content-Type": "application/json" },
       body: JSON.stringify({ filehostRequireRegistration: true }),
@@ -266,7 +276,7 @@ describe("Modern Chat Platform Features (Profiles, Replies, Media, Unread & WebP
     expect(lockedGuestUpload.status).toBe(401);
 
     // Registered account still succeeds
-    const lockedUserUpload = await mf.dispatchFetch(`${httpUrl.origin}/api/media/upload`, {
+    const lockedUserUpload = await request(`${httpUrl.origin}/api/media/upload`, {
       method: "POST",
       headers: { Authorization: basicAuth, "Content-Type": "text/plain" },
       body: textData,
@@ -274,13 +284,13 @@ describe("Modern Chat Platform Features (Profiles, Replies, Media, Unread & WebP
     expect(lockedUserUpload.status).toBe(201);
 
     // 5. Disable filehost completely via config (exploit mitigation toggle)
-    await mf.dispatchFetch(`${httpUrl.origin}/admin/config`, {
+    await request(`${httpUrl.origin}/admin/config`, {
       method: "POST",
       headers: { Authorization: `Bearer ${ADMIN_TOKEN}`, "Content-Type": "application/json" },
       body: JSON.stringify({ filehostEnabled: false }),
     });
 
-    const disabledUpload = await mf.dispatchFetch(`${httpUrl.origin}/api/media/upload`, {
+    const disabledUpload = await request(`${httpUrl.origin}/api/media/upload`, {
       method: "POST",
       headers: { Authorization: basicAuth, "Content-Type": "text/plain" },
       body: textData,
@@ -290,7 +300,7 @@ describe("Modern Chat Platform Features (Profiles, Replies, Media, Unread & WebP
     expect(disabledData.error).toContain("disabled");
 
     // Re-enable for subsequent tests
-    await mf.dispatchFetch(`${httpUrl.origin}/admin/config`, {
+    await request(`${httpUrl.origin}/admin/config`, {
       method: "POST",
       headers: { Authorization: `Bearer ${ADMIN_TOKEN}`, "Content-Type": "application/json" },
       body: JSON.stringify({ filehostEnabled: true, filehostRequireRegistration: false }),
@@ -298,7 +308,7 @@ describe("Modern Chat Platform Features (Profiles, Replies, Media, Unread & WebP
   });
 
   it("Phase 3 (R2): Media upload and retrieval using Cloudflare R2 bucket binding", async () => {
-    const r2Srv = await createMiniflareServer({
+    const r2Srv = await createProtocolServer({
       bindings: { ADMIN_TOKEN },
       r2Buckets: { MEDIA_BUCKET: "flarc-media" },
     });
@@ -307,9 +317,9 @@ describe("Modern Chat Platform Features (Profiles, Replies, Media, Unread & WebP
       const formData = new FormData();
       formData.append("file", new Blob([fileBytes], { type: "image/gif" }), "animation.gif");
 
-      const uploadRes = await r2Srv.mf.dispatchFetch(`${r2Srv.url.origin}/api/media/upload`, {
+      const uploadRes = await r2Srv.request(`${r2Srv.url.origin}/api/media/upload`, {
         method: "POST",
-        headers: { Authorization: `Bearer ${ADMIN_TOKEN}` },
+        headers: { Authorization: `Bearer ${r2Srv.adminToken}` },
         body: formData as any,
       });
       expect(uploadRes.status).toBe(201);
@@ -326,7 +336,7 @@ describe("Modern Chat Platform Features (Profiles, Replies, Media, Unread & WebP
       expect(r2Object?.httpMetadata?.contentType).toBe("image/gif");
 
       // Verify retrieval through the FlaRC public endpoint
-      const getRes = await r2Srv.mf.dispatchFetch(`${r2Srv.url.origin}${uploadData.url}`);
+      const getRes = await r2Srv.request(`${r2Srv.url.origin}${uploadData.url}`);
       expect(getRes.status).toBe(200);
       expect(getRes.headers.get("Content-Type")).toBe("image/gif");
       const downloaded = await getRes.arrayBuffer();
@@ -339,7 +349,7 @@ describe("Modern Chat Platform Features (Profiles, Replies, Media, Unread & WebP
 
   it("Phase 4: Unread counters, mention tracking, and WebPush subscriptions", async () => {
     // 1. Register user Charlie
-    await mf.dispatchFetch(`${httpUrl.origin}/api/accounts/register`, {
+    await request(`${httpUrl.origin}/admin/accounts`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -348,6 +358,9 @@ describe("Modern Chat Platform Features (Profiles, Replies, Media, Unread & WebP
       }),
     });
 
+    const charlieRequest = fixture.authenticatedFetch(
+      await fixture.login("charlie", "charliePassword123"),
+    );
     // 2. Connect client Dave and send messages to #chat mentioning Charlie
     const clientDave = makeClient();
     await clientDave.connect();
@@ -363,7 +376,7 @@ describe("Modern Chat Platform Features (Profiles, Replies, Media, Unread & WebP
     await new Promise((r) => setTimeout(r, 200));
 
     // 3. Query unread count for Charlie on #chat
-    const unreadRes1 = await mf.dispatchFetch(
+    const unreadRes1 = await charlieRequest(
       `${httpUrl.origin}/api/channels/%23chat/unread?username=charlie`,
     );
     expect(unreadRes1.status).toBe(200);
@@ -386,7 +399,7 @@ describe("Modern Chat Platform Features (Profiles, Replies, Media, Unread & WebP
     await new Promise((r) => setTimeout(r, 200));
 
     // 5. Query unread count after MARKREAD
-    const unreadRes2 = await mf.dispatchFetch(
+    const unreadRes2 = await charlieRequest(
       `${httpUrl.origin}/api/channels/%23chat/unread?username=charlie`,
     );
     const unreadData2 = (await unreadRes2.json()) as any;
@@ -395,14 +408,14 @@ describe("Modern Chat Platform Features (Profiles, Replies, Media, Unread & WebP
     expect(unreadData2.mentionCount).toBe(0);
 
     // 6. User summary unread endpoint
-    const userUnreadRes = await mf.dispatchFetch(`${httpUrl.origin}/api/users/charlie/unread`);
+    const userUnreadRes = await charlieRequest(`${httpUrl.origin}/api/users/charlie/unread`);
     expect(userUnreadRes.status).toBe(200);
     const userUnreadData = (await userUnreadRes.json()) as any;
     expect(userUnreadData.ok).toBe(true);
     expect(Array.isArray(userUnreadData.channels)).toBe(true);
 
     // 7. WebPush Subscriptions
-    const subRes = await mf.dispatchFetch(`${httpUrl.origin}/api/webpush/subscribe`, {
+    const subRes = await charlieRequest(`${httpUrl.origin}/api/webpush/subscribe`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -420,7 +433,7 @@ describe("Modern Chat Platform Features (Profiles, Replies, Media, Unread & WebP
     expect(subData.registered).toBe(true);
 
     // List subscriptions
-    const listRes = await mf.dispatchFetch(
+    const listRes = await charlieRequest(
       `${httpUrl.origin}/api/webpush/subscriptions?username=charlie`,
     );
     expect(listRes.status).toBe(200);
@@ -429,7 +442,7 @@ describe("Modern Chat Platform Features (Profiles, Replies, Media, Unread & WebP
     expect(listData.endpoints).toContain("https://push.example.com/v1/sub-987654");
 
     // Delete subscription
-    const delRes = await mf.dispatchFetch(
+    const delRes = await charlieRequest(
       `${httpUrl.origin}/api/webpush/subscribe?username=charlie&endpoint=${encodeURIComponent(
         "https://push.example.com/v1/sub-987654",
       )}`,

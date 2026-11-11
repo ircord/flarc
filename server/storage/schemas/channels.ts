@@ -83,6 +83,7 @@ export const channelListModes = sqliteTable(
 
 export const channelInvites = sqliteTable("channel_invites", {
   targetNick: text("target_nick").primaryKey(),
+  targetUserId: text("target_user_id"),
   invitedBy: text("invited_by").notNull(),
   createdAt: integer("created_at").notNull(),
 });
@@ -97,6 +98,9 @@ export const channelKvMetadata = sqliteTable("channel_kv_metadata", {
 export const channelRoleGroups = sqliteTable("channel_role_groups", {
   id: text("id").primaryKey(),
   name: text("name").notNull(),
+  color: text("color"),
+  position: integer("position").notNull().default(0),
+  updatedAt: integer("updated_at"),
   ircPrefix: text("irc_prefix"), // e.g. "~", "&", "@", "%", "+"
   ircMode: text("irc_mode"), // e.g. "q", "a", "o", "h", "v"
   priority: integer("priority").notNull().default(0),
@@ -139,3 +143,12 @@ export type ChannelMember = typeof channelMembers.$inferSelect;
 export type ChannelRoleGroup = typeof channelRoleGroups.$inferSelect;
 export type ChannelUserRole = typeof channelUserRoles.$inferSelect;
 export type ChannelWebhook = typeof channelWebhooks.$inferSelect;
+
+export const messageEdits = sqliteTable("message_edits", {
+  messageId: text("message_id")
+    .primaryKey()
+    .references(() => messages.id, { onDelete: "cascade" }),
+  rootId: text("root_id")
+    .notNull()
+    .references(() => messages.id, { onDelete: "cascade" }),
+});

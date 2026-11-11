@@ -8,6 +8,9 @@ function connectEcho() {
 
   echoBot.on("open", () => {
     console.log(`Echo bot connected to ${wsUrl}`);
+    if (!process.env.ECHO_BOT_PASSWORD)
+      throw new Error("ECHO_BOT_PASSWORD is required; provision the bot account first");
+    ws.send(`PASS Echo:${process.env.ECHO_BOT_PASSWORD}`);
     echoBot.send("NICK Echo");
     echoBot.send("USER echo 0 * :Echo Bot");
   });

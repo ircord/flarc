@@ -3,6 +3,15 @@ import type { ChannelDO } from "../durable-objects/channel";
 import type { SessionDO } from "../durable-objects/session";
 
 export interface Env {
+  EMBED_ALLOWED_HOSTS?: string;
+  OUTGOING_WEBHOOK_ALLOWED_HOSTS?: string;
+  ALLOWED_ORIGINS?: string;
+  SIGNUP_POLICY?: string;
+  SIGNUP_TOKEN?: string;
+  MIN_PASSWORD_LENGTH?: string;
+  WEBPUSH_VAPID_PUBLIC_KEY?: string;
+  REQUIRE_ACCOUNTS?: string;
+  AUTO_REGISTER_CHANNELS?: string;
   SESSION: DurableObjectNamespace<SessionDO>;
   CHANNELS: DurableObjectNamespace<ChannelDO>;
   ACCOUNTS: DurableObjectNamespace<AccountsDO>;
@@ -42,6 +51,7 @@ export interface SessionAttachment {
   sessionId: string;
   userId: string;
   accountName: string | null;
+  credentialVersion?: number;
   nickname: string | null;
   requestedNick?: string | null;
   username: string | null;
@@ -77,8 +87,7 @@ export interface SessionAttachment {
     serverNonce: string;
     salt: string;
     iterations: number;
-    storedKey: string;
-    serverKey: string;
+    credentialVersion: number;
   };
   preRegMetadata?: Record<string, string>;
 }
@@ -129,6 +138,7 @@ export interface ChannelStateSummary {
 }
 
 export interface AccountInfo {
+  credentialVersion?: number;
   id: string;
   username: string;
   displayName: string | null;

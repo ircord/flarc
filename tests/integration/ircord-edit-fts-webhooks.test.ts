@@ -1,19 +1,23 @@
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import WebSocket from "ws";
-import { createMiniflareServer, TestIRCClient } from "../helpers/miniflare-harness";
+import { createProtocolServer, TestIRCClient } from "../helpers/miniflare-harness";
 
-const ADMIN_TOKEN = "super-secret-admin-token";
+let ADMIN_TOKEN = "super-secret-admin-token";
 
 describe("IRCord Edit Protocol, FTS5 Search & Incoming Webhooks", () => {
   let url: URL;
   let wsUrl: string;
   let dispose: () => Promise<void>;
+  let fixture: Awaited<ReturnType<typeof createProtocolServer>>;
+  let request: Awaited<ReturnType<typeof createProtocolServer>>["request"];
   const clients: TestIRCClient[] = [];
 
   beforeEach(async () => {
-    const srv = await createMiniflareServer({
-      bindings: { ADMIN_TOKEN },
+    const srv = await createProtocolServer({
+      bindings: { ADMIN_TOKEN, OUTGOING_WEBHOOK_ALLOWED_HOSTS: "example.com" },
     });
+    fixture = srv;
+    request = srv.request;
+    ADMIN_TOKEN = srv.adminToken;
     url = srv.url;
     wsUrl = srv.wsUrl;
     dispose = srv.dispose;
@@ -98,7 +102,7 @@ describe("IRCord Edit Protocol, FTS5 Search & Incoming Webhooks", () => {
     expect(bobReceivedEdit).toContain(`+ircord/edit=${origMsgId}`);
 
     // Verify REST API reflects edited message
-    const res = await fetch(`${url.origin}/api/v1/channels/%23chat/messages`);
+    const res = await request(`${url.origin}/api/v1/channels/%23chat/messages`);
     const data = (await res.json()) as any;
     expect(data.ok).toBe(true);
     const origMsg = data.messages.find((m: any) => m.id === origMsgId);
@@ -107,8 +111,12 @@ describe("IRCord Edit Protocol, FTS5 Search & Incoming Webhooks", () => {
   });
 
   it("indexes messages in SQLite FTS5 and supports search via REST and IRC SEARCH command", async () => {
+    const engineer = await fixture.apiUser("Engineer", "#tech");
+    const dev = await fixture.apiUser("Dev", "#tech");
+    const writer = await fixture.apiUser("DocWriter", "#tech");
+    const architect = await fixture.apiUser("Architect", "#tech");
     // Post distinct messages via REST API
-    await fetch(`${url.origin}/api/v1/channels/%23tech/messages`, {
+    await engineer.request(`${url.origin}/api/v1/channels/%23tech/messages`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -117,7 +125,7 @@ describe("IRCord Edit Protocol, FTS5 Search & Incoming Webhooks", () => {
       }),
     });
 
-    await fetch(`${url.origin}/api/v1/channels/%23tech/messages`, {
+    await dev.request(`${url.origin}/api/v1/channels/%23tech/messages`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -126,7 +134,7 @@ describe("IRCord Edit Protocol, FTS5 Search & Incoming Webhooks", () => {
       }),
     });
 
-    await fetch(`${url.origin}/api/v1/channels/%23tech/messages`, {
+    await writer.request(`${url.origin}/api/v1/channels/%23tech/messages`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -136,7 +144,7 @@ describe("IRCord Edit Protocol, FTS5 Search & Incoming Webhooks", () => {
     });
 
     // 1. Search via REST API (keyword query)
-    const searchRes = await fetch(
+    const searchRes = await request(
       `${url.origin}/api/v1/channels/%23tech/messages/search?q=Cloudflare`,
     );
     expect(searchRes.status).toBe(200);
@@ -146,7 +154,7 @@ describe("IRCord Edit Protocol, FTS5 Search & Incoming Webhooks", () => {
     expect(searchData.messages[0].content).toContain("Cloudflare Workers");
 
     // 2. Search via REST API with Discord/IRCord filters (from: and has:link)
-    const filterRes = await fetch(
+    const filterRes = await request(
       `${url.origin}/api/v1/channels/%23tech/messages/search?q=from:DocWriter+has:link`,
     );
     expect(filterRes.status).toBe(200);
@@ -156,7 +164,7 @@ describe("IRCord Edit Protocol, FTS5 Search & Incoming Webhooks", () => {
     expect(filterData.messages[0].content).toContain("https://github.com/flarc/cfcord");
 
     // 3. Search via REST API with query parameters (?from=Dev)
-    const devRes = await fetch(`${url.origin}/api/v1/channels/%23tech/messages/search?from=Dev`);
+    const devRes = await request(`${url.origin}/api/v1/channels/%23tech/messages/search?from=Dev`);
     expect(devRes.status).toBe(200);
     const devData = (await devRes.json()) as any;
     expect(devData.ok).toBe(true);
@@ -169,9 +177,11 @@ describe("IRCord Edit Protocol, FTS5 Search & Incoming Webhooks", () => {
     client.send("NICK Searcher\r\nUSER searcher 0 * :Searcher\r\n");
     await client.waitForLine((l) => l.includes(" 001 Searcher "));
 
-    client.send("SEARCH #tech has:link");
+    const searcherToken = await fixture.apiUser("AuthenticatedSearcher", "#tech");
+    const searchClient = searcherToken.client;
+    searchClient.send("SEARCH #tech has:link");
     let ircSearchResult = "";
-    await client.waitForLine((l) => {
+    await searchClient.waitForLine((l) => {
       if (l.includes("https://github.com/flarc/cfcord")) {
         ircSearchResult = l;
         return true;
@@ -181,7 +191,7 @@ describe("IRCord Edit Protocol, FTS5 Search & Incoming Webhooks", () => {
     expect(ircSearchResult).toContain("DocWriter");
 
     // 5. Post message with tags (reply & pinned) and test tag-based search
-    await fetch(`${url.origin}/api/v1/channels/%23tech/messages`, {
+    await architect.request(`${url.origin}/api/v1/channels/%23tech/messages`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -195,7 +205,7 @@ describe("IRCord Edit Protocol, FTS5 Search & Incoming Webhooks", () => {
     });
 
     // 6. Test IRCord compatible /api/v1/search endpoint with tag and conversationId
-    const tagSearchRes = await fetch(
+    const tagSearchRes = await request(
       `${url.origin}/api/v1/search?conversationId=%23tech&tag=reply`,
     );
     expect(tagSearchRes.status).toBe(200);
@@ -207,18 +217,18 @@ describe("IRCord Edit Protocol, FTS5 Search & Incoming Webhooks", () => {
     expect(tagSearchData.items[0].conversation.name).toBe("tech");
 
     // 7. Test inline tag search: q="tag:pinned" or q="+draft/reply"
-    const inlineTagRes = await fetch(
-      `${url.origin}/api/v1/search?q=in:tech+tag:pinned`,
-    );
+    const inlineTagRes = await request(`${url.origin}/api/v1/search?q=in:tech+tag:pinned`);
     expect(inlineTagRes.status).toBe(200);
     const inlineTagData = (await inlineTagRes.json()) as any;
     expect(inlineTagData.ok).toBe(true);
-    expect(inlineTagData.messages.some((m: any) => m.content.includes("Replying to previous"))).toBe(true);
+    expect(
+      inlineTagData.messages.some((m: any) => m.content.includes("Replying to previous")),
+    ).toBe(true);
 
     // 8. Test IRC SEARCH command with tag filter (+draft/reply)
-    client.send("SEARCH #tech +draft/reply");
+    searchClient.send("SEARCH #tech +draft/reply");
     let ircTagResult = "";
-    await client.waitForLine((l) => {
+    await searchClient.waitForLine((l) => {
       if (l.includes("Replying to previous")) {
         ircTagResult = l;
         return true;
@@ -230,7 +240,7 @@ describe("IRCord Edit Protocol, FTS5 Search & Incoming Webhooks", () => {
 
   it("supports Discord/Slack compatible incoming webhooks", async () => {
     // 1. Create Webhook for #alerts
-    const createRes = await fetch(`${url.origin}/api/v1/channels/%23alerts/webhooks`, {
+    const createRes = await request(`${url.origin}/api/v1/channels/%23alerts/webhooks`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -257,7 +267,7 @@ describe("IRCord Edit Protocol, FTS5 Search & Incoming Webhooks", () => {
     await client.waitForLine((l) => l.includes(" 366 MonitorBot #alerts"));
 
     // 3. Post webhook payload (Discord/Slack style)
-    const execRes = await fetch(`${url.origin}/api/v1/webhooks/${token}?channel=%23alerts`, {
+    const execRes = await request(`${url.origin}/api/v1/webhooks/${token}?channel=%23alerts`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -278,13 +288,22 @@ describe("IRCord Edit Protocol, FTS5 Search & Incoming Webhooks", () => {
       }
       return false;
     });
-    expect(hookMsgLine).toContain(":CI/CD Bot!webhook@discord.bot PRIVMSG #alerts");
+    expect(hookMsgLine).toContain(":hook_CI_CD_Bot!webhook@discord.bot PRIVMSG #alerts");
     expect(hookMsgLine).toContain("+role=webhook");
     expect(hookMsgLine).toContain("+badge=bot");
 
     // 5. Test Discord embed-only payload through standard /api/webhooks/:id/:token route
-    const discordHookRes = await fetch(
-      `${url.origin}/api/webhooks/12345/${token}?channel=%23alerts`,
+    const mismatchedHook = await request(
+      `${url.origin}/api/webhooks/wrong/${token}?channel=%23alerts`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ content: "mismatched hook must not write" }),
+      },
+    );
+    expect(mismatchedHook.status).toBe(400);
+    const discordHookRes = await request(
+      `${url.origin}/api/webhooks/${webhookData.webhook.id}/${token}?channel=%23alerts`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -315,14 +334,14 @@ describe("IRCord Edit Protocol, FTS5 Search & Incoming Webhooks", () => {
       }
       return false;
     });
-    expect(embedMsgLine).toContain(":Release Bot!webhook@discord.bot PRIVMSG #alerts");
+    expect(embedMsgLine).toContain(":hook_Release_Bot!webhook@discord.bot PRIVMSG #alerts");
     expect(embedMsgLine).toContain("+role=webhook");
     expect(embedMsgLine).toContain("FlaRC Automation");
   });
 
   it("supports channel notification preferences, outgoing webhooks, prometheus metrics, and paginated message history", async () => {
     // 1. Prometheus Metrics endpoint
-    const metricsRes = await fetch(`${url.origin}/metrics`);
+    const metricsRes = await request(`${url.origin}/metrics`);
     expect(metricsRes.status).toBe(200);
     expect(metricsRes.headers.get("content-type")).toContain("text/plain");
     const metricsText = await metricsRes.text();
@@ -331,31 +350,34 @@ describe("IRCord Edit Protocol, FTS5 Search & Incoming Webhooks", () => {
     expect(metricsText).toContain("flarc_active_connections");
 
     // 2. Outgoing Webhooks CRUD
-    const outCreateRes = await fetch(`${url.origin}/api/v1/channels/%23alerts/outgoing-webhooks`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${ADMIN_TOKEN}`,
+    const outCreateRes = await request(
+      `${url.origin}/api/v1/channels/%23alerts/outgoing-webhooks`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${ADMIN_TOKEN}`,
+        },
+        body: JSON.stringify({
+          target_url: "https://example.com/webhook-receiver",
+          events: ["message.created"],
+        }),
       },
-      body: JSON.stringify({
-        target_url: "https://example.com/webhook-receiver",
-        events: ["message.created"],
-      }),
-    });
+    );
     expect(outCreateRes.status).toBe(200);
     const outData = (await outCreateRes.json()) as any;
     expect(outData.ok).toBe(true);
     expect(outData.webhook.target_url).toBe("https://example.com/webhook-receiver");
     const hookId = outData.webhook.id;
 
-    const outListRes = await fetch(`${url.origin}/api/v1/channels/%23alerts/outgoing-webhooks`, {
+    const outListRes = await request(`${url.origin}/api/v1/channels/%23alerts/outgoing-webhooks`, {
       headers: { Authorization: `Bearer ${ADMIN_TOKEN}` },
     });
     const outListData = (await outListRes.json()) as any;
     expect(outListData.ok).toBe(true);
     expect(outListData.webhooks.some((w: any) => w.id === hookId)).toBe(true);
 
-    const outDeleteRes = await fetch(
+    const outDeleteRes = await request(
       `${url.origin}/api/v1/channels/%23alerts/outgoing-webhooks/${hookId}`,
       {
         method: "DELETE",
@@ -366,7 +388,7 @@ describe("IRCord Edit Protocol, FTS5 Search & Incoming Webhooks", () => {
 
     // 3. Channel Notification Preferences
     // First register user if not already present
-    await fetch(`${url.origin}/api/v1/auth/register`, {
+    await request(`${url.origin}/api/v1/auth/register`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -375,7 +397,10 @@ describe("IRCord Edit Protocol, FTS5 Search & Incoming Webhooks", () => {
       }),
     });
 
-    const setNotifRes = await fetch(
+    const notifyToken = await fixture.login("notifyuser", "Password123!");
+    const notifyRequest = fixture.authenticatedFetch(notifyToken);
+    const notifier = await fixture.apiUser("Notifier", "#alerts");
+    const setNotifRes = await notifyRequest(
       `${url.origin}/api/v1/users/notifyuser/notifications/%23alerts`,
       {
         method: "PUT",
@@ -391,7 +416,7 @@ describe("IRCord Edit Protocol, FTS5 Search & Incoming Webhooks", () => {
     expect(setNotifData.ok).toBe(true);
     expect(setNotifData.level).toBe("all");
 
-    const getNotifRes = await fetch(`${url.origin}/api/v1/users/notifyuser/notifications`);
+    const getNotifRes = await notifyRequest(`${url.origin}/api/v1/users/notifyuser/notifications`);
     expect(getNotifRes.status).toBe(200);
     const getNotifData = (await getNotifRes.json()) as any;
     expect(getNotifData.ok).toBe(true);
@@ -401,7 +426,7 @@ describe("IRCord Edit Protocol, FTS5 Search & Incoming Webhooks", () => {
 
     // 4. Cursor-paginated message history
     // Post a message to #alerts first so it has history
-    await fetch(`${url.origin}/api/v1/channels/%23alerts/messages`, {
+    await notifier.request(`${url.origin}/api/v1/channels/%23alerts/messages`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -410,7 +435,7 @@ describe("IRCord Edit Protocol, FTS5 Search & Incoming Webhooks", () => {
       }),
     });
 
-    const paginatedRes = await fetch(`${url.origin}/api/v1/channels/%23alerts/messages?limit=10`);
+    const paginatedRes = await request(`${url.origin}/api/v1/channels/%23alerts/messages?limit=10`);
     expect(paginatedRes.status).toBe(200);
     const paginatedData = (await paginatedRes.json()) as any;
     expect(paginatedData.ok).toBe(true);

@@ -1,3 +1,4 @@
+import { fetchAllowedResource } from "../outbound";
 /**
  * oEmbed & OpenGraph Link Preview Resolver
  *
@@ -26,7 +27,7 @@ export interface EmbedMetadata {
 }
 
 const MAX_FETCH_BYTES = 1024 * 1024; // 1MB limit for preview HTML
-const FETCH_TIMEOUT_MS = 5000;
+const _FETCH_TIMEOUT_MS = 5000;
 
 /**
  * Extracts all HTTP/HTTPS URLs found in a string of text.
@@ -42,7 +43,10 @@ export function extractUrls(text: string): string[] {
 /**
  * Resolves oEmbed and OpenGraph metadata for a given URL.
  */
-export async function resolveUrlEmbed(targetUrl: string): Promise<EmbedMetadata | null> {
+export async function resolveUrlEmbed(
+  targetUrl: string,
+  allowedHosts: string[] = [],
+): Promise<EmbedMetadata | null> {
   let parsedUrl: URL;
   try {
     parsedUrl = new URL(targetUrl);
@@ -54,24 +58,9 @@ export async function resolveUrlEmbed(targetUrl: string): Promise<EmbedMetadata 
   }
 
   try {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
-
-    const response = await fetch(targetUrl, {
-      signal: controller.signal,
-      headers: {
-        "User-Agent": "FlaRC-LinkPreview/1.0 (+https://github.com/flarc/cfcord)",
-        Accept: "text/html,application/xhtml+xml,application/json;q=0.9,*/*;q=0.8",
-      },
-      redirect: "follow",
-    });
-
-    clearTimeout(timeoutId);
-
-    if (!response.ok) {
-      return null;
-    }
-
+    const fetched = await fetchAllowedResource(targetUrl, allowedHosts);
+    if (!fetched) return null;
+    const response = fetched.response;
     const contentType = response.headers.get("content-type") || "";
     if (contentType.includes("image/")) {
       return {
@@ -90,7 +79,7 @@ export async function resolveUrlEmbed(targetUrl: string): Promise<EmbedMetadata 
       return null;
     }
 
-    const html = await response.text();
+    const html = fetched.text;
     const truncatedHtml = html.slice(0, MAX_FETCH_BYTES);
 
     // 1. Check for oEmbed endpoint link in HTML
@@ -102,14 +91,12 @@ export async function resolveUrlEmbed(targetUrl: string): Promise<EmbedMetadata 
         /<link[^>]+href=["']([^"']+)["'][^>]+type=["']application\/json\+oembed["']/i,
       );
 
-    if (oembedLinkMatch && oembedLinkMatch[1]) {
+    if (oembedLinkMatch?.[1]) {
       const oembedUrl = new URL(oembedLinkMatch[1], targetUrl).toString();
       try {
-        const oembedRes = await fetch(oembedUrl, {
-          headers: { "User-Agent": "FlaRC-LinkPreview/1.0" },
-        });
-        if (oembedRes.ok) {
-          const data = (await oembedRes.json()) as any;
+        const oembedRes = await fetchAllowedResource(oembedUrl, allowedHosts, 128 * 1024);
+        if (oembedRes) {
+          const data = JSON.parse(oembedRes.text) as any;
           if (data && typeof data === "object") {
             return {
               url: targetUrl,
@@ -120,7 +107,7 @@ export async function resolveUrlEmbed(targetUrl: string): Promise<EmbedMetadata 
               image: data.thumbnail_url ?? (data.type === "photo" ? data.url : null),
               thumbnail: data.thumbnail_url ?? null,
               type: data.type === "video" ? "video" : data.type === "photo" ? "photo" : "link",
-              html: data.html ?? null,
+              html: null, // Never relay executable third-party HTML.
             };
           }
         }
@@ -145,14 +132,14 @@ export async function resolveUrlEmbed(targetUrl: string): Promise<EmbedMetadata 
             "i",
           ),
         );
-      return match && match[1] ? decodeHtmlEntities(match[1].trim()) : null;
+      return match?.[1] ? decodeHtmlEntities(match[1].trim()) : null;
     };
 
     // Extract title
     let title = getMeta("og:title") || getMeta("twitter:title");
     if (!title) {
       const titleTagMatch = truncatedHtml.match(/<title[^>]*>([^<]+)<\/title>/i);
-      if (titleTagMatch && titleTagMatch[1]) {
+      if (titleTagMatch?.[1]) {
         title = decodeHtmlEntities(titleTagMatch[1].trim());
       }
     }
@@ -204,7 +191,7 @@ export async function resolveUrlEmbed(targetUrl: string): Promise<EmbedMetadata 
       type,
       color,
     };
-  } catch (err) {
+  } catch (_err) {
     return null;
   }
 }

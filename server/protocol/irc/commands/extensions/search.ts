@@ -1,17 +1,11 @@
 import { SERVER_CONFIG } from "~/core/config";
-import type {
-  ChannelMemberInfo,
-  ChannelStateSummary,
-  SessionAttachment,
-  StoredChannelMessage,
-} from "~/core/types";
-import { encodeIRCMessage, encodeNumeric } from "~/protocol/irc/encoder";
+import type { SessionAttachment } from "~/core/types";
+import { encodeIRCMessage } from "~/protocol/irc/encoder";
+import { parseSearchCommand } from "~/protocol/irc/extensions/search";
 import { Numerics } from "~/protocol/irc/numerics";
 import { canonicalizeIRCName } from "~/protocol/irc/parser";
 import type { IRCMessage } from "~/protocol/irc/types";
-import { deliverMultilineOrFallback } from "../messaging";
 import type { ISessionDO } from "../types";
-import { parseSearchCommand } from "~/protocol/irc/extensions/search";
 
 export async function handleSearch(
   session: ISessionDO,
@@ -37,6 +31,23 @@ export async function handleSearch(
   const channelStub = session.env.CHANNELS.get(
     session.env.CHANNELS.idFromName(`${SERVER_CONFIG.networkId}:${canon}`),
   );
+  if (
+    !attachment.accountName ||
+    !(await channelStub.canReadAccount({
+      id: attachment.userId,
+      username: attachment.accountName,
+      isAdmin: attachment.isOper,
+    }))
+  ) {
+    session.sendNumeric(
+      ws,
+      attachment,
+      Numerics.ERR_NOTONCHANNEL,
+      [target, "Channel access denied"],
+      labelTags,
+    );
+    return;
+  }
   const results = (await (channelStub as any).searchMessages(query, {
     limit,
     from,
@@ -104,4 +115,3 @@ export async function handleSearch(
     );
   }
 }
-

@@ -1,7 +1,7 @@
 import { createError, defineEventHandler, getRouterParam, readBody } from "nitro/h3";
 import { z } from "zod";
 import { SERVER_CONFIG } from "~/core/config";
-import { getEnv, parseChannelParam } from "~/utils/auth";
+import { clientRequest, getEnv, parseChannelParam, requireSelf } from "~/utils/auth";
 
 const notificationUpdateSchema = z.object({
   level: z.enum(["all", "mentions", "nothing"]).default("mentions"),
@@ -9,8 +9,8 @@ const notificationUpdateSchema = z.object({
 });
 
 export default defineEventHandler(async (event) => {
-  const username = getRouterParam(event, "username");
-  const channel = getRouterParam(event, "channel");
+  const username = getRouterParam(event, "username", { decode: true });
+  const channel = getRouterParam(event, "channel", { decode: true });
   if (!username || !channel) {
     throw createError({ statusCode: 400, statusMessage: "Username and channel required" });
   }
@@ -25,6 +25,7 @@ export default defineEventHandler(async (event) => {
     });
   }
 
+  await requireSelf(event, username);
   const env = getEnv(event);
   const accountsStub = env.ACCOUNTS.get(env.ACCOUNTS.idFromName(SERVER_CONFIG.networkId));
 
@@ -34,12 +35,12 @@ export default defineEventHandler(async (event) => {
   }
 
   const { name } = parseChannelParam(channel);
-  const result = await accountsStub.setChannelNotification(
-    user.id,
-    name,
-    parsed.data.level,
-    parsed.data.muted_until,
-  );
+  const result = await clientRequest(event, accountsStub, "notifications.update", {
+    username,
+    channel: name,
+    level: parsed.data.level,
+    mutedUntil: parsed.data.muted_until,
+  });
 
   return {
     username,

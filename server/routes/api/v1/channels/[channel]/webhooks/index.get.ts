@@ -3,7 +3,7 @@ import { SERVER_CONFIG } from "~/core/config";
 import { getEnv, parseChannelParam, requireChannelOpOrOwner } from "~/utils/auth";
 
 export default defineEventHandler(async (event) => {
-  const channel = getRouterParam(event, "channel");
+  const channel = getRouterParam(event, "channel", { decode: true });
   if (!channel) {
     throw createError({ statusCode: 400, statusMessage: "Channel required" });
   }

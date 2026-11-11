@@ -1,5 +1,8 @@
 export const SERVER_CONFIG = {
   networkId: "FlaRC",
+  requireAccounts: true as boolean,
+  autoRegisterChannels: true as boolean,
+  minPasswordLength: 12,
   serverName: "irc.flarc.local",
   version: "flarc-0.2.0",
   createdAt: "2026-11-10",
@@ -30,13 +33,13 @@ export const SERVER_CONFIG = {
   caseMapping: "rfc1459" as "rfc1459" | "precis" | "ascii",
   /** Whether the file hosting / media upload pipeline is enabled. Defaults to true. */
   filehostEnabled: true as boolean,
-  /** Whether file uploads require registered account authentication. */
-  filehostRequireRegistration: false as boolean,
+  /** Legacy setting; private media endpoints always require authentication. */
+  filehostRequireRegistration: true as boolean,
   /** Whether the F service bot automatically joins newly registered channels. Defaults to false. */
   fBotAutoJoin: false as boolean,
-  /** Comma-separated list of usernames that are always administrators. */
+  /** Reserved usernames eligible for the one-time administrator bootstrap. */
   adminUsers: [] as string[],
-  /** Master admin API token / secret. */
+  /** One-time bootstrap secret. Never an API session credential. */
   adminToken: null as string | null,
 };
 
@@ -45,6 +48,9 @@ export const SERVER_CONFIG = {
  * Safe to call repeatedly (idempotent).
  */
 export function applyEnvConfig(env: {
+  MIN_PASSWORD_LENGTH?: string;
+  REQUIRE_ACCOUNTS?: string;
+  AUTO_REGISTER_CHANNELS?: string;
   SERVER_NAME?: string;
   NETWORK_NAME?: string;
   SERVER_PASSWORD?: string;
@@ -70,6 +76,14 @@ export function applyEnvConfig(env: {
   CFCORD_ADMIN_USERS?: string;
   CFCORD_ADMIN_TOKEN?: string;
 }): void {
+  SERVER_CONFIG.requireAccounts = env.REQUIRE_ACCOUNTS !== "0";
+  SERVER_CONFIG.autoRegisterChannels = env.AUTO_REGISTER_CHANNELS !== "0";
+  const minimumPassword = Number(
+    env.MIN_PASSWORD_LENGTH ?? (SERVER_CONFIG.requireAccounts ? 12 : 1),
+  );
+  SERVER_CONFIG.minPasswordLength = Number.isFinite(minimumPassword)
+    ? Math.max(1, Math.min(1024, minimumPassword))
+    : 12;
   if (env.SERVER_NAME) SERVER_CONFIG.serverName = env.SERVER_NAME;
   if (env.NETWORK_NAME) SERVER_CONFIG.networkId = env.NETWORK_NAME;
   if (env.SERVER_PASSWORD) SERVER_CONFIG.serverPassword = env.SERVER_PASSWORD;
@@ -85,12 +99,14 @@ export function applyEnvConfig(env: {
     SERVER_CONFIG.caseMapping = caseMapping as any;
   }
 
-  const fhEnabled = env.FILEHOST_ENABLED ?? env.FLARC_FILEHOST_ENABLED ?? env.CFCORD_FILEHOST_ENABLED;
+  const fhEnabled =
+    env.FILEHOST_ENABLED ?? env.FLARC_FILEHOST_ENABLED ?? env.CFCORD_FILEHOST_ENABLED;
   if (fhEnabled !== undefined) {
     SERVER_CONFIG.filehostEnabled = fhEnabled !== "0" && fhEnabled !== "false";
   }
 
-  const fhReqReg = env.FILEHOST_REQUIRE_REG ?? env.FLARC_FILEHOST_REQUIRE_REG ?? env.CFCORD_FILEHOST_REQUIRE_REG;
+  const fhReqReg =
+    env.FILEHOST_REQUIRE_REG ?? env.FLARC_FILEHOST_REQUIRE_REG ?? env.CFCORD_FILEHOST_REQUIRE_REG;
   if (fhReqReg !== undefined) {
     SERVER_CONFIG.filehostRequireRegistration = fhReqReg === "1" || fhReqReg === "true";
   }

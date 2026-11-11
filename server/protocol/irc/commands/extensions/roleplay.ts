@@ -1,15 +1,8 @@
-import { SERVER_CONFIG } from "~/core/config";
-import type {
-  ChannelMemberInfo,
-  ChannelStateSummary,
-  SessionAttachment,
-  StoredChannelMessage,
-} from "~/core/types";
-import { encodeIRCMessage, encodeNumeric } from "~/protocol/irc/encoder";
+import type { SessionAttachment } from "~/core/types";
+import { encodeIRCMessage } from "~/protocol/irc/encoder";
 import { Numerics } from "~/protocol/irc/numerics";
-import { canonicalizeIRCName } from "~/protocol/irc/parser";
 import type { IRCMessage } from "~/protocol/irc/types";
-import { deliverMultilineOrFallback } from "../messaging";
+import { canSendDirectMessage } from "../messaging";
 import type { ISessionDO } from "../types";
 
 export async function handleRoleplayCommand(
@@ -111,6 +104,26 @@ export async function handleRoleplayCommand(
       );
       return;
     }
+    if (
+      !canSendDirectMessage(
+        session,
+        ws,
+        attachment,
+        primary.attachment,
+        "PRIVMSG",
+        content,
+        labelTags,
+      )
+    )
+      return;
+    const message = session.storeDirectMessage({
+      sender: attachment,
+      target: primary.attachment,
+      messageId: crypto.randomUUID(),
+      command: "PRIVMSG",
+      content,
+      displayNick: npcNick,
+    });
     const prefix = `${npcNick}!${attachment.username}@${attachment.hostname}`;
     for (const ts of targetSessions) {
       session.sendLine(
@@ -118,6 +131,11 @@ export async function handleRoleplayCommand(
         ts.attachment,
         encodeIRCMessage({
           prefix,
+          tags: session.filterOutgoingTags(ts.attachment, {
+            msgid: message.id,
+            time: new Date(message.createdAt).toISOString(),
+            ...(attachment.accountName ? { account: attachment.accountName } : {}),
+          }),
           command: "PRIVMSG",
           params: [ts.attachment.nickname!, content],
         }),
@@ -126,4 +144,3 @@ export async function handleRoleplayCommand(
     session.sendAck(ws, attachment, labelTags);
   }
 }
-

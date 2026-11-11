@@ -19,7 +19,7 @@ describe("Modular IRC Extensions & Structured Search", () => {
   describe("Structured Search Token Parser", () => {
     it("parses complex Discord/IRCord search queries with tags, chips, and text", () => {
       const query =
-        'deploying workers in:general from:alice mentions:bob has:image has:link before:2026-12-31 tag:reply tag:react=❤️ +file pinned:true limit:25';
+        "deploying workers in:general from:alice mentions:bob has:image has:link before:2026-12-31 tag:reply tag:react=❤️ +file pinned:true limit:25";
       const parsed = parseSearchFilterString(query);
 
       expect(parsed.query).toBe("deploying workers");

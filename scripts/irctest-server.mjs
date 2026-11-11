@@ -33,20 +33,28 @@ function getScriptPath() {
   }
   const nitroBundle = path.join(root, ".output/server/index.mjs");
   if (!fs.existsSync(nitroBundle)) {
-    execSync("npm run build", { cwd: root, stdio: "inherit" });
+    execSync("bun run build", { cwd: root, stdio: "inherit" });
   }
   return nitroBundle;
 }
 
 async function start() {
+  const scriptPath = getScriptPath();
   const mf = new Miniflare({
     host: HOST,
     port: HTTP_PORT,
     modules: true,
-    scriptPath: getScriptPath(),
+    scriptPath,
+    modulesRoot: path.dirname(scriptPath),
     compatibilityDate: "2025-02-04",
     compatibilityFlags: ["nodejs_compat"],
     bindings: {
+      REQUIRE_ACCOUNTS: "0", // Explicit open-network protocol fixture; application default remains registered-only.
+      AUTO_REGISTER_CHANNELS: "0",
+      SIGNUP_POLICY: "open",
+      ADMIN_USERS: "ConformanceAdmin",
+      ADMIN_TOKEN: "conformance-bootstrap-local-only",
+      WEBIRC_PASSWORD: "conformance-gateway-local-only",
       SERVER_NAME: process.env.CFCORD_SERVER_NAME ?? "My.Little.Server",
       NETWORK_NAME: process.env.CFCORD_NETWORK_NAME ?? "ErgoTest",
       ...(process.env.CFCORD_SERVER_PASSWORD
@@ -75,7 +83,35 @@ async function start() {
       ACCOUNTS: { className: "AccountsDO", useSQLite: true },
     },
   });
-  await mf.ready;
+  const testUrl = await mf.ready;
+  const registerAdmin = await mf.dispatchFetch(`${testUrl.origin}/api/v1/auth/register`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "x-bootstrap-token": "conformance-bootstrap-local-only",
+    },
+    body: JSON.stringify({
+      username: "ConformanceAdmin",
+      password: "conformance-admin-local-only",
+    }),
+  });
+  if (registerAdmin.status !== 201 && registerAdmin.status !== 400)
+    throw new Error("Conformance administrator provisioning failed");
+  const login = await mf.dispatchFetch(`${testUrl.origin}/api/v1/auth/login`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      username: "ConformanceAdmin",
+      password: "conformance-admin-local-only",
+    }),
+  });
+  const { token } = await login.json();
+  if (!token) throw new Error("Conformance administrator login failed");
+  await mf.dispatchFetch(`${testUrl.origin}/admin/accounts`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+    body: JSON.stringify({ username: "operuser", password: "operpassword", roles: ["oper"] }),
+  });
   const wsUrl = `ws://127.0.0.1:${HTTP_PORT}/irc`;
 
   const PROXY_V2_SIG = Buffer.from("\r\n\r\n\x00\r\nQUIT\n", "binary");
@@ -123,7 +159,9 @@ async function start() {
 
     const initWs = (ip) => {
       const targetWsUrl = `${wsUrl}?ip=${encodeURIComponent(ip)}&tcp=1`;
-      ws = new WebSocket(targetWsUrl, ["text.ircv3.net"]);
+      ws = new WebSocket(targetWsUrl, ["text.ircv3.net"], {
+        headers: { "x-gateway-token": "conformance-gateway-local-only" },
+      });
       ws.on("open", () => {
         for (const l of pending.splice(0)) ws.send(l);
       });
@@ -140,6 +178,10 @@ async function start() {
     };
 
     socket.on("data", (chunk) => {
+      if (buffer.length + chunk.length > 65536 || pending.length > 128) {
+        socket.destroy();
+        return;
+      }
       buffer = Buffer.concat([buffer, chunk]);
 
       if (!proxyHandled) {

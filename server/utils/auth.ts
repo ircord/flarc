@@ -1,6 +1,7 @@
 import type { H3Event } from "nitro/h3";
-import { createError, getHeader, getQuery } from "nitro/h3";
-import { SERVER_CONFIG } from "../core/config";
+import { createError, getHeader, setResponseHeader } from "nitro/h3";
+import { applyEnvConfig, SERVER_CONFIG } from "../core/config";
+import { isValidChannelName } from "../core/permissions/validation";
 import type { Env } from "../core/types";
 import { canonicalizeIRCName } from "../protocol/irc/parser";
 
@@ -13,137 +14,66 @@ export interface AuthUser {
 }
 
 export function getEnv(event: H3Event): Env {
-  return ((event.req as any)?.runtime?.cloudflare?.env ||
+  const env = ((event.req as any)?.runtime?.cloudflare?.env ||
     (event.context as any)?.cloudflare?.env ||
     (globalThis as any).__env__ ||
     (globalThis as any).env ||
     process.env) as Env;
+  applyEnvConfig(env);
+  return env;
 }
 
 export function parseChannelParam(raw: string): { name: string; canon: string } {
-  const decoded = decodeURIComponent(raw);
-  const name = decoded.startsWith("#") || decoded.startsWith("&") ? decoded : `#${decoded}`;
-  return {
-    name,
-    canon: canonicalizeIRCName(name),
-  };
+  // H3 already decodes router parameters. Decoding again creates aliases and throws on literal '%'.
+  const name = raw.startsWith("#") || raw.startsWith("&") ? raw : `#${raw}`;
+  if (!isValidChannelName(name))
+    throw createError({ statusCode: 400, statusMessage: "Invalid channel name" });
+  return { name, canon: canonicalizeIRCName(name) };
+}
+
+export function getSessionToken(event: H3Event): string | undefined {
+  const auth = getHeader(event, "authorization");
+  if (auth?.startsWith("Bearer ")) return auth.slice(7).trim();
+  const sessionId = getHeader(event, "x-session-id");
+  if (sessionId) return sessionId.trim();
 }
 
 export async function getAuthenticatedUser(event: H3Event): Promise<AuthUser | null> {
+  if (event.context.authUser) return event.context.authUser as AuthUser;
+  const token = getSessionToken(event);
+  if (!token) return null;
   const env = getEnv(event);
-  const accountsStub = env.ACCOUNTS.get(env.ACCOUNTS.idFromName(SERVER_CONFIG.networkId));
-  const sessionStub = env.SESSION.get(env.SESSION.idFromName(SERVER_CONFIG.networkId));
-
-  const adminToken = env.ADMIN_TOKEN || env.ADMIN_API_KEY || SERVER_CONFIG.adminToken;
-  const authHeader = getHeader(event, "authorization");
-  const xAdminToken = getHeader(event, "x-admin-token");
-  const xSessionId = getHeader(event, "x-session-id");
-  const query = getQuery(event);
-
-  // 1. Direct Admin Token check
-  if (
-    adminToken &&
-    (authHeader === `Bearer ${adminToken}` ||
-      xAdminToken === adminToken ||
-      query.token === adminToken)
-  ) {
-    return {
-      id: "admin",
-      username: "admin",
-      displayName: "Administrator",
-      roles: ["admin"],
-      isAdmin: true,
-    };
-  }
-
-  // 2. Bearer token / Session ID check
-  let bearerToken: string | undefined;
-  if (authHeader?.startsWith("Bearer ")) {
-    bearerToken = authHeader.slice(7).trim();
-  } else if (xSessionId) {
-    bearerToken = xSessionId.trim();
-  } else if (typeof query.token === "string") {
-    bearerToken = query.token.trim();
-  } else if (typeof query.session_id === "string") {
-    bearerToken = query.session_id.trim();
-  }
-
-  if (bearerToken) {
-    try {
-      const activeUser = await sessionStub.verifyActiveUser({ sessionId: bearerToken });
-      if (activeUser.active && (activeUser.accountName || activeUser.nickname)) {
-        const username = activeUser.accountName || activeUser.nickname!;
-        const account = await accountsStub.getAccountByUsername(username);
-        if (account) {
-          const isAdmin = await accountsStub.isUserAdmin(account.id);
-          return {
-            id: account.id,
-            username: account.username,
-            displayName: account.displayName,
-            roles: account.roles,
-            isAdmin,
-          };
-        }
-      }
-    } catch {}
-  }
-
-  // 3. Basic Authentication (user:password)
-  if (authHeader?.startsWith("Basic ")) {
-    try {
-      const creds = atob(authHeader.slice(6).trim());
-      const colonIdx = creds.indexOf(":");
-      if (colonIdx !== -1) {
-        const username = creds.slice(0, colonIdx);
-        const password = creds.slice(colonIdx + 1);
-        const res = await accountsStub.verifyCredentials(username, password);
-        if (res.ok) {
-          const isAdmin = await accountsStub.isUserAdmin(res.account.id);
-          return {
-            id: res.account.id,
-            username: res.account.username,
-            displayName: res.account.displayName,
-            roles: res.account.roles,
-            isAdmin,
-          };
-        }
-      }
-    } catch {}
-  }
-
-  // 4. Registered user check (via trusted internal gateway header only)
-  const trustedHeaderUser = getHeader(event, "soju-username") || getHeader(event, "x-user");
-
-  if (trustedHeaderUser) {
-    try {
-      const account = await accountsStub.getAccountByUsername(trustedHeaderUser);
-      if (account) {
-        const isAdmin = await accountsStub.isUserAdmin(account.id);
-        return {
-          id: account.id,
-          username: account.username,
-          displayName: account.displayName,
-          roles: account.roles,
-          isAdmin,
-        };
-      }
-    } catch {}
-  }
-
-  return null;
-}
-
-export async function checkAdminAuth(event: H3Event): Promise<boolean> {
-  const user = await getAuthenticatedUser(event);
-  return Boolean(user?.isAdmin);
+  const accounts = env.ACCOUNTS.get(env.ACCOUNTS.idFromName(SERVER_CONFIG.networkId));
+  const account = await accounts.verifyApiSession(token);
+  if (!account) return null;
+  const user = { ...account, isAdmin: account.roles.includes("admin") };
+  event.context.authUser = user;
+  return user;
 }
 
 export async function requireAuthenticatedUser(event: H3Event): Promise<AuthUser> {
   const user = await getAuthenticatedUser(event);
   if (!user) {
+    setResponseHeader(event, "WWW-Authenticate", "Bearer");
     throw createError({
       statusCode: 401,
-      statusMessage: "Authentication required: must have a registered account in ChanServ/NickServ",
+      statusMessage: "A logged-in account session is required",
+      headers: { "WWW-Authenticate": "Bearer", "Cache-Control": "private, no-store" },
+    });
+  }
+  return user;
+}
+
+export async function checkAdminAuth(event: H3Event): Promise<boolean> {
+  return Boolean((await getAuthenticatedUser(event))?.isAdmin);
+}
+
+export async function requireSelf(event: H3Event, username: string): Promise<AuthUser> {
+  const user = await requireAuthenticatedUser(event);
+  if (canonicalizeIRCName(user.username) !== canonicalizeIRCName(username)) {
+    throw createError({
+      statusCode: 403,
+      statusMessage: "This resource belongs to another account",
     });
   }
   return user;
@@ -154,80 +84,66 @@ export async function requireChannelOpOrOwner(
   rawChannel: string,
 ): Promise<AuthUser> {
   const user = await requireAuthenticatedUser(event);
-  if (user.isAdmin) {
-    return user;
-  }
-
   const { canon } = parseChannelParam(rawChannel);
   const env = getEnv(event);
-  const chanStub = env.CHANNELS.get(env.CHANNELS.idFromName(`${SERVER_CONFIG.networkId}:${canon}`));
-
-  // Check if channel is registered and caller is founder/owner
-  const info = await chanStub.getChannelInfo();
-  if (info.founder && canonicalizeIRCName(info.founder) === canonicalizeIRCName(user.username)) {
-    return user;
+  const channel = env.CHANNELS.get(env.CHANNELS.idFromName(`${SERVER_CONFIG.networkId}:${canon}`));
+  if (!(await channel.canManageAccount(user))) {
+    throw createError({
+      statusCode: 403,
+      statusMessage: "Channel owner or operator permissions required",
+    });
   }
-
-  // Check if caller has operator (+o, +q, +a) modes on this channel
-  const members = await chanStub.getMembers();
-  const callerMember = members.find(
-    (m: any) =>
-      canonicalizeIRCName(m.nickname) === canonicalizeIRCName(user.username) ||
-      (m.account && canonicalizeIRCName(m.account) === canonicalizeIRCName(user.username)),
-  );
-
-  if (callerMember && /[oqa]/.test(callerMember.modes)) {
-    return user;
-  }
-
-  throw createError({
-    statusCode: 403,
-    statusMessage: "Forbidden: Only channel owners and operators can perform this action",
-  });
+  return user;
 }
 
 export async function canAccessChannelHistory(
   event: H3Event,
   rawChannel: string,
-): Promise<{ allowed: boolean; reason?: string; user?: AuthUser }> {
+): Promise<{ allowed: boolean; reason?: string; user: AuthUser }> {
+  const user = await requireAuthenticatedUser(event);
   const { canon } = parseChannelParam(rawChannel);
   const env = getEnv(event);
-  const chanStub = env.CHANNELS.get(env.CHANNELS.idFromName(`${SERVER_CONFIG.networkId}:${canon}`));
+  const channel = env.CHANNELS.get(env.CHANNELS.idFromName(`${SERVER_CONFIG.networkId}:${canon}`));
+  const allowed = await channel.canReadAccount(user);
+  return { allowed, user, reason: allowed ? undefined : "Channel membership is required" };
+}
 
-  const info = await chanStub.getChannelInfo();
-  const modes = info.modes || "";
-  const isRestricted = modes.includes("s") || modes.includes("p") || modes.includes("i");
+export async function requireChannelRead(event: H3Event, rawChannel: string): Promise<AuthUser> {
+  const access = await canAccessChannelHistory(event, rawChannel);
+  if (!access.allowed) throw createError({ statusCode: 403, statusMessage: access.reason });
+  return access.user;
+}
 
-  // If public and does not require registration (+R) or secret/private/invite-only modes:
-  if (!isRestricted && !modes.includes("R")) {
-    const user = await getAuthenticatedUser(event);
-    return { allowed: true, user: user ?? undefined };
+export async function requireChannelFounder(event: H3Event, rawChannel: string): Promise<AuthUser> {
+  const user = await requireChannelOpOrOwner(event, rawChannel);
+  const env = getEnv(event);
+  const { canon } = parseChannelParam(rawChannel);
+  const channel = env.CHANNELS.get(env.CHANNELS.idFromName(`${SERVER_CONFIG.networkId}:${canon}`));
+  if (!user.isAdmin && !(await channel.isAccountFounder(user.id)))
+    throw createError({ statusCode: 403, statusMessage: "Channel founder permissions required" });
+  return user;
+}
+
+export async function clientRequest(
+  event: H3Event,
+  domain: any,
+  operation: string,
+  input?: any,
+): Promise<any> {
+  try {
+    return await domain.clientRequest(getSessionToken(event)!, operation, input);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "";
+    if (/Authentication required/.test(message))
+      throw createError({ statusCode: 401, statusMessage: "Session expired" });
+    if (
+      /access denied|management denied|membership required|Only the founder|Account access denied|Destination denied/i.test(
+        message,
+      )
+    )
+      throw createError({ statusCode: 403, statusMessage: "Permission denied" });
+    if (/Unknown role target|Unknown role group/i.test(message))
+      throw createError({ statusCode: 404, statusMessage: "Role target not found" });
+    throw error;
   }
-
-  // Channel is restricted (secret, private, invite-only, or registered-only):
-  const user = await getAuthenticatedUser(event);
-  if (!user) {
-    return {
-      allowed: false,
-      reason: "Authentication required for private, secret, or invite-only channel",
-    };
-  }
-
-  if (user.isAdmin) {
-    return { allowed: true, user };
-  }
-
-  if (info.founder && canonicalizeIRCName(info.founder) === canonicalizeIRCName(user.username)) {
-    return { allowed: true, user };
-  }
-
-  const isMem = await (chanStub as any).isMember(user.username);
-  if (isMem) {
-    return { allowed: true, user };
-  }
-
-  return {
-    allowed: false,
-    reason: "Forbidden: You are not a member of this private/restricted channel",
-  };
 }

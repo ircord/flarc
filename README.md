@@ -3,7 +3,7 @@
 FlaRC is an API-first modern communications server and serverless IRCv3 network built on **Nitro 3**, **Cloudflare Workers**, **WebSocket Hibernation**, and **SQLite-backed Durable Objects** managed with **Drizzle ORM**.
 
 It provides three synchronized interfaces to the exact same authoritative underlying application state:
-1. **IRC / IRCv3**: Full protocol compliance for traditional IRC clients (Halloy, IRCord, WeeChat, etc.) over WebSocket and TCP.
+1. **IRC / IRCv3**: IRC protocol support for traditional IRC clients (Halloy, IRCord, WeeChat, etc.) over WebSocket and TCP.
 2. **REST API**: Clean, file-based Nitro 3 endpoints validated with Zod, fully documented via OpenAPI 3.1 & Scalar.
 3. **Real-time Events API**: Structured WebSocket event stream (`/api/v1/events`) delivering real-time domain events to modern clients.
 
@@ -41,7 +41,7 @@ It provides three synchronized interfaces to the exact same authoritative underl
 - Pure Nitro 3 application using the `cloudflare_module` preset and `rolldown` bundler.
 - File-based API routing (`server/routes/api/v1/...`).
 - Interactive **Scalar API Documentation** at `GET /docs` and OpenAPI 3.1 specification at `GET /openapi.json`.
-- Automatic Typed Client SDK generated via `openapi-typescript` (`npm run generate:client`).
+- Automatic Typed Client SDK generated via `openapi-typescript` (`bun run generate:client`).
 
 ### 2. Session Durable Object (`SessionDO`)
 - Authoritative coordinator for client WebSocket hibernation (`ctx.acceptWebSocket()`, `ctx.getWebSockets()`).
@@ -60,7 +60,7 @@ It provides three synchronized interfaces to the exact same authoritative underl
 - Central SQLite store with Drizzle ORM for user accounts, PBKDF2/SCRAM-SHA-256 credentials, and role assignments.
 - Canonical user profiles (avatars, bios, custom statuses, pronouns, display names).
 - Media storage provider with Cloudflare R2 integration and Durable Object fallback.
-- Read marker tracking (`MARKREAD`) and WebPush notification dispatch.
+- Read marker tracking (`MARKREAD`), notification preferences and private WebPush subscription storage. Encrypted push delivery is not implemented.
 
 ---
 
@@ -68,7 +68,9 @@ It provides three synchronized interfaces to the exact same authoritative underl
 
 - **Scalar API Docs UI**: `http://127.0.0.1:8788/docs`
 - **OpenAPI 3.1 Spec**: `http://127.0.0.1:8788/openapi.json`
-- **Generated Client SDK**: [`docs/api/client.ts`](file:///Users/karbowiak/Projects/CFCord/docs/api/client.ts)
+- **Generated API types**: [`docs/api/client.ts`](docs/api/client.ts) (generated TypeScript definitions)
+
+See the [API usage and access policies](docs/api/README.md), [findings](docs/security/findings.md) and [verification results](docs/security/security-test-results.md). Local conformance results do not certify production security.
 
 ### Core REST Endpoints:
 - `POST /api/v1/auth/register` & `POST /api/v1/auth/login`
@@ -88,25 +90,29 @@ It provides three synchronized interfaces to the exact same authoritative underl
 
 ## Development & Verification
 
+Use Bun 1.4.4+ (`bun install --frozen-lockfile`) and Node 22.14+ for the Cloudflare tooling. Runtime validation runs in workerd. Security policy, migration limitations and verified results are in [`docs/security/`](docs/security/threat-model.md).
+
+Signup defaults closed. Provision a reserved `ADMIN_USERS` account through registration with the configured `ADMIN_TOKEN` in `X-Bootstrap-Token`, then log in at `/api/v1/auth/login`. The returned expiring `token` is the API bearer credential. Static administrator secrets, Basic auth and username headers do not authorize client/admin APIs. Browser event connections require a single-use ticket from `POST /api/v1/auth/events-ticket`.
+
 ### Build Application
 ```bash
-npm run build
+bun run build
 ```
 
 ### Run Vitest Suites
 ```bash
-npm test
+bun run test
 ```
 
 ### Typecheck & Lint
 ```bash
-npm run typecheck
-npx biome check server/ tests/ scripts/
+bun run typecheck
+bunx biome check server/ tests/ scripts/
 ```
 
 ### Generate TypeScript Client SDK
 ```bash
-npm run generate:client
+bun run generate:client
 ```
 
 ### Run Conformance Test Suite (irctest)
@@ -117,7 +123,7 @@ npm run generate:client
 
 ### Run Local Server
 ```bash
-npm run dev
+bun run dev
 ```
 Connect via:
 - **REST & OpenAPI**: `http://127.0.0.1:8788/docs`
@@ -149,7 +155,7 @@ Connect via:
 - **`msgid`**: Unique message identification tags.
 - **`multi-prefix`**: Sending all user prefixes in `NAMES` and `WHO`.
 - **`no-implicit-names`**: Suppressing automatic `NAMES` lists on channel join.
-- **`sasl`**: `PLAIN`, `EXTERNAL`, and `SCRAM-SHA-256` mechanisms, plus re-authentication.
+- **`sasl`**: `PLAIN` and `SCRAM-SHA-256` mechanisms, plus re-authentication.
 - **`server-time`**: Microsecond ISO 8601 server timestamps (`@time`).
 - **`setname`**: Dynamic realname modifications via `SETNAME`.
 - **`standard-replies`**: Structured `FAIL`, `WARN`, `NOTE` messages.
@@ -157,7 +163,7 @@ Connect via:
 - **`znc.in/playback` & `znc.in/self-message`**: Bouncer history playback compatibility.
 
 ### Draft Specifications & Ergo Extensions
-- **`draft/account-registration`**: In-band user registration before and after connect, verification, password updates, and unregistration.
+- **`draft/account-registration`**: In-band user registration before and after connect, password updates, and unregistration. Email challenge verification is unavailable; `VERIFY` fails explicitly.
 - **`draft/auto-join`**: Persisted channel auto-joins burst upon client connection.
 - **`draft/channel-rename`**: Live channel renaming without disrupting active members.
 - **`draft/event-playback`**: Historical event replaying for reconnecting clients.
@@ -170,8 +176,8 @@ Connect via:
 - **`draft/persistence`**: Channel and account persistence modes (`+P`).
 - **`draft/pre-away`**: Setting away status during pre-registration.
 - **`draft/read-marker`**: Synchronized cross-device channel read markers via `MARKREAD`.
-- **`draft/relaymsg`**: Unprivileged message relaying for bots and bridge operators.
-- **`draft/webpush`**: WebPush subscription management and notification dispatch.
+- **`draft/relaymsg`**: Message relaying subject to channel operator authorization.
+- **`draft/webpush`**: Private WebPush subscription management. Notification encryption/delivery and VAPID signing are not implemented.
 - **`draft/whoami`**: `WHOAMI` command for current connection inspection.
 - **`ergo.chat/nope`**: Rate limit feedback.
 - **`soju.im/bouncer-networks`**: Multi-network bouncer enumeration.
@@ -185,18 +191,18 @@ Connect via:
 Run the internal unit, integration, and Durable Object persistence test suite:
 
 ```bash
-npm test
+bun run test
 ```
 
 ### TypeScript Validation
 Ensure type safety across all Workers and Durable Objects:
 
 ```bash
-npm run typecheck
+bun run typecheck
 ```
 
 ### Conformance Test Suite (irctest)
-FlaRC is validated against the official Python IRC conformance suite (`irctest`).
+FlaRC is tested against the independent Python IRC conformance suite (`irctest`). The runner uses an explicitly permissive IRC protocol fixture so tests that require guest clients remain meaningful; separate security suites test the default registered-only policy.
 
 Run a single suite:
 ```bash
@@ -212,7 +218,7 @@ Run the full parallel conformance test sweep across 8 workers:
 To run the server with a built-in TCP bridge on `127.0.0.1:6667` and HTTP/WebSocket on `127.0.0.1:8788`:
 
 ```bash
-npm run dev
+bun run dev
 ```
 
 Connect using any IRC client:

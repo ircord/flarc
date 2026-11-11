@@ -53,7 +53,7 @@ export function xorBytes(a: Uint8Array, b: Uint8Array): Uint8Array {
 
 export async function generateScramKeys(
   password: string,
-  iterations = 4096,
+  iterations = 100_000,
 ): Promise<ScramAccountData> {
   const saltBytes = crypto.getRandomValues(new Uint8Array(16));
   const passBytes = new TextEncoder().encode(password);
@@ -114,6 +114,7 @@ export function parseClientFirstMessage(msg: string): {
   if (comma2 === -1) return null;
 
   const headerPart = msg.slice(0, comma2);
+  if (!/^[ny],(?:a=[^,]+)?$/.test(headerPart)) return null;
   let authzid: string | undefined;
   const aIdx = headerPart.indexOf(",a=");
   if (aIdx !== -1) {
@@ -122,6 +123,11 @@ export function parseClientFirstMessage(msg: string): {
 
   const clientFirstBare = msg.slice(comma2 + 1);
   const parts = clientFirstBare.split(",");
+  if (
+    parts.some((p) => p.startsWith("m=")) ||
+    new Set(parts.map((p) => p.slice(0, 2))).size !== parts.length
+  )
+    return null;
   let username: string | undefined;
   let clientNonce: string | undefined;
 
@@ -133,7 +139,7 @@ export function parseClientFirstMessage(msg: string): {
     }
   }
 
-  if (!username || !clientNonce) return null;
+  if (!username || !clientNonce || !/^[!-+\--~]+$/.test(clientNonce)) return null;
   return { clientFirstBare, username, clientNonce, authzid };
 }
 
@@ -150,6 +156,11 @@ export function parseClientFinalMessage(msg: string): {
   const proofB64 = msg.slice(pIdx + 3);
 
   const parts = clientFinalWithoutProof.split(",");
+  if (
+    new Set(parts.map((p) => p.slice(0, 2))).size !== parts.length ||
+    !/^[A-Za-z0-9+/]{43}=$/.test(proofB64)
+  )
+    return null;
   let channelBinding = "";
   let nonce = "";
 

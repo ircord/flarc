@@ -1,11 +1,6 @@
 import { SERVER_CONFIG } from "~/core/config";
-import type {
-  ChannelMemberInfo,
-  ChannelStateSummary,
-  SessionAttachment,
-  StoredChannelMessage,
-} from "~/core/types";
-import { encodeIRCMessage, encodeNumeric } from "~/protocol/irc/encoder";
+import type { SessionAttachment, StoredChannelMessage } from "~/core/types";
+import { encodeIRCMessage } from "~/protocol/irc/encoder";
 import { Numerics } from "~/protocol/irc/numerics";
 import { canonicalizeIRCName } from "~/protocol/irc/parser";
 import type { IRCMessage } from "~/protocol/irc/types";
@@ -44,7 +39,6 @@ export async function handleHistoryCommand(
     labelTags,
   );
 }
-
 
 export async function handleChathistory(
   session: ISessionDO,
@@ -243,7 +237,10 @@ export async function handleChathistory(
     isEnd = res.isEnd ?? true;
   } else {
     // Direct message history from SessionDO SQLite with full LATEST/BEFORE/AFTER/AROUND/BETWEEN support
-    const peerPair = session.getCanonicalDmPair(attachment.nickname!, target);
+    const targetUserId =
+      session.getAllSessionsForNick(target)[0]?.attachment.userId ??
+      (await session.getAccountsStub().resolveConversationAccount(target))?.id;
+    const peerPair = session.getCanonicalDmPair(attachment.userId, targetUserId ?? "missing");
     const hasEventPlayback = session.hasCap(attachment, "draft/event-playback");
     const cmdClause = hasEventPlayback ? "" : " AND command IN ('PRIVMSG', 'NOTICE')";
     const acctClause = attachment.accountName
@@ -270,7 +267,7 @@ export async function handleChathistory(
         redacted: number;
         created_at: number;
       }>(
-        `SELECT * FROM direct_messages WHERE peer_pair = ?${acctClause} AND redacted = 0${cmdClause} ORDER BY sequence ASC`,
+        `SELECT * FROM direct_messages WHERE peer_pair = ?${acctClause} AND redacted = 0 AND COALESCE(expires_at, created_at + ${SERVER_CONFIG.retentionMs}) > ${Date.now()}${cmdClause} ORDER BY sequence ASC`,
         ...acctParams,
       )
       .toArray();
@@ -562,5 +559,3 @@ export async function handleChathistory(
     );
   }
 }
-
-

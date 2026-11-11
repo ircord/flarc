@@ -1,5 +1,4 @@
 import { SERVER_CONFIG } from "~/core/config";
-import { domainEvents } from "~/core/events/emitter";
 import { isValidNickname } from "~/core/permissions/validation";
 import type { SessionAttachment, StoredChannelMessage } from "~/core/types";
 import { encodeIRCMessage } from "~/protocol/irc/encoder";
@@ -14,7 +13,55 @@ import {
   handleNickServ,
   handleZncPlayback,
 } from "./services";
-import { type ISessionDO, type PendingMultilineBatch, truncateUtf8 } from "./types";
+import { type ISessionDO, truncateUtf8 } from "./types";
+
+export function canSendDirectMessage(
+  session: ISessionDO,
+  ws: WebSocket,
+  sender: SessionAttachment,
+  recipient: SessionAttachment,
+  command: string,
+  content: string,
+  labelTags?: Record<string, string | true>,
+): boolean {
+  const modes = recipient.userModes ?? "";
+  const accepted = (recipient.acceptList ?? []).some(
+    (nick) => canonicalizeIRCName(nick) === canonicalizeIRCName(sender.nickname!),
+  );
+  if (!sender.isOper && modes.includes("R") && !sender.accountName && !accepted) {
+    if (command !== "NOTICE")
+      session.sendNumeric(
+        ws,
+        sender,
+        Numerics.ERR_NEEDREGGEDNICK,
+        [recipient.nickname!, "Identify before messaging this user"],
+        labelTags,
+      );
+    return false;
+  }
+  if (
+    !sender.isOper &&
+    modes.includes("T") &&
+    content.startsWith("\x01") &&
+    !content.toUpperCase().startsWith("\x01ACTION ") &&
+    content.toUpperCase() !== "\x01ACTION\x01"
+  )
+    return false;
+  if (command !== "TAGMSG" && sender.nickname && recipient.nickname) {
+    for (const client of session.getAllSessionsForNick(sender.nickname)) {
+      const accepted = client.attachment.acceptList ?? [];
+      if (
+        !accepted.some(
+          (nick) => canonicalizeIRCName(nick) === canonicalizeIRCName(recipient.nickname!),
+        )
+      )
+        accepted.push(recipient.nickname);
+      client.attachment.acceptList = accepted;
+      session.saveAttachment(client.ws, client.attachment);
+    }
+  }
+  return true;
+}
 
 export async function handlePrivmsgOrNotice(
   session: ISessionDO,
@@ -58,7 +105,7 @@ export async function handlePrivmsgOrNotice(
 
   const clientTags: Record<string, string | true> = {};
   for (const [k, v] of Object.entries(msg.tags)) {
-    if (k.startsWith("+")) {
+    if (k.startsWith("+") && k !== "+role" && k !== "+badge") {
       clientTags[k] = v;
     }
   }
@@ -104,10 +151,10 @@ export async function handlePrivmsgOrNotice(
     senderBadge = "member";
   }
 
-  if (senderRole && !clientTags["+role"]) {
+  if (senderRole) {
     clientTags["+role"] = senderRole;
   }
-  if (senderBadge && !clientTags["+badge"]) {
+  if (senderBadge) {
     clientTags["+badge"] = senderBadge;
   }
 
@@ -296,94 +343,35 @@ export async function handlePrivmsgOrNotice(
       }
 
       const primaryTarget = targetSessions[0];
-      const targetModes = primaryTarget.attachment.userModes ?? "";
-
-      // Enforce user mode +R (registered-only DMs unless in target's ACCEPT list or sender is oper)
-      if (!attachment.isOper && targetModes.includes("R") && !attachment.accountName) {
-        const accepted = (primaryTarget.attachment.acceptList ?? []).some(
-          (n) => canonicalizeIRCName(n) === canonicalizeIRCName(attachment.nickname!),
-        );
-        if (!accepted) {
-          if (command === "PRIVMSG") {
-            session.sendNumeric(
-              ws,
-              attachment,
-              Numerics.ERR_NEEDREGGEDNICK,
-              [
-                primaryTarget.attachment.nickname!,
-                "You must identify to a registered nick to private message this user",
-              ],
-              labelTags,
-            );
-            echoedToSender = true;
-          }
-          continue;
-        }
-      }
-
-      // When sending a DM, auto-accept recipient so they can reply even if sender has +R
-      if (attachment.nickname && primaryTarget.attachment.nickname) {
-        const canonRecipient = canonicalizeIRCName(primaryTarget.attachment.nickname);
-        const senderSessions = session.getAllSessionsForNick(attachment.nickname);
-        if (senderSessions.length === 0) {
-          if (!attachment.acceptList) attachment.acceptList = [];
-          if (!attachment.acceptList.some((n) => canonicalizeIRCName(n) === canonRecipient)) {
-            attachment.acceptList.push(primaryTarget.attachment.nickname);
-          }
-          session.saveAttachment(ws, attachment);
-        } else {
-          for (const s of senderSessions) {
-            if (!s.attachment.acceptList) s.attachment.acceptList = [];
-            if (!s.attachment.acceptList.some((n) => canonicalizeIRCName(n) === canonRecipient)) {
-              s.attachment.acceptList.push(primaryTarget.attachment.nickname);
-            }
-            session.saveAttachment(s.ws, s.attachment);
-          }
-        }
-      }
-
-      // Enforce user mode +T (block CTCP except ACTION)
       if (
-        !attachment.isOper &&
-        targetModes.includes("T") &&
-        content.startsWith("\x01") &&
-        !content.toUpperCase().startsWith("\x01ACTION ") &&
-        content.toUpperCase() !== "\x01ACTION\x01"
+        !canSendDirectMessage(
+          session,
+          ws,
+          attachment,
+          primaryTarget.attachment,
+          command,
+          content,
+          labelTags,
+        )
       ) {
+        echoedToSender = true;
         continue;
       }
 
       const msgId = crypto.randomUUID();
-      const now = Date.now();
-      const isoTime = new Date(now).toISOString();
-
-      // Persist DM in SQLite for DM CHATHISTORY & REDACT
-      const peerPair = session.getCanonicalDmPair(
-        attachment.nickname!,
-        primaryTarget.attachment.nickname!,
-      );
-      session.sql.exec(
-        `INSERT INTO direct_messages (id, peer_pair, sender_id, sender_account, sender_nick, sender_user, sender_host, target_nick, target_account, command, content, tags_json, redacted, created_at)
-           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, ?)`,
-        msgId,
-        peerPair,
-        attachment.userId,
-        attachment.accountName,
-        attachment.nickname!,
-        attachment.username!,
-        attachment.hostname,
-        primaryTarget.attachment.nickname!,
-        primaryTarget.attachment.accountName ?? null,
+      const stored = session.storeDirectMessage({
+        sender: attachment,
+        target: primaryTarget.attachment,
+        messageId: msgId,
         command,
         content,
-        Object.keys(clientTags).length > 0 ? JSON.stringify(clientTags) : "{}",
-        now,
-      );
+        tags: clientTags,
+      });
 
       const baseTags: Record<string, string | true> = {
         ...clientTags,
         msgid: msgId,
-        time: isoTime,
+        time: new Date(stored.createdAt).toISOString(),
         ...(attachment.accountName ? { account: attachment.accountName } : {}),
         ...(attachment.isBot ? { bot: true } : {}),
       };
@@ -503,7 +491,7 @@ export async function handleTagmsg(
 
   const clientTags: Record<string, string | true> = {};
   for (const [k, v] of Object.entries(msg.tags)) {
-    if (k.startsWith("+")) {
+    if (k.startsWith("+") && k !== "+role" && k !== "+badge") {
       clientTags[k] = v;
     }
   }
@@ -549,10 +537,10 @@ export async function handleTagmsg(
     senderBadge = "member";
   }
 
-  if (senderRole && !clientTags["+role"]) {
+  if (senderRole) {
     clientTags["+role"] = senderRole;
   }
-  if (senderBadge && !clientTags["+badge"]) {
+  if (senderBadge) {
     clientTags["+badge"] = senderBadge;
   }
 
@@ -652,32 +640,33 @@ export async function handleTagmsg(
     const msgId = crypto.randomUUID();
     const now = Date.now();
 
-    if (shouldPersist) {
-      const peerPair = session.getCanonicalDmPair(
-        attachment.nickname!,
-        primaryTarget.attachment.nickname!,
-      );
-      session.sql.exec(
-        `INSERT INTO direct_messages (id, peer_pair, sender_id, sender_account, sender_nick, sender_user, sender_host, target_nick, target_account, command, content, tags_json, redacted, created_at)
-           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'TAGMSG', '', ?, 0, ?)`,
-        msgId,
-        peerPair,
-        attachment.userId,
-        attachment.accountName,
-        attachment.nickname!,
-        attachment.username!,
-        attachment.hostname,
-        primaryTarget.attachment.nickname!,
-        primaryTarget.attachment.accountName ?? null,
-        JSON.stringify(clientTags),
-        now,
-      );
-    }
+    if (
+      !canSendDirectMessage(
+        session,
+        ws,
+        attachment,
+        primaryTarget.attachment,
+        "TAGMSG",
+        "",
+        labelTags,
+      )
+    )
+      return;
+    const stored = shouldPersist
+      ? session.storeDirectMessage({
+          sender: attachment,
+          target: primaryTarget.attachment,
+          messageId: msgId,
+          command: "TAGMSG",
+          content: "",
+          tags: clientTags,
+        })
+      : null;
 
     const baseTags: Record<string, string | true> = {
       ...clientTags,
       msgid: msgId,
-      time: new Date(now).toISOString(),
+      time: new Date(stored?.createdAt ?? now).toISOString(),
       ...(attachment.accountName ? { account: attachment.accountName } : {}),
     };
 
@@ -757,7 +746,7 @@ export async function handleClientBatch(
 
     const clientTags: Record<string, string | true> = {};
     for (const [k, v] of Object.entries(msg.tags)) {
-      if (k.startsWith("+")) {
+      if (k.startsWith("+") && k !== "+role" && k !== "+badge") {
         clientTags[k] = v;
       }
     }
@@ -908,46 +897,28 @@ export async function handleClientBatch(
 
     const primaryTarget = targetSessions[0];
     const msgId = crypto.randomUUID();
-    const now = Date.now();
-    const peerPair = session.getCanonicalDmPair(
-      attachment.nickname!,
-      primaryTarget.attachment.nickname!,
-    );
-
-    session.sql.exec(
-      `INSERT INTO direct_messages (id, peer_pair, sender_id, sender_account, sender_nick, sender_user, sender_host, target_nick, target_account, command, content, tags_json, multiline_json, redacted, created_at)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, ?)`,
-      msgId,
-      peerPair,
-      attachment.userId,
-      attachment.accountName,
-      attachment.nickname!,
-      attachment.username!,
-      attachment.hostname,
-      primaryTarget.attachment.nickname!,
-      primaryTarget.attachment.accountName ?? null,
-      command,
-      combined,
-      Object.keys(pending.tags).length > 0 ? JSON.stringify(pending.tags) : "{}",
-      JSON.stringify(pending.lines),
-      now,
-    );
-
-    const stored: StoredChannelMessage = {
-      id: msgId,
-      sequence: 0,
-      senderId: attachment.userId,
-      senderAccount: attachment.accountName,
-      senderNick: attachment.nickname!,
-      senderUser: attachment.username!,
-      senderHost: attachment.hostname,
+    const _now = Date.now();
+    if (
+      !canSendDirectMessage(
+        session,
+        ws,
+        attachment,
+        primaryTarget.attachment,
+        command,
+        combined,
+        effectiveLabelTags,
+      )
+    )
+      return;
+    const stored = session.storeDirectMessage({
+      sender: attachment,
+      target: primaryTarget.attachment,
+      messageId: msgId,
       command,
       content: combined,
       tags: pending.tags,
       multilineLines: pending.lines,
-      createdAt: now,
-      expiresAt: now + SERVER_CONFIG.retentionMs,
-    };
+    });
 
     for (const targetSess of targetSessions) {
       deliverMultilineOrFallback(
@@ -1170,9 +1141,10 @@ export async function handleRedact(
         sender_id: string;
         sender_account: string | null;
         sender_nick: string;
+        target_id: string | null;
         redacted: number;
       }>(
-        "SELECT id, sender_id, sender_account, sender_nick, redacted FROM direct_messages WHERE id = ?",
+        "SELECT id, sender_id, sender_account, sender_nick, target_id, redacted FROM direct_messages WHERE id = ?",
         targetMsgId,
       )
       .toArray();
@@ -1192,10 +1164,11 @@ export async function handleRedact(
     }
 
     const dm = dmRows[0];
-    const isAuthor =
-      dm.sender_id === attachment.userId ||
-      canonicalizeIRCName(dm.sender_nick) === canonicalizeIRCName(attachment.nickname!);
-    if (!isAuthor && !attachment.isOper) {
+    const peerId =
+      session.getAllSessionsForNick(target)[0]?.attachment.userId ??
+      (await session.getAccountsStub().getAccountByUsername(target))?.id;
+    const isAuthor = dm.sender_id === attachment.userId && peerId === dm.target_id;
+    if (!isAuthor) {
       session.sendLine(
         ws,
         attachment,
@@ -1215,10 +1188,7 @@ export async function handleRedact(
       return;
     }
 
-    session.sql.exec(
-      "UPDATE direct_messages SET redacted = 1, content = '' WHERE id = ?",
-      targetMsgId,
-    );
+    session.redactDirectMessage(targetMsgId, attachment.userId);
 
     const redactParams = reason ? [target, targetMsgId, reason] : [target, targetMsgId];
     for (const targetSess of session.getAllSessionsForNick(target)) {

@@ -1,7 +1,7 @@
 import { createError, defineEventHandler, readBody } from "nitro/h3";
 import { SERVER_CONFIG } from "~/core/config";
 import { WebPushSubscribeSchema } from "~/schemas/notifications";
-import { getEnv } from "~/utils/auth";
+import { clientRequest, getEnv, requireSelf } from "~/utils/auth";
 
 export default defineEventHandler(async (event) => {
   let body: any;
@@ -19,14 +19,15 @@ export default defineEventHandler(async (event) => {
     });
   }
 
+  await requireSelf(event, parsed.data.username);
   const env = getEnv(event);
   const accountsStub = env.ACCOUNTS.get(env.ACCOUNTS.idFromName(SERVER_CONFIG.networkId));
 
-  await accountsStub.registerWebpush(
-    parsed.data.username,
-    parsed.data.endpoint,
-    JSON.stringify(parsed.data.keys ?? {}),
-  );
+  await clientRequest(event, accountsStub, "push.register", {
+    username: parsed.data.username,
+    endpoint: parsed.data.endpoint,
+    keys: JSON.stringify(parsed.data.keys ?? {}),
+  });
 
   return { ok: true, registered: true, endpoint: parsed.data.endpoint };
 });

@@ -1,15 +1,9 @@
 import { SERVER_CONFIG } from "~/core/config";
-import type {
-  ChannelMemberInfo,
-  ChannelStateSummary,
-  SessionAttachment,
-  StoredChannelMessage,
-} from "~/core/types";
+import type { ChannelMemberInfo, ChannelStateSummary, SessionAttachment } from "~/core/types";
 import { encodeIRCMessage, encodeNumeric } from "~/protocol/irc/encoder";
 import { Numerics } from "~/protocol/irc/numerics";
 import { canonicalizeIRCName } from "~/protocol/irc/parser";
 import type { IRCMessage } from "~/protocol/irc/types";
-import { deliverMultilineOrFallback } from "../messaging";
 import type { ISessionDO } from "../types";
 
 export async function handleMetadata(
@@ -95,7 +89,13 @@ export async function handleMetadata(
 
     // Check +i invite-only channel access for non-members
     const callerMember = channelSummary.members.find((m) => m.sessionId === attachment.sessionId);
-    if (channelSummary.modes.includes("i") && !callerMember && !attachment.isOper) {
+    if (
+      !(await channelStub.canReadAccount({
+        id: attachment.userId,
+        username: attachment.accountName ?? "",
+        isAdmin: attachment.isOper,
+      }))
+    ) {
       session.sendLine(
         ws,
         attachment,
@@ -682,4 +682,3 @@ export async function syncChannelMemberMetadataOnJoin(
     }
   }
 }
-

@@ -1,4 +1,4 @@
-import { createError, defineEventHandler, readBody, setResponseStatus } from "nitro/h3";
+import { createError, defineEventHandler, getHeader, readBody, setResponseStatus } from "nitro/h3";
 import { SERVER_CONFIG } from "~/core/config";
 import { RegisterRequestSchema } from "~/schemas/auth";
 import { getEnv } from "~/utils/auth";
@@ -26,7 +26,8 @@ export default defineEventHandler(async (event) => {
     username: parsed.data.username,
     password: parsed.data.password,
     displayName: parsed.data.displayName,
-    roles: parsed.data.roles,
+    bootstrapToken: getHeader(event, "x-bootstrap-token"),
+    signupToken: getHeader(event, "x-signup-token"),
   });
 
   if (!res.ok) {

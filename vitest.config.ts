@@ -6,6 +6,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig({
   test: {
+    globalSetup: ["./tests/helpers/build.ts"],
     include: ["tests/**/*.test.ts"],
     exclude: ["old/**", "node_modules/**", ".output/**", ".nitro/**"],
     testTimeout: 20000,

@@ -1,7 +1,6 @@
 import { SERVER_CONFIG } from "~/core/config";
 import type { SessionAttachment } from "~/core/types";
 import { encodeIRCMessage } from "~/protocol/irc/encoder";
-import { Numerics } from "~/protocol/irc/numerics";
 import type { ISessionDO } from "../types";
 
 export function sendServiceResponse(
@@ -67,4 +66,3 @@ export function sendServiceResponse(
     );
   }
 }
-

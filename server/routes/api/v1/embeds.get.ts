@@ -1,6 +1,7 @@
 import { createError, defineEventHandler, getQuery } from "nitro/h3";
 import { z } from "zod";
 import { resolveUrlEmbed } from "~/services/embeds/resolver";
+import { getEnv } from "~/utils/auth";
 
 const embedQuerySchema = z.object({
   url: z.string().url("Valid URL is required"),
@@ -17,7 +18,10 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  const embed = await resolveUrlEmbed(parsed.data.url);
+  const embed = await resolveUrlEmbed(
+    parsed.data.url,
+    (getEnv(event).EMBED_ALLOWED_HOSTS ?? "").split(","),
+  );
   if (!embed) {
     throw createError({
       statusCode: 404,

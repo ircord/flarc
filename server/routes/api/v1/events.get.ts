@@ -4,7 +4,7 @@ import { getEnv } from "~/utils/auth";
 
 export default defineEventHandler(async (event) => {
   const upgrade = getHeader(event, "upgrade");
-  if (!upgrade || upgrade.toLowerCase() !== "websocket") {
+  if (upgrade?.toLowerCase() !== "websocket") {
     throw createError({ statusCode: 426, statusMessage: "Expected WebSocket upgrade" });
   }
 

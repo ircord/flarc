@@ -85,7 +85,12 @@ export async function handleChghost(
   attachment: SessionAttachment,
   msg: IRCMessage,
   labelTags?: Record<string, string | true>,
+  trustedService = false,
 ): Promise<void> {
+  if (!attachment.isOper && !trustedService) {
+    session.sendNumeric(ws, attachment, Numerics.ERR_NOPRIVILEGES, ["Permission denied"]);
+    return;
+  }
   // Allow CHGHOST <newuser> <newhost> or CHGHOST <nick> <newuser> <newhost>
   if (msg.params.length < 2) {
     session.sendNumeric(
@@ -180,23 +185,52 @@ export async function handleRename(
 
   const oldStub = session.getChannelStub(oldChan);
   const summary = await oldStub.getChannelSummary(oldChan);
-  const exportedState = await oldStub.exportChannelStateForRename();
+  if (canonicalizeIRCName(oldChan) === canonicalizeIRCName(newChan)) {
+    session.sendNumeric(
+      ws,
+      attachment,
+      Numerics.ERR_CHANOPRIVSNEEDED,
+      [oldChan, "Choose a different channel name"],
+      labelTags,
+    );
+    return;
+  }
   const newStub = session.getChannelStub(newChan);
-  await newStub.importChannelStateFromRename(newChan, exportedState);
+  let exportedState: Awaited<ReturnType<typeof oldStub.exportChannelStateForRename>>;
+  try {
+    exportedState = await oldStub.exportChannelStateForRename(attachment.sessionId, newChan);
+  } catch {
+    session.sendNumeric(
+      ws,
+      attachment,
+      Numerics.ERR_CHANOPRIVSNEEDED,
+      [oldChan, "Channel rename denied"],
+      labelTags,
+    );
+    return;
+  }
+  try {
+    await newStub.importChannelStateFromRename(newChan, exportedState);
+  } catch {
+    if (!(await newStub.hasRenameSnapshot(exportedState.nonce)))
+      await oldStub.cancelChannelRename(exportedState.nonce);
+    session.sendLine(
+      ws,
+      attachment,
+      encodeIRCMessage({
+        prefix: SERVER_CONFIG.serverName,
+        command: "FAIL",
+        params: ["RENAME", "CANNOT_RENAME", oldChan, newChan, "Destination unavailable"],
+      }),
+    );
+    return;
+  }
+  // Once the destination commits, failures leave a persisted deny-by-default
+  // rename journal for operator recovery, rather than exposing partial state.
+  await session.getAccountsStub().rebindChannelMedia(oldChan, newChan, exportedState.resourceId);
 
-  for (const m of summary.members) {
-    await oldStub.part(m.sessionId);
-    await newStub.join({
-      channelName: newChan,
-      sessionId: m.sessionId,
-      userId: m.userId,
-      accountName: m.accountName,
-      nickname: m.nickname,
-      username: m.username,
-      hostname: m.hostname,
-      realname: m.realname,
-      isOper: true,
-    });
+  for (const m of summary.members.filter((member) => !member.sessionId.startsWith("service:"))) {
+    await oldStub.part(m.sessionId, undefined, true);
 
     session.sql.exec(
       "DELETE FROM session_channels WHERE session_id = ? AND canonical_channel = ?",
@@ -210,6 +244,19 @@ export async function handleRename(
       newChan,
     );
   }
+
+  await oldStub.completeChannelRename(exportedState.nonce, false);
+  session.sql.exec(
+    "DELETE FROM known_channels WHERE canonical_channel = ?",
+    canonicalizeIRCName(oldChan),
+  );
+  session.sql.exec(
+    "INSERT OR REPLACE INTO known_channels (canonical_channel, channel_name, created_at) VALUES (?, ?, ?)",
+    canonicalizeIRCName(newChan),
+    newChan,
+    Date.now(),
+  );
+  await newStub.completeChannelRename(exportedState.nonce, true);
 
   const prefix = session.getUserPrefix(attachment);
   const newSummary = await newStub.getChannelSummary(newChan);
@@ -291,20 +338,12 @@ export async function handleOperCommand(
   }
   const name = msg.params[0];
   const pass = msg.params[1];
-  const expectedPass = session.env.ADMIN_TOKEN ?? "operpass";
-  let valid =
-    pass === expectedPass ||
-    (name === "admin" && pass === "admin") ||
-    (name === "operuser" && pass === "operpassword");
-  if (!valid) {
-    const verify = await session.getAccountsStub().verifyCredentials(name, pass);
-    if (
-      verify.ok &&
-      (verify.account.roles.includes("oper") || verify.account.roles.includes("admin"))
-    ) {
-      valid = true;
-    }
-  }
+  const verify = await session.getAccountsStub().verifyCredentials(name, pass);
+  const valid =
+    verify.ok &&
+    (!SERVER_CONFIG.requireAccounts ||
+      (attachment.authenticated && verify.account.id === attachment.userId)) &&
+    (verify.account.roles.includes("oper") || verify.account.roles.includes("admin"));
   if (!valid) {
     session.sendNumeric(
       ws,

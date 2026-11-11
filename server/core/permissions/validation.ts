@@ -4,6 +4,21 @@ const ASCII_NICK_REGEX = /^[A-Za-z_\-[\]\\^{}|`][A-Za-z0-9_\-[\]\\^{}|`]*$/;
 const PRECIS_NICK_REGEX = /^[\p{L}_\-[\]\\^{}|`][\p{L}\p{N}_\-[\]\\^{}|`]*$/u;
 const CHANNEL_REGEX = /^[#&][^\x00\x07\r\n ,:]+$/;
 
+export function isReservedServiceNickname(nick: string): boolean {
+  return [
+    "nickserv",
+    "chanserv",
+    "hostserv",
+    "histserv",
+    "f",
+    "flareserv",
+    "q",
+    "ns",
+    "cs",
+    "hs",
+  ].includes(nick.toLowerCase());
+}
+
 export function isValidNickname(nick: string): boolean {
   if (!nick || nick.length < 1 || nick.length > SERVER_CONFIG.maxNickLength) {
     return false;

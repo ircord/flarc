@@ -7,10 +7,10 @@ import {
 } from "nitro/h3";
 import { SERVER_CONFIG } from "~/core/config";
 import { CreateRoleGroupSchema } from "~/schemas/channels";
-import { getEnv, parseChannelParam } from "~/utils/auth";
+import { clientRequest, getEnv, parseChannelParam, requireChannelFounder } from "~/utils/auth";
 
 export default defineEventHandler(async (event) => {
-  const rawChan = getRouterParam(event, "channel");
+  const rawChan = getRouterParam(event, "channel", { decode: true });
   if (!rawChan) {
     throw createError({ statusCode: 400, statusMessage: "Channel parameter required" });
   }
@@ -30,11 +30,12 @@ export default defineEventHandler(async (event) => {
     });
   }
 
+  const _actor = await requireChannelFounder(event, rawChan);
   const { canon } = parseChannelParam(rawChan);
   const env = getEnv(event);
   const stub = env.CHANNELS.get(env.CHANNELS.idFromName(`${SERVER_CONFIG.networkId}:${canon}`));
 
-  const role = await (stub as any).createRoleGroup(parsed.data);
+  const role = await clientRequest(event, stub, "role.create", { group: parsed.data });
   setResponseStatus(event, 201);
   return { ok: true, role };
 });

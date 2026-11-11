@@ -1,22 +1,27 @@
 import type { Miniflare } from "miniflare";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { createMiniflareServer, TestIRCClient } from "../helpers/miniflare-harness";
+import { createProtocolServer, TestIRCClient } from "../helpers/miniflare-harness";
 
-const ADMIN_TOKEN = "super-secret-admin-token";
+let ADMIN_TOKEN = "super-secret-admin-token";
 
 describe("FlaRC Administration REST API & F Bot Integration", () => {
   let mf: Miniflare;
   let httpUrl: URL;
   let wsUrl: string;
   let dispose: () => Promise<void>;
+  let fixture: Awaited<ReturnType<typeof createProtocolServer>>;
+  let request: Awaited<ReturnType<typeof createProtocolServer>>["request"];
   const clients: TestIRCClient[] = [];
 
   beforeEach(async () => {
-    const srv = await createMiniflareServer({
+    const srv = await createProtocolServer({
       bindings: {
         ADMIN_TOKEN,
       },
     });
+    fixture = srv;
+    request = srv.request;
+    ADMIN_TOKEN = srv.adminToken;
     mf = srv.mf;
     httpUrl = srv.url;
     wsUrl = srv.wsUrl;
@@ -49,13 +54,13 @@ describe("FlaRC Administration REST API & F Bot Integration", () => {
     expect(unauthRes.status).toBe(401);
 
     // 2. Authorized request using X-Admin-Token header
-    const authRes = await mf.dispatchFetch(`${httpUrl.origin}/admin/accounts`, {
-      headers: { "X-Admin-Token": ADMIN_TOKEN },
+    const authRes = await request(`${httpUrl.origin}/admin/accounts`, {
+      headers: { Authorization: `Bearer ${ADMIN_TOKEN}` },
     });
     expect(authRes.status).toBe(200);
 
     // 3. Register a new user via admin endpoint
-    const regRes = await mf.dispatchFetch(`${httpUrl.origin}/admin/accounts`, {
+    const regRes = await request(`${httpUrl.origin}/admin/accounts`, {
       method: "POST",
       headers: adminHeaders(),
       body: JSON.stringify({
@@ -71,7 +76,7 @@ describe("FlaRC Administration REST API & F Bot Integration", () => {
     expect(regData.account.username).toBe("adminuser");
 
     // 4. Get account details
-    const getRes = await mf.dispatchFetch(`${httpUrl.origin}/admin/accounts/adminuser`, {
+    const getRes = await request(`${httpUrl.origin}/admin/accounts/adminuser`, {
       headers: adminHeaders(),
     });
     expect(getRes.status).toBe(200);
@@ -82,7 +87,7 @@ describe("FlaRC Administration REST API & F Bot Integration", () => {
     expect(getData.account.disabled).toBe(false);
 
     // 5. Update account details (PATCH)
-    const patchRes = await mf.dispatchFetch(`${httpUrl.origin}/admin/accounts/adminuser`, {
+    const patchRes = await request(`${httpUrl.origin}/admin/accounts/adminuser`, {
       method: "PATCH",
       headers: adminHeaders(),
       body: JSON.stringify({
@@ -96,7 +101,7 @@ describe("FlaRC Administration REST API & F Bot Integration", () => {
     expect(patchData.account.roles).toContain("root");
 
     // 6. Reset password
-    const pwRes = await mf.dispatchFetch(`${httpUrl.origin}/admin/accounts/adminuser/password`, {
+    const pwRes = await request(`${httpUrl.origin}/admin/accounts/adminuser/password`, {
       method: "POST",
       headers: adminHeaders(),
       body: JSON.stringify({ password: "newsuperpassword456" }),
@@ -104,51 +109,53 @@ describe("FlaRC Administration REST API & F Bot Integration", () => {
     expect(pwRes.status).toBe(200);
 
     // 7. Disable account & re-enable
-    const disRes = await mf.dispatchFetch(`${httpUrl.origin}/admin/accounts/adminuser/disable`, {
+    const disRes = await request(`${httpUrl.origin}/admin/accounts/adminuser/disable`, {
       method: "POST",
       headers: adminHeaders(),
     });
     expect(disRes.status).toBe(200);
 
-    const getDis = await mf.dispatchFetch(`${httpUrl.origin}/admin/accounts/adminuser`, {
+    const getDis = await request(`${httpUrl.origin}/admin/accounts/adminuser`, {
       headers: adminHeaders(),
     });
     const disData = (await getDis.json()) as any;
     expect(disData.account.disabled).toBe(true);
 
-    const enRes = await mf.dispatchFetch(`${httpUrl.origin}/admin/accounts/adminuser/enable`, {
+    const enRes = await request(`${httpUrl.origin}/admin/accounts/adminuser/enable`, {
       method: "POST",
       headers: adminHeaders(),
     });
     expect(enRes.status).toBe(200);
 
     // 8. Delete account
-    const delRes = await mf.dispatchFetch(`${httpUrl.origin}/admin/accounts/adminuser`, {
+    const delRes = await request(`${httpUrl.origin}/admin/accounts/adminuser`, {
       method: "DELETE",
       headers: adminHeaders(),
     });
     expect(delRes.status).toBe(200);
 
-    const getAfterDel = await mf.dispatchFetch(`${httpUrl.origin}/admin/accounts/adminuser`, {
+    const getAfterDel = await request(`${httpUrl.origin}/admin/accounts/adminuser`, {
       headers: adminHeaders(),
     });
     expect(getAfterDel.status).toBe(404);
   });
 
   it("manages channels, bot F settings, and delivers welcome greeting upon user join", async () => {
+    await request(`${httpUrl.origin}/admin/accounts`, {
+      method: "POST",
+      headers: adminHeaders(),
+      body: JSON.stringify({ username: "netadmin", password: "netadmin-account-password" }),
+    });
     // 1. Admin registers channel #flare
-    const regChanRes = await mf.dispatchFetch(
-      `${httpUrl.origin}/admin/channels/%23flare/register`,
-      {
-        method: "POST",
-        headers: adminHeaders(),
-        body: JSON.stringify({ founder: "netadmin" }),
-      },
-    );
+    const regChanRes = await request(`${httpUrl.origin}/admin/channels/%23flare/register`, {
+      method: "POST",
+      headers: adminHeaders(),
+      body: JSON.stringify({ founder: "netadmin" }),
+    });
     expect(regChanRes.status).toBe(200);
 
     // 2. Configure F bot welcome greeting via REST API
-    const botRes = await mf.dispatchFetch(`${httpUrl.origin}/admin/channels/%23flare/bot`, {
+    const botRes = await request(`${httpUrl.origin}/admin/channels/%23flare/bot`, {
       method: "POST",
       headers: adminHeaders(),
       body: JSON.stringify({
@@ -162,7 +169,7 @@ describe("FlaRC Administration REST API & F Bot Integration", () => {
     expect(botData.bot.welcomeMessage).toContain("Welcome to #flare");
 
     // 3. Admin sets topic
-    const topicRes = await mf.dispatchFetch(`${httpUrl.origin}/admin/channels/%23flare/topic`, {
+    const topicRes = await request(`${httpUrl.origin}/admin/channels/%23flare/topic`, {
       method: "POST",
       headers: adminHeaders(),
       body: JSON.stringify({ topic: "Official FlaRC Channel" }),
@@ -170,7 +177,7 @@ describe("FlaRC Administration REST API & F Bot Integration", () => {
     expect(topicRes.status).toBe(200);
 
     // 4. Verify channel full details via REST API
-    const detailsRes = await mf.dispatchFetch(`${httpUrl.origin}/admin/channels/%23flare`, {
+    const detailsRes = await request(`${httpUrl.origin}/admin/channels/%23flare`, {
       headers: adminHeaders(),
     });
     expect(detailsRes.status).toBe(200);
@@ -199,7 +206,7 @@ describe("FlaRC Administration REST API & F Bot Integration", () => {
     expect(welcomeLine).toContain("Enjoy your stay on FlaRC.");
 
     // 6. Admin kicks user via REST API
-    const kickRes = await mf.dispatchFetch(`${httpUrl.origin}/admin/channels/%23flare/kick`, {
+    const kickRes = await request(`${httpUrl.origin}/admin/channels/%23flare/kick`, {
       method: "POST",
       headers: adminHeaders(),
       body: JSON.stringify({ nickname: "alice", reason: "Administrative maintenance" }),
@@ -207,14 +214,11 @@ describe("FlaRC Administration REST API & F Bot Integration", () => {
     expect(kickRes.status).toBe(200);
 
     // 7. Admin purges messages
-    const purgeRes = await mf.dispatchFetch(
-      `${httpUrl.origin}/admin/channels/%23flare/messages/purge`,
-      {
-        method: "POST",
-        headers: adminHeaders(),
-        body: JSON.stringify({ all: true }),
-      },
-    );
+    const purgeRes = await request(`${httpUrl.origin}/admin/channels/%23flare/messages/purge`, {
+      method: "POST",
+      headers: adminHeaders(),
+      body: JSON.stringify({ all: true }),
+    });
     expect(purgeRes.status).toBe(200);
   });
 
@@ -235,7 +239,7 @@ describe("FlaRC Administration REST API & F Bot Integration", () => {
     await bob.waitForLine((l) => l.includes(" 770 ") || l.includes(" 766 ") || l.includes(" 762 "));
 
     // 1. Admin sets user metadata via REST API
-    const setMetaRes = await mf.dispatchFetch(`${httpUrl.origin}/admin/metadata/users/bob`, {
+    const setMetaRes = await request(`${httpUrl.origin}/admin/metadata/users/bob`, {
       method: "PUT",
       headers: adminHeaders(),
       body: JSON.stringify({
@@ -255,7 +259,7 @@ describe("FlaRC Administration REST API & F Bot Integration", () => {
     expect(metaEvent).toContain("bob avatar * https://flarc.chat/avatars/bob.png");
 
     // 2. Admin retrieves metadata via REST API
-    const getMetaRes = await mf.dispatchFetch(`${httpUrl.origin}/admin/metadata/users/bob`, {
+    const getMetaRes = await request(`${httpUrl.origin}/admin/metadata/users/bob`, {
       headers: adminHeaders(),
     });
     expect(getMetaRes.status).toBe(200);
@@ -263,7 +267,7 @@ describe("FlaRC Administration REST API & F Bot Integration", () => {
     expect(getMetaData.metadata.avatar).toBe("https://flarc.chat/avatars/bob.png");
 
     // 3. Admin deletes metadata via REST API
-    const delMetaRes = await mf.dispatchFetch(`${httpUrl.origin}/admin/metadata/users/bob/avatar`, {
+    const delMetaRes = await request(`${httpUrl.origin}/admin/metadata/users/bob/avatar`, {
       method: "DELETE",
       headers: adminHeaders(),
     });
@@ -276,7 +280,7 @@ describe("FlaRC Administration REST API & F Bot Integration", () => {
 
   it("supports F bot QuakeNet-compatible IRC commands (HELP, AUTH, OP, VOICE, STATUS, UNREQUESTBOT)", async () => {
     // 1. Pre-register account for testing AUTH
-    await mf.dispatchFetch(`${httpUrl.origin}/admin/accounts`, {
+    await request(`${httpUrl.origin}/admin/accounts`, {
       method: "POST",
       headers: adminHeaders(),
       body: JSON.stringify({ username: "quaker", password: "quakesecretpassword" }),
@@ -355,7 +359,7 @@ describe("FlaRC Administration REST API & F Bot Integration", () => {
     await user1.register("tester1");
 
     // 1. List sessions via REST API
-    const sessRes = await mf.dispatchFetch(`${httpUrl.origin}/admin/sessions`, {
+    const sessRes = await request(`${httpUrl.origin}/admin/sessions`, {
       headers: adminHeaders(),
     });
     expect(sessRes.status).toBe(200);
@@ -363,7 +367,7 @@ describe("FlaRC Administration REST API & F Bot Integration", () => {
     expect(sessData.sessions.some((s: any) => s.nickname === "tester1")).toBe(true);
 
     // 2. Broadcast network announcement via REST API
-    const bcastRes = await mf.dispatchFetch(`${httpUrl.origin}/admin/broadcast`, {
+    const bcastRes = await request(`${httpUrl.origin}/admin/broadcast`, {
       method: "POST",
       headers: adminHeaders(),
       body: JSON.stringify({ message: "Network maintenance at midnight UTC" }),
@@ -376,7 +380,7 @@ describe("FlaRC Administration REST API & F Bot Integration", () => {
     expect(bcastLine).toContain("Network maintenance at midnight UTC");
 
     // 3. Disconnect user via REST API
-    const dcRes = await mf.dispatchFetch(`${httpUrl.origin}/admin/sessions/disconnect`, {
+    const dcRes = await request(`${httpUrl.origin}/admin/sessions/disconnect`, {
       method: "POST",
       headers: adminHeaders(),
       body: JSON.stringify({ nickname: "tester1", reason: "Administrative test disconnect" }),
@@ -389,14 +393,14 @@ describe("FlaRC Administration REST API & F Bot Integration", () => {
 
   it("enforces role management, webhook op permissions, and exposes non-secret public health/status", async () => {
     // 1. Public health and status are accessible without any authentication
-    const healthRes = await mf.dispatchFetch(`${httpUrl.origin}/health`);
+    const healthRes = await request(`${httpUrl.origin}/health`);
     expect(healthRes.status).toBe(200);
     const healthData = (await healthRes.json()) as any;
     expect(healthData.ok).toBe(true);
     expect(healthData.service).toBe("flarc");
     expect(healthData.adminToken).toBeUndefined();
 
-    const statusRes = await mf.dispatchFetch(`${httpUrl.origin}/status`);
+    const statusRes = await request(`${httpUrl.origin}/status`);
     expect(statusRes.status).toBe(200);
     const statusData = (await statusRes.json()) as any;
     expect(statusData.ok).toBe(true);
@@ -404,7 +408,7 @@ describe("FlaRC Administration REST API & F Bot Integration", () => {
     expect(statusData.adminToken).toBeUndefined();
 
     // 2. Role grant and revoke via Admin API
-    const regRes = await mf.dispatchFetch(`${httpUrl.origin}/admin/accounts`, {
+    const regRes = await request(`${httpUrl.origin}/admin/accounts`, {
       method: "POST",
       headers: adminHeaders(),
       body: JSON.stringify({
@@ -414,14 +418,14 @@ describe("FlaRC Administration REST API & F Bot Integration", () => {
     });
     expect(regRes.status).toBe(201);
 
-    const grantRes = await mf.dispatchFetch(`${httpUrl.origin}/admin/accounts/moduser/roles`, {
+    const grantRes = await request(`${httpUrl.origin}/admin/accounts/moduser/roles`, {
       method: "POST",
       headers: adminHeaders(),
       body: JSON.stringify({ role: "admin", action: "grant" }),
     });
     expect(grantRes.status).toBe(200);
 
-    const rolesRes = await mf.dispatchFetch(`${httpUrl.origin}/admin/accounts/moduser/roles`, {
+    const rolesRes = await request(`${httpUrl.origin}/admin/accounts/moduser/roles`, {
       headers: adminHeaders(),
     });
     expect(rolesRes.status).toBe(200);
@@ -430,36 +434,36 @@ describe("FlaRC Administration REST API & F Bot Integration", () => {
 
     // 3. Webhooks are restricted to channel owners/operators
     // An unauthenticated request to create webhooks should be rejected (401)
-    const unauthHookRes = await mf.dispatchFetch(`${httpUrl.origin}/api/v1/channels/%23priv/webhooks`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name: "Rogue Hook" }),
-    });
+    const unauthHookRes = await mf.dispatchFetch(
+      `${httpUrl.origin}/api/v1/channels/%23priv/webhooks`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: "Rogue Hook" }),
+      },
+    );
     expect(unauthHookRes.status).toBe(401);
 
     // A regular user who is not owner/op should be rejected (403)
-    const regUserRes = await mf.dispatchFetch(`${httpUrl.origin}/api/v1/auth/register`, {
+    const regUserRes = await request(`${httpUrl.origin}/api/v1/auth/register`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username: "regularjoe", password: "password123" }),
     });
     expect(regUserRes.status).toBe(201);
 
-    const forbiddenHookRes = await mf.dispatchFetch(
-      `${httpUrl.origin}/api/v1/channels/%23priv/webhooks`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Basic ${btoa("regularjoe:password123")}`,
-        },
-        body: JSON.stringify({ name: "Unauthorized Hook" }),
+    const forbiddenHookRes = await request(`${httpUrl.origin}/api/v1/channels/%23priv/webhooks`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${await fixture.login("regularjoe", "password123")}`,
       },
-    );
+      body: JSON.stringify({ name: "Unauthorized Hook" }),
+    });
     expect(forbiddenHookRes.status).toBe(403);
 
     // Channel founder/owner or Admin CAN configure webhooks
-    const adminHookRes = await mf.dispatchFetch(`${httpUrl.origin}/api/v1/channels/%23priv/webhooks`, {
+    const adminHookRes = await request(`${httpUrl.origin}/api/v1/channels/%23priv/webhooks`, {
       method: "POST",
       headers: adminHeaders(),
       body: JSON.stringify({ name: "Admin Hook" }),

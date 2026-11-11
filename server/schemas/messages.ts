@@ -1,14 +1,22 @@
 import { z } from "zod";
 
 export const SendMessageSchema = z.object({
-  content: z.string().min(1).max(8191),
+  content: z
+    .string()
+    .min(1)
+    .max(8191)
+    .regex(/^[^\x00]*$/, "NUL is not valid IRC content"),
   senderNick: z.string().optional(),
   replyToMessageId: z.string().optional(),
   tags: z.record(z.string(), z.union([z.string(), z.boolean()])).optional(),
 });
 
 export const EditMessageSchema = z.object({
-  content: z.string().min(1).max(8191),
+  content: z
+    .string()
+    .min(1)
+    .max(8191)
+    .regex(/^[^\x00]*$/, "NUL is not valid IRC content"),
   senderNick: z.string().optional(),
 });
 

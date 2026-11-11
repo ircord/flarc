@@ -1,13 +1,8 @@
 import type { drizzle } from "drizzle-orm/durable-sqlite";
-import type {
-  ChannelMemberInfo,
-  ChannelStateSummary,
-  Env,
-  SessionAttachment,
-  StoredChannelMessage,
-} from "~/core/types";
+import type { Env, SessionAttachment } from "~/core/types";
 import type { AccountsDO } from "~/durable-objects/accounts";
 import type { ChannelDO } from "~/durable-objects/channel";
+import type { SessionDO } from "~/durable-objects/session";
 import type { IRCMessage } from "~/protocol/irc/types";
 import type * as sessionSchema from "~/storage/schemas/session";
 
@@ -35,6 +30,8 @@ export function truncateUtf8(str: string, maxBytes: number): string {
 }
 
 export interface ISessionDO {
+  storeDirectMessage: SessionDO["storeDirectMessage"];
+  redactDirectMessage: SessionDO["redactDirectMessage"];
   env: Env;
   sql: SqlStorage;
   db: ReturnType<typeof drizzle<typeof sessionSchema>>;
@@ -47,6 +44,8 @@ export interface ISessionDO {
   maxLocalUsers: number;
   maxGlobalUsers: number;
 
+  prepareAccountChange(attachment: SessionAttachment, newUserId: string): Promise<void>;
+  invalidateAccountPermissions(username: string): Promise<number>;
   saveAttachment(ws: WebSocket, attachment: SessionAttachment): void;
   getChannelStub(channelName: string): DurableObjectStub<ChannelDO>;
   getAccountsStub(): DurableObjectStub<AccountsDO>;

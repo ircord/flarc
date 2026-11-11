@@ -1,17 +1,21 @@
 import type { Miniflare } from "miniflare";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { createMiniflareServer, TestIRCClient } from "../helpers/miniflare-harness";
+import { createProtocolServer, TestIRCClient } from "../helpers/miniflare-harness";
 
 describe("CFCord IRCv3 Server Integration (Miniflare)", () => {
-  let mf: Miniflare;
+  let _mf: Miniflare;
   let httpUrl: URL;
   let wsUrl: string;
   let dispose: () => Promise<void>;
+  let _fixture: Awaited<ReturnType<typeof createProtocolServer>>;
+  let request: Awaited<ReturnType<typeof createProtocolServer>>["request"];
   const clients: TestIRCClient[] = [];
 
   beforeEach(async () => {
-    const srv = await createMiniflareServer();
-    mf = srv.mf;
+    const srv = await createProtocolServer({ bindings: { WEBIRC_PASSWORD: "secret" } });
+    _fixture = srv;
+    request = srv.request;
+    _mf = srv.mf;
     httpUrl = srv.url;
     wsUrl = srv.wsUrl;
     dispose = srv.dispose;
@@ -150,7 +154,7 @@ describe("CFCord IRCv3 Server Integration (Miniflare)", () => {
 
   it("supports account registration, SASL PLAIN authentication, IRCv3 tags, and CHATHISTORY replay", async () => {
     // 1. Register an account via HTTP API
-    const regRes = await mf.dispatchFetch(`${httpUrl.origin}/api/accounts/register`, {
+    const regRes = await request(`${httpUrl.origin}/admin/accounts`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

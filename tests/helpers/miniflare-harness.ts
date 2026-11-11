@@ -1,18 +1,18 @@
-import { execSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 import { Miniflare } from "miniflare";
 import WebSocket from "ws";
 
 export async function ensureNitroBuilt(): Promise<string> {
-  const scriptPath = path.resolve(process.cwd(), ".output/server/index.mjs");
-  if (!fs.existsSync(scriptPath)) {
-    execSync("npm run build", { stdio: "inherit" });
-  }
+  const scriptPath =
+    process.env.FLARC_TEST_BUNDLE ?? path.resolve(process.cwd(), ".output/server/index.mjs");
+  if (!fs.existsSync(scriptPath))
+    throw new Error("Build snapshot is missing; run through Vitest globalSetup");
   return scriptPath;
 }
 
 export async function createMiniflareServer(options?: {
+  durableObjectsPersist?: string;
   bindings?: Record<string, string>;
   r2Buckets?: Record<string, string> | string[];
 }): Promise<{
@@ -25,9 +25,11 @@ export async function createMiniflareServer(options?: {
   const mf = new Miniflare({
     modules: true,
     scriptPath,
+    modulesRoot: path.dirname(scriptPath),
     compatibilityDate: "2025-02-04",
     compatibilityFlags: ["nodejs_compat"],
-    bindings: options?.bindings,
+    bindings: { SIGNUP_POLICY: "open", ...options?.bindings },
+    durableObjectsPersist: options?.durableObjectsPersist,
     r2Buckets: options?.r2Buckets,
     durableObjects: {
       SESSION: {
@@ -45,14 +47,23 @@ export async function createMiniflareServer(options?: {
     },
   });
 
-  const url = await mf.ready;
+  let url: URL;
+  try {
+    url = await mf.ready;
+  } catch (error) {
+    await mf.dispose();
+    throw error;
+  }
   const wsUrl = `ws://${url.host}/irc`;
 
+  let disposed = false;
   return {
     mf,
     url,
     wsUrl,
     dispose: async () => {
+      if (disposed) return;
+      disposed = true;
       await mf.dispose();
     },
   };
@@ -158,4 +169,80 @@ export class TestIRCClient {
       this.ws.close();
     }
   }
+}
+
+/** Explicit open-network fixture for independent protocol tests; security suites use secure defaults. */
+export async function createProtocolServer(options?: Parameters<typeof createMiniflareServer>[0]) {
+  const bootstrapSecret = options?.bindings?.ADMIN_TOKEN ?? "fixture-bootstrap-only";
+  const server = await createMiniflareServer({
+    ...options,
+    bindings: {
+      REQUIRE_ACCOUNTS: "0",
+      AUTO_REGISTER_CHANNELS: "0",
+      SIGNUP_POLICY: "open",
+      ADMIN_USERS: "FixtureAdmin",
+      ...options?.bindings,
+      ADMIN_TOKEN: bootstrapSecret,
+    },
+  });
+  const rawFetch = (path: string, init?: RequestInit) => fetch(new URL(path, server.url), init);
+  const register = await rawFetch("/api/v1/auth/register", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "x-bootstrap-token": bootstrapSecret },
+    body: JSON.stringify({ username: "FixtureAdmin", password: "fixture-admin-password" }),
+  });
+  if (register.status !== 201)
+    throw new Error(`Fixture provisioning failed: ${await register.text()}`);
+  async function login(username: string, password: string) {
+    const response = await rawFetch("/api/v1/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, password }),
+    });
+    const data = (await response.json()) as any;
+    if (!response.ok || !data.token)
+      throw new Error(`Fixture login failed: ${JSON.stringify(data)}`);
+    return data.token as string;
+  }
+  const adminToken = await login("FixtureAdmin", "fixture-admin-password");
+  const authenticatedFetch =
+    (token: string) =>
+    (url: string | URL, init: RequestInit = {}) => {
+      const headers = new Headers(init.headers);
+      if (!headers.has("Authorization")) headers.set("Authorization", `Bearer ${token}`);
+      return fetch(new URL(url, server.url), { ...init, headers });
+    };
+  const request = authenticatedFetch(adminToken);
+  const apiClients: TestIRCClient[] = [];
+  async function apiUser(username: string, channel: string) {
+    const password = "fixture-user-password";
+    const registered = await rawFetch("/api/v1/auth/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, password }),
+    });
+    if (registered.status !== 201)
+      throw new Error(`Fixture user failed: ${await registered.text()}`);
+    const token = await login(username, password);
+    const client = new TestIRCClient(server.wsUrl);
+    apiClients.push(client);
+    await client.connect();
+    client.send(`PASS ${username}:${password}`);
+    await client.register(username);
+    client.send(`JOIN ${channel}`);
+    await client.waitForLine((line) => line.includes(" 366 ") && line.includes(channel));
+    return { token, client, request: authenticatedFetch(token) };
+  }
+  return {
+    ...server,
+    adminToken,
+    request,
+    login,
+    authenticatedFetch,
+    apiUser,
+    dispose: async () => {
+      for (const client of apiClients) client.close();
+      await server.dispose();
+    },
+  };
 }

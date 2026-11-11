@@ -1,10 +1,10 @@
 import { createError, defineEventHandler, getQuery, getRouterParam } from "nitro/h3";
 import { SERVER_CONFIG } from "~/core/config";
 import { canonicalizeIRCName } from "~/protocol/irc/parser";
-import { getEnv, requireAuthenticatedUser } from "~/utils/auth";
+import { getEnv, getSessionToken, requireAuthenticatedUser } from "~/utils/auth";
 
 export default defineEventHandler(async (event) => {
-  const target = getRouterParam(event, "target");
+  const target = getRouterParam(event, "target", { decode: true });
   if (!target) {
     throw createError({ statusCode: 400, statusMessage: "Target required" });
   }
@@ -22,7 +22,7 @@ export default defineEventHandler(async (event) => {
   const userCanon = canonicalizeIRCName(user);
 
   const isParticipant = authCanon === targetCanon || authCanon === userCanon;
-  if (!authUser.isAdmin && !isParticipant) {
+  if (!isParticipant) {
     throw createError({
       statusCode: 403,
       statusMessage: "Forbidden: You can only query direct messages you participate in",
@@ -37,7 +37,14 @@ export default defineEventHandler(async (event) => {
   const env = getEnv(event);
   const sessionStub = env.SESSION.get(env.SESSION.idFromName(SERVER_CONFIG.networkId));
 
-  const result = await sessionStub.getPaginatedDirectMessages(user, target, limit, before, after);
+  const result = await (sessionStub as any).clientDirectMessages(
+    getSessionToken(event)!,
+    user,
+    target,
+    limit,
+    before,
+    after,
+  );
 
   return {
     ok: true,

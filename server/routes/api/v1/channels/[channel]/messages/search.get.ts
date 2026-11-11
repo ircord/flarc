@@ -2,7 +2,7 @@ import { createError, defineEventHandler, getQuery, getRouterParam } from "nitro
 import { z } from "zod";
 import { SERVER_CONFIG } from "~/core/config";
 import { normalizeTagFilter, parseSearchFilterString } from "~/protocol/irc/extensions/search";
-import { canAccessChannelHistory, getEnv, parseChannelParam } from "~/utils/auth";
+import { canAccessChannelHistory, clientRequest, getEnv, parseChannelParam } from "~/utils/auth";
 
 const searchSchema = z.object({
   q: z.string().optional(),
@@ -21,7 +21,7 @@ const searchSchema = z.object({
 });
 
 export default defineEventHandler(async (event) => {
-  const channel = getRouterParam(event, "channel");
+  const channel = getRouterParam(event, "channel", { decode: true });
   if (!channel) {
     throw createError({ statusCode: 400, statusMessage: "Channel required" });
   }
@@ -125,18 +125,21 @@ export default defineEventHandler(async (event) => {
   const env = getEnv(event);
   const stub = env.CHANNELS.get(env.CHANNELS.idFromName(`${SERVER_CONFIG.networkId}:${canon}`));
 
-  const rawMessages = await (stub as any).searchMessages(query, {
-    limit: limit + 1,
-    from: fromFilters,
-    mentions: mentionsFilters,
-    has: hasFilters,
-    before,
-    after,
-    on,
-    author,
-    tags: tagFilters,
-    pinned,
-    cursor,
+  const rawMessages = await clientRequest(event, stub, "search", {
+    query,
+    options: {
+      limit: limit + 1,
+      from: fromFilters,
+      mentions: mentionsFilters,
+      has: hasFilters,
+      before,
+      after,
+      on,
+      author,
+      tags: tagFilters,
+      pinned,
+      cursor,
+    },
   });
 
   const hasMore = rawMessages.length > limit;
@@ -146,7 +149,7 @@ export default defineEventHandler(async (event) => {
     message: {
       id: m.id,
       conversationId: name,
-      senderId: m.senderNick,
+      senderId: m.senderId,
       senderNick: m.senderNick,
       senderUser: m.senderUser,
       senderHost: m.senderHost,

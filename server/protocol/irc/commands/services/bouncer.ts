@@ -1,18 +1,10 @@
 import { SERVER_CONFIG } from "~/core/config";
-import type {
-  ChannelMemberInfo,
-  ChannelStateSummary,
-  SessionAttachment,
-  StoredChannelMessage,
-} from "~/core/types";
-import { encodeIRCMessage, encodeNumeric } from "~/protocol/irc/encoder";
-import { Numerics } from "~/protocol/irc/numerics";
+import type { SessionAttachment } from "~/core/types";
+import { encodeIRCMessage } from "~/protocol/irc/encoder";
 import { canonicalizeIRCName } from "~/protocol/irc/parser";
 import type { IRCMessage } from "~/protocol/irc/types";
-import { deliverMultilineOrFallback } from "../messaging";
-import type { ISessionDO } from "../types";
-import { sendServiceResponse } from "./helpers";
 import { handleChathistory } from "../extensions";
+import type { ISessionDO } from "../types";
 
 export function handleBouncerCommand(
   session: ISessionDO,
@@ -62,7 +54,6 @@ export function handleBouncerCommand(
   session.sendAck(ws, attachment, labelTags);
 }
 
-
 export async function handleZncCommand(
   session: ISessionDO,
   ws: WebSocket,
@@ -93,7 +84,7 @@ export async function handleZncPlayback(
     const parseTs = (raw?: string): string | null => {
       if (!raw) return null;
       const num = parseFloat(raw);
-      if (!isNaN(num) && num > 0) {
+      if (!Number.isNaN(num) && num > 0) {
         const ms = num < 10000000000 ? Math.floor(num * 1000) : Math.floor(num);
         return new Date(ms).toISOString();
       }
@@ -201,5 +192,3 @@ export async function handleZncPlayback(
   }
   session.sendAck(ws, attachment, labelTags);
 }
-
-

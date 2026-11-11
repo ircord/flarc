@@ -2,7 +2,6 @@ import { SERVER_CONFIG } from "~/core/config";
 import type { SessionAttachment } from "~/core/types";
 import { encodeIRCMessage } from "~/protocol/irc/encoder";
 import { Numerics } from "~/protocol/irc/numerics";
-import { canonicalizeIRCName } from "~/protocol/irc/parser";
 import type { IRCMessage } from "~/protocol/irc/types";
 import {
   handleAuthenticate,
@@ -90,6 +89,49 @@ export async function dispatchIRCCommand(
   msg: IRCMessage,
 ): Promise<void> {
   const cmd = msg.command;
+  if (
+    SERVER_CONFIG.requireAccounts &&
+    !attachment.registered &&
+    !new Set([
+      "CAP",
+      "AUTHENTICATE",
+      "PASS",
+      "NICK",
+      "USER",
+      "REGISTER",
+      "VERIFY",
+      "PING",
+      "PONG",
+      "QUIT",
+      "WEBIRC",
+    ]).has(cmd)
+  ) {
+    session.sendNumeric(ws, attachment, Numerics.ERR_NOTREGISTERED, [
+      "Authenticate before using this command",
+    ]);
+    return;
+  }
+  if (attachment.registered && attachment.authenticated && attachment.accountName) {
+    const current = await session.getAccountsStub().getAccountByUsername(attachment.accountName);
+    if (
+      !current ||
+      current.id !== attachment.userId ||
+      current.credentialVersion !== attachment.credentialVersion
+    ) {
+      await session.disconnectSession(ws, attachment, "Account no longer available");
+      return;
+    }
+    attachment.roles = current.roles;
+    attachment.isOper = Boolean(
+      attachment.isOper && (current.roles.includes("admin") || current.roles.includes("oper")),
+    );
+    session.saveAttachment(ws, attachment);
+  }
+  if (SERVER_CONFIG.requireAccounts && attachment.registered && !attachment.authenticated) {
+    await session.disconnectSession(ws, attachment, "Account login required");
+    return;
+  }
+
   const clientLabel =
     typeof msg.tags.label === "string" && session.hasCap(attachment, "labeled-response")
       ? msg.tags.label
@@ -188,7 +230,7 @@ export async function dispatchIRCCommand(
       }
       const [webircPass, _gateway, clientHost, clientIp] = msg.params;
       const requiredPass = (session.env as any)?.WEBIRC_PASSWORD ?? SERVER_CONFIG.webircPassword;
-      if (requiredPass && webircPass !== requiredPass) {
+      if (!requiredPass || webircPass !== requiredPass) {
         session.sendNumeric(ws, attachment, Numerics.ERR_PASSWDMISMATCH, ["Password incorrect"]);
         return;
       }

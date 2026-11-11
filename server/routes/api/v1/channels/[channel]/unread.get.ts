@@ -1,22 +1,32 @@
 import { createError, defineEventHandler, getQuery, getRouterParam } from "nitro/h3";
 import { SERVER_CONFIG } from "~/core/config";
-import { getEnv, parseChannelParam } from "~/utils/auth";
+import {
+  clientRequest,
+  getEnv,
+  parseChannelParam,
+  requireAuthenticatedUser,
+  requireChannelRead,
+  requireSelf,
+} from "~/utils/auth";
 
 export default defineEventHandler(async (event) => {
-  const rawChan = getRouterParam(event, "channel");
+  const rawChan = getRouterParam(event, "channel", { decode: true });
   if (!rawChan) {
     throw createError({ statusCode: 400, statusMessage: "Channel parameter required" });
   }
 
+  await requireChannelRead(event, rawChan);
   const { name, canon } = parseChannelParam(rawChan);
   const query = getQuery(event);
+  const actor = await requireAuthenticatedUser(event);
   const username =
     typeof query.username === "string"
       ? query.username
       : typeof query.user === "string"
         ? query.user
-        : null;
+        : actor.username;
 
+  await requireSelf(event, username);
   const env = getEnv(event);
   let lastReadMs = 0;
   let lastReadTimestamp: string | null = null;
@@ -30,7 +40,7 @@ export default defineEventHandler(async (event) => {
   }
 
   const stub = env.CHANNELS.get(env.CHANNELS.idFromName(`${SERVER_CONFIG.networkId}:${canon}`));
-  const summary = await stub.getUnreadSummary(username || "", lastReadMs);
+  const summary = await clientRequest(event, stub, "unread", { username, lastReadMs });
 
   return {
     ok: true,

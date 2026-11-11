@@ -2,7 +2,7 @@ import { createError, defineEventHandler, getQuery } from "nitro/h3";
 import { z } from "zod";
 import { SERVER_CONFIG } from "~/core/config";
 import { normalizeTagFilter, parseSearchFilterString } from "~/protocol/irc/extensions/search";
-import { canAccessChannelHistory, getEnv, parseChannelParam } from "~/utils/auth";
+import { canAccessChannelHistory, clientRequest, getEnv, parseChannelParam } from "~/utils/auth";
 
 const searchSchema = z.object({
   q: z.string().optional(),
@@ -136,6 +136,7 @@ export default defineEventHandler(async (event) => {
   }
 
   const allResults: any[] = [];
+  const accessibleChannels: string[] = [];
 
   for (const chan of channelsToSearch) {
     const access = await canAccessChannelHistory(event, chan);
@@ -150,27 +151,29 @@ export default defineEventHandler(async (event) => {
       continue;
     }
 
+    accessibleChannels.push(chan);
     const { name, canon } = parseChannelParam(chan);
     const stub = env.CHANNELS.get(env.CHANNELS.idFromName(`${SERVER_CONFIG.networkId}:${canon}`));
-    try {
-      const messages = await (stub as any).searchMessages(query, {
-        limit: limit + 1,
-        from: fromFilters,
-        mentions: mentionsFilters,
-        has: hasFilters,
-        before,
-        after,
-        on,
-        author,
-        tags: tagFilters,
-        pinned,
-        cursor,
+    {
+      const messages = await clientRequest(event, stub, "search", {
+        query,
+        options: {
+          limit: limit + 1,
+          from: fromFilters,
+          mentions: mentionsFilters,
+          has: hasFilters,
+          before,
+          after,
+          on,
+          author,
+          tags: tagFilters,
+          pinned,
+          cursor,
+        },
       });
       for (const m of messages) {
         allResults.push({ ...m, channel: name });
       }
-    } catch {
-      // Channel DO might not exist yet
     }
   }
 
@@ -183,7 +186,7 @@ export default defineEventHandler(async (event) => {
     message: {
       id: m.id,
       conversationId: m.channel,
-      senderId: m.senderNick,
+      senderId: m.senderId,
       senderNick: m.senderNick,
       senderUser: m.senderUser,
       senderHost: m.senderHost,
@@ -211,7 +214,7 @@ export default defineEventHandler(async (event) => {
 
   return {
     ok: true,
-    channels: channelsToSearch,
+    channels: accessibleChannels,
     query,
     filters: {
       in: targetChannels.length ? targetChannels : undefined,

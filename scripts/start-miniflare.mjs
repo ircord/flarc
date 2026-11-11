@@ -17,7 +17,7 @@ function stripTags(rawLine) {
 }
 
 async function start() {
-  execSync("npm run build", { stdio: "inherit" });
+  execSync("bun run build", { stdio: "inherit" });
   const nitroBundle = path.resolve(process.cwd(), ".output/server/index.mjs");
 
   const mfOptions = {
@@ -27,6 +27,15 @@ async function start() {
     scriptPath: nitroBundle,
     compatibilityDate: "2025-02-04",
     compatibilityFlags: ["nodejs_compat"],
+    bindings: Object.fromEntries(
+      Object.entries(process.env).filter(
+        ([key, value]) =>
+          value !== undefined &&
+          /^(?:SERVER_|NETWORK_|WEBIRC_|WEBPUSH_|ADMIN_|SIGNUP_|MIN_PASSWORD_LENGTH|REQUIRE_ACCOUNTS|AUTO_REGISTER_CHANNELS|DEFAULT_USER_MODES|CASEMAPPING|REG_|ALWAYS_ON_DEFAULT|ALLOWED_ORIGINS|EMBED_ALLOWED_HOSTS|OUTGOING_WEBHOOK_ALLOWED_HOSTS|FILEHOST_|F_BOT_|CFCORD_)/.test(
+            key,
+          ),
+      ),
+    ),
     r2Buckets: ["MEDIA_BUCKET"],
     durableObjectsPersist: ".wrangler/state/v3/do",
     durableObjects: {
@@ -47,7 +56,7 @@ async function start() {
 
   const mf = new Miniflare(mfOptions);
 
-  const url = await mf.ready;
+  const _url = await mf.ready;
   console.log(`\n======================================================`);
   console.log(`🚀 FlaRC (Flare Relay Chat) Nitro 3 Server running:`);
   console.log(`   - HTTP & REST API:        http://127.0.0.1:${PORT}`);
@@ -80,7 +89,7 @@ async function start() {
           const startMs = Date.now();
           console.log(`\n[Nitro Watcher] Change detected in ${filename}. Rebuilding...`);
           try {
-            execSync("npm run build", { stdio: "inherit" });
+            execSync("bun run build", { stdio: "inherit" });
             await mf.setOptions(mfOptions);
             console.log(`[Nitro Watcher] Hot-reloaded in ${Date.now() - startMs}ms! ✅\n`);
           } catch (err) {
@@ -92,18 +101,6 @@ async function start() {
       });
     }
   }
-
-  // Seed default local account for Halloy & IRCord if not already present
-  await mf.dispatchFetch(`${url.origin}/api/accounts/register`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      username: "karbowiak",
-      password: "cfcord-local-password",
-      displayName: "Karbowiak",
-      roles: ["oper", "admin"],
-    }),
-  });
 
   function handleBotCtcp(ws, botName, botDesc, rawLine) {
     const raw = String(rawLine).trim();
@@ -171,74 +168,81 @@ async function start() {
     return ctcpCmd !== "ACTION";
   }
 
-  // Connect CFBot
-  const bot = new WebSocket(`ws://127.0.0.1:${PORT}/irc`, ["text.ircv3.net"]);
-  bot.on("open", () => {
-    bot.send("NICK CFBot");
-    bot.send("USER cfbot 0 * :Cloudflare Edge Bot");
-  });
-  bot.on("message", (data) => {
-    const raw = data.toString();
-    if (handleBotCtcp(bot, "CFBot", "Cloudflare Edge Bot v0.2.0", raw)) {
-      return;
-    }
-    const line = stripTags(raw);
-    if (line.includes(" 001 ")) {
-      bot.send("MODE CFBot +B");
-      bot.send("JOIN #general,#dev");
-      setTimeout(() => {
-        bot.send(
-          "TOPIC #general :Welcome to FlaRC (Flare Relay Chat) running locally on Cloudflare Miniflare!",
-        );
-      }, 250);
-    } else if (line.startsWith("PING ")) {
-      bot.send(line.replace(/^PING/, "PONG"));
-    } else if (
-      line.includes("PRIVMSG #general :") &&
-      !line.startsWith(":CFBot!") &&
-      !line.startsWith(":Echo!")
-    ) {
-      const sender = line.slice(1, line.indexOf("!"));
-      const text = line.split("PRIVMSG #general :")[1] ?? "";
-      bot.send(
-        `PRIVMSG #general :Hey ${sender}! Received your message on Cloudflare DO: "${text}"`,
-      );
-    }
-  });
-
-  // Connect Echo bot in #general, #dev, and DMs
-  const echoBot = new WebSocket(`ws://127.0.0.1:${PORT}/irc`, ["text.ircv3.net"]);
-  echoBot.on("open", () => {
-    echoBot.send("NICK Echo");
-    echoBot.send("USER echo 0 * :Echo Bot");
-  });
-  echoBot.on("message", (data) => {
-    const raw = data.toString();
-    if (handleBotCtcp(echoBot, "Echo", "FlaRC Echo Bot v0.2.0", raw)) {
-      return;
-    }
-    const line = stripTags(raw);
-    if (line.includes(" 001 ")) {
-      echoBot.send("MODE Echo +B");
-      echoBot.send("JOIN #general,#dev");
-    } else if (line.startsWith("PING ")) {
-      echoBot.send(line.replace(/^PING/, "PONG"));
-    } else if (line.includes(" PRIVMSG ")) {
-      if (line.startsWith(":Echo!") || line.startsWith(":CFBot!")) {
+  // Bots are opt-in and authenticate as explicitly provisioned ordinary accounts.
+  if (process.env.CFBOT_PASSWORD) {
+    // Connect CFBot
+    const bot = new WebSocket(`ws://127.0.0.1:${PORT}/irc`, ["text.ircv3.net"]);
+    bot.on("open", () => {
+      bot.send(`PASS CFBot:${process.env.CFBOT_PASSWORD}`);
+      bot.send("NICK CFBot");
+      bot.send("USER cfbot 0 * :Cloudflare Edge Bot");
+    });
+    bot.on("message", (data) => {
+      const raw = data.toString();
+      if (handleBotCtcp(bot, "CFBot", "Cloudflare Edge Bot v0.2.0", raw)) {
         return;
       }
-      const bangIdx = line.indexOf("!");
-      const sender = bangIdx > 1 ? line.slice(1, bangIdx) : "someone";
-      const privIdx = line.indexOf(" PRIVMSG ");
-      const afterPriv = line.slice(privIdx + " PRIVMSG ".length);
-      const colonIdx = afterPriv.indexOf(" :");
-      if (colonIdx === -1) return;
-      const target = afterPriv.slice(0, colonIdx).trim();
-      const text = afterPriv.slice(colonIdx + 2);
-      const replyTarget = target.startsWith("#") || target.startsWith("&") ? target : sender;
-      echoBot.send(`PRIVMSG ${replyTarget} :${text}`);
-    }
-  });
+      const line = stripTags(raw);
+      if (line.includes(" 001 ")) {
+        bot.send("MODE CFBot +B");
+        bot.send("JOIN #general,#dev");
+        setTimeout(() => {
+          bot.send(
+            "TOPIC #general :Welcome to FlaRC (Flare Relay Chat) running locally on Cloudflare Miniflare!",
+          );
+        }, 250);
+      } else if (line.startsWith("PING ")) {
+        bot.send(line.replace(/^PING/, "PONG"));
+      } else if (
+        line.includes("PRIVMSG #general :") &&
+        !line.startsWith(":CFBot!") &&
+        !line.startsWith(":Echo!")
+      ) {
+        const sender = line.slice(1, line.indexOf("!"));
+        const text = line.split("PRIVMSG #general :")[1] ?? "";
+        bot.send(
+          `PRIVMSG #general :Hey ${sender}! Received your message on Cloudflare DO: "${text}"`,
+        );
+      }
+    });
+  }
+
+  if (process.env.ECHO_BOT_PASSWORD) {
+    // Connect Echo bot in #general, #dev, and DMs
+    const echoBot = new WebSocket(`ws://127.0.0.1:${PORT}/irc`, ["text.ircv3.net"]);
+    echoBot.on("open", () => {
+      echoBot.send(`PASS Echo:${process.env.ECHO_BOT_PASSWORD}`);
+      echoBot.send("NICK Echo");
+      echoBot.send("USER echo 0 * :Echo Bot");
+    });
+    echoBot.on("message", (data) => {
+      const raw = data.toString();
+      if (handleBotCtcp(echoBot, "Echo", "FlaRC Echo Bot v0.2.0", raw)) {
+        return;
+      }
+      const line = stripTags(raw);
+      if (line.includes(" 001 ")) {
+        echoBot.send("MODE Echo +B");
+        echoBot.send("JOIN #general,#dev");
+      } else if (line.startsWith("PING ")) {
+        echoBot.send(line.replace(/^PING/, "PONG"));
+      } else if (line.includes(" PRIVMSG ")) {
+        if (line.startsWith(":Echo!") || line.startsWith(":CFBot!")) {
+          return;
+        }
+        const bangIdx = line.indexOf("!");
+        const sender = bangIdx > 1 ? line.slice(1, bangIdx) : "someone";
+        const privIdx = line.indexOf(" PRIVMSG ");
+        const afterPriv = line.slice(privIdx + " PRIVMSG ".length);
+        const colonIdx = afterPriv.indexOf(" :");
+        if (colonIdx === -1) return;
+        const target = afterPriv.slice(0, colonIdx).trim();
+        const text = afterPriv.slice(colonIdx + 2);
+        const replyTarget = target.startsWith("#") || target.startsWith("&") ? target : sender;
+        echoBot.send(`PRIVMSG ${replyTarget} :${text}`);
+      }
+    });
+  }
 
   // Start local TCP-to-WebSocket IRC Bridge so traditional TCP IRC clients (like IRCord) can connect
   const tcpServer = net.createServer((socket) => {
@@ -279,6 +283,10 @@ async function start() {
     });
 
     socket.on("data", (chunk) => {
+      if (buffer.length + chunk.length > 65536 || pendingLines.length > 128) {
+        socket.destroy();
+        return;
+      }
       buffer += chunk.toString("utf-8");
       let nlIdx;
       while ((nlIdx = buffer.indexOf("\n")) !== -1) {

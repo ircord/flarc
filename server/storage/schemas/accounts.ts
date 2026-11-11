@@ -3,6 +3,8 @@ import { blob, index, integer, primaryKey, sqliteTable, text } from "drizzle-orm
 export const users = sqliteTable("users", {
   id: text("id").primaryKey(),
   username: text("username").notNull().unique(),
+  canonicalUsername: text("canonical_username").notNull().unique(),
+  credentialVersion: integer("credential_version").notNull().default(0),
   displayName: text("display_name"),
   passwordHash: text("password_hash").notNull(),
   createdAt: integer("created_at").notNull(),
@@ -105,6 +107,11 @@ export const mediaUploads = sqliteTable("media_uploads", {
   mimeType: text("mime_type").notNull(),
   size: integer("size").notNull(),
   data: blob("data", { mode: "buffer" }).notNull(),
+  ownerId: text("owner_id"),
+  scopeKind: text("scope_kind").notNull().default("private"),
+  scopeTarget: text("scope_target"),
+  scopeGeneration: text("scope_generation"),
+  storageKind: text("storage_kind").notNull().default("sqlite"),
   createdAt: integer("created_at").notNull(),
 });
 
@@ -112,3 +119,19 @@ export type User = typeof users.$inferSelect;
 export type NewUser = typeof users.$inferInsert;
 export type AccountRole = typeof accountRoles.$inferSelect;
 export type MediaUpload = typeof mediaUploads.$inferSelect;
+
+export const apiSessions = sqliteTable("api_sessions", {
+  tokenHash: text("token_hash").primaryKey(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  expiresAt: integer("expires_at").notNull(),
+  createdAt: integer("created_at").notNull(),
+});
+export const eventTickets = sqliteTable("event_tickets", {
+  ticketHash: text("ticket_hash").primaryKey(),
+  sessionHash: text("session_hash")
+    .notNull()
+    .references(() => apiSessions.tokenHash, { onDelete: "cascade" }),
+  expiresAt: integer("expires_at").notNull(),
+});

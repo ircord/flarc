@@ -75,5 +75,5 @@ export function canEditMessage(
   if (originalMessage.senderSessionId) {
     return originalMessage.senderSessionId === actor.sessionId;
   }
-  return originalMessage.senderNick?.toLowerCase() === actor.nickname.toLowerCase();
+  return false;
 }

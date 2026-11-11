@@ -452,6 +452,15 @@ export async function handleNames(
     }
     const stub = session.getChannelStub(ch);
     const summary = await stub.getChannelSummary(ch);
+    const member = summary.members.some((m) => m.sessionId === attachment.sessionId);
+    const restricted = SERVER_CONFIG.requireAccounts
+      ? /[spik]/.test(summary.modes)
+      : /[sp]/.test(summary.modes);
+    if (restricted && !member && !attachment.isOper) {
+      if (!isMulti)
+        session.sendNumeric(ws, attachment, Numerics.RPL_ENDOFNAMES, [ch, "End of /NAMES list."]);
+      continue;
+    }
     if (summary.members.length === 0) {
       if (!isMulti) {
         session.sendNumeric(ws, attachment, Numerics.RPL_ENDOFNAMES, [ch, "End of /NAMES list."]);
@@ -607,7 +616,7 @@ export async function handleMode(
     const modeString = msg.params[1];
     const modeArgs = msg.params.slice(2);
 
-    if (modeString && modeString.includes("f") && !modeString.startsWith("-")) {
+    if (modeString?.includes("f") && !modeString.startsWith("-")) {
       const forwardArg = modeArgs[0];
       if (!forwardArg || !isValidChannelName(forwardArg)) {
         session.sendNumeric(
@@ -957,11 +966,12 @@ export async function handleInvite(
   msg: IRCMessage,
 ): Promise<void> {
   if (msg.params.length === 0) {
-    const canonNick = canonicalizeIRCName(attachment.nickname ?? "");
+    const _canonNick = canonicalizeIRCName(attachment.nickname ?? "");
     const rows = session.sql
       .exec<{ channel_name: string }>(
-        "SELECT channel_name FROM session_invites WHERE canon_nick = ?",
-        canonNick,
+        "SELECT channel_name FROM session_invites WHERE target_user_id = ? AND created_at > ?",
+        attachment.userId,
+        Date.now() - 24 * 60 * 60 * 1000,
       )
       .toArray();
     for (const row of rows) {
@@ -998,6 +1008,7 @@ export async function handleInvite(
     actorSessionId: attachment.sessionId,
     actorNick: attachment.nickname!,
     targetNick: targetSess.attachment.nickname!,
+    targetUserId: targetSess.attachment.userId,
     isOper: attachment.isOper,
   });
 
@@ -1023,12 +1034,13 @@ export async function handleInvite(
   ]);
 
   session.sql.exec(
-    `INSERT INTO session_invites (canon_nick, channel_name, created_at)
-       VALUES (?, ?, ?)
-       ON CONFLICT(canon_nick, channel_name) DO UPDATE SET created_at = excluded.created_at`,
+    `INSERT INTO session_invites (canon_nick, channel_name, created_at, target_user_id)
+       VALUES (?, ?, ?, ?)
+       ON CONFLICT(canon_nick, channel_name) DO UPDATE SET created_at = excluded.created_at, target_user_id = excluded.target_user_id`,
     canonicalizeIRCName(targetNick),
     res.channelName,
     Date.now(),
+    targetSess.attachment.userId,
   );
 
   const inviteTags: Record<string, string | true> = {
@@ -1137,6 +1149,15 @@ export async function handleList(
     const stub = session.getChannelStub(row.channel_name);
     const summary = await stub.getChannelSummary(row.channel_name);
     const isMember = clientChanSet.has(canonicalizeIRCName(summary.name));
+    if (
+      SERVER_CONFIG.requireAccounts &&
+      !(await stub.canReadAccount({
+        id: attachment.userId,
+        username: attachment.accountName ?? "",
+        isAdmin: attachment.isOper,
+      }))
+    )
+      continue;
 
     // Conceal secret channels (+s) from non-members
     if (summary.modes.includes("s") && !isMember) {
@@ -1152,13 +1173,13 @@ export async function handleList(
       for (const f of filters) {
         if (f.startsWith(">")) {
           const min = parseInt(f.slice(1), 10);
-          if (!isNaN(min) && summary.memberCount <= min) {
+          if (!Number.isNaN(min) && summary.memberCount <= min) {
             matches = false;
             break;
           }
         } else if (f.startsWith("<")) {
           const max = parseInt(f.slice(1), 10);
-          if (!isNaN(max) && summary.memberCount >= max) {
+          if (!Number.isNaN(max) && summary.memberCount >= max) {
             matches = false;
             break;
           }

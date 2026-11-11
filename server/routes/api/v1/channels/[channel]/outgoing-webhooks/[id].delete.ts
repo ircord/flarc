@@ -3,8 +3,8 @@ import { SERVER_CONFIG } from "~/core/config";
 import { getEnv, parseChannelParam, requireChannelOpOrOwner } from "~/utils/auth";
 
 export default defineEventHandler(async (event) => {
-  const rawChan = getRouterParam(event, "channel");
-  const id = getRouterParam(event, "id");
+  const rawChan = getRouterParam(event, "channel", { decode: true });
+  const id = getRouterParam(event, "id", { decode: true });
   if (!rawChan || !id) {
     throw createError({ statusCode: 400, statusMessage: "Channel and webhook ID required" });
   }

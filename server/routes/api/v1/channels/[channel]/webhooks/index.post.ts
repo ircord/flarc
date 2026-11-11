@@ -16,7 +16,7 @@ const webhookSchema = z.object({
 });
 
 export default defineEventHandler(async (event) => {
-  const channel = getRouterParam(event, "channel");
+  const channel = getRouterParam(event, "channel", { decode: true });
   if (!channel) {
     throw createError({ statusCode: 400, statusMessage: "Channel required" });
   }
@@ -39,7 +39,7 @@ export default defineEventHandler(async (event) => {
 
   const result = await (stub as any).createWebhook(
     parsed.data.name,
-    parsed.data.created_by || user.username,
+    user.username,
     parsed.data.avatar_url,
   );
 

@@ -1,18 +1,22 @@
 import type { Miniflare } from "miniflare";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import WebSocket from "ws";
-import { createMiniflareServer, TestIRCClient } from "../helpers/miniflare-harness";
+import { createProtocolServer, TestIRCClient } from "../helpers/miniflare-harness";
 
 describe("Realtime Events, Custom Role Groups & Message Editing", () => {
-  let mf: Miniflare;
+  let _mf: Miniflare;
   let httpUrl: URL;
   let wsUrl: string;
   let dispose: () => Promise<void>;
+  let fixture: Awaited<ReturnType<typeof createProtocolServer>>;
+  let request: Awaited<ReturnType<typeof createProtocolServer>>["request"];
   const clients: TestIRCClient[] = [];
 
   beforeEach(async () => {
-    const srv = await createMiniflareServer();
-    mf = srv.mf;
+    const srv = await createProtocolServer();
+    fixture = srv;
+    request = srv.request;
+    _mf = srv.mf;
     httpUrl = srv.url;
     wsUrl = srv.wsUrl;
     dispose = srv.dispose;
@@ -37,7 +41,9 @@ describe("Realtime Events, Custom Role Groups & Message Editing", () => {
     // 1. Connect WebSocket to /api/v1/events
     const eventsWsUrl = `ws://${httpUrl.host}/api/v1/events`;
     const receivedEvents: any[] = [];
-    const eventWs = new WebSocket(eventsWsUrl);
+    const eventWs = new WebSocket(eventsWsUrl, {
+      headers: { Authorization: `Bearer ${fixture.adminToken}` },
+    });
 
     await new Promise<void>((resolve, reject) => {
       eventWs.on("open", () => resolve());
@@ -50,21 +56,18 @@ describe("Realtime Events, Custom Role Groups & Message Editing", () => {
     });
 
     // 2. Create custom role group via REST API
-    const createRoleRes = await mf.dispatchFetch(
-      `${httpUrl.origin}/api/v1/channels/%23gaming/roles`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: "Moderator",
-          color: "#00FF00",
-          priority: 50,
-          ircMode: "o",
-          ircPrefix: "@",
-          permissions: ["send_messages", "kick_members", "change_topic"],
-        }),
-      },
-    );
+    const createRoleRes = await request(`${httpUrl.origin}/api/v1/channels/%23gaming/roles`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: "Moderator",
+        color: "#00FF00",
+        priority: 50,
+        ircMode: "o",
+        ircPrefix: "@",
+        permissions: ["send_messages", "kick_members", "change_topic"],
+      }),
+    });
     expect(createRoleRes.status).toBe(201);
     const createdRoleData = (await createRoleRes.json()) as any;
     expect(createdRoleData.ok).toBe(true);
@@ -77,25 +80,23 @@ describe("Realtime Events, Custom Role Groups & Message Editing", () => {
     ircClient.send("JOIN #gaming");
     await ircClient.waitForLine((l) => l.includes(" JOIN #gaming"));
 
+    const gamer = await fixture.apiUser("gamerApi", "#gaming");
     // Send message via REST API
-    const sendMsgRes = await mf.dispatchFetch(
-      `${httpUrl.origin}/api/v1/channels/%23gaming/messages`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          content: "Hello from modern API!",
-          senderNick: "gamer_one",
-        }),
-      },
-    );
+    const sendMsgRes = await gamer.request(`${httpUrl.origin}/api/v1/channels/%23gaming/messages`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        content: "Hello from modern API!",
+        senderNick: "gamer_one",
+      }),
+    });
     expect(sendMsgRes.status).toBe(201);
     const msgData = (await sendMsgRes.json()) as any;
     expect(msgData.ok).toBe(true);
     const messageId = msgData.message.id;
 
     // 4. Edit message via REST API
-    const editMsgRes = await mf.dispatchFetch(
+    const editMsgRes = await gamer.request(
       `${httpUrl.origin}/api/v1/channels/%23gaming/messages/${messageId}`,
       {
         method: "PATCH",
@@ -122,11 +123,11 @@ describe("Realtime Events, Custom Role Groups & Message Editing", () => {
     const editEvent = receivedEvents.find((e) => e.type === "message.updated");
     expect(editEvent).toBeDefined();
     expect(editEvent.data.newContent).toBe("Hello from modern API! (edited)");
-    expect(editEvent.data.editor).toBe("gamer_one");
+    expect(editEvent.data.editor).toBe("gamerApi");
   });
 
   it("serves OpenAPI 3.1 schema at /openapi.json and Scalar HTML UI at /docs", async () => {
-    const specRes = await mf.dispatchFetch(`${httpUrl.origin}/openapi.json`);
+    const specRes = await request(`${httpUrl.origin}/openapi.json`);
     expect(specRes.status).toBe(200);
     const spec = (await specRes.json()) as any;
     expect(spec.openapi).toBe("3.1.0");
@@ -135,7 +136,7 @@ describe("Realtime Events, Custom Role Groups & Message Editing", () => {
     expect(spec.paths["/api/v1/channels/{channel}/roles"]).toBeDefined();
     expect(spec.paths["/api/v1/events"]).toBeDefined();
 
-    const docsRes = await mf.dispatchFetch(`${httpUrl.origin}/docs`);
+    const docsRes = await request(`${httpUrl.origin}/docs`);
     expect(docsRes.status).toBe(200);
     expect(docsRes.headers.get("content-type")).toContain("text/html");
     const html = await docsRes.text();

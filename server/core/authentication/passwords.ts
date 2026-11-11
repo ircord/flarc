@@ -29,7 +29,15 @@ export async function verifyPassword(password: string, storedHash: string): Prom
   if (parts.length !== 4 || parts[0] !== "pbkdf2") {
     return false;
   }
-  const iterations = parseInt(parts[1], 10);
+  const iterations = Number(parts[1]);
+  if (
+    !Number.isInteger(iterations) ||
+    iterations < 1 ||
+    iterations > 100_000 ||
+    !/^[a-f0-9]{32}$/i.test(parts[2]) ||
+    !/^[a-f0-9]{64}$/i.test(parts[3])
+  )
+    return false;
   const salt = hexToBytes(parts[2]);
   const expectedHash = hexToBytes(parts[3]);
 

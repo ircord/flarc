@@ -1,15 +1,6 @@
-import { SERVER_CONFIG } from "~/core/config";
-import type {
-  ChannelMemberInfo,
-  ChannelStateSummary,
-  SessionAttachment,
-  StoredChannelMessage,
-} from "~/core/types";
-import { encodeIRCMessage, encodeNumeric } from "~/protocol/irc/encoder";
+import type { SessionAttachment } from "~/core/types";
 import { Numerics } from "~/protocol/irc/numerics";
 import { canonicalizeIRCName } from "~/protocol/irc/parser";
-import type { IRCMessage } from "~/protocol/irc/types";
-import { deliverMultilineOrFallback } from "../messaging";
 import type { ISessionDO } from "../types";
 import { sendServiceResponse } from "./helpers";
 
@@ -42,6 +33,7 @@ export async function handleNickServ(
     const res = await accountsStub.registerAccount({
       username: accountName,
       password,
+      registrationPolicyBypass: isSa,
     });
     if (!res.ok) {
       sendServiceResponse(
@@ -56,8 +48,10 @@ export async function handleNickServ(
     }
 
     if (!isSa) {
+      await session.prepareAccountChange(attachment, res.account.id);
       attachment.authenticated = true;
       attachment.userId = res.account.id;
+      attachment.credentialVersion = res.account.credentialVersion ?? 0;
       attachment.accountName = res.account.username;
       attachment.roles = res.account.roles;
       session.saveAttachment(ws, attachment);
@@ -94,8 +88,11 @@ export async function handleNickServ(
       return;
     }
 
+    await session.prepareAccountChange(attachment, res.account.id);
+
     attachment.authenticated = true;
     attachment.userId = res.account.id;
+    attachment.credentialVersion = res.account.credentialVersion ?? 0;
     attachment.accountName = res.account.username;
     attachment.roles = res.account.roles;
     attachment.isOper = res.account.roles.includes("oper") || res.account.roles.includes("admin");
@@ -234,7 +231,19 @@ export async function handleNickServ(
       );
       return;
     }
+    if (!isSa && canonicalizeIRCName(targetAcct) !== canonicalizeIRCName(attachment.accountName!)) {
+      sendServiceResponse(
+        session,
+        ws,
+        attachment,
+        "NickServ",
+        ["Insufficient privileges"],
+        labelTags,
+      );
+      return;
+    }
     const ok = await accountsStub.unregisterAccount(targetAcct);
+    if (ok) await session.invalidateAccountPermissions(targetAcct);
     if (ok && !isSa) {
       attachment.authenticated = false;
       attachment.accountName = null;
@@ -270,7 +279,9 @@ export async function handleNickServ(
       );
       return;
     }
-    const ok = await accountsStub.changePassword(attachment.accountName, newPass);
+    const changedAccount = attachment.accountName;
+    const ok = await accountsStub.changePassword(changedAccount, newPass);
+    if (ok) await session.invalidateAccountPermissions(changedAccount);
     sendServiceResponse(
       session,
       ws,
@@ -279,7 +290,7 @@ export async function handleNickServ(
       [
         ok
           ? "Successfully changed password"
-          : "Could not change password (must be at least 6 characters)",
+          : "Could not change password (check the configured password policy)",
       ],
       labelTags,
     );
@@ -336,6 +347,20 @@ export async function handleNickServ(
 
   if (sub === "CLIENTS" || sub === "SESSIONS") {
     const targetAcct = parts[1] ?? attachment.accountName ?? "";
+    if (
+      !attachment.isOper &&
+      canonicalizeIRCName(targetAcct) !== canonicalizeIRCName(attachment.accountName ?? "")
+    ) {
+      sendServiceResponse(
+        session,
+        ws,
+        attachment,
+        "NickServ",
+        ["Insufficient privileges"],
+        labelTags,
+      );
+      return;
+    }
     if (!targetAcct) {
       sendServiceResponse(
         session,
@@ -459,4 +484,3 @@ export async function handleNickServ(
     labelTags,
   );
 }
-

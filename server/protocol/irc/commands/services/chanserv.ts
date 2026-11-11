@@ -1,15 +1,7 @@
 import { SERVER_CONFIG } from "~/core/config";
-import type {
-  ChannelMemberInfo,
-  ChannelStateSummary,
-  SessionAttachment,
-  StoredChannelMessage,
-} from "~/core/types";
-import { encodeIRCMessage, encodeNumeric } from "~/protocol/irc/encoder";
-import { Numerics } from "~/protocol/irc/numerics";
+import type { SessionAttachment } from "~/core/types";
+import { encodeIRCMessage } from "~/protocol/irc/encoder";
 import { canonicalizeIRCName } from "~/protocol/irc/parser";
-import type { IRCMessage } from "~/protocol/irc/types";
-import { deliverMultilineOrFallback } from "../messaging";
 import type { ISessionDO } from "../types";
 import { sendServiceResponse } from "./helpers";
 
@@ -23,6 +15,20 @@ export async function handleChanServ(
   const parts = rawText.trim().split(/\s+/).filter(Boolean);
   const sub = (parts[0] ?? "HELP").toUpperCase();
   const accountsStub = session.getAccountsStub();
+  const requestedChannel =
+    sub === "TRANSFER" && parts[1]?.toLowerCase() === "accept" ? parts[2] : parts[1];
+  if (
+    requestedChannel &&
+    /^[#&]/.test(requestedChannel) &&
+    !(await session.getChannelStub(requestedChannel).canReadAccount({
+      id: attachment.userId,
+      username: attachment.accountName ?? "",
+      isAdmin: attachment.isOper,
+    }))
+  ) {
+    sendServiceResponse(session, ws, attachment, "ChanServ", ["Channel access denied"], labelTags);
+    return;
+  }
 
   if (sub === "INFO") {
     const channelName = parts[1] ?? "";
@@ -315,13 +321,23 @@ export async function handleChanServ(
     const rows = session.sql
       .exec<{ channel_name: string }>("SELECT DISTINCT channel_name FROM session_channels")
       .toArray();
-    const lines: string[] = [`Channels (${rows.length}):`];
+    const lines: string[] = [];
     for (const r of rows) {
-      const info = await session.getChannelStub(r.channel_name).csInfo(r.channel_name);
+      const stub = session.getChannelStub(r.channel_name);
+      if (
+        !(await stub.canReadAccount({
+          id: attachment.userId,
+          username: attachment.accountName ?? "",
+          isAdmin: attachment.isOper,
+        }))
+      )
+        continue;
+      const info = await stub.csInfo(r.channel_name);
       lines.push(
         `- ${info.channelName}${info.registered ? ` (registered by ${info.founder ?? "*"})` : ""}`,
       );
     }
+    lines.unshift(`Channels (${lines.length}):`);
     sendServiceResponse(session, ws, attachment, "ChanServ", lines, labelTags);
     return;
   }
@@ -412,4 +428,3 @@ export async function handleChanServ(
     labelTags,
   );
 }
-

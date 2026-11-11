@@ -9,15 +9,17 @@ import {
   xorBytes,
 } from "~/core/authentication/scram";
 import { SERVER_CONFIG } from "~/core/config";
-import { domainEvents } from "~/core/events/emitter";
-import { isValidNickname, isValidUsername } from "~/core/permissions/validation";
+import {
+  isReservedServiceNickname,
+  isValidNickname,
+  isValidUsername,
+} from "~/core/permissions/validation";
 import type { SessionAttachment } from "~/core/types";
 import { formatCapabilitiesList, isSupportedCapability } from "~/protocol/irc/capabilities";
 import { encodeIRCMessage } from "~/protocol/irc/encoder";
 import { Numerics } from "~/protocol/irc/numerics";
 import { canonicalizeIRCName } from "~/protocol/irc/parser";
 import type { IRCMessage } from "~/protocol/irc/types";
-import { handleJoin } from "./channel";
 import type { ISessionDO } from "./types";
 
 export async function handleCap(
@@ -133,9 +135,9 @@ export async function handleAuthenticate(
 
   if (!attachment.saslMechanism) {
     const mech = arg.toUpperCase();
-    if (mech !== "PLAIN" && mech !== "EXTERNAL" && mech !== "SCRAM-SHA-256") {
+    if (mech !== "PLAIN" && mech !== "SCRAM-SHA-256") {
       session.sendNumeric(ws, attachment, Numerics.RPL_SASLMECHS, [
-        "PLAIN,EXTERNAL,SCRAM-SHA-256",
+        "PLAIN,SCRAM-SHA-256",
         "are available SASL mechanisms",
       ]);
       session.sendNumeric(ws, attachment, Numerics.ERR_SASLFAIL, ["SASL authentication failed"]);
@@ -206,7 +208,11 @@ export async function handleAuthenticate(
       }
 
       const parsedFirst = parseClientFirstMessage(decodedFirst);
-      if (!parsedFirst) {
+      if (
+        !parsedFirst ||
+        (parsedFirst.authzid &&
+          canonicalizeIRCName(parsedFirst.authzid) !== canonicalizeIRCName(parsedFirst.username))
+      ) {
         attachment.saslMechanism = null;
         attachment.scramState = undefined;
         session.saveAttachment(ws, attachment);
@@ -236,8 +242,7 @@ export async function handleAuthenticate(
         serverNonce,
         salt: res.scram.salt,
         iterations: res.scram.iterations,
-        storedKey: res.scram.storedKey,
-        serverKey: res.scram.serverKey,
+        credentialVersion: res.account.credentialVersion ?? 0,
       };
       session.saveAttachment(ws, attachment);
 
@@ -267,6 +272,7 @@ export async function handleAuthenticate(
       const parsedFinal = parseClientFinalMessage(decodedFinal);
       if (
         !parsedFinal ||
+        (parsedFinal.channelBinding !== "biws" && parsedFinal.channelBinding !== "eSws") ||
         parsedFinal.nonce !== attachment.scramState.clientNonce + attachment.scramState.serverNonce
       ) {
         attachment.saslMechanism = null;
@@ -276,8 +282,20 @@ export async function handleAuthenticate(
         return;
       }
 
+      const credentials = await accountsStub.getScramCredentials(attachment.scramState.username);
+      if (
+        !credentials.ok ||
+        (credentials.account.credentialVersion ?? 0) !== attachment.scramState.credentialVersion ||
+        credentials.scram.salt !== attachment.scramState.salt
+      ) {
+        attachment.saslMechanism = null;
+        attachment.scramState = undefined;
+        session.saveAttachment(ws, attachment);
+        session.sendNumeric(ws, attachment, Numerics.ERR_SASLFAIL, ["SASL authentication failed"]);
+        return;
+      }
       const authMessage = `${attachment.scramState.authMessagePrefix},${parsedFinal.clientFinalWithoutProof}`;
-      const storedKeyBytes = base64ToUint8Array(attachment.scramState.storedKey);
+      const storedKeyBytes = base64ToUint8Array(credentials.scram.storedKey);
       const clientSignature = await hmacSha256(storedKeyBytes, authMessage);
       const clientProofBytes = base64ToUint8Array(parsedFinal.proofB64);
 
@@ -305,7 +323,7 @@ export async function handleAuthenticate(
         return;
       }
 
-      const serverKeyBytes = base64ToUint8Array(attachment.scramState.serverKey);
+      const serverKeyBytes = base64ToUint8Array(credentials.scram.serverKey);
       const serverSignature = await hmacSha256(serverKeyBytes, authMessage);
       const serverFinal = `v=${uint8ArrayToBase64(serverSignature)}`;
 
@@ -334,10 +352,16 @@ export async function handleAuthenticate(
       }
 
       const username = attachment.scramState.username;
+      const freshCredentials = await accountsStub.getScramCredentials(username);
+      const challengeCurrent =
+        freshCredentials.ok &&
+        (freshCredentials.account.credentialVersion ?? 0) ===
+          attachment.scramState.credentialVersion &&
+        freshCredentials.scram.salt === attachment.scramState.salt;
       attachment.saslMechanism = null;
       attachment.scramState = undefined;
       const acct = await accountsStub.getAccountByUsername(username);
-      if (!acct) {
+      if (!acct || !challengeCurrent) {
         session.saveAttachment(ws, attachment);
         session.sendNumeric(ws, attachment, Numerics.ERR_SASLFAIL, ["SASL authentication failed"]);
         return;
@@ -349,30 +373,12 @@ export async function handleAuthenticate(
     attachment.saslBuffer = "";
     session.saslBuffersBySession.delete(attachment.sessionId);
 
-    if (mech === "EXTERNAL") {
-      let targetAcct = attachment.nickname ?? "";
-      if (payload && payload !== "+") {
-        try {
-          const decodedAuthzid = atob(payload).replace(/\0/g, "").trim();
-          if (decodedAuthzid) targetAcct = decodedAuthzid;
-        } catch {
-          // ignore
-        }
-      }
-      if (targetAcct) {
-        const acct = await accountsStub.getAccountByUsername(targetAcct);
-        if (acct) {
-          authenticatedAccount = acct;
-        }
-      }
-      if (!authenticatedAccount) {
-        session.saveAttachment(ws, attachment);
-        session.sendNumeric(ws, attachment, Numerics.ERR_SASLFAIL, ["SASL authentication failed"]);
-        return;
-      }
-    } else {
+    {
       const decoded = decodeSaslPlain(payload);
-      if (!decoded) {
+      if (
+        !decoded ||
+        canonicalizeIRCName(decoded.authzid) !== canonicalizeIRCName(decoded.authcid)
+      ) {
         session.saveAttachment(ws, attachment);
         session.sendNumeric(ws, attachment, Numerics.ERR_SASLFAIL, ["SASL authentication failed"]);
         return;
@@ -392,8 +398,10 @@ export async function handleAuthenticate(
     return;
   }
 
+  await session.prepareAccountChange(attachment, authenticatedAccount.id);
   attachment.authenticated = true;
   attachment.userId = authenticatedAccount.id;
+  attachment.credentialVersion = (authenticatedAccount as any).credentialVersion ?? 0;
   attachment.accountName = authenticatedAccount.username;
   attachment.isOper =
     authenticatedAccount.roles.includes("oper") || authenticatedAccount.roles.includes("admin");
@@ -442,7 +450,7 @@ export async function handleRegisterCommand(
     (session.env as any)?.REG_BEFORE_CONNECT ??
     (session.env as any)?.CFCORD_REG_BEFORE_CONNECT ??
     (typeof process !== "undefined"
-      ? process.env.REG_BEFORE_CONNECT ?? process.env.CFCORD_REG_BEFORE_CONNECT
+      ? (process.env.REG_BEFORE_CONNECT ?? process.env.CFCORD_REG_BEFORE_CONNECT)
       : undefined);
   if (!attachment.registered && envRegBeforeConnect === "0") {
     session.sendLine(
@@ -467,7 +475,7 @@ export async function handleRegisterCommand(
     (session.env as any)?.REG_REQUIRES_EMAIL ??
     (session.env as any)?.CFCORD_REG_REQUIRES_EMAIL ??
     (typeof process !== "undefined"
-      ? process.env.REG_REQUIRES_EMAIL ?? process.env.CFCORD_REG_REQUIRES_EMAIL
+      ? (process.env.REG_REQUIRES_EMAIL ?? process.env.CFCORD_REG_REQUIRES_EMAIL)
       : undefined);
   const email = msg.params[1];
   if (envRegRequiresEmail === "1" && (!email || email === "*" || !email.includes("@"))) {
@@ -547,8 +555,11 @@ export async function handleRegisterCommand(
     return;
   }
 
+  await session.prepareAccountChange(attachment, res.account.id);
+
   attachment.authenticated = true;
   attachment.userId = res.account.id;
+  attachment.credentialVersion = res.account.credentialVersion ?? 0;
   attachment.accountName = res.account.username;
   attachment.roles = res.account.roles;
   session.saveAttachment(ws, attachment);
@@ -611,12 +622,16 @@ export function handleVerifyCommand(
     );
     return;
   }
-  session.sendNumeric(
+  // No challenge issuer or verifier exists. Never claim arbitrary tokens were verified.
+  session.sendLine(
     ws,
     attachment,
-    Numerics.RPL_VERIFYSUCCESS,
-    [account, "Account verification successful"],
-    labelTags,
+    encodeIRCMessage({
+      tags: session.filterOutgoingTags(attachment, labelTags),
+      prefix: SERVER_CONFIG.serverName,
+      command: "FAIL",
+      params: ["VERIFY", "INVALID_CODE", account, "Account verification is not configured"],
+    }),
   );
 }
 
@@ -652,7 +667,7 @@ export async function handleNick(
     session.sendNumeric(ws, attachment, Numerics.ERR_NONICKNAMEGIVEN, ["No nickname given"]);
     return;
   }
-  if (!isValidNickname(newNick)) {
+  if (!isValidNickname(newNick) || isReservedServiceNickname(newNick)) {
     session.sendNumeric(ws, attachment, Numerics.ERR_ERRONEUSNICKNAME, [
       newNick,
       "Erroneous nickname",
@@ -663,6 +678,17 @@ export async function handleNick(
   const canonNick = canonicalizeIRCName(newNick);
   attachment.requestedNick = newNick;
   session.saveAttachment(ws, attachment);
+
+  if (SERVER_CONFIG.requireAccounts && attachment.registered) {
+    const owner = await session.getAccountsStub().getNickOwner(newNick);
+    if (owner && owner !== attachment.userId) {
+      session.sendNumeric(ws, attachment, Numerics.ERR_NICKNAMEINUSE, [
+        newNick,
+        "Nickname belongs to another account",
+      ]);
+      return;
+    }
+  }
 
   const existingOwnerSessionId = session.sessionsByNick.get(canonNick);
   if (existingOwnerSessionId && existingOwnerSessionId !== attachment.sessionId) {
@@ -677,7 +703,7 @@ export async function handleNick(
     let multiclientAllowed = false;
     if (sameAccount && attachment.userId) {
       const settings = await session.getAccountsStub().getAccountSettings(attachment.userId);
-      const mc = settings["multiclient"]?.toLowerCase();
+      const mc = settings.multiclient?.toLowerCase();
       multiclientAllowed = mc !== "off" && mc !== "false";
     }
 
@@ -705,7 +731,7 @@ export async function handleNick(
   session.saveAttachment(ws, attachment);
 
   if (attachment.registered && oldNick && oldNick !== newNick) {
-    const nickMsg = encodeIRCMessage({
+    const _nickMsg = encodeIRCMessage({
       prefix: oldPrefix,
       command: "NICK",
       params: [newNick],

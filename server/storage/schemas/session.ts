@@ -31,6 +31,7 @@ export const sessionInvites = sqliteTable(
   "session_invites",
   {
     canonNick: text("canon_nick").notNull(),
+    targetUserId: text("target_user_id"),
     channelName: text("channel_name").notNull(),
     createdAt: integer("created_at").notNull(),
   },
@@ -54,6 +55,9 @@ export const directMessages = sqliteTable("direct_messages", {
   senderHost: text("sender_host").notNull(),
   targetNick: text("target_nick").notNull(),
   targetAccount: text("target_account"),
+  targetId: text("target_id"),
+  expiresAt: integer("expires_at"),
+  multilineJson: text("multiline_json"),
   command: text("command").notNull().default("PRIVMSG"),
   content: text("content").notNull(),
   tagsJson: text("tags_json").notNull().default("{}"),
@@ -62,3 +66,12 @@ export const directMessages = sqliteTable("direct_messages", {
 });
 
 export type DirectMessage = typeof directMessages.$inferSelect;
+
+export const directMessageEdits = sqliteTable("direct_message_edits", {
+  messageId: text("message_id")
+    .primaryKey()
+    .references(() => directMessages.id, { onDelete: "cascade" }),
+  rootId: text("root_id")
+    .notNull()
+    .references(() => directMessages.id, { onDelete: "cascade" }),
+});

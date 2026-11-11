@@ -44,16 +44,36 @@ export const ChannelRoleGroupSchema = z.object({
 
 export const CreateRoleGroupSchema = z.object({
   name: z.string().min(1).max(32),
+  color: z
+    .string()
+    .regex(/^#[0-9a-f]{6}$/i)
+    .nullable()
+    .optional(),
   ircPrefix: z.enum(["~", "&", "@", "%", "+"]).nullable().optional(),
   ircMode: z.enum(["q", "a", "o", "h", "v"]).nullable().optional(),
   priority: z.number().int().min(0).max(100).default(0),
-  permissions: z.array(z.string()).default([]),
+  permissions: z
+    .array(
+      z.enum([
+        "send_messages",
+        "change_topic",
+        "kick_members",
+        "ban_members",
+        "attach_files",
+        "manage_channel",
+      ]),
+    )
+    .max(6)
+    .default([]),
 });
 
-export const AssignUserRoleSchema = z.object({
-  groupId: z.string().min(1),
-  username: z.string().min(1),
-});
+export const AssignUserRoleSchema = z
+  .object({
+    userId: z.string().uuid(),
+    roleGroupId: z.string().uuid(),
+    remove: z.boolean().optional(),
+  })
+  .strict();
 
 export type ChannelInfo = z.infer<typeof ChannelInfoSchema>;
 export type UpdateChannelInfoInput = z.infer<typeof UpdateChannelInfoSchema>;

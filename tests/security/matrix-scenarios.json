@@ -1,0 +1,1361 @@
+{
+  "source": "docs/security/matrix-requirements.md",
+  "scenarios": [
+    {
+      "id": "AUTH-001",
+      "requirement": "Unauthenticated IRC clients cannot send channel messages."
+    },
+    {
+      "id": "AUTH-002",
+      "requirement": "Unauthenticated IRC clients cannot send DMs."
+    },
+    {
+      "id": "AUTH-003",
+      "requirement": "Unauthenticated clients cannot JOIN channels."
+    },
+    {
+      "id": "AUTH-004",
+      "requirement": "NICK and USER alone do not authenticate a session."
+    },
+    {
+      "id": "AUTH-005",
+      "requirement": "Valid account credentials authenticate successfully."
+    },
+    {
+      "id": "AUTH-006",
+      "requirement": "Invalid passwords are rejected."
+    },
+    {
+      "id": "AUTH-007",
+      "requirement": "Unknown accounts are rejected."
+    },
+    {
+      "id": "AUTH-008",
+      "requirement": "Disabled accounts cannot authenticate."
+    },
+    {
+      "id": "AUTH-009",
+      "requirement": "Deleted accounts cannot authenticate."
+    },
+    {
+      "id": "AUTH-010",
+      "requirement": "Expired sessions cannot access REST APIs."
+    },
+    {
+      "id": "AUTH-011",
+      "requirement": "Revoked sessions cannot access REST APIs."
+    },
+    {
+      "id": "AUTH-012",
+      "requirement": "Incorrect credentials never create a usable session."
+    },
+    {
+      "id": "AUTH-013",
+      "requirement": "Successful login resolves the correct stable account identity."
+    },
+    {
+      "id": "AUTH-014",
+      "requirement": "NickServ and REST authentication resolve the same account."
+    },
+    {
+      "id": "AUTH-015",
+      "requirement": "SASL authentication resolves the same account."
+    },
+    {
+      "id": "AUTH-016",
+      "requirement": "Authentication restores legitimate account-based ChanServ permissions."
+    },
+    {
+      "id": "AUTH-017",
+      "requirement": "Authentication does not automatically confer channel privileges the account doesn't possess."
+    },
+    {
+      "id": "AUTH-018",
+      "requirement": "Ordinary account creation cannot assign administrator privileges."
+    },
+    {
+      "id": "AUTH-019",
+      "requirement": "User-controlled registration properties cannot inject privileged roles."
+    },
+    {
+      "id": "AUTH-020",
+      "requirement": "Account signup restrictions are enforced."
+    },
+    {
+      "id": "AUTH-021",
+      "requirement": "Multiple failed logins trigger appropriate rate limits."
+    },
+    {
+      "id": "AUTH-022",
+      "requirement": "Logging out invalidates the relevant session."
+    },
+    {
+      "id": "AUTH-023",
+      "requirement": "Password reset invalidates sessions according to the defined security policy."
+    },
+    {
+      "id": "AUTH-024",
+      "requirement": "Account disable revokes active access."
+    },
+    {
+      "id": "AUTH-025",
+      "requirement": "Reenabling an account does not silently reactivate previously revoked sessions."
+    },
+    {
+      "id": "AUTH-026",
+      "requirement": "Authentication credentials do not appear in public API responses or logs."
+    },
+    {
+      "id": "AUTH-027",
+      "requirement": "Malformed SASL and SCRAM exchanges fail safely."
+    },
+    {
+      "id": "AUTH-028",
+      "requirement": "SCRAM authentication matches published cryptographic test vectors."
+    },
+    {
+      "id": "AUTH-029",
+      "requirement": "Unknown users and invalid passwords do not expose unnecessary account-enumeration information."
+    },
+    {
+      "id": "AUTH-030",
+      "requirement": "Pre-authentication IRC commands are limited to the permitted authentication and registration flow."
+    },
+    {
+      "id": "ADMIN-001",
+      "requirement": "Administrator can list accounts."
+    },
+    {
+      "id": "ADMIN-002",
+      "requirement": "Administrator can inspect permitted account administration metadata."
+    },
+    {
+      "id": "ADMIN-003",
+      "requirement": "Administrator can disable an account."
+    },
+    {
+      "id": "ADMIN-004",
+      "requirement": "Administrator can reenable an account."
+    },
+    {
+      "id": "ADMIN-005",
+      "requirement": "Administrator can revoke a session."
+    },
+    {
+      "id": "ADMIN-006",
+      "requirement": "Administrator can disconnect an active IRC user."
+    },
+    {
+      "id": "ADMIN-007",
+      "requirement": "Administrator can assign network roles within their authority."
+    },
+    {
+      "id": "ADMIN-008",
+      "requirement": "Administrator can remove network roles."
+    },
+    {
+      "id": "ADMIN-009",
+      "requirement": "Administrator can register a channel administratively."
+    },
+    {
+      "id": "ADMIN-010",
+      "requirement": "Administrator can inspect channel configuration."
+    },
+    {
+      "id": "ADMIN-011",
+      "requirement": "Administrator can change network-controlled channel settings."
+    },
+    {
+      "id": "ADMIN-012",
+      "requirement": "Administrator can apply global bans."
+    },
+    {
+      "id": "ADMIN-013",
+      "requirement": "Administrator can remove global bans."
+    },
+    {
+      "id": "ADMIN-014",
+      "requirement": "Administrator can broadcast network notices."
+    },
+    {
+      "id": "ADMIN-015",
+      "requirement": "Administrator can inspect operational statistics."
+    },
+    {
+      "id": "ADMIN-016",
+      "requirement": "Administrator can inspect appropriate administrative audit logs."
+    },
+    {
+      "id": "ADMIN-017",
+      "requirement": "Administrator can manage service-bot configuration."
+    },
+    {
+      "id": "ADMIN-018",
+      "requirement": "Administrator can revoke compromised bot credentials."
+    },
+    {
+      "id": "ADMIN-019",
+      "requirement": "Ordinary users cannot enumerate all accounts through admin APIs."
+    },
+    {
+      "id": "ADMIN-020",
+      "requirement": "Ordinary users cannot disable other accounts."
+    },
+    {
+      "id": "ADMIN-021",
+      "requirement": "Ordinary users cannot reset other users' passwords."
+    },
+    {
+      "id": "ADMIN-022",
+      "requirement": "Ordinary users cannot assign network-wide roles."
+    },
+    {
+      "id": "ADMIN-023",
+      "requirement": "Ordinary users cannot revoke other users' sessions."
+    },
+    {
+      "id": "ADMIN-024",
+      "requirement": "Ordinary users cannot issue network-wide announcements."
+    },
+    {
+      "id": "ADMIN-025",
+      "requirement": "Channel founders cannot impersonate network administrators."
+    },
+    {
+      "id": "ADMIN-026",
+      "requirement": "IRC operators cannot perform network-administrator-only actions unless explicitly delegated."
+    },
+    {
+      "id": "ADMIN-027",
+      "requirement": "Administrators cannot exceed their configured privilege scope."
+    },
+    {
+      "id": "ADMIN-028",
+      "requirement": "No administrator API can be accessed through an unprotected legacy alias."
+    },
+    {
+      "id": "ADMIN-029",
+      "requirement": "Administrative requests are audited with actor, action, target and outcome."
+    },
+    {
+      "id": "ADMIN-030",
+      "requirement": "Rejected administrative attempts do not modify state."
+    },
+    {
+      "id": "USER-001",
+      "requirement": "Alice can view her own profile."
+    },
+    {
+      "id": "USER-002",
+      "requirement": "Alice can update permitted fields on her own profile."
+    },
+    {
+      "id": "USER-003",
+      "requirement": "Alice cannot modify Bob's profile."
+    },
+    {
+      "id": "USER-004",
+      "requirement": "Alice cannot change Bob's avatar."
+    },
+    {
+      "id": "USER-005",
+      "requirement": "Alice cannot change Bob's display name."
+    },
+    {
+      "id": "USER-006",
+      "requirement": "Alice cannot change Bob's status."
+    },
+    {
+      "id": "USER-007",
+      "requirement": "Alice cannot change Bob's password."
+    },
+    {
+      "id": "USER-008",
+      "requirement": "Alice cannot change Bob's email or recovery credentials, if supported."
+    },
+    {
+      "id": "USER-009",
+      "requirement": "Alice cannot retrieve Bob's password hashes or SCRAM credential material."
+    },
+    {
+      "id": "USER-010",
+      "requirement": "Alice cannot add herself to another user's registered nicknames."
+    },
+    {
+      "id": "USER-011",
+      "requirement": "Alice cannot remove Bob's registered nickname."
+    },
+    {
+      "id": "USER-012",
+      "requirement": "Alice cannot set her own `isAdmin` or equivalent field."
+    },
+    {
+      "id": "USER-013",
+      "requirement": "Alice cannot assign herself a privileged account role."
+    },
+    {
+      "id": "USER-014",
+      "requirement": "Mass-assignment attempts using additional JSON properties are rejected or safely ignored."
+    },
+    {
+      "id": "USER-015",
+      "requirement": "Public profile endpoints do not expose private account metadata."
+    },
+    {
+      "id": "USER-016",
+      "requirement": "Profile updates propagate correctly to subscribed IRC clients."
+    },
+    {
+      "id": "USER-017",
+      "requirement": "Profile updates propagate correctly to authorized REST/event clients."
+    },
+    {
+      "id": "USER-018",
+      "requirement": "Private profile metadata is excluded from public metadata synchronization."
+    },
+    {
+      "id": "USER-019",
+      "requirement": "Disabled accounts cannot update profiles using existing sessions."
+    },
+    {
+      "id": "USER-020",
+      "requirement": "Account deletion follows the documented data-retention policy without deleting unrelated data."
+    },
+    {
+      "id": "CHAN-001",
+      "requirement": "Authenticated users can join ordinary public channels."
+    },
+    {
+      "id": "CHAN-002",
+      "requirement": "Joined users can send messages when permitted."
+    },
+    {
+      "id": "CHAN-003",
+      "requirement": "Users can leave a channel."
+    },
+    {
+      "id": "CHAN-004",
+      "requirement": "Leaving removes active membership."
+    },
+    {
+      "id": "CHAN-005",
+      "requirement": "Users cannot impersonate another member when joining."
+    },
+    {
+      "id": "CHAN-006",
+      "requirement": "Membership is restored or reconciled correctly after reconnects according to policy."
+    },
+    {
+      "id": "CHAN-007",
+      "requirement": "Unauthorized users cannot discover secret channels through LIST."
+    },
+    {
+      "id": "CHAN-008",
+      "requirement": "Unauthorized users cannot discover secret channels through REST discovery."
+    },
+    {
+      "id": "CHAN-009",
+      "requirement": "Unauthorized users cannot enumerate secret-channel members."
+    },
+    {
+      "id": "CHAN-010",
+      "requirement": "Unauthorized users cannot retrieve secret-channel history."
+    },
+    {
+      "id": "CHAN-011",
+      "requirement": "Unauthorized users cannot subscribe to secret-channel events."
+    },
+    {
+      "id": "CHAN-012",
+      "requirement": "Unauthorized users cannot retrieve secret-channel attachment metadata."
+    },
+    {
+      "id": "CHAN-013",
+      "requirement": "Authorized members can access permitted secret-channel resources."
+    },
+    {
+      "id": "CHAN-014",
+      "requirement": "Revoked members lose future access."
+    },
+    {
+      "id": "CHAN-015",
+      "requirement": "History access before joining and after leaving follows an explicit documented policy."
+    },
+    {
+      "id": "CHAN-016",
+      "requirement": "Uninvited users cannot join invite-only channels."
+    },
+    {
+      "id": "CHAN-017",
+      "requirement": "Invitations grant only the intended access."
+    },
+    {
+      "id": "CHAN-018",
+      "requirement": "Invitations cannot be forged by ordinary members."
+    },
+    {
+      "id": "CHAN-019",
+      "requirement": "Revoked invitations cannot be reused."
+    },
+    {
+      "id": "CHAN-020",
+      "requirement": "Incorrect channel keys are rejected."
+    },
+    {
+      "id": "CHAN-021",
+      "requirement": "Channel keys are not exposed through unauthorized APIs or events."
+    },
+    {
+      "id": "CHAN-022",
+      "requirement": "REST and IRC enforce identical JOIN policies."
+    },
+    {
+      "id": "CHAN-023",
+      "requirement": "API-created membership cannot bypass invite/key restrictions."
+    },
+    {
+      "id": "CHAN-024",
+      "requirement": "Expired or consumed invitations cannot be replayed when applicable."
+    },
+    {
+      "id": "CHAN-025",
+      "requirement": "Banned users cannot rejoin."
+    },
+    {
+      "id": "CHAN-026",
+      "requirement": "Banned users cannot bypass restrictions using REST."
+    },
+    {
+      "id": "CHAN-027",
+      "requirement": "Banned users cannot publish messages through the API."
+    },
+    {
+      "id": "CHAN-028",
+      "requirement": "Banned users cannot receive restricted real-time events."
+    },
+    {
+      "id": "CHAN-029",
+      "requirement": "Ban exceptions work only when their defined conditions match."
+    },
+    {
+      "id": "CHAN-030",
+      "requirement": "Bans remain effective after disconnect/reconnect."
+    },
+    {
+      "id": "CHAN-031",
+      "requirement": "Nickname changes do not bypass account-based restrictions."
+    },
+    {
+      "id": "CHAN-032",
+      "requirement": "Membership data does not remain incorrectly authorized after a KICK."
+    },
+    {
+      "id": "CHAN-033",
+      "requirement": "Channel removal and re-registration do not accidentally retain stale permissions."
+    },
+    {
+      "id": "ROLE-001",
+      "requirement": "Founder can manage channel settings."
+    },
+    {
+      "id": "ROLE-002",
+      "requirement": "Founder can create permitted role groups."
+    },
+    {
+      "id": "ROLE-003",
+      "requirement": "Founder can assign roles within the policy."
+    },
+    {
+      "id": "ROLE-004",
+      "requirement": "Founder can remove roles."
+    },
+    {
+      "id": "ROLE-005",
+      "requirement": "Founder can configure the F service bot."
+    },
+    {
+      "id": "ROLE-006",
+      "requirement": "Founder can transfer ownership only through the authorized ownership-transfer flow."
+    },
+    {
+      "id": "ROLE-007",
+      "requirement": "Another user cannot impersonate the founder."
+    },
+    {
+      "id": "ROLE-008",
+      "requirement": "Channel administrators can perform their explicitly assigned moderation actions."
+    },
+    {
+      "id": "ROLE-009",
+      "requirement": "Channel administrators cannot assign privileges above their own."
+    },
+    {
+      "id": "ROLE-010",
+      "requirement": "Channel administrators cannot take ownership without authorization."
+    },
+    {
+      "id": "ROLE-011",
+      "requirement": "Operators can kick users when permitted."
+    },
+    {
+      "id": "ROLE-012",
+      "requirement": "Operators can ban users when permitted."
+    },
+    {
+      "id": "ROLE-013",
+      "requirement": "Operators can change permitted channel modes."
+    },
+    {
+      "id": "ROLE-014",
+      "requirement": "Operators cannot perform founder-only actions."
+    },
+    {
+      "id": "ROLE-015",
+      "requirement": "Half-operators cannot modify higher-ranked users when prohibited by the configured hierarchy."
+    },
+    {
+      "id": "ROLE-016",
+      "requirement": "Half-operators cannot assign operator privileges unless explicitly authorized."
+    },
+    {
+      "id": "ROLE-017",
+      "requirement": "Operators in `#public` have no automatic privileges in `#staff`."
+    },
+    {
+      "id": "ROLE-018",
+      "requirement": "Voiced users can speak in moderated channels."
+    },
+    {
+      "id": "ROLE-019",
+      "requirement": "Ordinary users cannot speak in moderated channels unless independently permitted."
+    },
+    {
+      "id": "ROLE-020",
+      "requirement": "Voiced users cannot kick or ban members."
+    },
+    {
+      "id": "ROLE-021",
+      "requirement": "Ordinary users cannot change channel modes."
+    },
+    {
+      "id": "ROLE-022",
+      "requirement": "Ordinary users cannot change channel roles."
+    },
+    {
+      "id": "ROLE-023",
+      "requirement": "Ordinary users cannot modify restricted channel metadata."
+    },
+    {
+      "id": "ROLE-024",
+      "requirement": "Ordinary users cannot assign themselves voice through the REST API."
+    },
+    {
+      "id": "ROLE-025",
+      "requirement": "Custom role names do not automatically grant privileges."
+    },
+    {
+      "id": "ROLE-026",
+      "requirement": "Custom permissions are applied consistently."
+    },
+    {
+      "id": "ROLE-027",
+      "requirement": "Removing a role immediately removes its associated permissions."
+    },
+    {
+      "id": "ROLE-028",
+      "requirement": "Custom permissions cannot escalate beyond the assigning actor's authority."
+    },
+    {
+      "id": "ROLE-029",
+      "requirement": "Deleting a role removes or safely reconciles assignments."
+    },
+    {
+      "id": "ROLE-030",
+      "requirement": "Role assignments survive restarts."
+    },
+    {
+      "id": "ROLE-031",
+      "requirement": "Role changes update IRC prefix modes where applicable."
+    },
+    {
+      "id": "ROLE-032",
+      "requirement": "IRC mode changes update API-visible role state where applicable."
+    },
+    {
+      "id": "ROLE-033",
+      "requirement": "Role changes invalidate cached permissions."
+    },
+    {
+      "id": "ROLE-034",
+      "requirement": "Role inheritance cannot create privilege-escalation cycles."
+    },
+    {
+      "id": "ROLE-035",
+      "requirement": "A malicious user cannot grant themselves access by creating a similarly named role."
+    },
+    {
+      "id": "ROLE-036",
+      "requirement": "Cross-channel role IDs cannot be reused to modify unrelated channels."
+    },
+    {
+      "id": "MSG-001",
+      "requirement": "Alice can send messages to a public channel she is authorized to use."
+    },
+    {
+      "id": "MSG-002",
+      "requirement": "Alice cannot send into a restricted channel she cannot access."
+    },
+    {
+      "id": "MSG-003",
+      "requirement": "Alice cannot forge Bob's sender identity."
+    },
+    {
+      "id": "MSG-004",
+      "requirement": "Alice cannot forge a server/service prefix."
+    },
+    {
+      "id": "MSG-005",
+      "requirement": "Alice cannot forge privileged server-generated account or role tags."
+    },
+    {
+      "id": "MSG-006",
+      "requirement": "Alice can edit her own message when editing is permitted."
+    },
+    {
+      "id": "MSG-007",
+      "requirement": "Alice cannot edit Bob's message."
+    },
+    {
+      "id": "MSG-008",
+      "requirement": "Alice cannot edit messages in inaccessible channels."
+    },
+    {
+      "id": "MSG-009",
+      "requirement": "Alice cannot use another channel's message ID to edit a different message."
+    },
+    {
+      "id": "MSG-010",
+      "requirement": "Editing produces correct persistent state."
+    },
+    {
+      "id": "MSG-011",
+      "requirement": "Editing produces correct authorized real-time events."
+    },
+    {
+      "id": "MSG-012",
+      "requirement": "Editing survives object reactivation."
+    },
+    {
+      "id": "MSG-013",
+      "requirement": "Unauthorized edits produce no data changes or events."
+    },
+    {
+      "id": "MSG-014",
+      "requirement": "Alice can redact her own message when policy permits."
+    },
+    {
+      "id": "MSG-015",
+      "requirement": "Alice cannot redact Bob's message without moderation privileges."
+    },
+    {
+      "id": "MSG-016",
+      "requirement": "Authorized moderators can redact messages according to policy."
+    },
+    {
+      "id": "MSG-017",
+      "requirement": "Moderation does not silently rewrite a message as though its author edited it."
+    },
+    {
+      "id": "MSG-018",
+      "requirement": "Redacted messages do not reappear through CHATHISTORY."
+    },
+    {
+      "id": "MSG-019",
+      "requirement": "Redacted messages do not reappear through REST history."
+    },
+    {
+      "id": "MSG-020",
+      "requirement": "Reply references cannot expose restricted messages."
+    },
+    {
+      "id": "MSG-021",
+      "requirement": "Reactions, if supported, respect channel access."
+    },
+    {
+      "id": "MSG-022",
+      "requirement": "Editing or deleting nonexistent messages produces a safe error."
+    },
+    {
+      "id": "MSG-023",
+      "requirement": "Duplicate message IDs cannot overwrite unrelated messages."
+    },
+    {
+      "id": "MSG-024",
+      "requirement": "Message ordering and sequence IDs remain correct under concurrent delivery."
+    },
+    {
+      "id": "MSG-025",
+      "requirement": "Failed message persistence does not result in a falsely confirmed durable message."
+    },
+    {
+      "id": "MSG-026",
+      "requirement": "Valid messages survive actual storage reinitialization."
+    },
+    {
+      "id": "MSG-027",
+      "requirement": "Messages from unauthorized or disabled accounts are rejected even when the socket remains open."
+    },
+    {
+      "id": "MSG-028",
+      "requirement": "IRC, REST and event clients receive the same canonical message identity and state."
+    },
+    {
+      "id": "DM-001",
+      "requirement": "Alice can send a DM to Bob when allowed."
+    },
+    {
+      "id": "DM-002",
+      "requirement": "Bob can read the Alice/Bob conversation."
+    },
+    {
+      "id": "DM-003",
+      "requirement": "Alice can read the Alice/Bob conversation."
+    },
+    {
+      "id": "DM-004",
+      "requirement": "Charlie cannot read Alice/Bob history."
+    },
+    {
+      "id": "DM-005",
+      "requirement": "Charlie cannot retrieve an Alice/Bob message by ID."
+    },
+    {
+      "id": "DM-006",
+      "requirement": "Charlie cannot modify an Alice/Bob message."
+    },
+    {
+      "id": "DM-007",
+      "requirement": "Charlie cannot delete an Alice/Bob message."
+    },
+    {
+      "id": "DM-008",
+      "requirement": "Charlie cannot subscribe to Alice/Bob events."
+    },
+    {
+      "id": "DM-009",
+      "requirement": "Charlie cannot retrieve Alice/Bob unread counts."
+    },
+    {
+      "id": "DM-010",
+      "requirement": "Charlie cannot enumerate Alice/Bob private attachments."
+    },
+    {
+      "id": "DM-011",
+      "requirement": "Alice cannot retrieve Bob/Charlie history."
+    },
+    {
+      "id": "DM-012",
+      "requirement": "Alice cannot substitute Bob's account ID to access Bob/Charlie history."
+    },
+    {
+      "id": "DM-013",
+      "requirement": "Conversation IDs cannot be manipulated to gain unauthorized access."
+    },
+    {
+      "id": "DM-014",
+      "requirement": "DM permissions are checked against the authenticated account, not supplied usernames."
+    },
+    {
+      "id": "DM-015",
+      "requirement": "A revoked session loses DM access."
+    },
+    {
+      "id": "DM-016",
+      "requirement": "Offline DM persistence preserves the correct recipient identity."
+    },
+    {
+      "id": "DM-017",
+      "requirement": "DM history survives restart and remains access-controlled afterward."
+    },
+    {
+      "id": "DM-018",
+      "requirement": "DM notifications go only to intended recipients."
+    },
+    {
+      "id": "DM-019",
+      "requirement": "DM API and IRC PRIVMSG paths apply consistent access policies."
+    },
+    {
+      "id": "DM-020",
+      "requirement": "No DM content appears in ordinary public-channel event streams."
+    },
+    {
+      "id": "DM-021",
+      "requirement": "Network administrators do not automatically gain private conversation access unless an explicit, documented administrative policy grants it."
+    },
+    {
+      "id": "DM-022",
+      "requirement": "No legacy API endpoint bypasses DM participant checks."
+    },
+    {
+      "id": "DM-023",
+      "requirement": "Group-DM membership changes revoke future access according to a clearly defined history policy, if group DMs are supported."
+    },
+    {
+      "id": "DM-024",
+      "requirement": "Server-side search cannot reveal other users' DMs."
+    },
+    {
+      "id": "API-001",
+      "requirement": "Protected API without credentials is rejected."
+    },
+    {
+      "id": "API-002",
+      "requirement": "Invalid credentials are rejected."
+    },
+    {
+      "id": "API-003",
+      "requirement": "Expired credentials are rejected."
+    },
+    {
+      "id": "API-004",
+      "requirement": "Revoked credentials are rejected."
+    },
+    {
+      "id": "API-005",
+      "requirement": "Ordinary users cannot invoke admin endpoints."
+    },
+    {
+      "id": "API-006",
+      "requirement": "Changing the HTTP method cannot bypass authorization."
+    },
+    {
+      "id": "API-007",
+      "requirement": "Legacy route aliases enforce the same authorization as `/api/v1`."
+    },
+    {
+      "id": "API-008",
+      "requirement": "Username path parameters cannot impersonate another account."
+    },
+    {
+      "id": "API-009",
+      "requirement": "Channel path parameters cannot bypass membership checks."
+    },
+    {
+      "id": "API-010",
+      "requirement": "Query parameters cannot override authenticated identity."
+    },
+    {
+      "id": "API-011",
+      "requirement": "Request-body IDs cannot override authenticated identity."
+    },
+    {
+      "id": "API-012",
+      "requirement": "Privileged fields cannot be modified through mass assignment."
+    },
+    {
+      "id": "API-013",
+      "requirement": "Invalid input is rejected by runtime validation."
+    },
+    {
+      "id": "API-014",
+      "requirement": "Error responses do not leak database internals, credentials or stack traces."
+    },
+    {
+      "id": "API-015",
+      "requirement": "Unauthorized pagination cannot enumerate protected records."
+    },
+    {
+      "id": "API-016",
+      "requirement": "Bulk operations enforce authorization for every target resource."
+    },
+    {
+      "id": "API-017",
+      "requirement": "OpenAPI-described security requirements match actual route behavior."
+    },
+    {
+      "id": "API-018",
+      "requirement": "Undocumented routes do not accidentally bypass authentication."
+    },
+    {
+      "id": "API-019",
+      "requirement": "Cookie-based mutations enforce CSRF protection."
+    },
+    {
+      "id": "API-020",
+      "requirement": "Cross-origin requests follow the configured CORS policy."
+    },
+    {
+      "id": "API-021",
+      "requirement": "Admin credentials are not accepted through URL query strings."
+    },
+    {
+      "id": "API-022",
+      "requirement": "API responses exclude password hashes, secret keys and private internal attributes."
+    },
+    {
+      "id": "API-023",
+      "requirement": "Restricted responses have appropriate cache-control headers."
+    },
+    {
+      "id": "API-024",
+      "requirement": "Public documentation/health endpoints expose no operational secrets."
+    },
+    {
+      "id": "WS-001",
+      "requirement": "Unauthenticated event subscriptions are rejected."
+    },
+    {
+      "id": "WS-002",
+      "requirement": "Valid short-lived tickets establish authorized sessions."
+    },
+    {
+      "id": "WS-003",
+      "requirement": "Expired tickets are rejected."
+    },
+    {
+      "id": "WS-004",
+      "requirement": "Already-consumed tickets are rejected."
+    },
+    {
+      "id": "WS-005",
+      "requirement": "Concurrent attempts cannot redeem the same ticket twice."
+    },
+    {
+      "id": "WS-006",
+      "requirement": "Tickets for one endpoint cannot authenticate another endpoint."
+    },
+    {
+      "id": "WS-007",
+      "requirement": "Tickets cannot be redeemed as another account."
+    },
+    {
+      "id": "WS-008",
+      "requirement": "Reusable account credentials are not stored in WebSocket attachments."
+    },
+    {
+      "id": "WS-009",
+      "requirement": "Alice receives public events she is authorized to observe."
+    },
+    {
+      "id": "WS-010",
+      "requirement": "Alice cannot subscribe to `#staff` without permission."
+    },
+    {
+      "id": "WS-011",
+      "requirement": "Charlie cannot subscribe to Alice/Bob DM events."
+    },
+    {
+      "id": "WS-012",
+      "requirement": "Revoking channel access prevents future event delivery."
+    },
+    {
+      "id": "WS-013",
+      "requirement": "Disabling an account invalidates active event streams."
+    },
+    {
+      "id": "WS-014",
+      "requirement": "Session revocation continues to work after Durable Object hibernation."
+    },
+    {
+      "id": "WS-015",
+      "requirement": "Reconstructed attachments do not restore stale administrator privileges."
+    },
+    {
+      "id": "WS-016",
+      "requirement": "Reconnection cannot bypass authentication."
+    },
+    {
+      "id": "WS-017",
+      "requirement": "Event replay does not expose data outside the current access policy."
+    },
+    {
+      "id": "WS-018",
+      "requirement": "Event cursors cannot be used to retrieve another user's private events."
+    },
+    {
+      "id": "WS-019",
+      "requirement": "Cross-shard delivery respects channel subscription authorization."
+    },
+    {
+      "id": "WS-020",
+      "requirement": "Disconnects clean up subscription state."
+    },
+    {
+      "id": "WS-021",
+      "requirement": "Slow clients cannot exhaust unbounded buffers."
+    },
+    {
+      "id": "WS-022",
+      "requirement": "Duplicate event delivery does not result in unauthorized duplicate mutations."
+    },
+    {
+      "id": "WS-023",
+      "requirement": "WebSocket Origin checks and authentication policy are enforced."
+    },
+    {
+      "id": "WS-024",
+      "requirement": "Permission changes while the socket is idle take effect without requiring a user to reconnect voluntarily."
+    },
+    {
+      "id": "SVC-001",
+      "requirement": "Unauthenticated users cannot use privileged service commands."
+    },
+    {
+      "id": "SVC-002",
+      "requirement": "Users cannot authenticate as another account with invalid credentials."
+    },
+    {
+      "id": "SVC-003",
+      "requirement": "Users cannot register another user's nickname."
+    },
+    {
+      "id": "SVC-004",
+      "requirement": "Channel registration requires the defined permissions and prerequisites."
+    },
+    {
+      "id": "SVC-005",
+      "requirement": "Ordinary members cannot request founder privileges from F."
+    },
+    {
+      "id": "SVC-006",
+      "requirement": "F OP respects channel access lists."
+    },
+    {
+      "id": "SVC-007",
+      "requirement": "F DEOP respects hierarchy restrictions."
+    },
+    {
+      "id": "SVC-008",
+      "requirement": "F VOICE and DEVOICE respect assigned privileges."
+    },
+    {
+      "id": "SVC-009",
+      "requirement": "F CHANLEV cannot assign permissions exceeding the actor's authority."
+    },
+    {
+      "id": "SVC-010",
+      "requirement": "F cannot be used to bypass REST authorization."
+    },
+    {
+      "id": "SVC-011",
+      "requirement": "REST cannot be used to bypass service-bot authorization."
+    },
+    {
+      "id": "SVC-012",
+      "requirement": "ChanServ access assignments persist across reconnects."
+    },
+    {
+      "id": "SVC-013",
+      "requirement": "Removing ChanServ access revokes effective privileges."
+    },
+    {
+      "id": "SVC-014",
+      "requirement": "Unregistered channels do not receive unauthorized service-bot privileges."
+    },
+    {
+      "id": "SVC-015",
+      "requirement": "Service-bot identities cannot be spoofed by ordinary IRC clients."
+    },
+    {
+      "id": "SVC-016",
+      "requirement": "Service actions produce the correct audit events."
+    },
+    {
+      "id": "SVC-017",
+      "requirement": "A user with privileges in one channel cannot use them in another."
+    },
+    {
+      "id": "MEDIA-001",
+      "requirement": "Authenticated users can upload within configured limits."
+    },
+    {
+      "id": "MEDIA-002",
+      "requirement": "Unauthenticated users cannot upload."
+    },
+    {
+      "id": "MEDIA-003",
+      "requirement": "Users cannot delete attachments owned by others without permission."
+    },
+    {
+      "id": "MEDIA-004",
+      "requirement": "Private channel attachments are inaccessible to unauthorized users."
+    },
+    {
+      "id": "MEDIA-005",
+      "requirement": "DM attachments are inaccessible to nonparticipants."
+    },
+    {
+      "id": "MEDIA-006",
+      "requirement": "Guessing media IDs does not bypass authorization."
+    },
+    {
+      "id": "MEDIA-007",
+      "requirement": "Signed access links, where used, expire correctly."
+    },
+    {
+      "id": "MEDIA-008",
+      "requirement": "Private media is not inadvertently served from public immutable caches."
+    },
+    {
+      "id": "MEDIA-009",
+      "requirement": "File-size limits are enforced."
+    },
+    {
+      "id": "MEDIA-010",
+      "requirement": "Malicious filenames are safely handled."
+    },
+    {
+      "id": "MEDIA-011",
+      "requirement": "Dangerous content types cannot execute as trusted application content."
+    },
+    {
+      "id": "MEDIA-012",
+      "requirement": "Users cannot bypass storage quotas."
+    },
+    {
+      "id": "MEDIA-013",
+      "requirement": "Deleting an attachment updates persistent metadata correctly."
+    },
+    {
+      "id": "MEDIA-014",
+      "requirement": "Expired or removed resources cannot be retrieved through legacy URLs."
+    },
+    {
+      "id": "MEDIA-015",
+      "requirement": "Unauthorized users cannot enumerate private upload metadata."
+    },
+    {
+      "id": "PUSH-001",
+      "requirement": "Users can register their own push subscriptions."
+    },
+    {
+      "id": "PUSH-002",
+      "requirement": "Users cannot register subscriptions under another account."
+    },
+    {
+      "id": "PUSH-003",
+      "requirement": "Users cannot list another user's private push endpoints."
+    },
+    {
+      "id": "PUSH-004",
+      "requirement": "Users cannot delete another user's subscriptions."
+    },
+    {
+      "id": "PUSH-005",
+      "requirement": "Disabled accounts cannot use old subscriptions to regain access."
+    },
+    {
+      "id": "PUSH-006",
+      "requirement": "Revoked subscriptions stop receiving notifications."
+    },
+    {
+      "id": "PUSH-007",
+      "requirement": "Private notifications are delivered only to intended accounts."
+    },
+    {
+      "id": "PUSH-008",
+      "requirement": "No private message bodies leak into unrelated notifications."
+    },
+    {
+      "id": "PUSH-009",
+      "requirement": "Notification preferences are enforced."
+    },
+    {
+      "id": "PUSH-010",
+      "requirement": "Invalid or expired push subscriptions are handled safely."
+    },
+    {
+      "id": "PUSH-011",
+      "requirement": "Repeated delivery failures do not cause unbounded retries."
+    },
+    {
+      "id": "PUSH-012",
+      "requirement": "WebPush credentials and subscription secrets do not appear in logs or public APIs."
+    },
+    {
+      "id": "DB-001",
+      "requirement": "Account creation writes complete, valid database records."
+    },
+    {
+      "id": "DB-002",
+      "requirement": "Account login reads the correct persisted credentials."
+    },
+    {
+      "id": "DB-003",
+      "requirement": "Account updates survive runtime restart."
+    },
+    {
+      "id": "DB-004",
+      "requirement": "Account disable state survives runtime restart."
+    },
+    {
+      "id": "DB-005",
+      "requirement": "Channel registration persists."
+    },
+    {
+      "id": "DB-006",
+      "requirement": "Channel metadata updates persist."
+    },
+    {
+      "id": "DB-007",
+      "requirement": "Role assignments persist."
+    },
+    {
+      "id": "DB-008",
+      "requirement": "Removing roles updates related records correctly."
+    },
+    {
+      "id": "DB-009",
+      "requirement": "Message history persists."
+    },
+    {
+      "id": "DB-010",
+      "requirement": "Message edits persist."
+    },
+    {
+      "id": "DB-011",
+      "requirement": "Redactions persist and do not restore removed content unexpectedly."
+    },
+    {
+      "id": "DB-012",
+      "requirement": "Read markers persist."
+    },
+    {
+      "id": "DB-013",
+      "requirement": "Foreign-key constraints actually reject invalid references within one database."
+    },
+    {
+      "id": "DB-014",
+      "requirement": "Unique constraints reject duplicate records."
+    },
+    {
+      "id": "DB-015",
+      "requirement": "Transactions roll back incomplete modifications where appropriate."
+    },
+    {
+      "id": "DB-016",
+      "requirement": "Cross-Durable-Object failures do not produce unauthorized permanent state."
+    },
+    {
+      "id": "DB-017",
+      "requirement": "Concurrent changes preserve required invariants."
+    },
+    {
+      "id": "DB-018",
+      "requirement": "Ninety-day retention removes expired messages."
+    },
+    {
+      "id": "DB-019",
+      "requirement": "Retention cleanup does not remove unexpired messages."
+    },
+    {
+      "id": "DB-020",
+      "requirement": "Old database migrations preserve existing data."
+    },
+    {
+      "id": "DB-021",
+      "requirement": "Deleted accounts do not accidentally cascade-delete unrelated channel history."
+    },
+    {
+      "id": "DB-022",
+      "requirement": "Drizzle models match the actual deployed SQLite schema."
+    },
+    {
+      "id": "DB-023",
+      "requirement": "Repeated migrations are safe and idempotent where required."
+    },
+    {
+      "id": "DB-024",
+      "requirement": "Retry after a successful commit does not create duplicate messages or permissions."
+    },
+    {
+      "id": "DB-025",
+      "requirement": "A denied operation leaves stored data unchanged."
+    },
+    {
+      "id": "DB-026",
+      "requirement": "A new Durable Object instance cannot assume an unrelated object's database identity."
+    },
+    {
+      "id": "DB-027",
+      "requirement": "Query pagination cannot escape the intended account/channel scope."
+    },
+    {
+      "id": "DB-028",
+      "requirement": "SQL indexes support bounded history and authorization queries without full-table scans under representative load."
+    },
+    {
+      "id": "ABUSE-001",
+      "requirement": "Oversized IRC messages are rejected or handled according to protocol rules."
+    },
+    {
+      "id": "ABUSE-002",
+      "requirement": "Oversized WebSocket frames cannot exhaust memory."
+    },
+    {
+      "id": "ABUSE-003",
+      "requirement": "Oversized HTTP bodies are rejected."
+    },
+    {
+      "id": "ABUSE-004",
+      "requirement": "Authentication requests are rate-limited."
+    },
+    {
+      "id": "ABUSE-005",
+      "requirement": "Channel JOIN/PART flooding is controlled."
+    },
+    {
+      "id": "ABUSE-006",
+      "requirement": "Channel creation flooding is controlled."
+    },
+    {
+      "id": "ABUSE-007",
+      "requirement": "Excessive media uploads are controlled."
+    },
+    {
+      "id": "ABUSE-008",
+      "requirement": "History query limits cannot be bypassed using negative or extreme parameters."
+    },
+    {
+      "id": "ABUSE-009",
+      "requirement": "Invalid Unicode and malformed IRC tags cannot crash the server."
+    },
+    {
+      "id": "ABUSE-010",
+      "requirement": "User-controlled metadata cannot inject unauthorized server message tags."
+    },
+    {
+      "id": "ABUSE-011",
+      "requirement": "Excessive event subscriptions cannot exhaust memory."
+    },
+    {
+      "id": "ABUSE-012",
+      "requirement": "Slow consumers are disconnected or throttled safely."
+    },
+    {
+      "id": "ABUSE-013",
+      "requirement": "Repeated failing RPCs cannot trigger unbounded retry loops."
+    },
+    {
+      "id": "ABUSE-014",
+      "requirement": "Malformed API payloads cannot bypass Zod validation."
+    },
+    {
+      "id": "ABUSE-015",
+      "requirement": "Concurrent nickname claims result in only one authorized owner."
+    },
+    {
+      "id": "ABUSE-016",
+      "requirement": "Concurrent ticket redemption has only one winner."
+    },
+    {
+      "id": "ABUSE-017",
+      "requirement": "Untrusted embed URLs cannot trigger SSRF to private network or cloud metadata endpoints."
+    },
+    {
+      "id": "ABUSE-018",
+      "requirement": "Client input cannot cause uncontrolled log growth or sensitive-data logging."
+    }
+  ]
+}

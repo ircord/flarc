@@ -24,7 +24,7 @@ export const CORE_CAPABILITIES: Record<string, string | null> = {
   msgid: null,
   "multi-prefix": null,
   "no-implicit-names": null,
-  sasl: "PLAIN,EXTERNAL,SCRAM-SHA-256",
+  sasl: "PLAIN,SCRAM-SHA-256",
   "server-time": null,
   setname: null,
   "standard-replies": null,

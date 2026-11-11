@@ -25,7 +25,11 @@ if [[ "${1:-}" == "--setup" ]]; then
 fi
 
 # Build the worker bundle once up front (shared by all parallel workers).
-(cd "$ROOT" && npm run build)
+(cd "$ROOT" && bun run build)
+# Use an immutable bundle snapshot so later builds cannot corrupt a running conformance sweep.
+IRCTEST_SNAPSHOT=$(mktemp -d "$COMP/run.XXXXXX")
+cp -R "$ROOT/.output/server" "$IRCTEST_SNAPSHOT/server"
+export CFCORD_BUNDLE="$IRCTEST_SNAPSHOT/server/index.mjs"
 export CFCORD_SKIP_BUNDLE=1
 
 cd "$COMP/irctest"

@@ -7,30 +7,42 @@
     "dev": "node scripts/start-miniflare.mjs",
     "start": "node scripts/start-miniflare.mjs",
     "build": "nitro build",
-    "generate:client": "npx tsx scripts/generate-client.ts",
-    "deploy": "wrangler deploy",
+    "generate:client": "bun scripts/generate-client.ts",
+    "deploy": "bun run build && wrangler deploy --config .output/server/wrangler.json",
     "test": "vitest run",
     "test:watch": "vitest",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "lint": "biome check server/ tests/ scripts/",
+    "test:security": "vitest run tests/security",
+    "test:conformance": "bash scripts/run-irctest.sh"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.6.6",
-    "@cloudflare/workers-types": "^4.20250214.0",
-    "@types/node": "^22.13.4",
-    "@types/ws": "^8.5.14",
+    "@cloudflare/workers-types": "^5.20261110.1",
+    "@types/node": "^26.6.6",
+    "@types/ws": "^8.18.2",
     "drizzle-kit": "^0.31.11",
-    "miniflare": "^3.20250214.0",
+    "miniflare": "^4.20260730.0",
     "openapi-typescript": "^7.13.0",
     "rolldown": "^1.3.2",
-    "typescript": "^5.7.3",
-    "vitest": "^3.0.5",
-    "wrangler": "^3.109.2",
-    "ws": "^8.18.0"
+    "typescript": "^5.9.3",
+    "vitest": "^5.1.0",
+    "wrangler": "^4.160.1",
+    "ws": "^8.22.2"
   },
   "dependencies": {
     "@scalar/api-reference": "^1.78.0",
     "drizzle-orm": "^0.45.4",
     "nitro": "^3.0.261103-rc",
     "zod": "^4.6.7"
+  },
+  "packageManager": "bun@1.4.4",
+  "engines": {
+    "node": ">=22.14.0"
+  },
+  "overrides": {
+    "esbuild": "^0.28.2",
+    "sharp": "^0.35.5",
+    "undici": "^7.30.2"
   }
 }

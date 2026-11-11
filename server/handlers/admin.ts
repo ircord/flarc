@@ -1,22 +1,47 @@
-import { createError, defineEventHandler, getQuery, readBody, setResponseStatus } from "nitro/h3";
+import {
+  createError,
+  defineEventHandler,
+  getQuery,
+  readBody as readRawBody,
+  setResponseStatus,
+} from "nitro/h3";
 import { SERVER_CONFIG } from "../core/config";
-import { checkAdminAuth, getEnv, parseChannelParam } from "../utils/auth";
+import { AdminConfigSchema, adminBodySchema } from "../schemas/admin";
+import {
+  getEnv,
+  getSessionToken,
+  parseChannelParam,
+  requireAuthenticatedUser,
+} from "../utils/auth";
 
 export default defineEventHandler(async (event) => {
-  if (!(await checkAdminAuth(event))) {
-    throw createError({ statusCode: 401, statusMessage: "Unauthorized" });
-  }
+  const administrator = await requireAuthenticatedUser(event);
+  if (!administrator.isAdmin)
+    throw createError({ statusCode: 403, statusMessage: "Administrator role required" });
 
+  const token = getSessionToken(event)!;
+  // Each owning object re-verifies the current administrator session. The proxy
+  // preserves typed RPC methods while preventing routes from bypassing that facade.
+  const authorized = <T extends { adminRequest: (...args: any[]) => any }>(stub: T): T =>
+    new Proxy(stub, {
+      get(target, property) {
+        return (...args: unknown[]) => target.adminRequest(token, String(property), args);
+      },
+    });
   const env = getEnv(event);
-  const sessionStub = env.SESSION.get(env.SESSION.idFromName(SERVER_CONFIG.networkId));
-  const accountsStub = env.ACCOUNTS.get(env.ACCOUNTS.idFromName(SERVER_CONFIG.networkId));
+  const sessionStub = authorized(env.SESSION.get(env.SESSION.idFromName(SERVER_CONFIG.networkId)));
+  const accountsStub = authorized(
+    env.ACCOUNTS.get(env.ACCOUNTS.idFromName(SERVER_CONFIG.networkId)),
+  );
 
   const getChanStub = (channelName: string) => {
-    const { name, canon } = parseChannelParam(channelName);
+    const { name, canon } = parseChannelParam(decodeURIComponent(channelName));
     return {
       name,
       canon,
-      stub: env.CHANNELS.get(env.CHANNELS.idFromName(`${SERVER_CONFIG.networkId}:${canon}`)),
+      stub: authorized(
+        env.CHANNELS.get(env.CHANNELS.idFromName(`${SERVER_CONFIG.networkId}:${canon}`)),
+      ),
     };
   };
 
@@ -32,27 +57,34 @@ export default defineEventHandler(async (event) => {
 
   const method = event.method.toUpperCase();
   const query = getQuery(event);
+  let validatedBody: any = {};
+  if (["POST", "PUT", "PATCH", "DELETE"].includes(method)) {
+    let rawBody: unknown;
+    try {
+      rawBody = await readRawBody(event);
+    } catch {
+      throw createError({ statusCode: 400, statusMessage: "Invalid JSON body" });
+    }
+    const parsed = adminBodySchema(path, method).safeParse(rawBody ?? {});
+    if (!parsed.success)
+      throw createError({
+        statusCode: 400,
+        statusMessage: "Invalid administrator request",
+        data: parsed.error.issues,
+      });
+    validatedBody = parsed.data;
+  }
+  // Validate once before branch-local optional-body handling: malformed DELETE bodies must never fall back to purging.
+  const readBody = async (_event: typeof event) => validatedBody;
 
   // 1. Config & Stats
   if (path === "/config" && method === "POST") {
-    const body = ((await readBody(event)) || {}) as Record<string, any>;
-    if (body.zncMaxMessages !== undefined) {
-      SERVER_CONFIG.zncMaxMessages = Number(body.zncMaxMessages);
-    }
-    if (body.filehostEnabled !== undefined) {
-      SERVER_CONFIG.filehostEnabled = Boolean(body.filehostEnabled);
-    }
-    if (body.filehostRequireRegistration !== undefined) {
-      SERVER_CONFIG.filehostRequireRegistration = Boolean(body.filehostRequireRegistration);
-    }
-    return {
-      ok: true,
-      config: {
-        filehostEnabled: SERVER_CONFIG.filehostEnabled,
-        filehostRequireRegistration: SERVER_CONFIG.filehostRequireRegistration,
-        zncMaxMessages: SERVER_CONFIG.zncMaxMessages,
-      },
-    };
+    const parsed = AdminConfigSchema.safeParse(await readBody(event));
+    if (!parsed.success)
+      throw createError({ statusCode: 400, statusMessage: "Invalid runtime configuration" });
+    const config = await accountsStub.setRuntimeConfig(parsed.data);
+    await sessionStub.setRuntimeConfig(config);
+    return { ok: true, config };
   }
 
   if (path === "/stats" && method === "GET") {
@@ -117,7 +149,13 @@ export default defineEventHandler(async (event) => {
     if (!body.username || !body.password) {
       throw createError({ statusCode: 400, statusMessage: "username and password are required" });
     }
-    const res = await accountsStub.registerAccount(body as any);
+    const res = await accountsStub.registerAccount({
+      username: body.username,
+      password: body.password,
+      displayName: body.displayName,
+      roles: body.roles,
+      registrationPolicyBypass: true,
+    });
     if (!res.ok) {
       throw createError({ statusCode: 400, statusMessage: res.error });
     }
@@ -166,6 +204,7 @@ export default defineEventHandler(async (event) => {
     if (subpath === "" && method === "PATCH") {
       const body = (await readBody(event)) || {};
       const res = await accountsStub.updateAccount(username, body);
+      if (res.ok && body.roles !== undefined) await sessionStub.refreshAccountPermissions(username);
       return res;
     }
     if (subpath === "/password" && method === "POST") {
@@ -173,6 +212,7 @@ export default defineEventHandler(async (event) => {
       if (!body.password)
         throw createError({ statusCode: 400, statusMessage: "password is required" });
       const res = await accountsStub.adminResetPassword(username, body.password);
+      if (res.ok) await sessionStub.invalidateAccountPermissions(username);
       return res;
     }
     if (subpath === "/disable" && method === "POST") {
@@ -198,9 +238,11 @@ export default defineEventHandler(async (event) => {
       }
       if (body.action === "revoke") {
         const ok = await accountsStub.revokeRole(username, body.role);
+        if (ok) await sessionStub.refreshAccountPermissions(username);
         return { ok, username, action: "revoke", role: body.role };
       }
       const ok = await accountsStub.grantRole(username, body.role);
+      if (ok) await sessionStub.refreshAccountPermissions(username);
       return { ok, username, action: "grant", role: body.role };
     }
     if (subpath === "" && method === "DELETE") {
@@ -244,7 +286,7 @@ export default defineEventHandler(async (event) => {
 
   const chanMetaMatch = path.match(/^\/metadata\/channels\/([^/]+)(.*)$/);
   if (chanMetaMatch) {
-    const { name } = parseChannelParam(chanMetaMatch[1]);
+    const { name } = parseChannelParam(decodeURIComponent(chanMetaMatch[1]));
     const subpath = chanMetaMatch[2] || "";
     if (subpath === "" && method === "GET") {
       const keysParam = typeof query.keys === "string" ? query.keys : undefined;
@@ -280,15 +322,18 @@ export default defineEventHandler(async (event) => {
       msgId?: string;
       reason?: string;
     };
-    if (!body.msgId) {
-      throw createError({ statusCode: 400, statusMessage: "msgId is required" });
+    if (!body.msgId || !body.channel) {
+      throw createError({ statusCode: 400, statusMessage: "channel and msgId are required" });
     }
     if (body.channel) {
       const { stub } = getChanStub(body.channel);
       const redacted = await stub.adminRedactMessage(body.msgId);
       return { ok: redacted, msgId: body.msgId };
     }
-    return { ok: true, msgId: body.msgId };
+    throw createError({
+      statusCode: 400,
+      statusMessage: "Channel required; DM redaction is participant-only",
+    });
   }
 
   // 6. Channel Management & Bot F (/channels/...)
@@ -322,10 +367,11 @@ export default defineEventHandler(async (event) => {
         if (body?.purgeMessages !== undefined) purge = body.purgeMessages;
       } catch {}
       const res = await stub.adminDestroyChannel(purge, name);
+      await sessionStub.removeChannelRouting(name, res.recipientSessionIds);
       return { ok: true, ...res };
     }
     if (subpath === "/register" && method === "POST") {
-      let founder = "admin";
+      let founder = (await requireAuthenticatedUser(event)).username;
       try {
         const body = (await readBody(event)) as any;
         if (body?.founder) founder = body.founder;

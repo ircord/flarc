@@ -1,15 +1,7 @@
 import { SERVER_CONFIG } from "~/core/config";
-import type {
-  ChannelMemberInfo,
-  ChannelStateSummary,
-  SessionAttachment,
-  StoredChannelMessage,
-} from "~/core/types";
-import { encodeIRCMessage, encodeNumeric } from "~/protocol/irc/encoder";
-import { Numerics } from "~/protocol/irc/numerics";
-import { canonicalizeIRCName } from "~/protocol/irc/parser";
+import type { SessionAttachment } from "~/core/types";
+import { encodeIRCMessage } from "~/protocol/irc/encoder";
 import type { IRCMessage } from "~/protocol/irc/types";
-import { deliverMultilineOrFallback } from "../messaging";
 import type { ISessionDO } from "../types";
 
 export async function handleWebpush(
@@ -24,17 +16,17 @@ export async function handleWebpush(
   const accountsStub = session.getAccountsStub();
 
   if (sub === "VAPID") {
+    const publicKey = session.env.WEBPUSH_VAPID_PUBLIC_KEY;
     session.sendLine(
       ws,
       attachment,
       encodeIRCMessage({
         tags: session.filterOutgoingTags(attachment, labelTags),
         prefix: SERVER_CONFIG.serverName,
-        command: "WEBPUSH",
-        params: [
-          "VAPID",
-          "BEl62iUYgUivxIkv69yViEuiBIa-Ib9-SkvMeAtA3LFgDzkrxZJjSgSnfckjBJuBkr3qBUYIHBQFLXYp5Nksh8U",
-        ],
+        command: publicKey ? "WEBPUSH" : "FAIL",
+        params: publicKey
+          ? ["VAPID", publicKey]
+          : ["WEBPUSH", "TEMPORARILY_UNAVAILABLE", "VAPID is not configured"],
       }),
     );
     return;
@@ -123,4 +115,3 @@ export async function handleWebpush(
     }),
   );
 }
-

@@ -1,15 +1,6 @@
-import { SERVER_CONFIG } from "~/core/config";
-import type {
-  ChannelMemberInfo,
-  ChannelStateSummary,
-  SessionAttachment,
-  StoredChannelMessage,
-} from "~/core/types";
-import { encodeIRCMessage, encodeNumeric } from "~/protocol/irc/encoder";
+import type { SessionAttachment } from "~/core/types";
 import { Numerics } from "~/protocol/irc/numerics";
-import { canonicalizeIRCName } from "~/protocol/irc/parser";
 import type { IRCMessage } from "~/protocol/irc/types";
-import { deliverMultilineOrFallback } from "../messaging";
 import type { ISessionDO } from "../types";
 
 export function handleLanguageCommand(
@@ -32,4 +23,3 @@ export function handleLanguageCommand(
     labelTags,
   );
 }
-

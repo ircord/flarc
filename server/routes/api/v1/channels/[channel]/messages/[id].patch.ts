@@ -1,11 +1,11 @@
 import { createError, defineEventHandler, getRouterParam, readBody } from "nitro/h3";
 import { SERVER_CONFIG } from "~/core/config";
 import { EditMessageSchema } from "~/schemas/messages";
-import { getEnv, parseChannelParam } from "~/utils/auth";
+import { clientRequest, getEnv, parseChannelParam, requireChannelRead } from "~/utils/auth";
 
 export default defineEventHandler(async (event): Promise<any> => {
-  const rawChan = getRouterParam(event, "channel");
-  const messageId = getRouterParam(event, "id");
+  const rawChan = getRouterParam(event, "channel", { decode: true });
+  const messageId = getRouterParam(event, "id", { decode: true });
   if (!rawChan || !messageId) {
     throw createError({ statusCode: 400, statusMessage: "Channel and message ID required" });
   }
@@ -29,8 +29,11 @@ export default defineEventHandler(async (event): Promise<any> => {
   const env = getEnv(event);
   const stub = env.CHANNELS.get(env.CHANNELS.idFromName(`${SERVER_CONFIG.networkId}:${canon}`));
 
-  const senderNick = parsed.data.senderNick || "APIUser";
-  const res = (await (stub as any).editMessage(messageId, senderNick, parsed.data.content)) as {
+  const _actor = await requireChannelRead(event, rawChan);
+  const res = (await clientRequest(event, stub, "edit", {
+    id: messageId,
+    content: parsed.data.content,
+  })) as {
     ok: boolean;
     error?: string;
     message?: Record<string, any>;

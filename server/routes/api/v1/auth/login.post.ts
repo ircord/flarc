@@ -28,5 +28,6 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 401, statusMessage: res.error });
   }
 
-  return res;
+  const session = await accountsStub.createApiSession(res.account.id);
+  return { ...res, ...session };
 });

@@ -118,11 +118,14 @@ export function initAccountsStorage(sql: SqlStorage): void {
     "ALTER TABLE account_settings ADD COLUMN settings_json TEXT NOT NULL DEFAULT '{}'",
   ];
   for (const stmt of safeAlterations) {
-    try {
+    const [, table, column] = stmt.match(/^ALTER TABLE (\w+) ADD COLUMN (\w+)/)!;
+    if (
+      !sql
+        .exec<{ name: string }>(`PRAGMA table_info(${table})`)
+        .toArray()
+        .some((c) => c.name === column)
+    )
       sql.exec(stmt);
-    } catch {
-      // Column already exists
-    }
   }
 }
 
