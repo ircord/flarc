@@ -1,0 +1,28 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "flarc",
+  "main": "server.ts",
+  "compatibility_date": "2025-02-04",
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "SESSION",
+        "class_name": "SessionDO"
+      },
+      {
+        "name": "CHANNELS",
+        "class_name": "ChannelDO"
+      },
+      {
+        "name": "ACCOUNTS",
+        "class_name": "AccountsDO"
+      }
+    ]
+  },
+  "migrations": [
+    {
+      "tag": "v1",
+      "new_sqlite_classes": ["SessionDO", "ChannelDO", "AccountsDO"]
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+import {
+  createError,
+  defineEventHandler,
+  getRouterParam,
+  readBody,
+  setResponseStatus,
+} from "nitro/h3";
+import { SERVER_CONFIG } from "~/core/config";
+import { CreateRoleGroupSchema } from "~/schemas/channels";
+import { getEnv, parseChannelParam } from "~/utils/auth";
+
+export default defineEventHandler(async (event) => {
+  const rawChan = getRouterParam(event, "channel");
+  if (!rawChan) {
+    throw createError({ statusCode: 400, statusMessage: "Channel parameter required" });
+  }
+
+  let body: any;
+  try {
+    body = await readBody(event);
+  } catch {
+    throw createError({ statusCode: 400, statusMessage: "Invalid JSON body" });
+  }
+
+  const parsed = CreateRoleGroupSchema.safeParse(body);
+  if (!parsed.success) {
+    throw createError({
+      statusCode: 400,
+      statusMessage: parsed.error.issues.map((i: any) => i.message).join(", "),
+    });
+  }
+
+  const { canon } = parseChannelParam(rawChan);
+  const env = getEnv(event);
+  const stub = env.CHANNELS.get(env.CHANNELS.idFromName(`${SERVER_CONFIG.networkId}:${canon}`));
+
+  const role = await (stub as any).createRoleGroup(parsed.data);
+  setResponseStatus(event, 201);
+  return { ok: true, role };
+});

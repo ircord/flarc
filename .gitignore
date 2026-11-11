@@ -1,0 +1,14 @@
+node_modules/
+.wrangler/
+.output/
+dist/
+*.log
+.DS_Store
+.env
+.env.local
+compliance/
+.compliance/
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
