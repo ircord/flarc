@@ -329,11 +329,23 @@ describe("Modern Chat Platform Features (Profiles, Replies, Media, Unread & WebP
       expect(uploadData.mimeType).toBe("image/gif");
       expect(uploadData.url).toMatch(/^\/media\/[a-f0-9-]+\.gif$/i);
 
-      // Verify the file was stored directly in R2 bucket
+      // The durable reservation owns the opaque R2 key; the public media ID is not that key.
       const r2Bucket = await r2Srv.mf.getR2Bucket("MEDIA_BUCKET");
-      const r2Object = await r2Bucket.get(uploadData.id);
-      expect(r2Object).not.toBeNull();
+      await r2Bucket.put("unrelated-fixture-object", new Uint8Array([0x55]));
+      const listed = await r2Bucket.list();
+      const matching = [];
+      for (const item of listed.objects) {
+        const object = await r2Bucket.get(item.key);
+        if (object && Buffer.from(await object.arrayBuffer()).equals(Buffer.from(fileBytes)))
+          matching.push({ key: item.key, object });
+      }
+      expect(matching).toHaveLength(1);
+      expect(matching[0].key).not.toBe(uploadData.id);
+      const r2Object = matching[0].object;
       expect(r2Object?.httpMetadata?.contentType).toBe("image/gif");
+      const unrelated = await r2Bucket.get("unrelated-fixture-object");
+      expect(unrelated).not.toBeNull();
+      expect(new Uint8Array(await unrelated!.arrayBuffer())).toEqual(new Uint8Array([0x55]));
 
       // Verify retrieval through the FlaRC public endpoint
       const getRes = await r2Srv.request(`${r2Srv.url.origin}${uploadData.url}`);
@@ -341,7 +353,7 @@ describe("Modern Chat Platform Features (Profiles, Replies, Media, Unread & WebP
       expect(getRes.headers.get("Content-Type")).toBe("image/gif");
       const downloaded = await getRes.arrayBuffer();
       expect(downloaded.byteLength).toBe(fileBytes.length);
-      expect(new Uint8Array(downloaded)[0]).toBe(0x47);
+      expect(new Uint8Array(downloaded)).toEqual(fileBytes);
     } finally {
       await r2Srv.dispose();
     }

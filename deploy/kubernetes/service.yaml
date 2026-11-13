@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: flarc
+spec:
+  selector:
+    app: flarc
+  ports:
+    - name: http
+      port: 8788
+      targetPort: http
+    - name: irc
+      port: 6667
+      targetPort: irc

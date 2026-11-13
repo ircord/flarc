@@ -1,20 +1,17 @@
-import {
-  createError,
-  defineEventHandler,
-  getQuery,
-  readBody as readRawBody,
-  setResponseStatus,
-} from "nitro/h3";
+import { createError, defineEventHandler, getQuery, setResponseStatus } from "nitro/h3";
 import { SERVER_CONFIG } from "../core/config";
 import { AdminConfigSchema, adminBodySchema } from "../schemas/admin";
+import { adminAuditOperation, adminAuditOutcome, adminAuditTarget } from "../utils/admin-audit";
 import {
+  getAuthenticatedUser,
   getEnv,
   getSessionToken,
   parseChannelParam,
   requireAuthenticatedUser,
 } from "../utils/auth";
+import { readJsonBody } from "../utils/body";
 
-export default defineEventHandler(async (event) => {
+const handleAdmin = defineEventHandler(async (event) => {
   const administrator = await requireAuthenticatedUser(event);
   if (!administrator.isAdmin)
     throw createError({ statusCode: 403, statusMessage: "Administrator role required" });
@@ -56,15 +53,26 @@ export default defineEventHandler(async (event) => {
   if (!path.startsWith("/")) path = `/${path}`;
 
   const method = event.method.toUpperCase();
+  const parts = path.split("/").filter(Boolean);
+  const category = parts[0] || "unknown";
+  const resource =
+    ["accounts", "channels", "profile"].includes(category) &&
+    parts[1] &&
+    !["register", "disable"].includes(parts[1])
+      ? decodeURIComponent(parts[1]).toLowerCase()
+      : "*";
+  if (
+    !(await env.ACCOUNTS.get(env.ACCOUNTS.idFromName(SERVER_CONFIG.networkId)).authorizeCredential(
+      token,
+      `admin.route.${category}.${method.toLowerCase()}`,
+      resource,
+    ))
+  )
+    throw createError({ statusCode: 403, statusMessage: "Administrator scope denied" });
   const query = getQuery(event);
   let validatedBody: any = {};
   if (["POST", "PUT", "PATCH", "DELETE"].includes(method)) {
-    let rawBody: unknown;
-    try {
-      rawBody = await readRawBody(event);
-    } catch {
-      throw createError({ statusCode: 400, statusMessage: "Invalid JSON body" });
-    }
+    const rawBody = await readJsonBody(event);
     const parsed = adminBodySchema(path, method).safeParse(rawBody ?? {});
     if (!parsed.success)
       throw createError({
@@ -74,8 +82,52 @@ export default defineEventHandler(async (event) => {
       });
     validatedBody = parsed.data;
   }
+  event.context.adminAuditAction = adminAuditOperation(event.path, method, validatedBody);
+  if (
+    path === "/accounts/disable" &&
+    method === "POST" &&
+    typeof validatedBody.username === "string"
+  )
+    event.context.adminAuditSubject = validatedBody.username;
   // Validate once before branch-local optional-body handling: malformed DELETE bodies must never fall back to purging.
   const readBody = async (_event: typeof event) => validatedBody;
+
+  if (path === "/audit" && method === "GET") {
+    return {
+      ok: true,
+      records: await env.ACCOUNTS.get(env.ACCOUNTS.idFromName(SERVER_CONFIG.networkId)).queryAudit(
+        token,
+        Number(query.limit) || 100,
+      ),
+    };
+  }
+  if (path === "/bans" && method === "GET") {
+    return {
+      ok: true,
+      bans: await env.ACCOUNTS.get(
+        env.ACCOUNTS.idFromName(SERVER_CONFIG.networkId),
+      ).listNetworkBans(token),
+    };
+  }
+  if (path === "/bans" && method === "POST") {
+    const body = validatedBody as {
+      kind: "account" | "hostmask";
+      value: string;
+      expiresAt?: number | null;
+    };
+    const ban = await env.ACCOUNTS.get(
+      env.ACCOUNTS.idFromName(SERVER_CONFIG.networkId),
+    ).createNetworkBan(token, body.kind, body.value, body.expiresAt ?? null);
+    return { ok: true, ban };
+  }
+  const banMatch = path.match(/^\/bans\/([^/]+)$/);
+  if (banMatch && method === "DELETE") {
+    const ok = await env.ACCOUNTS.get(
+      env.ACCOUNTS.idFromName(SERVER_CONFIG.networkId),
+    ).deleteNetworkBan(token, banMatch[1]);
+    if (!ok) throw createError({ statusCode: 404, statusMessage: "Ban not found" });
+    return { ok: true };
+  }
 
   // 1. Config & Stats
   if (path === "/config" && method === "POST") {
@@ -196,6 +248,52 @@ export default defineEventHandler(async (event) => {
     const username = decodeURIComponent(accountMatch[1]);
     const subpath = accountMatch[2] || "";
 
+    if (subpath === "/scopes" && method === "GET") {
+      const details = await accountsStub.getAccountDetails(username);
+      if (!details) throw createError({ statusCode: 404, statusMessage: "Account not found" });
+      const policy = await env.ACCOUNTS.get(
+        env.ACCOUNTS.idFromName(SERVER_CONFIG.networkId),
+      ).getAdminScopes(token, details.account.id);
+      return { ok: true, ...policy };
+    }
+    if (subpath === "/scopes" && method === "PUT") {
+      const details = await accountsStub.getAccountDetails(username);
+      if (!details) throw createError({ statusCode: 404, statusMessage: "Account not found" });
+      const body = validatedBody as { scopes: { operation: string; resource: string }[] };
+      try {
+        await env.ACCOUNTS.get(env.ACCOUNTS.idFromName(SERVER_CONFIG.networkId)).setAdminScopes(
+          token,
+          details.account.id,
+          body.scopes,
+        );
+      } catch (error) {
+        if (
+          error instanceof Error &&
+          /^(Scope exceeds authority|Administrator authorization required)$/.test(error.message)
+        )
+          throw createError({ statusCode: 403, statusMessage: "Administrator scope denied" });
+        throw error;
+      }
+      return { ok: true };
+    }
+    if (subpath === "/sessions" && method === "GET") {
+      const details = await accountsStub.getAccountDetails(username);
+      if (!details) throw createError({ statusCode: 404, statusMessage: "Account not found" });
+      const sessions = await env.ACCOUNTS.get(
+        env.ACCOUNTS.idFromName(SERVER_CONFIG.networkId),
+      ).listAccountSessions(token, details.account.id);
+      return { ok: true, sessions };
+    }
+    const sessionMatch = subpath.match(/^\/sessions\/([^/]+)$/);
+    if (sessionMatch && method === "DELETE") {
+      const details = await accountsStub.getAccountDetails(username);
+      if (!details) throw createError({ statusCode: 404, statusMessage: "Account not found" });
+      const rawAccounts = env.ACCOUNTS.get(env.ACCOUNTS.idFromName(SERVER_CONFIG.networkId));
+      const sessions = await rawAccounts.listAccountSessions(token, details.account.id);
+      if (!sessions.some((session) => session.id === sessionMatch[1]))
+        throw createError({ statusCode: 404, statusMessage: "Session not found" });
+      return { ok: await rawAccounts.revokeAccountSession(token, sessionMatch[1]) };
+    }
     if (subpath === "" && method === "GET") {
       const details = await accountsStub.getAccountDetails(username);
       if (!details) throw createError({ statusCode: 404, statusMessage: "Account not found" });
@@ -260,11 +358,23 @@ export default defineEventHandler(async (event) => {
     if (subpath === "" && method === "GET") {
       const keysParam = typeof query.keys === "string" ? query.keys : undefined;
       const keys = keysParam ? keysParam.split(",").map((k) => k.trim()) : undefined;
+      const isOwner = target.toLowerCase() === administrator.username.toLowerCase();
+      if (!isOwner && keys?.some((key) => key.toLowerCase().startsWith("private:")))
+        throw createError({ statusCode: 403, statusMessage: "Private metadata denied" });
       const metadata = await sessionStub.adminGetMetadata(target, keys);
+      if (!isOwner)
+        for (const key of Object.keys(metadata))
+          if (key.toLowerCase().startsWith("private:")) delete metadata[key];
       return { ok: true, target, metadata };
     }
     if (subpath === "" && method === "PUT") {
       const body = ((await readBody(event)) || {}) as Record<string, any>;
+      const keys = body.entries ? Object.keys(body.entries) : [body.key];
+      if (
+        target.toLowerCase() !== administrator.username.toLowerCase() &&
+        keys.some((key) => typeof key === "string" && key.toLowerCase().startsWith("private:"))
+      )
+        throw createError({ statusCode: 403, statusMessage: "Private metadata denied" });
       if (body.entries) {
         for (const [k, v] of Object.entries(body.entries)) {
           await sessionStub.adminSetMetadata(target, k, v as string | null);
@@ -279,6 +389,11 @@ export default defineEventHandler(async (event) => {
     const keyMatch = subpath.match(/^\/([^/]+)$/);
     if (keyMatch && method === "DELETE") {
       const key = decodeURIComponent(keyMatch[1]);
+      if (
+        target.toLowerCase() !== administrator.username.toLowerCase() &&
+        key.toLowerCase().startsWith("private:")
+      )
+        throw createError({ statusCode: 403, statusMessage: "Private metadata denied" });
       await sessionStub.adminSetMetadata(target, key, null);
       return { ok: true, target, deletedKey: key };
     }
@@ -387,28 +502,29 @@ export default defineEventHandler(async (event) => {
       const body = (await readBody(event)) as any;
       if (!body?.modeString)
         throw createError({ statusCode: 400, statusMessage: "modeString is required" });
-      const res = await stub.handleModeCommand({
-        channelName: name,
-        actorSessionId: "admin",
-        actorPrefix: SERVER_CONFIG.serverName,
-        modeString: body.modeString,
-        modeArgs: body.modeArgs || [],
-        isOper: true,
-      });
+      const res = await (sessionStub as any).adminChannelModes(
+        name,
+        body.modeString,
+        body.modeArgs || [],
+      );
       return res;
     }
     if (subpath === "/topic" && method === "POST") {
       const body = (await readBody(event)) as any;
       if (body?.topic === undefined)
         throw createError({ statusCode: 400, statusMessage: "topic is required" });
-      const res = await stub.adminSetTopic(body.topic, body.setBy || "Administrator", name);
+      const res = await (sessionStub as any).adminChannelTopic(name, body.topic);
       return res;
     }
     if (subpath === "/kick" && method === "POST") {
       const body = (await readBody(event)) as any;
       if (!body?.nickname)
         throw createError({ statusCode: 400, statusMessage: "nickname is required" });
-      const res = await stub.adminKickMember(body.nickname, body.reason, name);
+      const res = await (sessionStub as any).adminChannelKick(
+        name,
+        body.nickname,
+        body.reason || "Kicked by administrator",
+      );
       return res;
     }
     if (subpath === "/bot" && method === "GET") {
@@ -439,4 +555,58 @@ export default defineEventHandler(async (event) => {
   }
 
   throw createError({ statusCode: 404, statusMessage: `Admin route not found: ${method} ${path}` });
+});
+
+export default defineEventHandler(async (event) => {
+  const actor = await getAuthenticatedUser(event);
+  const env = getEnv(event);
+  const accounts = env.ACCOUNTS.get(env.ACCOUNTS.idFromName(SERVER_CONFIG.networkId));
+  try {
+    const result = await handleAdmin(event);
+    const target = await adminAuditTarget(
+      event.path,
+      typeof event.context.adminAuditSubject === "string"
+        ? event.context.adminAuditSubject
+        : undefined,
+    );
+    await accounts.appendAudit(
+      actor?.id ?? null,
+      typeof event.context.adminAuditAction === "string"
+        ? event.context.adminAuditAction
+        : adminAuditOperation(event.path, event.method),
+      target,
+      (result as any)?.ok === false ? "denied" : "allowed",
+      "rest",
+    );
+    return result;
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "";
+    const status =
+      message === "Metadata target unavailable"
+        ? 404
+        : ["Administrator authorization required", "Account access denied"].includes(message)
+          ? 403
+          : message === "Invalid metadata"
+            ? 400
+            : undefined;
+    const responseError = status
+      ? createError({ statusCode: status, statusMessage: message })
+      : error;
+    const target = await adminAuditTarget(
+      event.path,
+      typeof event.context.adminAuditSubject === "string"
+        ? event.context.adminAuditSubject
+        : undefined,
+    );
+    await accounts.appendAudit(
+      actor?.id ?? null,
+      typeof event.context.adminAuditAction === "string"
+        ? event.context.adminAuditAction
+        : adminAuditOperation(event.path, event.method),
+      target,
+      adminAuditOutcome(responseError),
+      "rest",
+    );
+    throw responseError;
+  }
 });

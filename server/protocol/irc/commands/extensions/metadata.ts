@@ -36,10 +36,55 @@ export async function handleMetadata(
     return sess?.attachment.accountName ?? canonicalizeIRCName(nick);
   };
 
+  const visibleMetadata = async (key: string, keys?: string[]) => {
+    if (attachment.authenticated)
+      return (
+        await session.featureRequest({ ircSessionId: attachment.sessionId }, "metadata.get", {
+          target: key,
+          keys,
+        })
+      ).metadata as Record<string, string>;
+    const values = await accountsStub.getMetadata(key, keys);
+    return Object.fromEntries(
+      Object.entries(values).filter(([name]) => !name.startsWith("private:")),
+    );
+  };
+  const mutateMetadata = async (key: string, value: string | null) => {
+    if (!attachment.authenticated) {
+      if (key.startsWith("private:")) throw new Error("Private metadata requires authentication");
+      return accountsStub.setMetadata(getUserMetaKey(target), key, value);
+    }
+    const revision = msg.tags["+draft/profile-revision"];
+    if (revision !== undefined && (typeof revision !== "string" || !/^\d+$/.test(revision)))
+      throw new Error("Invalid profile revision");
+    return session.featureRequest({ ircSessionId: attachment.sessionId }, "metadata.update", {
+      target: getUserMetaKey(target),
+      key,
+      value,
+      expectedRevision: revision === undefined ? undefined : Number(revision),
+      clientOperationId: msg.tags["+draft/client-operation-id"],
+    });
+  };
   if (subcmd === "SUB") {
     const subs = new Set(attachment.metadataSubs ?? []);
     for (const key of args) {
       const cleanKey = key.toLowerCase();
+      if (
+        cleanKey.startsWith("private:") &&
+        (!attachment.authenticated ||
+          (rawTarget !== "*" && getUserMetaKey(target) !== attachment.accountName))
+      ) {
+        session.sendLine(
+          ws,
+          attachment,
+          encodeIRCMessage({
+            prefix: SERVER_CONFIG.serverName,
+            command: "FAIL",
+            params: ["METADATA", "KEY_NO_PERMISSION", cleanKey, "Private metadata is owner-only"],
+          }),
+        );
+        continue;
+      }
       subs.add(cleanKey);
       session.sendNumeric(ws, attachment, Numerics.RPL_METADATASUBOK, [cleanKey], labelTags);
     }
@@ -70,11 +115,40 @@ export async function handleMetadata(
 
   // Target validation & channel permission checks
   let channelSummary: ChannelStateSummary | null = null;
+  const readGenerations = new Map<string, string>();
+  const requestedMetadataLine = (socket: WebSocket, actor: SessionAttachment, line: string) => {
+    const numeric = line.match(/ (?:761|766) \S+ (\S+) (\S+)/);
+    if (!numeric) {
+      session.sendLine(socket, actor, line);
+      return;
+    }
+    const context = {
+      key: numeric[2],
+      requested: true,
+      sourceUserId: actor.userId,
+      ...(/^[#&]/.test(numeric[1])
+        ? {
+            channel: numeric[1],
+            channelGeneration:
+              readGenerations.get(canonicalizeIRCName(numeric[1])) ?? channelSummary?.generation,
+          }
+        : {}),
+    };
+    (
+      session.sendLine as (
+        socket: WebSocket,
+        actor: SessionAttachment,
+        line: string,
+        context: unknown,
+      ) => void
+    )(socket, actor, line, context);
+  };
+
   if (isChannel) {
     const channelStub = session.getChannelStub(target);
     channelSummary = await channelStub.getChannelSummary(target);
     if (channelSummary.memberCount === 0 && !channelSummary.registered) {
-      session.sendLine(
+      requestedMetadataLine(
         ws,
         attachment,
         encodeIRCMessage({
@@ -96,7 +170,7 @@ export async function handleMetadata(
         isAdmin: attachment.isOper,
       }))
     ) {
-      session.sendLine(
+      requestedMetadataLine(
         ws,
         attachment,
         encodeIRCMessage({
@@ -124,7 +198,7 @@ export async function handleMetadata(
             callerMember.modes.includes("a") ||
             callerMember.modes.includes("q")));
       if (!isOp) {
-        session.sendLine(
+        requestedMetadataLine(
           ws,
           attachment,
           encodeIRCMessage({
@@ -137,7 +211,7 @@ export async function handleMetadata(
         return;
       }
     }
-  } else {
+  } else if (!(subcmd === "SYNC" && rawTarget.toUpperCase() === "*ALL")) {
     // User target
     const isSelf =
       rawTarget === "*" ||
@@ -147,7 +221,7 @@ export async function handleMetadata(
     if (sessions.length === 0 && !isSelf && !(!attachment.registered && rawTarget === "*")) {
       const acct = await accountsStub.getAccountByUsername(target);
       if (!acct) {
-        session.sendLine(
+        requestedMetadataLine(
           ws,
           attachment,
           encodeIRCMessage({
@@ -163,7 +237,7 @@ export async function handleMetadata(
 
     if (subcmd === "SET" || subcmd === "CLEAR") {
       if (!isSelf && !attachment.isOper) {
-        session.sendLine(
+        requestedMetadataLine(
           ws,
           attachment,
           encodeIRCMessage({
@@ -178,13 +252,40 @@ export async function handleMetadata(
     }
   }
 
+  const directNumeric = session.sendNumeric.bind(session);
+  const requestedNumeric = (
+    socket: WebSocket,
+    actor: SessionAttachment,
+    numeric: string,
+    params: string[],
+    tags?: Record<string, string | true>,
+  ) => {
+    if (numeric !== Numerics.RPL_KEYVALUE && numeric !== Numerics.RPL_KEYNOTSET) {
+      directNumeric(socket, actor, numeric, params, tags);
+      return;
+    }
+    directNumeric(socket, actor, numeric, params, tags, {
+      key: params[1] ?? "*",
+      requested: true,
+      sourceUserId: actor.userId,
+      ...(isChannel ? { channel: target, channelGeneration: channelSummary?.generation } : {}),
+    });
+  };
+  const channelMetadata = async (keys?: string[]) => {
+    const stub = session.getChannelStub(target),
+      generation = channelSummary?.generation;
+    const values = await stub.getChannelMetadata(keys);
+    if (!generation || (await stub.getExistingChannelGeneration()) !== generation)
+      throw new Error("Channel generation changed");
+    return values;
+  };
   const hasBatch = session.hasCap(attachment, "batch");
 
   if (subcmd === "SET") {
     const key = (args[0] ?? "").toLowerCase();
     const value = args[1] ?? "";
     if (!key || !/^[a-zA-Z0-9_.:/-]+$/.test(key)) {
-      session.sendLine(
+      requestedMetadataLine(
         ws,
         attachment,
         encodeIRCMessage({
@@ -200,7 +301,7 @@ export async function handleMetadata(
     // Check UTF-8 validity & length limits
     const byteLen = new TextEncoder().encode(value).length;
     if (byteLen > 400 || value.includes("\uFFFD")) {
-      session.sendLine(
+      requestedMetadataLine(
         ws,
         attachment,
         encodeIRCMessage({
@@ -213,12 +314,29 @@ export async function handleMetadata(
       return;
     }
 
+    if (key.startsWith("private:") && !attachment.authenticated) {
+      requestedMetadataLine(
+        ws,
+        attachment,
+        encodeIRCMessage({
+          prefix: SERVER_CONFIG.serverName,
+          command: "FAIL",
+          params: [
+            "METADATA",
+            "KEY_NO_PERMISSION",
+            key,
+            "Private metadata requires authentication",
+          ],
+        }),
+      );
+      return;
+    }
     if (!attachment.registered && rawTarget === "*") {
       attachment.preRegMetadata = attachment.preRegMetadata ?? {};
       attachment.preRegMetadata[key] = value;
       session.saveAttachment(ws, attachment);
       if (value) {
-        session.sendLine(
+        requestedMetadataLine(
           ws,
           attachment,
           encodeIRCMessage({
@@ -229,7 +347,7 @@ export async function handleMetadata(
           }),
         );
       } else {
-        session.sendLine(
+        requestedMetadataLine(
           ws,
           attachment,
           encodeIRCMessage({
@@ -245,22 +363,15 @@ export async function handleMetadata(
 
     if (isChannel) {
       const stub = session.getChannelStub(target);
-      await stub.setChannelMetadata(key, value || null);
+      await stub.setChannelMetadata(key, value || null, channelSummary?.generation);
     } else {
-      const metaKey = attachment.accountName ?? canonicalizeIRCName(target);
-      await accountsStub.setMetadata(metaKey, key, value || null);
+      await mutateMetadata(key, value || null);
     }
 
     if (value) {
-      session.sendNumeric(
-        ws,
-        attachment,
-        Numerics.RPL_KEYVALUE,
-        [target, key, "*", value],
-        labelTags,
-      );
+      requestedNumeric(ws, attachment, Numerics.RPL_KEYVALUE, [target, key, "*", value], labelTags);
     } else {
-      session.sendNumeric(
+      requestedNumeric(
         ws,
         attachment,
         Numerics.RPL_KEYNOTSET,
@@ -270,18 +381,19 @@ export async function handleMetadata(
     }
 
     // Notify subscribed peers in shared channels (do NOT send to actor)
-    await broadcastMetadataChange(session, attachment, target, key, value);
+    if (isChannel || !attachment.authenticated)
+      await broadcastMetadataChange(session, attachment, target, key, value);
     return;
   }
 
   if (subcmd === "GET") {
     const data = isChannel
-      ? await session.getChannelStub(target).getChannelMetadata(args)
-      : await accountsStub.getMetadata(getUserMetaKey(target), args);
+      ? await channelMetadata(args)
+      : await visibleMetadata(getUserMetaKey(target), args);
 
     if (hasBatch) {
       const batchId = crypto.randomUUID().slice(0, 8);
-      session.sendLine(
+      requestedMetadataLine(
         ws,
         attachment,
         encodeIRCMessage({
@@ -294,7 +406,7 @@ export async function handleMetadata(
       for (const reqKey of args) {
         const lk = reqKey.toLowerCase();
         if (Object.hasOwn(data, lk)) {
-          session.sendLine(
+          requestedMetadataLine(
             ws,
             attachment,
             encodeIRCMessage({
@@ -305,7 +417,7 @@ export async function handleMetadata(
             }),
           );
         } else {
-          session.sendLine(
+          requestedMetadataLine(
             ws,
             attachment,
             encodeIRCMessage({
@@ -317,7 +429,7 @@ export async function handleMetadata(
           );
         }
       }
-      session.sendLine(
+      requestedMetadataLine(
         ws,
         attachment,
         encodeIRCMessage({
@@ -330,7 +442,7 @@ export async function handleMetadata(
       for (const reqKey of args) {
         const lk = reqKey.toLowerCase();
         if (Object.hasOwn(data, lk)) {
-          session.sendNumeric(
+          requestedNumeric(
             ws,
             attachment,
             Numerics.RPL_KEYVALUE,
@@ -338,7 +450,7 @@ export async function handleMetadata(
             labelTags,
           );
         } else {
-          session.sendNumeric(
+          requestedNumeric(
             ws,
             attachment,
             Numerics.RPL_KEYNOTSET,
@@ -347,19 +459,19 @@ export async function handleMetadata(
           );
         }
       }
-      session.sendNumeric(ws, attachment, Numerics.RPL_METADATAEND, ["End of metadata"], labelTags);
+      requestedNumeric(ws, attachment, Numerics.RPL_METADATAEND, ["End of metadata"], labelTags);
     }
     return;
   }
 
   if (subcmd === "LIST") {
     const data = isChannel
-      ? await session.getChannelStub(target).getChannelMetadata()
-      : await accountsStub.getMetadata(getUserMetaKey(target));
+      ? await channelMetadata()
+      : await visibleMetadata(getUserMetaKey(target));
 
     if (hasBatch) {
       const batchId = crypto.randomUUID().slice(0, 8);
-      session.sendLine(
+      requestedMetadataLine(
         ws,
         attachment,
         encodeIRCMessage({
@@ -370,7 +482,7 @@ export async function handleMetadata(
         }),
       );
       for (const [k, v] of Object.entries(data)) {
-        session.sendLine(
+        requestedMetadataLine(
           ws,
           attachment,
           encodeIRCMessage({
@@ -381,7 +493,7 @@ export async function handleMetadata(
           }),
         );
       }
-      session.sendLine(
+      requestedMetadataLine(
         ws,
         attachment,
         encodeIRCMessage({
@@ -392,21 +504,25 @@ export async function handleMetadata(
       );
     } else {
       for (const [k, v] of Object.entries(data)) {
-        session.sendNumeric(ws, attachment, Numerics.RPL_KEYVALUE, [target, k, "*", v], labelTags);
+        requestedNumeric(ws, attachment, Numerics.RPL_KEYVALUE, [target, k, "*", v], labelTags);
       }
-      session.sendNumeric(ws, attachment, Numerics.RPL_METADATAEND, ["End of metadata"], labelTags);
+      requestedNumeric(ws, attachment, Numerics.RPL_METADATAEND, ["End of metadata"], labelTags);
     }
     return;
   }
 
   if (subcmd === "CLEAR") {
     const cleared = isChannel
-      ? await session.getChannelStub(target).clearChannelMetadata()
-      : await accountsStub.clearMetadata(getUserMetaKey(target));
+      ? await session.getChannelStub(target).clearChannelMetadata(channelSummary?.generation)
+      : await (async () => {
+          const keys = Object.keys(await visibleMetadata(getUserMetaKey(target)));
+          for (const key of keys) await mutateMetadata(key, null);
+          return keys;
+        })();
 
     if (hasBatch) {
       const batchId = crypto.randomUUID().slice(0, 8);
-      session.sendLine(
+      requestedMetadataLine(
         ws,
         attachment,
         encodeIRCMessage({
@@ -417,7 +533,7 @@ export async function handleMetadata(
         }),
       );
       for (const k of cleared) {
-        session.sendLine(
+        requestedMetadataLine(
           ws,
           attachment,
           encodeIRCMessage({
@@ -428,7 +544,7 @@ export async function handleMetadata(
           }),
         );
       }
-      session.sendLine(
+      requestedMetadataLine(
         ws,
         attachment,
         encodeIRCMessage({
@@ -439,7 +555,7 @@ export async function handleMetadata(
       );
     } else {
       for (const k of cleared) {
-        session.sendNumeric(
+        requestedNumeric(
           ws,
           attachment,
           Numerics.RPL_KEYNOTSET,
@@ -447,23 +563,12 @@ export async function handleMetadata(
           labelTags,
         );
       }
-      session.sendNumeric(ws, attachment, Numerics.RPL_METADATAEND, ["End of metadata"], labelTags);
+      requestedNumeric(ws, attachment, Numerics.RPL_METADATAEND, ["End of metadata"], labelTags);
     }
 
     for (const k of cleared) {
-      await broadcastMetadataChange(session, attachment, target, k, "");
-    }
-    return;
-  }
-
-  if (subcmd === "SYNC") {
-    const subs = attachment.metadataSubs ?? [];
-    const data = isChannel
-      ? await session.getChannelStub(target).getChannelMetadata(subs.length > 0 ? subs : undefined)
-      : await accountsStub.getMetadata(getUserMetaKey(target), subs.length > 0 ? subs : undefined);
-
-    for (const [k, v] of Object.entries(data)) {
-      session.sendNumeric(ws, attachment, Numerics.RPL_KEYVALUE, [target, k, "*", v], labelTags);
+      if (isChannel || !attachment.authenticated)
+        await broadcastMetadataChange(session, attachment, target, k, "");
     }
     return;
   }
@@ -482,7 +587,7 @@ export async function handleMetadata(
         if (seenSubjects.has(canon)) return;
         seenSubjects.add(canon);
         const metaKey = accountName ?? canon;
-        const uData = await accountsStub.getMetadata(metaKey, filterKeys);
+        const uData = await visibleMetadata(metaKey, filterKeys);
         for (const [k, v] of Object.entries(uData)) {
           entries.push({ subject: nick, key: k, value: v });
         }
@@ -493,6 +598,8 @@ export async function handleMetadata(
       for (const ch of session.getSessionChannels(attachment.sessionId)) {
         const stub = session.getChannelStub(ch.channelName);
         const summary = await stub.getChannelSummary(ch.channelName);
+        if (!ch.generation || summary.generation !== ch.generation) continue;
+        readGenerations.set(canonicalizeIRCName(summary.name), ch.generation);
         const chanData = await stub.getChannelMetadata(filterKeys);
         for (const [k, v] of Object.entries(chanData)) {
           entries.push({ subject: summary.name, key: k, value: v });
@@ -504,19 +611,22 @@ export async function handleMetadata(
     } else if (isChannel) {
       const stub = session.getChannelStub(target);
       const summary = await stub.getChannelSummary(target);
+      if (summary.generation !== channelSummary?.generation)
+        throw new Error("Channel generation changed");
+      readGenerations.set(canonicalizeIRCName(summary.name), summary.generation!);
       const chanData = await stub.getChannelMetadata(filterKeys);
       for (const [k, v] of Object.entries(chanData)) {
         entries.push({ subject: summary.name, key: k, value: v });
       }
       for (const m of summary.members) {
         const metaKey = m.accountName ?? canonicalizeIRCName(m.nickname);
-        const mData = await accountsStub.getMetadata(metaKey, filterKeys);
+        const mData = await visibleMetadata(metaKey, filterKeys);
         for (const [k, v] of Object.entries(mData)) {
           entries.push({ subject: m.nickname, key: k, value: v });
         }
       }
     } else {
-      const uData = await accountsStub.getMetadata(getUserMetaKey(target), filterKeys);
+      const uData = await visibleMetadata(getUserMetaKey(target), filterKeys);
       for (const [k, v] of Object.entries(uData)) {
         entries.push({ subject: target, key: k, value: v });
       }
@@ -525,7 +635,7 @@ export async function handleMetadata(
     const batchTarget = rawTarget.toUpperCase() === "*ALL" ? "*ALL" : target;
 
     if (supportsBatch) {
-      session.sendLine(
+      requestedMetadataLine(
         ws,
         attachment,
         encodeIRCMessage({
@@ -539,7 +649,7 @@ export async function handleMetadata(
 
     for (const item of entries) {
       // Emit Ergo-standard RPL_KEYVALUE (761) with "*" as target client parameter
-      session.sendLine(
+      requestedMetadataLine(
         ws,
         attachment,
         encodeNumeric(
@@ -552,7 +662,7 @@ export async function handleMetadata(
     }
 
     if (supportsBatch) {
-      session.sendLine(
+      requestedMetadataLine(
         ws,
         attachment,
         encodeIRCMessage({
@@ -562,7 +672,7 @@ export async function handleMetadata(
         }),
       );
     } else {
-      session.sendNumeric(ws, attachment, Numerics.RPL_METADATAEND, ["End of metadata"], labelTags);
+      requestedNumeric(ws, attachment, Numerics.RPL_METADATAEND, ["End of metadata"], labelTags);
     }
   }
 }
@@ -588,7 +698,12 @@ export async function broadcastMetadataChange(
   const cleanKey = key.toLowerCase();
 
   for (const sid of recipientSessionIds) {
-    if (sid === actor.sessionId) continue;
+    if (
+      sid === actor.sessionId ||
+      (key.startsWith("private:") &&
+        session.sessionsById.get(sid)?.attachment.userId !== actor.userId)
+    )
+      continue;
     const sess = session.sessionsById.get(sid);
     if (!sess) continue;
     if (
@@ -600,18 +715,37 @@ export async function broadcastMetadataChange(
     const subs = sess.attachment.metadataSubs ?? [];
     if (subs.length > 0 && (subs.includes(cleanKey) || subs.includes("*"))) {
       if (value) {
-        session.sendNumeric(sess.ws, sess.attachment, Numerics.RPL_KEYVALUE, [
-          target,
-          key,
-          "*",
-          value,
-        ]);
+        session.sendNumeric(
+          sess.ws,
+          sess.attachment,
+          Numerics.RPL_KEYVALUE,
+          [target, key, "*", value],
+          undefined,
+          isChannel
+            ? { key: cleanKey, channel: target }
+            : {
+                key: cleanKey,
+                sourceSessionId: actor.sessionId,
+                sourceUserId: actor.userId,
+                sourceNick: actor.nickname ?? undefined,
+              },
+        );
       } else {
-        session.sendNumeric(sess.ws, sess.attachment, Numerics.RPL_KEYNOTSET, [
-          target,
-          key,
-          "Key is not set",
-        ]);
+        session.sendNumeric(
+          sess.ws,
+          sess.attachment,
+          Numerics.RPL_KEYNOTSET,
+          [target, key, "Key is not set"],
+          undefined,
+          isChannel
+            ? { key: cleanKey, channel: target }
+            : {
+                key: cleanKey,
+                sourceSessionId: actor.sessionId,
+                sourceUserId: actor.userId,
+                sourceNick: actor.nickname ?? undefined,
+              },
+        );
       }
     }
   }
@@ -634,7 +768,10 @@ export async function syncChannelMemberMetadataOnJoin(
   if (joinerHasMeta && joinerSubs.length > 0) {
     const chanMeta = await session.getChannelStub(channelName).getChannelMetadata(joinerSubs);
     for (const [k, v] of Object.entries(chanMeta)) {
-      session.sendNumeric(ws, joiner, Numerics.RPL_KEYVALUE, [channelName, k, "*", v]);
+      session.sendNumeric(ws, joiner, Numerics.RPL_KEYVALUE, [channelName, k, "*", v], undefined, {
+        key: k.toLowerCase(),
+        channel: channelName,
+      });
     }
   }
 
@@ -643,9 +780,18 @@ export async function syncChannelMemberMetadataOnJoin(
     for (const m of members) {
       if (m.sessionId === joiner.sessionId) continue;
       const metaKey = m.accountName ?? canonicalizeIRCName(m.nickname);
-      const data = await accountsStub.getMetadata(metaKey, joinerSubs);
+      const data = Object.fromEntries(
+        Object.entries(await accountsStub.getMetadata(metaKey, joinerSubs)).filter(
+          ([key]) => !key.startsWith("private:") || m.userId === joiner.userId,
+        ),
+      );
       for (const [k, v] of Object.entries(data)) {
-        session.sendNumeric(ws, joiner, Numerics.RPL_KEYVALUE, [m.nickname, k, "*", v]);
+        session.sendNumeric(ws, joiner, Numerics.RPL_KEYVALUE, [m.nickname, k, "*", v], undefined, {
+          key: k.toLowerCase(),
+          sourceSessionId: m.sessionId,
+          sourceUserId: m.userId,
+          sourceNick: m.nickname,
+        });
       }
     }
   }
@@ -653,7 +799,11 @@ export async function syncChannelMemberMetadataOnJoin(
   // 3. Send joiner's metadata to other channel members who are subscribed
   if (joiner.nickname) {
     const joinerMetaKey = joiner.accountName ?? canonicalizeIRCName(joiner.nickname);
-    const joinerData = await accountsStub.getMetadata(joinerMetaKey);
+    const joinerData = Object.fromEntries(
+      Object.entries(await accountsStub.getMetadata(joinerMetaKey)).filter(
+        ([key]) => !key.startsWith("private:"),
+      ),
+    );
     const joinerEntries = Object.entries(joinerData);
     if (joinerEntries.length > 0) {
       for (const m of members) {
@@ -670,12 +820,19 @@ export async function syncChannelMemberMetadataOnJoin(
         if (peerSubs.length === 0) continue;
         for (const [k, v] of joinerEntries) {
           if (peerSubs.includes(k.toLowerCase())) {
-            session.sendNumeric(peerSess.ws, peerSess.attachment, Numerics.RPL_KEYVALUE, [
-              joiner.nickname,
-              k,
-              "*",
-              v,
-            ]);
+            session.sendNumeric(
+              peerSess.ws,
+              peerSess.attachment,
+              Numerics.RPL_KEYVALUE,
+              [joiner.nickname, k, "*", v],
+              undefined,
+              {
+                key: k.toLowerCase(),
+                sourceSessionId: joiner.sessionId,
+                sourceUserId: joiner.userId,
+                sourceNick: joiner.nickname,
+              },
+            );
           }
         }
       }

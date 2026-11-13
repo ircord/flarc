@@ -1,6 +1,7 @@
 import type { Miniflare } from "miniflare";
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import WebSocket from "ws";
+import { isReaderControl } from "../helpers/event-reader";
 import { createProtocolServer, TestIRCClient } from "../helpers/miniflare-harness";
 
 describe("Realtime Events, Custom Role Groups & Message Editing", () => {
@@ -41,7 +42,7 @@ describe("Realtime Events, Custom Role Groups & Message Editing", () => {
     // 1. Connect WebSocket to /api/v1/events
     const eventsWsUrl = `ws://${httpUrl.host}/api/v1/events`;
     const receivedEvents: any[] = [];
-    const eventWs = new WebSocket(eventsWsUrl, {
+    const eventWs = new WebSocket(eventsWsUrl, ["flarc.events.v2"], {
       headers: { Authorization: `Bearer ${fixture.adminToken}` },
     });
 
@@ -49,9 +50,7 @@ describe("Realtime Events, Custom Role Groups & Message Editing", () => {
       eventWs.on("open", () => resolve());
       eventWs.on("error", (err) => reject(err));
       eventWs.on("message", (data) => {
-        try {
-          receivedEvents.push(JSON.parse(data.toString()));
-        } catch {}
+        if (!isReaderControl(eventWs, data)) receivedEvents.push(JSON.parse(data.toString()));
       });
     });
 
@@ -113,7 +112,10 @@ describe("Realtime Events, Custom Role Groups & Message Editing", () => {
     expect(editedData.message.content).toBe("Hello from modern API! (edited)");
 
     // 5. Verify received domain events on /api/v1/events
-    await new Promise((r) => setTimeout(r, 200));
+    await vi.waitFor(() => {
+      expect(receivedEvents.some((event) => event.type === "channel.role_created")).toBe(true);
+      expect(receivedEvents.some((event) => event.type === "message.updated")).toBe(true);
+    });
     eventWs.close();
 
     const roleEvent = receivedEvents.find((e) => e.type === "channel.role_created");

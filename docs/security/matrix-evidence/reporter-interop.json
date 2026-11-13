@@ -1,0 +1,132 @@
+{
+  "version": 1,
+  "slice": "reporter-interop",
+  "outcome": "PASS",
+  "scope": "Reporter and source-inventory interoperability only; this report does not establish behavioral coverage for any security-matrix scenario.",
+  "baselineBundleSha256": "8faa527957fdb3fa7024565646648394f19da0a4a5d20b9cfa3b4f8e17e91213",
+  "execution": {
+    "command": "FLARC_TEST_BUNDLE=/tmp/flarc-matrix-run_01d0e4aeb274/server-04/index.mjs bunx vitest run --config /tmp/flarc-matrix-run_01d0e4aeb274/vitest.frozen.config.mts tests/security/matrix-inventory.test.ts --reporter=default --reporter=json --outputFile=/tmp/flarc-matrix-run_01d0e4aeb274/integration-blockers-results.json",
+    "vitestJson": "/tmp/flarc-matrix-run_01d0e4aeb274/integration-blockers-results.json",
+    "counts": {
+      "pass": 12,
+      "fail": 0,
+      "skip": 0,
+      "xfail": 0,
+      "xpass": 0,
+      "deselected": 0,
+      "total": 12,
+      "countNotes": "All tests in the owned file were selected and executed. The Vitest v5 JSON has no xfail/xpass or deselection fields; the file has no expected-failure declarations, and the command had no title filter. Tests in other files were outside this slice."
+    },
+    "typecheck": "bun run typecheck — passed (tsc --noEmit)",
+    "formatting": "bunx biome check scripts/security-matrix-report.ts tests/security/matrix-inventory.test.ts — passed",
+    "diffCheck": "git diff --check on the working diff — passed; a trailing-whitespace scan of all five task-owned files found no matches"
+  },
+  "scenarios": [],
+  "additionalPassedTests": [
+    "security matrix report inventory integrity counts skipped and todo separately and reports unavailable Vitest categories as unknown",
+    "security matrix report inventory integrity requires every declared required assertion dimension and exact current execution evidence",
+    "security matrix report inventory integrity preserves required failures and mixed pass/fail cannot be cleared by a passing test",
+    "security matrix report inventory integrity consumes justified dispositions without fake tests and records route/command outcomes separately",
+    "security matrix report inventory integrity does not treat a missing-feature 404 as a secure success or capability disposition",
+    "security matrix report inventory integrity retains older failure history without poisoning current bundle PASS",
+    "security matrix report inventory integrity keeps report-shaped worker handoffs provisional and preserves their failure diagnostics"
+  ],
+  "toolingAssertions": [
+    {
+      "file": "tests/security/matrix-inventory.test.ts",
+      "title": "security matrix report inventory integrity keeps source discovery separate from exercised behavior and finds actual admin branches",
+      "outcome": "PASS",
+      "assertions": [
+        "The catalog retains 339 IDs from the exact matrix requirements; route discovery remains separate from behavior coverage.",
+        "The admin dispatcher has 40 unique route/method pairs, including POST /accounts, POST /accounts/register, and DELETE metadata-key routes for users and channels.",
+        "IRCord schema labels are not used for the FlaRC evidence schema."
+      ],
+      "transports": ["Reporter source discovery"]
+    },
+    {
+      "file": "tests/security/matrix-inventory.test.ts",
+      "title": "security matrix report inventory integrity accepts concrete route paths, query strings, encoded channel params and admin aliases",
+      "outcome": "PASS",
+      "assertions": [
+        "A concrete profile request /api/v1/profiles/alice?username=bob is validated against /api/v1/profiles/{username}; query data does not replace the path parameter.",
+        "A percent-encoded %23channel path parameter matches its discovered route template.",
+        "Concrete current /admin and legacy /api/v1/admin account-role paths match the same exact source template and method.",
+        "The previous template-alias plus requestPath form remains readable; generated coverage retains the source template and emits the concrete request path in alias and requestPath."
+      ],
+      "transports": ["Reporter route evidence validation"]
+    },
+    {
+      "file": "tests/security/matrix-inventory.test.ts",
+      "title": "security matrix report inventory integrity rejects mismatched routes, methods, unapproved prefixes and traversal aliases",
+      "outcome": "PASS",
+      "assertions": [
+        "Mismatched methods, unrelated route prefixes, and route parameters supplied only in query strings are rejected.",
+        "Encoded dot segments, encoded separators and malformed percent escapes are rejected.",
+        "A concrete alias and its requestPath cannot identify different URL paths."
+      ],
+      "transports": ["Reporter route evidence validation"]
+    },
+    {
+      "file": "tests/security/matrix-inventory.test.ts",
+      "title": "security matrix report inventory integrity merges independently executed dimensions conservatively across reordered declarations",
+      "outcome": "PASS",
+      "assertions": [
+        "Different declaration ordering and rationale text no longer make equivalent worker claims conflict.",
+        "Required wins when current executed claims disagree about applicability.",
+        "Only asserted dimensions from exact current executed tests count; a worker PASS label with missing required dimensions remains NOT IMPLEMENTED."
+      ],
+      "transports": ["Reporter evidence merge"]
+    },
+    {
+      "file": "tests/security/matrix-inventory.test.ts",
+      "title": "security matrix report inventory integrity validates checked-in media and channel evidence against their execution manifests without editing them",
+      "outcome": "PASS",
+      "assertions": [
+        "The checked-in media.json and channels.json evidence are loaded with all referenced execution manifests and the frozen bundle SHA.",
+        "Current-bundle route evidence is accepted and retains route behavior outcomes; the report does not show an evidence-reported FAIL.",
+        "The stale media-baseline-03 ABUSE-003 failure remains in evidenceHistory while the final matching run determines current status.",
+        "SHA-256 snapshots before and after generation are equal for media.json and channels.json."
+      ],
+      "transports": ["Vitest JSON manifests", "Frozen bundle SHA", "Checked-in JSON evidence"]
+    }
+  ],
+  "inventoryFinding": {
+    "previousCurrentAstCount": 36,
+    "sourceCount": 40,
+    "addedSourceOperations": [
+      "POST /accounts",
+      "POST /accounts/register",
+      "DELETE /metadata/users/{username}/{key}",
+      "DELETE /metadata/channels/{channel}/{key}"
+    ],
+    "discoveryBasis": "The AST extracts the two registration branches and route/method conditions; metadata key DELETE operations are derived from each actual nested subpath matcher and DELETE branch. Discovery asserts 40 unique route/method pairs and checks dynamic route-template mappings for drift.",
+    "interpretation": "The task's reported hand-list count of 40 agrees with the operations recovered from source, but the hand-list was not used as evidence. Source-operation discovery does not mean those operations have been behaviorally tested."
+  },
+  "bugs": [
+    {
+      "id": "REPORTER-ROUTE-ALIAS-MEMBERSHIP",
+      "status": "FIXED",
+      "details": "Literal alias membership rejected concrete dynamic paths and admin IDs. Validation now requires the exact discovered source template and method, then safely matches the concrete path against only the canonical or declared admin alias prefix. Query strings do not participate in routing."
+    },
+    {
+      "id": "ADMIN-INVENTORY-MISSING-OPERATIONS",
+      "status": "FIXED",
+      "details": "The prior current AST inventory found 36 admin pairs. Four real operations were omitted and are now discovered: two account-registration paths and two metadata-key deletion paths."
+    },
+    {
+      "id": "REPORTER-DIMENSION-MERGE",
+      "status": "FIXED",
+      "details": "Equivalent per-dimension declarations no longer conflict due to object ordering or rationale differences. Required dimensions merge conservatively and PASS still requires current executed evidence covering every required dimension."
+    }
+  ],
+  "coverageGaps": [
+    "No authorization behavior scenario IDs are asserted by this tooling slice; scenarios is intentionally empty.",
+    "The source inventory does not claim successful administrator actions, denials, state changes, events or persistence for the 40 operations.",
+    "This slice does not normalize all historical worker evidence or generate the final 339-scenario coverage artifacts.",
+    "No application source or frozen bundle was changed or rebuilt."
+  ],
+  "limitations": [
+    "Dynamic route matching deliberately rejects encoded path separators, backslashes, dot segments and malformed percent escapes; encoded channel marker %23 is covered.",
+    "The worker evidence integration check depends on the supplied /tmp/flarc-matrix-run_01d0e4aeb274 frozen bundle and execution-manifest files being available in this run environment."
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "name": "flarc-audit32-ea6a45676b",
+  "volume": "flarc-audit32-ea6a45676b-data",
+  "tag": "flarc:audit-32",
+  "checks": [
+    {
+      "label": "container32-volume",
+      "exitCode": 0
+    },
+    {
+      "label": "container32-start",
+      "exitCode": 0
+    },
+    {
+      "label": "container32-seed",
+      "exitCode": 0
+    },
+    {
+      "label": "container32-stop",
+      "exitCode": 0
+    },
+    {
+      "label": "container32-schema",
+      "exitCode": 0
+    },
+    {
+      "label": "container32-restart",
+      "exitCode": 0
+    },
+    {
+      "label": "container32-verify",
+      "exitCode": 0
+    }
+  ],
+  "smokeScriptSha256": "1d9dbb80351981f96de8c3de001dea7b99d57bdb9997c9d179ee3e7800c9ee73",
+  "image": "sha256:9e8777241888a08716d97a6c47cfb3bde79fc0be3ec462ed46e2d8fb4c0e86de",
+  "id": "WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested\ne2140760a505a11e61d506f6d76cbf12372f17dcbe73346d0f6cc3e882984578",
+  "result": "PASS",
+  "containerCleanupExitCode": 0,
+  "volumeCleanupExitCode": 0
+}

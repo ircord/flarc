@@ -1,0 +1,368 @@
+{
+  "version": 2,
+  "evidence": [
+    {
+      "kind": "test",
+      "executionId": "preauth-attachments-barrier-source09",
+      "bundleSha256": "5894497f55587e0e691458a6db9dad9472d93b36756e0bec50cdded299bf6446",
+      "testFile": "tests/security/matrix-preauth-attachments.test.ts",
+      "outcome": "PASS",
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "id": "AUTH-030",
+      "testTitle": "pre-authentication dispatcher inventory AUTH-030: classified dispatcher roots are denied on real sockets without protected state or events",
+      "scenarioScope": "Every currently dispatched command root receives the explicit documented pre-auth allow/deny classification; forbidden roots are exercised with concrete operands.",
+      "rationale": "A reviewed allowlist is checked against documented policy and independently enumerated switch cases; actual anonymous wire replies are required to be 451.",
+      "assertionDetails": [
+        "Allowed roots: CAP, AUTHENTICATE, PASS, NICK, USER, REGISTER, VERIFY, PING, PONG, QUIT, WEBIRC.",
+        "Forbidden roots: BOUNCER, METADATA, ISUPPORT, AWAY, JOIN, PART, PRIVMSG, NOTICE, TAGMSG, BATCH, REDACT, MARKREAD, SETNAME, CHGHOST, SEARCH, MONITOR, RENAME, WHOAMI, RELAYMSG, WEBPUSH, PERSISTENCE, NS, NICKSERV, CS, CHANSERV, HS, HOSTSERV, HISTSERV, F, FLARESERV, Q, ZNC, NAMES, TOPIC, MODE, SAMODE, KICK, INVITE, UNINVITE, WHO, WHOIS, WHOWAS, USERHOST, ISON, TIME, VERSION, INFO, HELP, HELPOP, LANGUAGE, ACCEPT, OPER, DEOPER, SAJOIN, SANICK, KILL, NPC, NPCA, SCENE, AMBIANCE, HISTORY, MOTD, LUSERS, LIST, CHATHISTORY, WALLOPS, LINKS.",
+        "Real independent authenticated observers assert event and IRC silence, protected SQLite snapshots match, restarted sessions preserve independent reads, and an authenticated channel message is delivered. CAP and PING are pre-auth controls; real IRC REGISTER creates an account whose identity survives a runtime restart; PASS, NickServ, SASL PLAIN and SCRAM positive controls are exercised by the separate WS-008 test.",
+        "Dispatcher SHA256 ad3c810f3dfd07c2e9e0eedff1212b1202e0932ce804e9f5680bc7e493d07271 matches both preserved source09 before/after inventories, and current server git diff SHA256 c33350cd698ebc26dac0d84962ab935ef5803fa6eae519dd438d2bf5ebcd8f69 matches bundle-09.json sourceDiffSha256; the before and after inventories are identical."
+      ],
+      "transports": [
+        "IRC WebSocket",
+        "REST",
+        "event WebSocket",
+        "workerd SQLite reconstruction"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "commandBehavior": [
+        {
+          "command": "BOUNCER",
+          "outcome": "negative"
+        },
+        {
+          "command": "METADATA",
+          "outcome": "negative"
+        },
+        {
+          "command": "ISUPPORT",
+          "outcome": "negative"
+        },
+        {
+          "command": "AWAY",
+          "outcome": "negative"
+        },
+        {
+          "command": "JOIN",
+          "outcome": "negative"
+        },
+        {
+          "command": "PART",
+          "outcome": "negative"
+        },
+        {
+          "command": "PRIVMSG",
+          "outcome": "negative"
+        },
+        {
+          "command": "NOTICE",
+          "outcome": "negative"
+        },
+        {
+          "command": "TAGMSG",
+          "outcome": "negative"
+        },
+        {
+          "command": "BATCH",
+          "outcome": "negative"
+        },
+        {
+          "command": "REDACT",
+          "outcome": "negative"
+        },
+        {
+          "command": "MARKREAD",
+          "outcome": "negative"
+        },
+        {
+          "command": "SETNAME",
+          "outcome": "negative"
+        },
+        {
+          "command": "CHGHOST",
+          "outcome": "negative"
+        },
+        {
+          "command": "SEARCH",
+          "outcome": "negative"
+        },
+        {
+          "command": "MONITOR",
+          "outcome": "negative"
+        },
+        {
+          "command": "RENAME",
+          "outcome": "negative"
+        },
+        {
+          "command": "WHOAMI",
+          "outcome": "negative"
+        },
+        {
+          "command": "RELAYMSG",
+          "outcome": "negative"
+        },
+        {
+          "command": "WEBPUSH",
+          "outcome": "negative"
+        },
+        {
+          "command": "PERSISTENCE",
+          "outcome": "negative"
+        },
+        {
+          "command": "NS",
+          "outcome": "negative"
+        },
+        {
+          "command": "NICKSERV",
+          "outcome": "negative"
+        },
+        {
+          "command": "CS",
+          "outcome": "negative"
+        },
+        {
+          "command": "CHANSERV",
+          "outcome": "negative"
+        },
+        {
+          "command": "HS",
+          "outcome": "negative"
+        },
+        {
+          "command": "HOSTSERV",
+          "outcome": "negative"
+        },
+        {
+          "command": "HISTSERV",
+          "outcome": "negative"
+        },
+        {
+          "command": "F",
+          "outcome": "negative"
+        },
+        {
+          "command": "FLARESERV",
+          "outcome": "negative"
+        },
+        {
+          "command": "Q",
+          "outcome": "negative"
+        },
+        {
+          "command": "ZNC",
+          "outcome": "negative"
+        },
+        {
+          "command": "NAMES",
+          "outcome": "negative"
+        },
+        {
+          "command": "TOPIC",
+          "outcome": "negative"
+        },
+        {
+          "command": "MODE",
+          "outcome": "negative"
+        },
+        {
+          "command": "SAMODE",
+          "outcome": "negative"
+        },
+        {
+          "command": "KICK",
+          "outcome": "negative"
+        },
+        {
+          "command": "INVITE",
+          "outcome": "negative"
+        },
+        {
+          "command": "UNINVITE",
+          "outcome": "negative"
+        },
+        {
+          "command": "WHO",
+          "outcome": "negative"
+        },
+        {
+          "command": "WHOIS",
+          "outcome": "negative"
+        },
+        {
+          "command": "WHOWAS",
+          "outcome": "negative"
+        },
+        {
+          "command": "USERHOST",
+          "outcome": "negative"
+        },
+        {
+          "command": "ISON",
+          "outcome": "negative"
+        },
+        {
+          "command": "TIME",
+          "outcome": "negative"
+        },
+        {
+          "command": "VERSION",
+          "outcome": "negative"
+        },
+        {
+          "command": "INFO",
+          "outcome": "negative"
+        },
+        {
+          "command": "HELP",
+          "outcome": "negative"
+        },
+        {
+          "command": "HELPOP",
+          "outcome": "negative"
+        },
+        {
+          "command": "LANGUAGE",
+          "outcome": "negative"
+        },
+        {
+          "command": "ACCEPT",
+          "outcome": "negative"
+        },
+        {
+          "command": "OPER",
+          "outcome": "negative"
+        },
+        {
+          "command": "DEOPER",
+          "outcome": "negative"
+        },
+        {
+          "command": "SAJOIN",
+          "outcome": "negative"
+        },
+        {
+          "command": "SANICK",
+          "outcome": "negative"
+        },
+        {
+          "command": "KILL",
+          "outcome": "negative"
+        },
+        {
+          "command": "NPC",
+          "outcome": "negative"
+        },
+        {
+          "command": "NPCA",
+          "outcome": "negative"
+        },
+        {
+          "command": "SCENE",
+          "outcome": "negative"
+        },
+        {
+          "command": "AMBIANCE",
+          "outcome": "negative"
+        },
+        {
+          "command": "HISTORY",
+          "outcome": "negative"
+        },
+        {
+          "command": "MOTD",
+          "outcome": "negative"
+        },
+        {
+          "command": "LUSERS",
+          "outcome": "negative"
+        },
+        {
+          "command": "LIST",
+          "outcome": "negative"
+        },
+        {
+          "command": "CHATHISTORY",
+          "outcome": "negative"
+        },
+        {
+          "command": "WALLOPS",
+          "outcome": "negative"
+        },
+        {
+          "command": "LINKS",
+          "outcome": "negative"
+        },
+        {
+          "command": "CAP",
+          "outcome": "positive"
+        },
+        {
+          "command": "PING",
+          "outcome": "positive"
+        },
+        {
+          "command": "REGISTER",
+          "outcome": "positive"
+        }
+      ]
+    },
+    {
+      "kind": "test",
+      "executionId": "preauth-attachments-barrier-source09",
+      "bundleSha256": "5894497f55587e0e691458a6db9dad9472d93b36756e0bec50cdded299bf6446",
+      "testFile": "tests/security/matrix-preauth-attachments.test.ts",
+      "outcome": "PASS",
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "id": "WS-008",
+      "testTitle": "real WebSocket attachments WS-008: PASS SASL and ticket attachments omit reusable credentials across hibernation",
+      "scenarioScope": "Real serialized PASS, NickServ, SASL PLAIN and SCRAM IRC attachments and ticket event attachments across workerd hibernation, authorized/outsider traffic and event-session revocation.",
+      "rationale": "Actual workerd-owned WebSockets are deserialized through a read-only test wrapper, their SQLite-backed identities and reusable-secret exclusions are checked, and live authorization is exercised across eviction and restart.",
+      "assertionDetails": [
+        "PASS and SASL IRC fields observed: acceptList, accountName, authenticated, awayMessage, capNegotiating, capabilities, connectedAt, credentialVersion, hostname, ip, isBot, isDirectWebSocket, isOper, languages, lastActiveAt, metadataSubs, nickname, realname, registered, requestedNick, roles, saslBuffer, saslMechanism, sessionId, subprotocol, userId, userModes, username, vhost.",
+        "Event fields observed: accountId, eventSessionHash.",
+        "Every live IRC socket is checked against a reviewed field-name set; completed SASL buffers are empty and credentialVersion matches its independently read AccountsDO SQLite user record. Bootstrap and all actual account passwords, bearer tokens, PLAIN and SCRAM payloads, SQLite password hashes and SCRAM stored/server keys are absent from serialized attachments; consumed one-use tickets are separately excluded.",
+        "Six IRC sockets from three independent accounts, including four Alice devices and NickServ account switching, preserve each nickname, session ID, account ID and credentialVersion after local workerd hibernation; all three event attachments retain exactly accountId and the matching SHA256 bearer-session hash.",
+        "After hibernation an IRC channel message reaches all four other authorized IRC devices and Alice and Bob event streams; Charlie is denied protected history and receives neither protected IRC nor event content, while a shared-channel marker confirms observer liveness.",
+        "Bob logs out, a second hibernation occurs, and an unconditional protected REST read/write is denied with 401; his event stream closes and receives no subsequent protected event, while Alice and Charlie receive an independent barrier. Alice history excludes the rejected post.",
+        "After runtime disposal, independently opened SQLite files contain both authorized markers with Alice sender ID; a new workerd instance over the same storage accepts Alice\u2019s session and reauthentication with the same ID and rejects Bob\u2019s revoked token.",
+        "The inspect and credential accessors are test-only read-only subclasses; actual authentication, sockets, SQLite and attachment serialization are production code from frozen source09. A consumed single-use ticket is distinct from the reusable passwords, token and credential material being excluded."
+      ],
+      "transports": [
+        "IRC WebSocket",
+        "ticket-authenticated event WebSocket",
+        "workerd local hibernation"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ]
+    }
+  ]
+}

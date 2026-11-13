@@ -1,0 +1,2191 @@
+{
+  "version": 1,
+  "status": "Source evidence mapping; current new alias assertions authored but not yet run; legacy evidence retains its historical scope.",
+  "operations": [
+    {
+      "method": "POST",
+      "route": "/admin/config",
+      "policy": "current authenticated administrator session; owning object rechecks authority",
+      "positive": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-014 ADMIN-015 ADMIN-024: operational statistics, configuration and broadcast with alias parity and recipient isolation",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-014 ADMIN-015 ADMIN-024: operational statistics, configuration and broadcast with alias parity and recipient isolation"
+        ],
+        "assertions": "200 and exact updated signupPolicy on each alias; unrelated recipients unaffected",
+        "aliasMechanism": "The original and swapped describe blocks execute the authored route through both prefixes; dynamic route identifiers are real resources created by this test."
+      },
+      "denial": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations"
+        ],
+        "assertions": "Exact method and branch issued with ordinary and anonymous principals on both prefixes (403/401), followed by IRC/event silence, protected and unrelated controls, and exact persistent-table comparison after restart."
+      },
+      "runtimeStatus": "NOT RUN in this inventory task"
+    },
+    {
+      "method": "POST",
+      "route": "/api/v1/admin/config",
+      "policy": "current authenticated administrator session; owning object rechecks authority",
+      "positive": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-014 ADMIN-015 ADMIN-024: operational statistics, configuration and broadcast with alias parity and recipient isolation",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-014 ADMIN-015 ADMIN-024: operational statistics, configuration and broadcast with alias parity and recipient isolation"
+        ],
+        "assertions": "200 and exact updated signupPolicy on each alias; unrelated recipients unaffected",
+        "aliasMechanism": "The original and swapped describe blocks execute the authored route through both prefixes; dynamic route identifiers are real resources created by this test."
+      },
+      "denial": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations"
+        ],
+        "assertions": "Exact method and branch issued with ordinary and anonymous principals on both prefixes (403/401), followed by IRC/event silence, protected and unrelated controls, and exact persistent-table comparison after restart."
+      },
+      "runtimeStatus": "NOT RUN in this inventory task"
+    },
+    {
+      "method": "GET",
+      "route": "/admin/stats",
+      "policy": "current authenticated administrator session; owning object rechecks authority",
+      "positive": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-014 ADMIN-015 ADMIN-024: operational statistics, configuration and broadcast with alias parity and recipient isolation",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-014 ADMIN-015 ADMIN-024: operational statistics, configuration and broadcast with alias parity and recipient isolation"
+        ],
+        "assertions": "200, ok true, activeConnections and registeredSessions fields",
+        "aliasMechanism": "The original and swapped describe blocks execute the authored route through both prefixes; dynamic route identifiers are real resources created by this test."
+      },
+      "denial": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations"
+        ],
+        "assertions": "Exact method and branch issued with ordinary and anonymous principals on both prefixes (403/401), followed by IRC/event silence, protected and unrelated controls, and exact persistent-table comparison after restart."
+      },
+      "runtimeStatus": "NOT RUN in this inventory task"
+    },
+    {
+      "method": "GET",
+      "route": "/api/v1/admin/stats",
+      "policy": "current authenticated administrator session; owning object rechecks authority",
+      "positive": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-014 ADMIN-015 ADMIN-024: operational statistics, configuration and broadcast with alias parity and recipient isolation",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-014 ADMIN-015 ADMIN-024: operational statistics, configuration and broadcast with alias parity and recipient isolation"
+        ],
+        "assertions": "200, ok true, activeConnections and registeredSessions fields",
+        "aliasMechanism": "The original and swapped describe blocks execute the authored route through both prefixes; dynamic route identifiers are real resources created by this test."
+      },
+      "denial": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations"
+        ],
+        "assertions": "Exact method and branch issued with ordinary and anonymous principals on both prefixes (403/401), followed by IRC/event silence, protected and unrelated controls, and exact persistent-table comparison after restart."
+      },
+      "runtimeStatus": "NOT RUN in this inventory task"
+    },
+    {
+      "method": "POST",
+      "route": "/admin/broadcast",
+      "policy": "current authenticated administrator session; owning object rechecks authority",
+      "positive": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-014 ADMIN-015 ADMIN-024: operational statistics, configuration and broadcast with alias parity and recipient isolation",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-014 ADMIN-015 ADMIN-024: operational statistics, configuration and broadcast with alias parity and recipient isolation"
+        ],
+        "assertions": "200 and authorized broadcast delivered to active IRC peers; unauthorized attempt denied",
+        "aliasMechanism": "The original and swapped describe blocks execute the authored route through both prefixes; dynamic route identifiers are real resources created by this test."
+      },
+      "denial": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations"
+        ],
+        "assertions": "Exact method and branch issued with ordinary and anonymous principals on both prefixes (403/401), followed by IRC/event silence, protected and unrelated controls, and exact persistent-table comparison after restart."
+      },
+      "runtimeStatus": "NOT RUN in this inventory task"
+    },
+    {
+      "method": "POST",
+      "route": "/api/v1/admin/broadcast",
+      "policy": "current authenticated administrator session; owning object rechecks authority",
+      "positive": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-014 ADMIN-015 ADMIN-024: operational statistics, configuration and broadcast with alias parity and recipient isolation",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-014 ADMIN-015 ADMIN-024: operational statistics, configuration and broadcast with alias parity and recipient isolation"
+        ],
+        "assertions": "200 and authorized broadcast delivered to active IRC peers; unauthorized attempt denied",
+        "aliasMechanism": "The original and swapped describe blocks execute the authored route through both prefixes; dynamic route identifiers are real resources created by this test."
+      },
+      "denial": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations"
+        ],
+        "assertions": "Exact method and branch issued with ordinary and anonymous principals on both prefixes (403/401), followed by IRC/event silence, protected and unrelated controls, and exact persistent-table comparison after restart."
+      },
+      "runtimeStatus": "NOT RUN in this inventory task"
+    },
+    {
+      "method": "GET",
+      "route": "/admin/sessions",
+      "policy": "current authenticated administrator session; owning object rechecks authority",
+      "positive": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-005 ADMIN-006 USER-009: session inspection, revocation, and active IRC user disconnection without secret exposure",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-005 ADMIN-006 USER-009: session inspection, revocation, and active IRC user disconnection without secret exposure"
+        ],
+        "assertions": "200, real session identity and no bearer/password leakage",
+        "aliasMechanism": "The original and swapped describe blocks execute the authored route through both prefixes; dynamic route identifiers are real resources created by this test."
+      },
+      "denial": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations"
+        ],
+        "assertions": "Exact method and branch issued with ordinary and anonymous principals on both prefixes (403/401), followed by IRC/event silence, protected and unrelated controls, and exact persistent-table comparison after restart."
+      },
+      "runtimeStatus": "NOT RUN in this inventory task"
+    },
+    {
+      "method": "GET",
+      "route": "/api/v1/admin/sessions",
+      "policy": "current authenticated administrator session; owning object rechecks authority",
+      "positive": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-005 ADMIN-006 USER-009: session inspection, revocation, and active IRC user disconnection without secret exposure",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-005 ADMIN-006 USER-009: session inspection, revocation, and active IRC user disconnection without secret exposure"
+        ],
+        "assertions": "200, real session identity and no bearer/password leakage",
+        "aliasMechanism": "The original and swapped describe blocks execute the authored route through both prefixes; dynamic route identifiers are real resources created by this test."
+      },
+      "denial": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations"
+        ],
+        "assertions": "Exact method and branch issued with ordinary and anonymous principals on both prefixes (403/401), followed by IRC/event silence, protected and unrelated controls, and exact persistent-table comparison after restart."
+      },
+      "runtimeStatus": "NOT RUN in this inventory task"
+    },
+    {
+      "method": "POST",
+      "route": "/admin/sessions/disconnect",
+      "policy": "current authenticated administrator session; owning object rechecks authority",
+      "positive": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-005 ADMIN-006 USER-009: session inspection, revocation, and active IRC user disconnection without secret exposure",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-005 ADMIN-006 USER-009: session inspection, revocation, and active IRC user disconnection without secret exposure"
+        ],
+        "assertions": "200, actual target disconnect and independent peer remains connected",
+        "aliasMechanism": "The original and swapped describe blocks execute the authored route through both prefixes; dynamic route identifiers are real resources created by this test."
+      },
+      "denial": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations"
+        ],
+        "assertions": "Exact method and branch issued with ordinary and anonymous principals on both prefixes (403/401), followed by IRC/event silence, protected and unrelated controls, and exact persistent-table comparison after restart."
+      },
+      "runtimeStatus": "NOT RUN in this inventory task"
+    },
+    {
+      "method": "POST",
+      "route": "/api/v1/admin/sessions/disconnect",
+      "policy": "current authenticated administrator session; owning object rechecks authority",
+      "positive": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-005 ADMIN-006 USER-009: session inspection, revocation, and active IRC user disconnection without secret exposure",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-005 ADMIN-006 USER-009: session inspection, revocation, and active IRC user disconnection without secret exposure"
+        ],
+        "assertions": "200, actual target disconnect and independent peer remains connected",
+        "aliasMechanism": "The original and swapped describe blocks execute the authored route through both prefixes; dynamic route identifiers are real resources created by this test."
+      },
+      "denial": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations"
+        ],
+        "assertions": "Exact method and branch issued with ordinary and anonymous principals on both prefixes (403/401), followed by IRC/event silence, protected and unrelated controls, and exact persistent-table comparison after restart."
+      },
+      "runtimeStatus": "NOT RUN in this inventory task"
+    },
+    {
+      "method": "GET",
+      "route": "/admin/accounts",
+      "policy": "current authenticated administrator session; owning object rechecks authority",
+      "positive": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-001 ADMIN-002 ADMIN-003 ADMIN-004 ADMIN-007 ADMIN-008 ADMIN-019 ADMIN-020 ADMIN-021 ADMIN-022 ADMIN-023 AUTH-009 AUTH-023 USER-009: account provisioning, profile, credentials, roles, enable/disable and deletion across aliases",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-001 ADMIN-002 ADMIN-003 ADMIN-004 ADMIN-007 ADMIN-008 ADMIN-019 ADMIN-020 ADMIN-021 ADMIN-022 ADMIN-023 AUTH-009 AUTH-023 USER-009: account provisioning, profile, credentials, roles, enable/disable and deletion across aliases"
+        ],
+        "assertions": "200, created account identities present and secret credentials absent",
+        "aliasMechanism": "The original and swapped describe blocks execute the authored route through both prefixes; dynamic route identifiers are real resources created by this test."
+      },
+      "denial": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations"
+        ],
+        "assertions": "Exact method and branch issued with ordinary and anonymous principals on both prefixes (403/401), followed by IRC/event silence, protected and unrelated controls, and exact persistent-table comparison after restart."
+      },
+      "runtimeStatus": "NOT RUN in this inventory task"
+    },
+    {
+      "method": "GET",
+      "route": "/api/v1/admin/accounts",
+      "policy": "current authenticated administrator session; owning object rechecks authority",
+      "positive": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-001 ADMIN-002 ADMIN-003 ADMIN-004 ADMIN-007 ADMIN-008 ADMIN-019 ADMIN-020 ADMIN-021 ADMIN-022 ADMIN-023 AUTH-009 AUTH-023 USER-009: account provisioning, profile, credentials, roles, enable/disable and deletion across aliases",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-001 ADMIN-002 ADMIN-003 ADMIN-004 ADMIN-007 ADMIN-008 ADMIN-019 ADMIN-020 ADMIN-021 ADMIN-022 ADMIN-023 AUTH-009 AUTH-023 USER-009: account provisioning, profile, credentials, roles, enable/disable and deletion across aliases"
+        ],
+        "assertions": "200, created account identities present and secret credentials absent",
+        "aliasMechanism": "The original and swapped describe blocks execute the authored route through both prefixes; dynamic route identifiers are real resources created by this test."
+      },
+      "denial": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations"
+        ],
+        "assertions": "Exact method and branch issued with ordinary and anonymous principals on both prefixes (403/401), followed by IRC/event silence, protected and unrelated controls, and exact persistent-table comparison after restart."
+      },
+      "runtimeStatus": "NOT RUN in this inventory task"
+    },
+    {
+      "method": "POST",
+      "route": "/admin/accounts",
+      "policy": "current authenticated administrator session; owning object rechecks authority",
+      "positive": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-001 ADMIN-002 ADMIN-003 ADMIN-004 ADMIN-007 ADMIN-008 ADMIN-019 ADMIN-020 ADMIN-021 ADMIN-022 ADMIN-023 AUTH-009 AUTH-023 USER-009: account provisioning, profile, credentials, roles, enable/disable and deletion across aliases",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-001 ADMIN-002 ADMIN-003 ADMIN-004 ADMIN-007 ADMIN-008 ADMIN-019 ADMIN-020 ADMIN-021 ADMIN-022 ADMIN-023 AUTH-009 AUTH-023 USER-009: account provisioning, profile, credentials, roles, enable/disable and deletion across aliases"
+        ],
+        "assertions": "201 and ok; newly created account successfully logs in",
+        "aliasMechanism": "The original and swapped describe blocks execute the authored route through both prefixes; dynamic route identifiers are real resources created by this test."
+      },
+      "denial": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations"
+        ],
+        "assertions": "Exact method and branch issued with ordinary and anonymous principals on both prefixes (403/401), followed by IRC/event silence, protected and unrelated controls, and exact persistent-table comparison after restart."
+      },
+      "runtimeStatus": "NOT RUN in this inventory task"
+    },
+    {
+      "method": "POST",
+      "route": "/api/v1/admin/accounts",
+      "policy": "current authenticated administrator session; owning object rechecks authority",
+      "positive": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-001 ADMIN-002 ADMIN-003 ADMIN-004 ADMIN-007 ADMIN-008 ADMIN-019 ADMIN-020 ADMIN-021 ADMIN-022 ADMIN-023 AUTH-009 AUTH-023 USER-009: account provisioning, profile, credentials, roles, enable/disable and deletion across aliases",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-001 ADMIN-002 ADMIN-003 ADMIN-004 ADMIN-007 ADMIN-008 ADMIN-019 ADMIN-020 ADMIN-021 ADMIN-022 ADMIN-023 AUTH-009 AUTH-023 USER-009: account provisioning, profile, credentials, roles, enable/disable and deletion across aliases"
+        ],
+        "assertions": "201 and ok; newly created account successfully logs in",
+        "aliasMechanism": "The original and swapped describe blocks execute the authored route through both prefixes; dynamic route identifiers are real resources created by this test."
+      },
+      "denial": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations"
+        ],
+        "assertions": "Exact method and branch issued with ordinary and anonymous principals on both prefixes (403/401), followed by IRC/event silence, protected and unrelated controls, and exact persistent-table comparison after restart."
+      },
+      "runtimeStatus": "NOT RUN in this inventory task"
+    },
+    {
+      "method": "POST",
+      "route": "/admin/accounts/register",
+      "policy": "current authenticated administrator session; owning object rechecks authority",
+      "positive": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-001 ADMIN-002 ADMIN-003 ADMIN-004 ADMIN-007 ADMIN-008 ADMIN-019 ADMIN-020 ADMIN-021 ADMIN-022 ADMIN-023 AUTH-009 AUTH-023 USER-009: account provisioning, profile, credentials, roles, enable/disable and deletion across aliases",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-001 ADMIN-002 ADMIN-003 ADMIN-004 ADMIN-007 ADMIN-008 ADMIN-019 ADMIN-020 ADMIN-021 ADMIN-022 ADMIN-023 AUTH-009 AUTH-023 USER-009: account provisioning, profile, credentials, roles, enable/disable and deletion across aliases"
+        ],
+        "assertions": "201 and ok; newly created account successfully logs in",
+        "aliasMechanism": "The original and swapped describe blocks execute the authored route through both prefixes; dynamic route identifiers are real resources created by this test."
+      },
+      "denial": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations"
+        ],
+        "assertions": "Exact method and branch issued with ordinary and anonymous principals on both prefixes (403/401), followed by IRC/event silence, protected and unrelated controls, and exact persistent-table comparison after restart."
+      },
+      "runtimeStatus": "NOT RUN in this inventory task"
+    },
+    {
+      "method": "POST",
+      "route": "/api/v1/admin/accounts/register",
+      "policy": "current authenticated administrator session; owning object rechecks authority",
+      "positive": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-001 ADMIN-002 ADMIN-003 ADMIN-004 ADMIN-007 ADMIN-008 ADMIN-019 ADMIN-020 ADMIN-021 ADMIN-022 ADMIN-023 AUTH-009 AUTH-023 USER-009: account provisioning, profile, credentials, roles, enable/disable and deletion across aliases",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-001 ADMIN-002 ADMIN-003 ADMIN-004 ADMIN-007 ADMIN-008 ADMIN-019 ADMIN-020 ADMIN-021 ADMIN-022 ADMIN-023 AUTH-009 AUTH-023 USER-009: account provisioning, profile, credentials, roles, enable/disable and deletion across aliases"
+        ],
+        "assertions": "201 and ok; newly created account successfully logs in",
+        "aliasMechanism": "The original and swapped describe blocks execute the authored route through both prefixes; dynamic route identifiers are real resources created by this test."
+      },
+      "denial": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations"
+        ],
+        "assertions": "Exact method and branch issued with ordinary and anonymous principals on both prefixes (403/401), followed by IRC/event silence, protected and unrelated controls, and exact persistent-table comparison after restart."
+      },
+      "runtimeStatus": "NOT RUN in this inventory task"
+    },
+    {
+      "method": "POST",
+      "route": "/admin/accounts/disable",
+      "policy": "current authenticated administrator session; owning object rechecks authority",
+      "positive": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-001 ADMIN-002 ADMIN-003 ADMIN-004 ADMIN-007 ADMIN-008 ADMIN-019 ADMIN-020 ADMIN-021 ADMIN-022 ADMIN-023 AUTH-009 AUTH-023 USER-009: account provisioning, profile, credentials, roles, enable/disable and deletion across aliases",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-001 ADMIN-002 ADMIN-003 ADMIN-004 ADMIN-007 ADMIN-008 ADMIN-019 ADMIN-020 ADMIN-021 ADMIN-022 ADMIN-023 AUTH-009 AUTH-023 USER-009: account provisioning, profile, credentials, roles, enable/disable and deletion across aliases"
+        ],
+        "assertions": "200, target bearer revoked and target credentials denied; enable/login control and unrelated account persist",
+        "aliasMechanism": "The original and swapped describe blocks execute the authored route through both prefixes; dynamic route identifiers are real resources created by this test."
+      },
+      "denial": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations"
+        ],
+        "assertions": "Exact method and branch issued with ordinary and anonymous principals on both prefixes (403/401), followed by IRC/event silence, protected and unrelated controls, and exact persistent-table comparison after restart."
+      },
+      "runtimeStatus": "NOT RUN in this inventory task"
+    },
+    {
+      "method": "POST",
+      "route": "/api/v1/admin/accounts/disable",
+      "policy": "current authenticated administrator session; owning object rechecks authority",
+      "positive": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-001 ADMIN-002 ADMIN-003 ADMIN-004 ADMIN-007 ADMIN-008 ADMIN-019 ADMIN-020 ADMIN-021 ADMIN-022 ADMIN-023 AUTH-009 AUTH-023 USER-009: account provisioning, profile, credentials, roles, enable/disable and deletion across aliases",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-001 ADMIN-002 ADMIN-003 ADMIN-004 ADMIN-007 ADMIN-008 ADMIN-019 ADMIN-020 ADMIN-021 ADMIN-022 ADMIN-023 AUTH-009 AUTH-023 USER-009: account provisioning, profile, credentials, roles, enable/disable and deletion across aliases"
+        ],
+        "assertions": "200, target bearer revoked and target credentials denied; enable/login control and unrelated account persist",
+        "aliasMechanism": "The original and swapped describe blocks execute the authored route through both prefixes; dynamic route identifiers are real resources created by this test."
+      },
+      "denial": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations"
+        ],
+        "assertions": "Exact method and branch issued with ordinary and anonymous principals on both prefixes (403/401), followed by IRC/event silence, protected and unrelated controls, and exact persistent-table comparison after restart."
+      },
+      "runtimeStatus": "NOT RUN in this inventory task"
+    },
+    {
+      "method": "POST",
+      "route": "/admin/messages/redact",
+      "policy": "current authenticated administrator session; owning object rechecks authority",
+      "positive": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-011: channel moderation, message inspection, redaction, purge, modes, topic, and kick with IRC delivery and alias parity",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-011: channel moderation, message inspection, redaction, purge, modes, topic, and kick with IRC delivery and alias parity"
+        ],
+        "assertions": "200 for actual generated IDs and subsequent history omits both redacted messages",
+        "aliasMechanism": "The original and swapped describe blocks execute the authored route through both prefixes; dynamic route identifiers are real resources created by this test."
+      },
+      "denial": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations"
+        ],
+        "assertions": "Exact method and branch issued with ordinary and anonymous principals on both prefixes (403/401), followed by IRC/event silence, protected and unrelated controls, and exact persistent-table comparison after restart."
+      },
+      "runtimeStatus": "NOT RUN in this inventory task"
+    },
+    {
+      "method": "POST",
+      "route": "/api/v1/admin/messages/redact",
+      "policy": "current authenticated administrator session; owning object rechecks authority",
+      "positive": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-011: channel moderation, message inspection, redaction, purge, modes, topic, and kick with IRC delivery and alias parity",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-011: channel moderation, message inspection, redaction, purge, modes, topic, and kick with IRC delivery and alias parity"
+        ],
+        "assertions": "200 for actual generated IDs and subsequent history omits both redacted messages",
+        "aliasMechanism": "The original and swapped describe blocks execute the authored route through both prefixes; dynamic route identifiers are real resources created by this test."
+      },
+      "denial": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations"
+        ],
+        "assertions": "Exact method and branch issued with ordinary and anonymous principals on both prefixes (403/401), followed by IRC/event silence, protected and unrelated controls, and exact persistent-table comparison after restart."
+      },
+      "runtimeStatus": "NOT RUN in this inventory task"
+    },
+    {
+      "method": "GET",
+      "route": "/admin/channels",
+      "policy": "current authenticated administrator session; owning object rechecks authority",
+      "positive": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-009 ADMIN-010 ADMIN-011 ADMIN-017: channel lifecycle, registration, info, bot F configuration, and channel deletion across aliases",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-009 ADMIN-010 ADMIN-011 ADMIN-017: channel lifecycle, registration, info, bot F configuration, and channel deletion across aliases"
+        ],
+        "assertions": "200 and known unrelated channel identity in list",
+        "aliasMechanism": "The original and swapped describe blocks execute the authored route through both prefixes; dynamic route identifiers are real resources created by this test."
+      },
+      "denial": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations"
+        ],
+        "assertions": "Exact method and branch issued with ordinary and anonymous principals on both prefixes (403/401), followed by IRC/event silence, protected and unrelated controls, and exact persistent-table comparison after restart."
+      },
+      "runtimeStatus": "NOT RUN in this inventory task"
+    },
+    {
+      "method": "GET",
+      "route": "/api/v1/admin/channels",
+      "policy": "current authenticated administrator session; owning object rechecks authority",
+      "positive": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-009 ADMIN-010 ADMIN-011 ADMIN-017: channel lifecycle, registration, info, bot F configuration, and channel deletion across aliases",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-009 ADMIN-010 ADMIN-011 ADMIN-017: channel lifecycle, registration, info, bot F configuration, and channel deletion across aliases"
+        ],
+        "assertions": "200 and known unrelated channel identity in list",
+        "aliasMechanism": "The original and swapped describe blocks execute the authored route through both prefixes; dynamic route identifiers are real resources created by this test."
+      },
+      "denial": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations"
+        ],
+        "assertions": "Exact method and branch issued with ordinary and anonymous principals on both prefixes (403/401), followed by IRC/event silence, protected and unrelated controls, and exact persistent-table comparison after restart."
+      },
+      "runtimeStatus": "NOT RUN in this inventory task"
+    },
+    {
+      "method": "DELETE",
+      "route": "/admin/metadata/users/{username}/{key}",
+      "policy": "current authenticated administrator session; owning object rechecks authority",
+      "positive": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-002: user and channel KV metadata administration across aliases and restart persistence",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-002: user and channel KV metadata administration across aliases and restart persistence"
+        ],
+        "assertions": "200 and subsequent read and persisted rows show removed key and unrelated key retained",
+        "aliasMechanism": "The original and swapped describe blocks execute the authored route through both prefixes; dynamic route identifiers are real resources created by this test."
+      },
+      "denial": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations"
+        ],
+        "assertions": "Exact method and branch issued with ordinary and anonymous principals on both prefixes (403/401), followed by IRC/event silence, protected and unrelated controls, and exact persistent-table comparison after restart."
+      },
+      "runtimeStatus": "NOT RUN in this inventory task"
+    },
+    {
+      "method": "DELETE",
+      "route": "/api/v1/admin/metadata/users/{username}/{key}",
+      "policy": "current authenticated administrator session; owning object rechecks authority",
+      "positive": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-002: user and channel KV metadata administration across aliases and restart persistence",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-002: user and channel KV metadata administration across aliases and restart persistence"
+        ],
+        "assertions": "200 and subsequent read and persisted rows show removed key and unrelated key retained",
+        "aliasMechanism": "The original and swapped describe blocks execute the authored route through both prefixes; dynamic route identifiers are real resources created by this test."
+      },
+      "denial": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations"
+        ],
+        "assertions": "Exact method and branch issued with ordinary and anonymous principals on both prefixes (403/401), followed by IRC/event silence, protected and unrelated controls, and exact persistent-table comparison after restart."
+      },
+      "runtimeStatus": "NOT RUN in this inventory task"
+    },
+    {
+      "method": "DELETE",
+      "route": "/admin/metadata/channels/{channel}/{key}",
+      "policy": "current authenticated administrator session; owning object rechecks authority",
+      "positive": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-002: user and channel KV metadata administration across aliases and restart persistence",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-002: user and channel KV metadata administration across aliases and restart persistence"
+        ],
+        "assertions": "200 and subsequent read and persisted rows show removed key and unrelated key retained",
+        "aliasMechanism": "The original and swapped describe blocks execute the authored route through both prefixes; dynamic route identifiers are real resources created by this test."
+      },
+      "denial": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations"
+        ],
+        "assertions": "Exact method and branch issued with ordinary and anonymous principals on both prefixes (403/401), followed by IRC/event silence, protected and unrelated controls, and exact persistent-table comparison after restart."
+      },
+      "runtimeStatus": "NOT RUN in this inventory task"
+    },
+    {
+      "method": "DELETE",
+      "route": "/api/v1/admin/metadata/channels/{channel}/{key}",
+      "policy": "current authenticated administrator session; owning object rechecks authority",
+      "positive": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-002: user and channel KV metadata administration across aliases and restart persistence",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-002: user and channel KV metadata administration across aliases and restart persistence"
+        ],
+        "assertions": "200 and subsequent read and persisted rows show removed key and unrelated key retained",
+        "aliasMechanism": "The original and swapped describe blocks execute the authored route through both prefixes; dynamic route identifiers are real resources created by this test."
+      },
+      "denial": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations"
+        ],
+        "assertions": "Exact method and branch issued with ordinary and anonymous principals on both prefixes (403/401), followed by IRC/event silence, protected and unrelated controls, and exact persistent-table comparison after restart."
+      },
+      "runtimeStatus": "NOT RUN in this inventory task"
+    },
+    {
+      "method": "GET",
+      "route": "/admin/profile/{username}",
+      "policy": "current authenticated administrator session; owning object rechecks authority",
+      "positive": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-001 ADMIN-002 ADMIN-003 ADMIN-004 ADMIN-007 ADMIN-008 ADMIN-019 ADMIN-020 ADMIN-021 ADMIN-022 ADMIN-023 AUTH-009 AUTH-023 USER-009: account provisioning, profile, credentials, roles, enable/disable and deletion across aliases",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-001 ADMIN-002 ADMIN-003 ADMIN-004 ADMIN-007 ADMIN-008 ADMIN-019 ADMIN-020 ADMIN-021 ADMIN-022 ADMIN-023 AUTH-009 AUTH-023 USER-009: account provisioning, profile, credentials, roles, enable/disable and deletion across aliases"
+        ],
+        "assertions": "200 and expected configured target customStatus",
+        "aliasMechanism": "The original and swapped describe blocks execute the authored route through both prefixes; dynamic route identifiers are real resources created by this test."
+      },
+      "denial": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations"
+        ],
+        "assertions": "Exact method and branch issued with ordinary and anonymous principals on both prefixes (403/401), followed by IRC/event silence, protected and unrelated controls, and exact persistent-table comparison after restart."
+      },
+      "runtimeStatus": "NOT RUN in this inventory task"
+    },
+    {
+      "method": "GET",
+      "route": "/api/v1/admin/profile/{username}",
+      "policy": "current authenticated administrator session; owning object rechecks authority",
+      "positive": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-001 ADMIN-002 ADMIN-003 ADMIN-004 ADMIN-007 ADMIN-008 ADMIN-019 ADMIN-020 ADMIN-021 ADMIN-022 ADMIN-023 AUTH-009 AUTH-023 USER-009: account provisioning, profile, credentials, roles, enable/disable and deletion across aliases",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-001 ADMIN-002 ADMIN-003 ADMIN-004 ADMIN-007 ADMIN-008 ADMIN-019 ADMIN-020 ADMIN-021 ADMIN-022 ADMIN-023 AUTH-009 AUTH-023 USER-009: account provisioning, profile, credentials, roles, enable/disable and deletion across aliases"
+        ],
+        "assertions": "200 and expected configured target customStatus",
+        "aliasMechanism": "The original and swapped describe blocks execute the authored route through both prefixes; dynamic route identifiers are real resources created by this test."
+      },
+      "denial": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations"
+        ],
+        "assertions": "Exact method and branch issued with ordinary and anonymous principals on both prefixes (403/401), followed by IRC/event silence, protected and unrelated controls, and exact persistent-table comparison after restart."
+      },
+      "runtimeStatus": "NOT RUN in this inventory task"
+    },
+    {
+      "method": "PATCH",
+      "route": "/admin/profile/{username}",
+      "policy": "current authenticated administrator session; owning object rechecks authority",
+      "positive": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-001 ADMIN-002 ADMIN-003 ADMIN-004 ADMIN-007 ADMIN-008 ADMIN-019 ADMIN-020 ADMIN-021 ADMIN-022 ADMIN-023 AUTH-009 AUTH-023 USER-009: account provisioning, profile, credentials, roles, enable/disable and deletion across aliases",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-001 ADMIN-002 ADMIN-003 ADMIN-004 ADMIN-007 ADMIN-008 ADMIN-019 ADMIN-020 ADMIN-021 ADMIN-022 ADMIN-023 AUTH-009 AUTH-023 USER-009: account provisioning, profile, credentials, roles, enable/disable and deletion across aliases"
+        ],
+        "assertions": "200 and subsequent target profile reads show exact updated status",
+        "aliasMechanism": "The original and swapped describe blocks execute the authored route through both prefixes; dynamic route identifiers are real resources created by this test."
+      },
+      "denial": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations"
+        ],
+        "assertions": "Exact method and branch issued with ordinary and anonymous principals on both prefixes (403/401), followed by IRC/event silence, protected and unrelated controls, and exact persistent-table comparison after restart."
+      },
+      "runtimeStatus": "NOT RUN in this inventory task"
+    },
+    {
+      "method": "PATCH",
+      "route": "/api/v1/admin/profile/{username}",
+      "policy": "current authenticated administrator session; owning object rechecks authority",
+      "positive": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-001 ADMIN-002 ADMIN-003 ADMIN-004 ADMIN-007 ADMIN-008 ADMIN-019 ADMIN-020 ADMIN-021 ADMIN-022 ADMIN-023 AUTH-009 AUTH-023 USER-009: account provisioning, profile, credentials, roles, enable/disable and deletion across aliases",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-001 ADMIN-002 ADMIN-003 ADMIN-004 ADMIN-007 ADMIN-008 ADMIN-019 ADMIN-020 ADMIN-021 ADMIN-022 ADMIN-023 AUTH-009 AUTH-023 USER-009: account provisioning, profile, credentials, roles, enable/disable and deletion across aliases"
+        ],
+        "assertions": "200 and subsequent target profile reads show exact updated status",
+        "aliasMechanism": "The original and swapped describe blocks execute the authored route through both prefixes; dynamic route identifiers are real resources created by this test."
+      },
+      "denial": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations"
+        ],
+        "assertions": "Exact method and branch issued with ordinary and anonymous principals on both prefixes (403/401), followed by IRC/event silence, protected and unrelated controls, and exact persistent-table comparison after restart."
+      },
+      "runtimeStatus": "NOT RUN in this inventory task"
+    },
+    {
+      "method": "GET",
+      "route": "/admin/accounts/{username}",
+      "policy": "current authenticated administrator session; owning object rechecks authority",
+      "positive": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-001 ADMIN-002 ADMIN-003 ADMIN-004 ADMIN-007 ADMIN-008 ADMIN-019 ADMIN-020 ADMIN-021 ADMIN-022 ADMIN-023 AUTH-009 AUTH-023 USER-009: account provisioning, profile, credentials, roles, enable/disable and deletion across aliases",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-001 ADMIN-002 ADMIN-003 ADMIN-004 ADMIN-007 ADMIN-008 ADMIN-019 ADMIN-020 ADMIN-021 ADMIN-022 ADMIN-023 AUTH-009 AUTH-023 USER-009: account provisioning, profile, credentials, roles, enable/disable and deletion across aliases"
+        ],
+        "assertions": "200 and actual target identity and roles; sensitive credential fields absent",
+        "aliasMechanism": "The original and swapped describe blocks execute the authored route through both prefixes; dynamic route identifiers are real resources created by this test."
+      },
+      "denial": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations"
+        ],
+        "assertions": "Exact method and branch issued with ordinary and anonymous principals on both prefixes (403/401), followed by IRC/event silence, protected and unrelated controls, and exact persistent-table comparison after restart."
+      },
+      "runtimeStatus": "NOT RUN in this inventory task"
+    },
+    {
+      "method": "GET",
+      "route": "/api/v1/admin/accounts/{username}",
+      "policy": "current authenticated administrator session; owning object rechecks authority",
+      "positive": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-001 ADMIN-002 ADMIN-003 ADMIN-004 ADMIN-007 ADMIN-008 ADMIN-019 ADMIN-020 ADMIN-021 ADMIN-022 ADMIN-023 AUTH-009 AUTH-023 USER-009: account provisioning, profile, credentials, roles, enable/disable and deletion across aliases",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-001 ADMIN-002 ADMIN-003 ADMIN-004 ADMIN-007 ADMIN-008 ADMIN-019 ADMIN-020 ADMIN-021 ADMIN-022 ADMIN-023 AUTH-009 AUTH-023 USER-009: account provisioning, profile, credentials, roles, enable/disable and deletion across aliases"
+        ],
+        "assertions": "200 and actual target identity and roles; sensitive credential fields absent",
+        "aliasMechanism": "The original and swapped describe blocks execute the authored route through both prefixes; dynamic route identifiers are real resources created by this test."
+      },
+      "denial": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations"
+        ],
+        "assertions": "Exact method and branch issued with ordinary and anonymous principals on both prefixes (403/401), followed by IRC/event silence, protected and unrelated controls, and exact persistent-table comparison after restart."
+      },
+      "runtimeStatus": "NOT RUN in this inventory task"
+    },
+    {
+      "method": "PATCH",
+      "route": "/admin/accounts/{username}",
+      "policy": "current authenticated administrator session; owning object rechecks authority",
+      "positive": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-001 ADMIN-002 ADMIN-003 ADMIN-004 ADMIN-007 ADMIN-008 ADMIN-019 ADMIN-020 ADMIN-021 ADMIN-022 ADMIN-023 AUTH-009 AUTH-023 USER-009: account provisioning, profile, credentials, roles, enable/disable and deletion across aliases",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-001 ADMIN-002 ADMIN-003 ADMIN-004 ADMIN-007 ADMIN-008 ADMIN-019 ADMIN-020 ADMIN-021 ADMIN-022 ADMIN-023 AUTH-009 AUTH-023 USER-009: account provisioning, profile, credentials, roles, enable/disable and deletion across aliases"
+        ],
+        "assertions": "200 and subsequent account read shows exact updated displayName",
+        "aliasMechanism": "The original and swapped describe blocks execute the authored route through both prefixes; dynamic route identifiers are real resources created by this test."
+      },
+      "denial": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations"
+        ],
+        "assertions": "Exact method and branch issued with ordinary and anonymous principals on both prefixes (403/401), followed by IRC/event silence, protected and unrelated controls, and exact persistent-table comparison after restart."
+      },
+      "runtimeStatus": "NOT RUN in this inventory task"
+    },
+    {
+      "method": "PATCH",
+      "route": "/api/v1/admin/accounts/{username}",
+      "policy": "current authenticated administrator session; owning object rechecks authority",
+      "positive": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-001 ADMIN-002 ADMIN-003 ADMIN-004 ADMIN-007 ADMIN-008 ADMIN-019 ADMIN-020 ADMIN-021 ADMIN-022 ADMIN-023 AUTH-009 AUTH-023 USER-009: account provisioning, profile, credentials, roles, enable/disable and deletion across aliases",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-001 ADMIN-002 ADMIN-003 ADMIN-004 ADMIN-007 ADMIN-008 ADMIN-019 ADMIN-020 ADMIN-021 ADMIN-022 ADMIN-023 AUTH-009 AUTH-023 USER-009: account provisioning, profile, credentials, roles, enable/disable and deletion across aliases"
+        ],
+        "assertions": "200 and subsequent account read shows exact updated displayName",
+        "aliasMechanism": "The original and swapped describe blocks execute the authored route through both prefixes; dynamic route identifiers are real resources created by this test."
+      },
+      "denial": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations"
+        ],
+        "assertions": "Exact method and branch issued with ordinary and anonymous principals on both prefixes (403/401), followed by IRC/event silence, protected and unrelated controls, and exact persistent-table comparison after restart."
+      },
+      "runtimeStatus": "NOT RUN in this inventory task"
+    },
+    {
+      "method": "POST",
+      "route": "/admin/accounts/{username}/password",
+      "policy": "current authenticated administrator session; owning object rechecks authority",
+      "positive": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-001 ADMIN-002 ADMIN-003 ADMIN-004 ADMIN-007 ADMIN-008 ADMIN-019 ADMIN-020 ADMIN-021 ADMIN-022 ADMIN-023 AUTH-009 AUTH-023 USER-009: account provisioning, profile, credentials, roles, enable/disable and deletion across aliases",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-001 ADMIN-002 ADMIN-003 ADMIN-004 ADMIN-007 ADMIN-008 ADMIN-019 ADMIN-020 ADMIN-021 ADMIN-022 ADMIN-023 AUTH-009 AUTH-023 USER-009: account provisioning, profile, credentials, roles, enable/disable and deletion across aliases"
+        ],
+        "assertions": "200, stale sessions invalidated, replacement credentials accepted and earlier credentials denied",
+        "aliasMechanism": "The original and swapped describe blocks execute the authored route through both prefixes; dynamic route identifiers are real resources created by this test."
+      },
+      "denial": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations"
+        ],
+        "assertions": "Exact method and branch issued with ordinary and anonymous principals on both prefixes (403/401), followed by IRC/event silence, protected and unrelated controls, and exact persistent-table comparison after restart."
+      },
+      "runtimeStatus": "NOT RUN in this inventory task"
+    },
+    {
+      "method": "POST",
+      "route": "/api/v1/admin/accounts/{username}/password",
+      "policy": "current authenticated administrator session; owning object rechecks authority",
+      "positive": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-001 ADMIN-002 ADMIN-003 ADMIN-004 ADMIN-007 ADMIN-008 ADMIN-019 ADMIN-020 ADMIN-021 ADMIN-022 ADMIN-023 AUTH-009 AUTH-023 USER-009: account provisioning, profile, credentials, roles, enable/disable and deletion across aliases",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-001 ADMIN-002 ADMIN-003 ADMIN-004 ADMIN-007 ADMIN-008 ADMIN-019 ADMIN-020 ADMIN-021 ADMIN-022 ADMIN-023 AUTH-009 AUTH-023 USER-009: account provisioning, profile, credentials, roles, enable/disable and deletion across aliases"
+        ],
+        "assertions": "200, stale sessions invalidated, replacement credentials accepted and earlier credentials denied",
+        "aliasMechanism": "The original and swapped describe blocks execute the authored route through both prefixes; dynamic route identifiers are real resources created by this test."
+      },
+      "denial": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations"
+        ],
+        "assertions": "Exact method and branch issued with ordinary and anonymous principals on both prefixes (403/401), followed by IRC/event silence, protected and unrelated controls, and exact persistent-table comparison after restart."
+      },
+      "runtimeStatus": "NOT RUN in this inventory task"
+    },
+    {
+      "method": "POST",
+      "route": "/admin/accounts/{username}/disable",
+      "policy": "current authenticated administrator session; owning object rechecks authority",
+      "positive": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-001 ADMIN-002 ADMIN-003 ADMIN-004 ADMIN-007 ADMIN-008 ADMIN-019 ADMIN-020 ADMIN-021 ADMIN-022 ADMIN-023 AUTH-009 AUTH-023 USER-009: account provisioning, profile, credentials, roles, enable/disable and deletion across aliases",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-001 ADMIN-002 ADMIN-003 ADMIN-004 ADMIN-007 ADMIN-008 ADMIN-019 ADMIN-020 ADMIN-021 ADMIN-022 ADMIN-023 AUTH-009 AUTH-023 USER-009: account provisioning, profile, credentials, roles, enable/disable and deletion across aliases"
+        ],
+        "assertions": "200 and target bearer invalidated; fresh login succeeds after enable",
+        "aliasMechanism": "The original and swapped describe blocks execute the authored route through both prefixes; dynamic route identifiers are real resources created by this test."
+      },
+      "denial": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations"
+        ],
+        "assertions": "Exact method and branch issued with ordinary and anonymous principals on both prefixes (403/401), followed by IRC/event silence, protected and unrelated controls, and exact persistent-table comparison after restart."
+      },
+      "runtimeStatus": "NOT RUN in this inventory task"
+    },
+    {
+      "method": "POST",
+      "route": "/api/v1/admin/accounts/{username}/disable",
+      "policy": "current authenticated administrator session; owning object rechecks authority",
+      "positive": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-001 ADMIN-002 ADMIN-003 ADMIN-004 ADMIN-007 ADMIN-008 ADMIN-019 ADMIN-020 ADMIN-021 ADMIN-022 ADMIN-023 AUTH-009 AUTH-023 USER-009: account provisioning, profile, credentials, roles, enable/disable and deletion across aliases",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-001 ADMIN-002 ADMIN-003 ADMIN-004 ADMIN-007 ADMIN-008 ADMIN-019 ADMIN-020 ADMIN-021 ADMIN-022 ADMIN-023 AUTH-009 AUTH-023 USER-009: account provisioning, profile, credentials, roles, enable/disable and deletion across aliases"
+        ],
+        "assertions": "200 and target bearer invalidated; fresh login succeeds after enable",
+        "aliasMechanism": "The original and swapped describe blocks execute the authored route through both prefixes; dynamic route identifiers are real resources created by this test."
+      },
+      "denial": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations"
+        ],
+        "assertions": "Exact method and branch issued with ordinary and anonymous principals on both prefixes (403/401), followed by IRC/event silence, protected and unrelated controls, and exact persistent-table comparison after restart."
+      },
+      "runtimeStatus": "NOT RUN in this inventory task"
+    },
+    {
+      "method": "POST",
+      "route": "/admin/accounts/{username}/enable",
+      "policy": "current authenticated administrator session; owning object rechecks authority",
+      "positive": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-001 ADMIN-002 ADMIN-003 ADMIN-004 ADMIN-007 ADMIN-008 ADMIN-019 ADMIN-020 ADMIN-021 ADMIN-022 ADMIN-023 AUTH-009 AUTH-023 USER-009: account provisioning, profile, credentials, roles, enable/disable and deletion across aliases",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-001 ADMIN-002 ADMIN-003 ADMIN-004 ADMIN-007 ADMIN-008 ADMIN-019 ADMIN-020 ADMIN-021 ADMIN-022 ADMIN-023 AUTH-009 AUTH-023 USER-009: account provisioning, profile, credentials, roles, enable/disable and deletion across aliases"
+        ],
+        "assertions": "200 and independently authenticated target logs in again",
+        "aliasMechanism": "The original and swapped describe blocks execute the authored route through both prefixes; dynamic route identifiers are real resources created by this test."
+      },
+      "denial": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations"
+        ],
+        "assertions": "Exact method and branch issued with ordinary and anonymous principals on both prefixes (403/401), followed by IRC/event silence, protected and unrelated controls, and exact persistent-table comparison after restart."
+      },
+      "runtimeStatus": "NOT RUN in this inventory task"
+    },
+    {
+      "method": "POST",
+      "route": "/api/v1/admin/accounts/{username}/enable",
+      "policy": "current authenticated administrator session; owning object rechecks authority",
+      "positive": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-001 ADMIN-002 ADMIN-003 ADMIN-004 ADMIN-007 ADMIN-008 ADMIN-019 ADMIN-020 ADMIN-021 ADMIN-022 ADMIN-023 AUTH-009 AUTH-023 USER-009: account provisioning, profile, credentials, roles, enable/disable and deletion across aliases",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-001 ADMIN-002 ADMIN-003 ADMIN-004 ADMIN-007 ADMIN-008 ADMIN-019 ADMIN-020 ADMIN-021 ADMIN-022 ADMIN-023 AUTH-009 AUTH-023 USER-009: account provisioning, profile, credentials, roles, enable/disable and deletion across aliases"
+        ],
+        "assertions": "200 and independently authenticated target logs in again",
+        "aliasMechanism": "The original and swapped describe blocks execute the authored route through both prefixes; dynamic route identifiers are real resources created by this test."
+      },
+      "denial": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations"
+        ],
+        "assertions": "Exact method and branch issued with ordinary and anonymous principals on both prefixes (403/401), followed by IRC/event silence, protected and unrelated controls, and exact persistent-table comparison after restart."
+      },
+      "runtimeStatus": "NOT RUN in this inventory task"
+    },
+    {
+      "method": "GET",
+      "route": "/admin/accounts/{username}/roles",
+      "policy": "current authenticated administrator session; owning object rechecks authority",
+      "positive": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-001 ADMIN-002 ADMIN-003 ADMIN-004 ADMIN-007 ADMIN-008 ADMIN-019 ADMIN-020 ADMIN-021 ADMIN-022 ADMIN-023 AUTH-009 AUTH-023 USER-009: account provisioning, profile, credentials, roles, enable/disable and deletion across aliases",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-001 ADMIN-002 ADMIN-003 ADMIN-004 ADMIN-007 ADMIN-008 ADMIN-019 ADMIN-020 ADMIN-021 ADMIN-022 ADMIN-023 AUTH-009 AUTH-023 USER-009: account provisioning, profile, credentials, roles, enable/disable and deletion across aliases"
+        ],
+        "assertions": "200 and exact grant/revoke effects visible for target account",
+        "aliasMechanism": "The original and swapped describe blocks execute the authored route through both prefixes; dynamic route identifiers are real resources created by this test."
+      },
+      "denial": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations"
+        ],
+        "assertions": "Exact method and branch issued with ordinary and anonymous principals on both prefixes (403/401), followed by IRC/event silence, protected and unrelated controls, and exact persistent-table comparison after restart."
+      },
+      "runtimeStatus": "NOT RUN in this inventory task"
+    },
+    {
+      "method": "GET",
+      "route": "/api/v1/admin/accounts/{username}/roles",
+      "policy": "current authenticated administrator session; owning object rechecks authority",
+      "positive": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-001 ADMIN-002 ADMIN-003 ADMIN-004 ADMIN-007 ADMIN-008 ADMIN-019 ADMIN-020 ADMIN-021 ADMIN-022 ADMIN-023 AUTH-009 AUTH-023 USER-009: account provisioning, profile, credentials, roles, enable/disable and deletion across aliases",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-001 ADMIN-002 ADMIN-003 ADMIN-004 ADMIN-007 ADMIN-008 ADMIN-019 ADMIN-020 ADMIN-021 ADMIN-022 ADMIN-023 AUTH-009 AUTH-023 USER-009: account provisioning, profile, credentials, roles, enable/disable and deletion across aliases"
+        ],
+        "assertions": "200 and exact grant/revoke effects visible for target account",
+        "aliasMechanism": "The original and swapped describe blocks execute the authored route through both prefixes; dynamic route identifiers are real resources created by this test."
+      },
+      "denial": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations"
+        ],
+        "assertions": "Exact method and branch issued with ordinary and anonymous principals on both prefixes (403/401), followed by IRC/event silence, protected and unrelated controls, and exact persistent-table comparison after restart."
+      },
+      "runtimeStatus": "NOT RUN in this inventory task"
+    },
+    {
+      "method": "POST",
+      "route": "/admin/accounts/{username}/roles",
+      "policy": "current authenticated administrator session; owning object rechecks authority",
+      "positive": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-001 ADMIN-002 ADMIN-003 ADMIN-004 ADMIN-007 ADMIN-008 ADMIN-019 ADMIN-020 ADMIN-021 ADMIN-022 ADMIN-023 AUTH-009 AUTH-023 USER-009: account provisioning, profile, credentials, roles, enable/disable and deletion across aliases",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-001 ADMIN-002 ADMIN-003 ADMIN-004 ADMIN-007 ADMIN-008 ADMIN-019 ADMIN-020 ADMIN-021 ADMIN-022 ADMIN-023 AUTH-009 AUTH-023 USER-009: account provisioning, profile, credentials, roles, enable/disable and deletion across aliases"
+        ],
+        "assertions": "200 and role lists reflect actual grant/revoke, retained after restart",
+        "aliasMechanism": "The original and swapped describe blocks execute the authored route through both prefixes; dynamic route identifiers are real resources created by this test."
+      },
+      "denial": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations"
+        ],
+        "assertions": "Exact method and branch issued with ordinary and anonymous principals on both prefixes (403/401), followed by IRC/event silence, protected and unrelated controls, and exact persistent-table comparison after restart."
+      },
+      "runtimeStatus": "NOT RUN in this inventory task"
+    },
+    {
+      "method": "POST",
+      "route": "/api/v1/admin/accounts/{username}/roles",
+      "policy": "current authenticated administrator session; owning object rechecks authority",
+      "positive": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-001 ADMIN-002 ADMIN-003 ADMIN-004 ADMIN-007 ADMIN-008 ADMIN-019 ADMIN-020 ADMIN-021 ADMIN-022 ADMIN-023 AUTH-009 AUTH-023 USER-009: account provisioning, profile, credentials, roles, enable/disable and deletion across aliases",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-001 ADMIN-002 ADMIN-003 ADMIN-004 ADMIN-007 ADMIN-008 ADMIN-019 ADMIN-020 ADMIN-021 ADMIN-022 ADMIN-023 AUTH-009 AUTH-023 USER-009: account provisioning, profile, credentials, roles, enable/disable and deletion across aliases"
+        ],
+        "assertions": "200 and role lists reflect actual grant/revoke, retained after restart",
+        "aliasMechanism": "The original and swapped describe blocks execute the authored route through both prefixes; dynamic route identifiers are real resources created by this test."
+      },
+      "denial": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations"
+        ],
+        "assertions": "Exact method and branch issued with ordinary and anonymous principals on both prefixes (403/401), followed by IRC/event silence, protected and unrelated controls, and exact persistent-table comparison after restart."
+      },
+      "runtimeStatus": "NOT RUN in this inventory task"
+    },
+    {
+      "method": "DELETE",
+      "route": "/admin/accounts/{username}",
+      "policy": "current authenticated administrator session; owning object rechecks authority",
+      "positive": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-001 ADMIN-002 ADMIN-003 ADMIN-004 ADMIN-007 ADMIN-008 ADMIN-019 ADMIN-020 ADMIN-021 ADMIN-022 ADMIN-023 AUTH-009 AUTH-023 USER-009: account provisioning, profile, credentials, roles, enable/disable and deletion across aliases",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-001 ADMIN-002 ADMIN-003 ADMIN-004 ADMIN-007 ADMIN-008 ADMIN-019 ADMIN-020 ADMIN-021 ADMIN-022 ADMIN-023 AUTH-009 AUTH-023 USER-009: account provisioning, profile, credentials, roles, enable/disable and deletion across aliases"
+        ],
+        "assertions": "200 and ok true, target login fails and unrelated account survives restart",
+        "aliasMechanism": "The original and swapped describe blocks execute the authored route through both prefixes; dynamic route identifiers are real resources created by this test."
+      },
+      "denial": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations"
+        ],
+        "assertions": "Exact method and branch issued with ordinary and anonymous principals on both prefixes (403/401), followed by IRC/event silence, protected and unrelated controls, and exact persistent-table comparison after restart."
+      },
+      "runtimeStatus": "NOT RUN in this inventory task"
+    },
+    {
+      "method": "DELETE",
+      "route": "/api/v1/admin/accounts/{username}",
+      "policy": "current authenticated administrator session; owning object rechecks authority",
+      "positive": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-001 ADMIN-002 ADMIN-003 ADMIN-004 ADMIN-007 ADMIN-008 ADMIN-019 ADMIN-020 ADMIN-021 ADMIN-022 ADMIN-023 AUTH-009 AUTH-023 USER-009: account provisioning, profile, credentials, roles, enable/disable and deletion across aliases",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-001 ADMIN-002 ADMIN-003 ADMIN-004 ADMIN-007 ADMIN-008 ADMIN-019 ADMIN-020 ADMIN-021 ADMIN-022 ADMIN-023 AUTH-009 AUTH-023 USER-009: account provisioning, profile, credentials, roles, enable/disable and deletion across aliases"
+        ],
+        "assertions": "200 and ok true, target login fails and unrelated account survives restart",
+        "aliasMechanism": "The original and swapped describe blocks execute the authored route through both prefixes; dynamic route identifiers are real resources created by this test."
+      },
+      "denial": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations"
+        ],
+        "assertions": "Exact method and branch issued with ordinary and anonymous principals on both prefixes (403/401), followed by IRC/event silence, protected and unrelated controls, and exact persistent-table comparison after restart."
+      },
+      "runtimeStatus": "NOT RUN in this inventory task"
+    },
+    {
+      "method": "GET",
+      "route": "/admin/metadata/users/{username}",
+      "policy": "current authenticated administrator session; owning object rechecks authority",
+      "positive": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-002: user and channel KV metadata administration across aliases and restart persistence",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-002: user and channel KV metadata administration across aliases and restart persistence"
+        ],
+        "assertions": "real target metadata values, with surviving exact fields after restart",
+        "aliasMechanism": "The original and swapped describe blocks execute the authored route through both prefixes; dynamic route identifiers are real resources created by this test."
+      },
+      "denial": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations"
+        ],
+        "assertions": "Exact method and branch issued with ordinary and anonymous principals on both prefixes (403/401), followed by IRC/event silence, protected and unrelated controls, and exact persistent-table comparison after restart."
+      },
+      "runtimeStatus": "NOT RUN in this inventory task"
+    },
+    {
+      "method": "GET",
+      "route": "/api/v1/admin/metadata/users/{username}",
+      "policy": "current authenticated administrator session; owning object rechecks authority",
+      "positive": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-002: user and channel KV metadata administration across aliases and restart persistence",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-002: user and channel KV metadata administration across aliases and restart persistence"
+        ],
+        "assertions": "real target metadata values, with surviving exact fields after restart",
+        "aliasMechanism": "The original and swapped describe blocks execute the authored route through both prefixes; dynamic route identifiers are real resources created by this test."
+      },
+      "denial": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations"
+        ],
+        "assertions": "Exact method and branch issued with ordinary and anonymous principals on both prefixes (403/401), followed by IRC/event silence, protected and unrelated controls, and exact persistent-table comparison after restart."
+      },
+      "runtimeStatus": "NOT RUN in this inventory task"
+    },
+    {
+      "method": "PUT",
+      "route": "/admin/metadata/users/{username}",
+      "policy": "current authenticated administrator session; owning object rechecks authority",
+      "positive": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-002: user and channel KV metadata administration across aliases and restart persistence",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-002: user and channel KV metadata administration across aliases and restart persistence"
+        ],
+        "assertions": "200 and subsequent reads expose written exact values, retained after restart",
+        "aliasMechanism": "The original and swapped describe blocks execute the authored route through both prefixes; dynamic route identifiers are real resources created by this test."
+      },
+      "denial": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations"
+        ],
+        "assertions": "Exact method and branch issued with ordinary and anonymous principals on both prefixes (403/401), followed by IRC/event silence, protected and unrelated controls, and exact persistent-table comparison after restart."
+      },
+      "runtimeStatus": "NOT RUN in this inventory task"
+    },
+    {
+      "method": "PUT",
+      "route": "/api/v1/admin/metadata/users/{username}",
+      "policy": "current authenticated administrator session; owning object rechecks authority",
+      "positive": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-002: user and channel KV metadata administration across aliases and restart persistence",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-002: user and channel KV metadata administration across aliases and restart persistence"
+        ],
+        "assertions": "200 and subsequent reads expose written exact values, retained after restart",
+        "aliasMechanism": "The original and swapped describe blocks execute the authored route through both prefixes; dynamic route identifiers are real resources created by this test."
+      },
+      "denial": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations"
+        ],
+        "assertions": "Exact method and branch issued with ordinary and anonymous principals on both prefixes (403/401), followed by IRC/event silence, protected and unrelated controls, and exact persistent-table comparison after restart."
+      },
+      "runtimeStatus": "NOT RUN in this inventory task"
+    },
+    {
+      "method": "GET",
+      "route": "/admin/metadata/channels/{channel}",
+      "policy": "current authenticated administrator session; owning object rechecks authority",
+      "positive": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-002: user and channel KV metadata administration across aliases and restart persistence",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-002: user and channel KV metadata administration across aliases and restart persistence"
+        ],
+        "assertions": "real channel metadata values and independent retained classification",
+        "aliasMechanism": "The original and swapped describe blocks execute the authored route through both prefixes; dynamic route identifiers are real resources created by this test."
+      },
+      "denial": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations"
+        ],
+        "assertions": "Exact method and branch issued with ordinary and anonymous principals on both prefixes (403/401), followed by IRC/event silence, protected and unrelated controls, and exact persistent-table comparison after restart."
+      },
+      "runtimeStatus": "NOT RUN in this inventory task"
+    },
+    {
+      "method": "GET",
+      "route": "/api/v1/admin/metadata/channels/{channel}",
+      "policy": "current authenticated administrator session; owning object rechecks authority",
+      "positive": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-002: user and channel KV metadata administration across aliases and restart persistence",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-002: user and channel KV metadata administration across aliases and restart persistence"
+        ],
+        "assertions": "real channel metadata values and independent retained classification",
+        "aliasMechanism": "The original and swapped describe blocks execute the authored route through both prefixes; dynamic route identifiers are real resources created by this test."
+      },
+      "denial": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations"
+        ],
+        "assertions": "Exact method and branch issued with ordinary and anonymous principals on both prefixes (403/401), followed by IRC/event silence, protected and unrelated controls, and exact persistent-table comparison after restart."
+      },
+      "runtimeStatus": "NOT RUN in this inventory task"
+    },
+    {
+      "method": "PUT",
+      "route": "/admin/metadata/channels/{channel}",
+      "policy": "current authenticated administrator session; owning object rechecks authority",
+      "positive": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-002: user and channel KV metadata administration across aliases and restart persistence",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-002: user and channel KV metadata administration across aliases and restart persistence"
+        ],
+        "assertions": "200 and channel metadata read shows exact added values",
+        "aliasMechanism": "The original and swapped describe blocks execute the authored route through both prefixes; dynamic route identifiers are real resources created by this test."
+      },
+      "denial": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations"
+        ],
+        "assertions": "Exact method and branch issued with ordinary and anonymous principals on both prefixes (403/401), followed by IRC/event silence, protected and unrelated controls, and exact persistent-table comparison after restart."
+      },
+      "runtimeStatus": "NOT RUN in this inventory task"
+    },
+    {
+      "method": "PUT",
+      "route": "/api/v1/admin/metadata/channels/{channel}",
+      "policy": "current authenticated administrator session; owning object rechecks authority",
+      "positive": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-002: user and channel KV metadata administration across aliases and restart persistence",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-002: user and channel KV metadata administration across aliases and restart persistence"
+        ],
+        "assertions": "200 and channel metadata read shows exact added values",
+        "aliasMechanism": "The original and swapped describe blocks execute the authored route through both prefixes; dynamic route identifiers are real resources created by this test."
+      },
+      "denial": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations"
+        ],
+        "assertions": "Exact method and branch issued with ordinary and anonymous principals on both prefixes (403/401), followed by IRC/event silence, protected and unrelated controls, and exact persistent-table comparison after restart."
+      },
+      "runtimeStatus": "NOT RUN in this inventory task"
+    },
+    {
+      "method": "GET",
+      "route": "/admin/channels/{channel}",
+      "policy": "current authenticated administrator session; owning object rechecks authority",
+      "positive": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-009 ADMIN-010 ADMIN-011 ADMIN-017: channel lifecycle, registration, info, bot F configuration, and channel deletion across aliases",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-009 ADMIN-010 ADMIN-011 ADMIN-017: channel lifecycle, registration, info, bot F configuration, and channel deletion across aliases"
+        ],
+        "assertions": "200, ok true and exact created channel identity",
+        "aliasMechanism": "The original and swapped describe blocks execute the authored route through both prefixes; dynamic route identifiers are real resources created by this test."
+      },
+      "denial": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations"
+        ],
+        "assertions": "Exact method and branch issued with ordinary and anonymous principals on both prefixes (403/401), followed by IRC/event silence, protected and unrelated controls, and exact persistent-table comparison after restart."
+      },
+      "runtimeStatus": "NOT RUN in this inventory task"
+    },
+    {
+      "method": "GET",
+      "route": "/api/v1/admin/channels/{channel}",
+      "policy": "current authenticated administrator session; owning object rechecks authority",
+      "positive": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-009 ADMIN-010 ADMIN-011 ADMIN-017: channel lifecycle, registration, info, bot F configuration, and channel deletion across aliases",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-009 ADMIN-010 ADMIN-011 ADMIN-017: channel lifecycle, registration, info, bot F configuration, and channel deletion across aliases"
+        ],
+        "assertions": "200, ok true and exact created channel identity",
+        "aliasMechanism": "The original and swapped describe blocks execute the authored route through both prefixes; dynamic route identifiers are real resources created by this test."
+      },
+      "denial": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations"
+        ],
+        "assertions": "Exact method and branch issued with ordinary and anonymous principals on both prefixes (403/401), followed by IRC/event silence, protected and unrelated controls, and exact persistent-table comparison after restart."
+      },
+      "runtimeStatus": "NOT RUN in this inventory task"
+    },
+    {
+      "method": "GET",
+      "route": "/admin/channels/{channel}/info",
+      "policy": "current authenticated administrator session; owning object rechecks authority",
+      "positive": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-009 ADMIN-010 ADMIN-011 ADMIN-017: channel lifecycle, registration, info, bot F configuration, and channel deletion across aliases",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-009 ADMIN-010 ADMIN-011 ADMIN-017: channel lifecycle, registration, info, bot F configuration, and channel deletion across aliases"
+        ],
+        "assertions": "actual registered founder and description read for dynamically created channel",
+        "aliasMechanism": "The original and swapped describe blocks execute the authored route through both prefixes; dynamic route identifiers are real resources created by this test."
+      },
+      "denial": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations"
+        ],
+        "assertions": "Exact method and branch issued with ordinary and anonymous principals on both prefixes (403/401), followed by IRC/event silence, protected and unrelated controls, and exact persistent-table comparison after restart."
+      },
+      "runtimeStatus": "NOT RUN in this inventory task"
+    },
+    {
+      "method": "GET",
+      "route": "/api/v1/admin/channels/{channel}/info",
+      "policy": "current authenticated administrator session; owning object rechecks authority",
+      "positive": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-009 ADMIN-010 ADMIN-011 ADMIN-017: channel lifecycle, registration, info, bot F configuration, and channel deletion across aliases",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-009 ADMIN-010 ADMIN-011 ADMIN-017: channel lifecycle, registration, info, bot F configuration, and channel deletion across aliases"
+        ],
+        "assertions": "actual registered founder and description read for dynamically created channel",
+        "aliasMechanism": "The original and swapped describe blocks execute the authored route through both prefixes; dynamic route identifiers are real resources created by this test."
+      },
+      "denial": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations"
+        ],
+        "assertions": "Exact method and branch issued with ordinary and anonymous principals on both prefixes (403/401), followed by IRC/event silence, protected and unrelated controls, and exact persistent-table comparison after restart."
+      },
+      "runtimeStatus": "NOT RUN in this inventory task"
+    },
+    {
+      "method": "PATCH",
+      "route": "/admin/channels/{channel}/info",
+      "policy": "current authenticated administrator session; owning object rechecks authority",
+      "positive": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-009 ADMIN-010 ADMIN-011 ADMIN-017: channel lifecycle, registration, info, bot F configuration, and channel deletion across aliases",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-009 ADMIN-010 ADMIN-011 ADMIN-017: channel lifecycle, registration, info, bot F configuration, and channel deletion across aliases"
+        ],
+        "assertions": "200 and subsequent info read contains updated description",
+        "aliasMechanism": "The original and swapped describe blocks execute the authored route through both prefixes; dynamic route identifiers are real resources created by this test."
+      },
+      "denial": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations"
+        ],
+        "assertions": "Exact method and branch issued with ordinary and anonymous principals on both prefixes (403/401), followed by IRC/event silence, protected and unrelated controls, and exact persistent-table comparison after restart."
+      },
+      "runtimeStatus": "NOT RUN in this inventory task"
+    },
+    {
+      "method": "PATCH",
+      "route": "/api/v1/admin/channels/{channel}/info",
+      "policy": "current authenticated administrator session; owning object rechecks authority",
+      "positive": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-009 ADMIN-010 ADMIN-011 ADMIN-017: channel lifecycle, registration, info, bot F configuration, and channel deletion across aliases",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-009 ADMIN-010 ADMIN-011 ADMIN-017: channel lifecycle, registration, info, bot F configuration, and channel deletion across aliases"
+        ],
+        "assertions": "200 and subsequent info read contains updated description",
+        "aliasMechanism": "The original and swapped describe blocks execute the authored route through both prefixes; dynamic route identifiers are real resources created by this test."
+      },
+      "denial": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations"
+        ],
+        "assertions": "Exact method and branch issued with ordinary and anonymous principals on both prefixes (403/401), followed by IRC/event silence, protected and unrelated controls, and exact persistent-table comparison after restart."
+      },
+      "runtimeStatus": "NOT RUN in this inventory task"
+    },
+    {
+      "method": "DELETE",
+      "route": "/admin/channels/{channel}",
+      "policy": "current authenticated administrator session; owning object rechecks authority",
+      "positive": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-009 ADMIN-010 ADMIN-011 ADMIN-017: channel lifecycle, registration, info, bot F configuration, and channel deletion across aliases",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-009 ADMIN-010 ADMIN-011 ADMIN-017: channel lifecycle, registration, info, bot F configuration, and channel deletion across aliases"
+        ],
+        "assertions": "200 for created target; target registration removed and unrelated channel survives",
+        "aliasMechanism": "The original and swapped describe blocks execute the authored route through both prefixes; dynamic route identifiers are real resources created by this test."
+      },
+      "denial": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations"
+        ],
+        "assertions": "Exact method and branch issued with ordinary and anonymous principals on both prefixes (403/401), followed by IRC/event silence, protected and unrelated controls, and exact persistent-table comparison after restart."
+      },
+      "runtimeStatus": "NOT RUN in this inventory task"
+    },
+    {
+      "method": "DELETE",
+      "route": "/api/v1/admin/channels/{channel}",
+      "policy": "current authenticated administrator session; owning object rechecks authority",
+      "positive": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-009 ADMIN-010 ADMIN-011 ADMIN-017: channel lifecycle, registration, info, bot F configuration, and channel deletion across aliases",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-009 ADMIN-010 ADMIN-011 ADMIN-017: channel lifecycle, registration, info, bot F configuration, and channel deletion across aliases"
+        ],
+        "assertions": "200 for created target; target registration removed and unrelated channel survives",
+        "aliasMechanism": "The original and swapped describe blocks execute the authored route through both prefixes; dynamic route identifiers are real resources created by this test."
+      },
+      "denial": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations"
+        ],
+        "assertions": "Exact method and branch issued with ordinary and anonymous principals on both prefixes (403/401), followed by IRC/event silence, protected and unrelated controls, and exact persistent-table comparison after restart."
+      },
+      "runtimeStatus": "NOT RUN in this inventory task"
+    },
+    {
+      "method": "POST",
+      "route": "/admin/channels/{channel}/register",
+      "policy": "current authenticated administrator session; owning object rechecks authority",
+      "positive": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-009 ADMIN-010 ADMIN-011 ADMIN-017: channel lifecycle, registration, info, bot F configuration, and channel deletion across aliases",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-009 ADMIN-010 ADMIN-011 ADMIN-017: channel lifecycle, registration, info, bot F configuration, and channel deletion across aliases"
+        ],
+        "assertions": "200 for real target and info reports registered true and founder identity",
+        "aliasMechanism": "The original and swapped describe blocks execute the authored route through both prefixes; dynamic route identifiers are real resources created by this test."
+      },
+      "denial": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations"
+        ],
+        "assertions": "Exact method and branch issued with ordinary and anonymous principals on both prefixes (403/401), followed by IRC/event silence, protected and unrelated controls, and exact persistent-table comparison after restart."
+      },
+      "runtimeStatus": "NOT RUN in this inventory task"
+    },
+    {
+      "method": "POST",
+      "route": "/api/v1/admin/channels/{channel}/register",
+      "policy": "current authenticated administrator session; owning object rechecks authority",
+      "positive": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-009 ADMIN-010 ADMIN-011 ADMIN-017: channel lifecycle, registration, info, bot F configuration, and channel deletion across aliases",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-009 ADMIN-010 ADMIN-011 ADMIN-017: channel lifecycle, registration, info, bot F configuration, and channel deletion across aliases"
+        ],
+        "assertions": "200 for real target and info reports registered true and founder identity",
+        "aliasMechanism": "The original and swapped describe blocks execute the authored route through both prefixes; dynamic route identifiers are real resources created by this test."
+      },
+      "denial": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations"
+        ],
+        "assertions": "Exact method and branch issued with ordinary and anonymous principals on both prefixes (403/401), followed by IRC/event silence, protected and unrelated controls, and exact persistent-table comparison after restart."
+      },
+      "runtimeStatus": "NOT RUN in this inventory task"
+    },
+    {
+      "method": "POST",
+      "route": "/admin/channels/{channel}/unregister",
+      "policy": "current authenticated administrator session; owning object rechecks authority",
+      "positive": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-009 ADMIN-010 ADMIN-011 ADMIN-017: channel lifecycle, registration, info, bot F configuration, and channel deletion across aliases",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-009 ADMIN-010 ADMIN-011 ADMIN-017: channel lifecycle, registration, info, bot F configuration, and channel deletion across aliases"
+        ],
+        "assertions": "200 for real target and subsequent info reports registered false",
+        "aliasMechanism": "The original and swapped describe blocks execute the authored route through both prefixes; dynamic route identifiers are real resources created by this test."
+      },
+      "denial": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations"
+        ],
+        "assertions": "Exact method and branch issued with ordinary and anonymous principals on both prefixes (403/401), followed by IRC/event silence, protected and unrelated controls, and exact persistent-table comparison after restart."
+      },
+      "runtimeStatus": "NOT RUN in this inventory task"
+    },
+    {
+      "method": "POST",
+      "route": "/api/v1/admin/channels/{channel}/unregister",
+      "policy": "current authenticated administrator session; owning object rechecks authority",
+      "positive": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-009 ADMIN-010 ADMIN-011 ADMIN-017: channel lifecycle, registration, info, bot F configuration, and channel deletion across aliases",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-009 ADMIN-010 ADMIN-011 ADMIN-017: channel lifecycle, registration, info, bot F configuration, and channel deletion across aliases"
+        ],
+        "assertions": "200 for real target and subsequent info reports registered false",
+        "aliasMechanism": "The original and swapped describe blocks execute the authored route through both prefixes; dynamic route identifiers are real resources created by this test."
+      },
+      "denial": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations"
+        ],
+        "assertions": "Exact method and branch issued with ordinary and anonymous principals on both prefixes (403/401), followed by IRC/event silence, protected and unrelated controls, and exact persistent-table comparison after restart."
+      },
+      "runtimeStatus": "NOT RUN in this inventory task"
+    },
+    {
+      "method": "POST",
+      "route": "/admin/channels/{channel}/modes",
+      "policy": "current authenticated administrator session; owning object rechecks authority",
+      "positive": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-011: channel moderation, message inspection, redaction, purge, modes, topic, and kick with IRC delivery and alias parity",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-011: channel moderation, message inspection, redaction, purge, modes, topic, and kick with IRC delivery and alias parity"
+        ],
+        "assertions": "200 and intended IRC members receive exact +m/-m changes, outsider silent",
+        "aliasMechanism": "The original and swapped describe blocks execute the authored route through both prefixes; dynamic route identifiers are real resources created by this test."
+      },
+      "denial": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations"
+        ],
+        "assertions": "Exact method and branch issued with ordinary and anonymous principals on both prefixes (403/401), followed by IRC/event silence, protected and unrelated controls, and exact persistent-table comparison after restart."
+      },
+      "runtimeStatus": "NOT RUN in this inventory task"
+    },
+    {
+      "method": "POST",
+      "route": "/api/v1/admin/channels/{channel}/modes",
+      "policy": "current authenticated administrator session; owning object rechecks authority",
+      "positive": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-011: channel moderation, message inspection, redaction, purge, modes, topic, and kick with IRC delivery and alias parity",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-011: channel moderation, message inspection, redaction, purge, modes, topic, and kick with IRC delivery and alias parity"
+        ],
+        "assertions": "200 and intended IRC members receive exact +m/-m changes, outsider silent",
+        "aliasMechanism": "The original and swapped describe blocks execute the authored route through both prefixes; dynamic route identifiers are real resources created by this test."
+      },
+      "denial": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations"
+        ],
+        "assertions": "Exact method and branch issued with ordinary and anonymous principals on both prefixes (403/401), followed by IRC/event silence, protected and unrelated controls, and exact persistent-table comparison after restart."
+      },
+      "runtimeStatus": "NOT RUN in this inventory task"
+    },
+    {
+      "method": "POST",
+      "route": "/admin/channels/{channel}/topic",
+      "policy": "current authenticated administrator session; owning object rechecks authority",
+      "positive": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-011: channel moderation, message inspection, redaction, purge, modes, topic, and kick with IRC delivery and alias parity",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-011: channel moderation, message inspection, redaction, purge, modes, topic, and kick with IRC delivery and alias parity"
+        ],
+        "assertions": "200 and intended IRC members receive exact topic marker, outsider silent",
+        "aliasMechanism": "The original and swapped describe blocks execute the authored route through both prefixes; dynamic route identifiers are real resources created by this test."
+      },
+      "denial": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations"
+        ],
+        "assertions": "Exact method and branch issued with ordinary and anonymous principals on both prefixes (403/401), followed by IRC/event silence, protected and unrelated controls, and exact persistent-table comparison after restart."
+      },
+      "runtimeStatus": "NOT RUN in this inventory task"
+    },
+    {
+      "method": "POST",
+      "route": "/api/v1/admin/channels/{channel}/topic",
+      "policy": "current authenticated administrator session; owning object rechecks authority",
+      "positive": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-011: channel moderation, message inspection, redaction, purge, modes, topic, and kick with IRC delivery and alias parity",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-011: channel moderation, message inspection, redaction, purge, modes, topic, and kick with IRC delivery and alias parity"
+        ],
+        "assertions": "200 and intended IRC members receive exact topic marker, outsider silent",
+        "aliasMechanism": "The original and swapped describe blocks execute the authored route through both prefixes; dynamic route identifiers are real resources created by this test."
+      },
+      "denial": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations"
+        ],
+        "assertions": "Exact method and branch issued with ordinary and anonymous principals on both prefixes (403/401), followed by IRC/event silence, protected and unrelated controls, and exact persistent-table comparison after restart."
+      },
+      "runtimeStatus": "NOT RUN in this inventory task"
+    },
+    {
+      "method": "POST",
+      "route": "/admin/channels/{channel}/kick",
+      "policy": "current authenticated administrator session; owning object rechecks authority",
+      "positive": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-011: channel moderation, message inspection, redaction, purge, modes, topic, and kick with IRC delivery and alias parity",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-011: channel moderation, message inspection, redaction, purge, modes, topic, and kick with IRC delivery and alias parity"
+        ],
+        "assertions": "200 and ok true, targeted member and peer receive kick, outsider silent",
+        "aliasMechanism": "The original and swapped describe blocks execute the authored route through both prefixes; dynamic route identifiers are real resources created by this test."
+      },
+      "denial": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations"
+        ],
+        "assertions": "Exact method and branch issued with ordinary and anonymous principals on both prefixes (403/401), followed by IRC/event silence, protected and unrelated controls, and exact persistent-table comparison after restart."
+      },
+      "runtimeStatus": "NOT RUN in this inventory task"
+    },
+    {
+      "method": "POST",
+      "route": "/api/v1/admin/channels/{channel}/kick",
+      "policy": "current authenticated administrator session; owning object rechecks authority",
+      "positive": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-011: channel moderation, message inspection, redaction, purge, modes, topic, and kick with IRC delivery and alias parity",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-011: channel moderation, message inspection, redaction, purge, modes, topic, and kick with IRC delivery and alias parity"
+        ],
+        "assertions": "200 and ok true, targeted member and peer receive kick, outsider silent",
+        "aliasMechanism": "The original and swapped describe blocks execute the authored route through both prefixes; dynamic route identifiers are real resources created by this test."
+      },
+      "denial": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations"
+        ],
+        "assertions": "Exact method and branch issued with ordinary and anonymous principals on both prefixes (403/401), followed by IRC/event silence, protected and unrelated controls, and exact persistent-table comparison after restart."
+      },
+      "runtimeStatus": "NOT RUN in this inventory task"
+    },
+    {
+      "method": "GET",
+      "route": "/admin/channels/{channel}/bot",
+      "policy": "current authenticated administrator session; owning object rechecks authority",
+      "positive": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-009 ADMIN-010 ADMIN-011 ADMIN-017: channel lifecycle, registration, info, bot F configuration, and channel deletion across aliases",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-009 ADMIN-010 ADMIN-011 ADMIN-017: channel lifecycle, registration, info, bot F configuration, and channel deletion across aliases"
+        ],
+        "assertions": "actual configured bot enabled state and exact welcome message",
+        "aliasMechanism": "The original and swapped describe blocks execute the authored route through both prefixes; dynamic route identifiers are real resources created by this test."
+      },
+      "denial": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations"
+        ],
+        "assertions": "Exact method and branch issued with ordinary and anonymous principals on both prefixes (403/401), followed by IRC/event silence, protected and unrelated controls, and exact persistent-table comparison after restart."
+      },
+      "runtimeStatus": "NOT RUN in this inventory task"
+    },
+    {
+      "method": "GET",
+      "route": "/api/v1/admin/channels/{channel}/bot",
+      "policy": "current authenticated administrator session; owning object rechecks authority",
+      "positive": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-009 ADMIN-010 ADMIN-011 ADMIN-017: channel lifecycle, registration, info, bot F configuration, and channel deletion across aliases",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-009 ADMIN-010 ADMIN-011 ADMIN-017: channel lifecycle, registration, info, bot F configuration, and channel deletion across aliases"
+        ],
+        "assertions": "actual configured bot enabled state and exact welcome message",
+        "aliasMechanism": "The original and swapped describe blocks execute the authored route through both prefixes; dynamic route identifiers are real resources created by this test."
+      },
+      "denial": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations"
+        ],
+        "assertions": "Exact method and branch issued with ordinary and anonymous principals on both prefixes (403/401), followed by IRC/event silence, protected and unrelated controls, and exact persistent-table comparison after restart."
+      },
+      "runtimeStatus": "NOT RUN in this inventory task"
+    },
+    {
+      "method": "POST",
+      "route": "/admin/channels/{channel}/bot",
+      "policy": "current authenticated administrator session; owning object rechecks authority",
+      "positive": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-009 ADMIN-010 ADMIN-011 ADMIN-017: channel lifecycle, registration, info, bot F configuration, and channel deletion across aliases",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-009 ADMIN-010 ADMIN-011 ADMIN-017: channel lifecycle, registration, info, bot F configuration, and channel deletion across aliases"
+        ],
+        "assertions": "200 and subsequent bot GET shows configured exact welcome message",
+        "aliasMechanism": "The original and swapped describe blocks execute the authored route through both prefixes; dynamic route identifiers are real resources created by this test."
+      },
+      "denial": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations"
+        ],
+        "assertions": "Exact method and branch issued with ordinary and anonymous principals on both prefixes (403/401), followed by IRC/event silence, protected and unrelated controls, and exact persistent-table comparison after restart."
+      },
+      "runtimeStatus": "NOT RUN in this inventory task"
+    },
+    {
+      "method": "POST",
+      "route": "/api/v1/admin/channels/{channel}/bot",
+      "policy": "current authenticated administrator session; owning object rechecks authority",
+      "positive": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-009 ADMIN-010 ADMIN-011 ADMIN-017: channel lifecycle, registration, info, bot F configuration, and channel deletion across aliases",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-009 ADMIN-010 ADMIN-011 ADMIN-017: channel lifecycle, registration, info, bot F configuration, and channel deletion across aliases"
+        ],
+        "assertions": "200 and subsequent bot GET shows configured exact welcome message",
+        "aliasMechanism": "The original and swapped describe blocks execute the authored route through both prefixes; dynamic route identifiers are real resources created by this test."
+      },
+      "denial": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations"
+        ],
+        "assertions": "Exact method and branch issued with ordinary and anonymous principals on both prefixes (403/401), followed by IRC/event silence, protected and unrelated controls, and exact persistent-table comparison after restart."
+      },
+      "runtimeStatus": "NOT RUN in this inventory task"
+    },
+    {
+      "method": "GET",
+      "route": "/admin/channels/{channel}/messages",
+      "policy": "current authenticated administrator session; owning object rechecks authority",
+      "positive": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-011: channel moderation, message inspection, redaction, purge, modes, topic, and kick with IRC delivery and alias parity",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-011: channel moderation, message inspection, redaction, purge, modes, topic, and kick with IRC delivery and alias parity"
+        ],
+        "assertions": "200 and actual created message contents visible to administrator",
+        "aliasMechanism": "The original and swapped describe blocks execute the authored route through both prefixes; dynamic route identifiers are real resources created by this test."
+      },
+      "denial": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations"
+        ],
+        "assertions": "Exact method and branch issued with ordinary and anonymous principals on both prefixes (403/401), followed by IRC/event silence, protected and unrelated controls, and exact persistent-table comparison after restart."
+      },
+      "runtimeStatus": "NOT RUN in this inventory task"
+    },
+    {
+      "method": "GET",
+      "route": "/api/v1/admin/channels/{channel}/messages",
+      "policy": "current authenticated administrator session; owning object rechecks authority",
+      "positive": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-011: channel moderation, message inspection, redaction, purge, modes, topic, and kick with IRC delivery and alias parity",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-011: channel moderation, message inspection, redaction, purge, modes, topic, and kick with IRC delivery and alias parity"
+        ],
+        "assertions": "200 and actual created message contents visible to administrator",
+        "aliasMechanism": "The original and swapped describe blocks execute the authored route through both prefixes; dynamic route identifiers are real resources created by this test."
+      },
+      "denial": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations"
+        ],
+        "assertions": "Exact method and branch issued with ordinary and anonymous principals on both prefixes (403/401), followed by IRC/event silence, protected and unrelated controls, and exact persistent-table comparison after restart."
+      },
+      "runtimeStatus": "NOT RUN in this inventory task"
+    },
+    {
+      "method": "POST",
+      "route": "/admin/channels/{channel}/messages/purge",
+      "policy": "current authenticated administrator session; owning object rechecks authority",
+      "positive": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-011: channel moderation, message inspection, redaction, purge, modes, topic, and kick with IRC delivery and alias parity",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-011: channel moderation, message inspection, redaction, purge, modes, topic, and kick with IRC delivery and alias parity"
+        ],
+        "assertions": "200 and previously created message absent from subsequent history",
+        "aliasMechanism": "The original and swapped describe blocks execute the authored route through both prefixes; dynamic route identifiers are real resources created by this test."
+      },
+      "denial": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations"
+        ],
+        "assertions": "Exact method and branch issued with ordinary and anonymous principals on both prefixes (403/401), followed by IRC/event silence, protected and unrelated controls, and exact persistent-table comparison after restart."
+      },
+      "runtimeStatus": "NOT RUN in this inventory task"
+    },
+    {
+      "method": "POST",
+      "route": "/api/v1/admin/channels/{channel}/messages/purge",
+      "policy": "current authenticated administrator session; owning object rechecks authority",
+      "positive": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-011: channel moderation, message inspection, redaction, purge, modes, topic, and kick with IRC delivery and alias parity",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-011: channel moderation, message inspection, redaction, purge, modes, topic, and kick with IRC delivery and alias parity"
+        ],
+        "assertions": "200 and previously created message absent from subsequent history",
+        "aliasMechanism": "The original and swapped describe blocks execute the authored route through both prefixes; dynamic route identifiers are real resources created by this test."
+      },
+      "denial": {
+        "file": "tests/security/matrix-admin-positive.test.ts",
+        "titles": [
+          "matrix administrative positive controls and complete branch inventory ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations",
+          "matrix administrative positive controls and complete branch inventory [swapped administrative aliases] ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations"
+        ],
+        "assertions": "Exact method and branch issued with ordinary and anonymous principals on both prefixes (403/401), followed by IRC/event silence, protected and unrelated controls, and exact persistent-table comparison after restart."
+      },
+      "runtimeStatus": "NOT RUN in this inventory task"
+    },
+    {
+      "method": "ANY",
+      "route": "/admin/{slug...}",
+      "policy": "current authenticated administrator session; concrete branches delegate to admin handler",
+      "positive": {
+        "delegatesTo": "the 40 concrete method/route entries under this prefix",
+        "file": "tests/security/matrix-api-admin-completion.test.ts",
+        "title": "administrative catchalls reject unknown branches without changes and metrics require a real session",
+        "assertions": "Known stats branch succeeds for admin; unknown GET returns handler 404 and its exact marker."
+      },
+      "denial": {
+        "file": "tests/security/matrix-api-admin-completion.test.ts",
+        "title": "administrative catchalls reject unknown branches without changes and metrics require a real session",
+        "assertions": "Unknown GET ordinary 403 and anonymous 401; live IRC/event silence and exact protected/unrelated account and channel state across runtime recreation."
+      },
+      "runtimeStatus": "NOT RUN"
+    },
+    {
+      "method": "ANY",
+      "route": "/api/v1/admin/{slug...}",
+      "policy": "current authenticated administrator session; concrete branches delegate to admin handler",
+      "positive": {
+        "delegatesTo": "the 40 concrete method/route entries under this prefix",
+        "file": "tests/security/matrix-api-admin-completion.test.ts",
+        "title": "administrative catchalls reject unknown branches without changes and metrics require a real session",
+        "assertions": "Known stats branch succeeds for admin; unknown GET returns handler 404 and its exact marker."
+      },
+      "denial": {
+        "file": "tests/security/matrix-api-admin-completion.test.ts",
+        "title": "administrative catchalls reject unknown branches without changes and metrics require a real session",
+        "assertions": "Unknown GET ordinary 403 and anonymous 401; live IRC/event silence and exact protected/unrelated account and channel state across runtime recreation."
+      },
+      "runtimeStatus": "NOT RUN"
+    },
+    {
+      "method": "GET",
+      "route": "/metrics",
+      "policy": "valid API bearer, not administrator-only",
+      "positive": {
+        "file": "tests/security/matrix-api-admin-completion.test.ts",
+        "title": "administrative catchalls reject unknown branches without changes and metrics require a real session",
+        "assertions": "Ordinary authenticated account receives 200 text/plain with flarc_up and registered users metrics; bearer absent from output."
+      },
+      "denial": {
+        "file": "tests/security/matrix-api-admin-completion.test.ts",
+        "title": "administrative catchalls reject unknown branches without changes and metrics require a real session",
+        "assertions": "Anonymous request 401; observer silence and account/protected/unrelated state unchanged across recreation."
+      },
+      "runtimeStatus": "NOT RUN"
+    },
+    {
+      "method": "GET",
+      "route": "/admin/audit",
+      "policy": "authenticated administrator with branch authority checked by owning object",
+      "positive": {
+        "file": "tests/features/api-expansion-boundaries.test.ts",
+        "title": "new admin audit, bans, scopes and account-session aliases enforce authority and preserve independent accounts",
+        "assertions": "Root GET returns 200 on each prefix.",
+        "status": "snapshot23 focused 4-case run passed: /tmp/flarc-feature-expansion/api-alias-23.json"
+      },
+      "denial": {
+        "file": "tests/features/api-expansion-boundaries.test.ts",
+        "title": "new admin audit, bans, scopes and account-session aliases enforce authority and preserve independent accounts",
+        "assertions": "Bob GET returns 403 on each prefix; anonymous /audit returns 401.",
+        "status": "snapshot23 focused 4-case run passed: /tmp/flarc-feature-expansion/api-alias-23.json"
+      },
+      "runtimeStatus": "snapshot23 focused 4-case run passed: /tmp/flarc-feature-expansion/api-alias-23.json"
+    },
+    {
+      "method": "GET",
+      "route": "/api/v1/admin/audit",
+      "policy": "authenticated administrator with branch authority checked by owning object",
+      "positive": {
+        "file": "tests/features/api-expansion-boundaries.test.ts",
+        "title": "new admin audit, bans, scopes and account-session aliases enforce authority and preserve independent accounts",
+        "assertions": "Root GET returns 200 on each prefix.",
+        "status": "snapshot23 focused 4-case run passed: /tmp/flarc-feature-expansion/api-alias-23.json"
+      },
+      "denial": {
+        "file": "tests/features/api-expansion-boundaries.test.ts",
+        "title": "new admin audit, bans, scopes and account-session aliases enforce authority and preserve independent accounts",
+        "assertions": "Bob GET returns 403 on each prefix; anonymous /audit returns 401.",
+        "status": "snapshot23 focused 4-case run passed: /tmp/flarc-feature-expansion/api-alias-23.json"
+      },
+      "runtimeStatus": "snapshot23 focused 4-case run passed: /tmp/flarc-feature-expansion/api-alias-23.json"
+    },
+    {
+      "method": "GET",
+      "route": "/admin/bans",
+      "policy": "authenticated administrator with branch authority checked by owning object",
+      "positive": {
+        "file": "tests/features/api-expansion-boundaries.test.ts",
+        "title": "new admin audit, bans, scopes and account-session aliases enforce authority and preserve independent accounts",
+        "assertions": "Root GET returns 200 and includes the newly created ban ID and Alice account ID.",
+        "status": "snapshot23 focused 4-case run passed: /tmp/flarc-feature-expansion/api-alias-23.json"
+      },
+      "denial": {
+        "file": "tests/features/api-expansion-boundaries.test.ts",
+        "title": "new admin audit, bans, scopes and account-session aliases enforce authority and preserve independent accounts",
+        "assertions": "Bob GET returns 403 on each prefix.",
+        "status": "snapshot23 focused 4-case run passed: /tmp/flarc-feature-expansion/api-alias-23.json"
+      },
+      "runtimeStatus": "snapshot23 focused 4-case run passed: /tmp/flarc-feature-expansion/api-alias-23.json"
+    },
+    {
+      "method": "GET",
+      "route": "/api/v1/admin/bans",
+      "policy": "authenticated administrator with branch authority checked by owning object",
+      "positive": {
+        "file": "tests/features/api-expansion-boundaries.test.ts",
+        "title": "new admin audit, bans, scopes and account-session aliases enforce authority and preserve independent accounts",
+        "assertions": "Root GET returns 200 and includes the newly created ban ID and Alice account ID.",
+        "status": "snapshot23 focused 4-case run passed: /tmp/flarc-feature-expansion/api-alias-23.json"
+      },
+      "denial": {
+        "file": "tests/features/api-expansion-boundaries.test.ts",
+        "title": "new admin audit, bans, scopes and account-session aliases enforce authority and preserve independent accounts",
+        "assertions": "Bob GET returns 403 on each prefix.",
+        "status": "snapshot23 focused 4-case run passed: /tmp/flarc-feature-expansion/api-alias-23.json"
+      },
+      "runtimeStatus": "snapshot23 focused 4-case run passed: /tmp/flarc-feature-expansion/api-alias-23.json"
+    },
+    {
+      "method": "POST",
+      "route": "/admin/bans",
+      "policy": "authenticated administrator with branch authority checked by owning object",
+      "positive": {
+        "file": "tests/features/api-expansion-boundaries.test.ts",
+        "title": "new admin audit, bans, scopes and account-session aliases enforce authority and preserve independent accounts",
+        "assertions": "Root POST creates a ban for Alice and the returned ID appears in the subsequent list.",
+        "status": "snapshot23 focused 4-case run passed: /tmp/flarc-feature-expansion/api-alias-23.json"
+      },
+      "denial": {
+        "file": "tests/features/api-expansion-boundaries.test.ts",
+        "title": "new admin audit, bans, scopes and account-session aliases enforce authority and preserve independent accounts",
+        "assertions": "Bob POST for Alice returns 403 on each prefix.",
+        "status": "snapshot23 focused 4-case run passed: /tmp/flarc-feature-expansion/api-alias-23.json"
+      },
+      "runtimeStatus": "snapshot23 focused 4-case run passed: /tmp/flarc-feature-expansion/api-alias-23.json"
+    },
+    {
+      "method": "POST",
+      "route": "/api/v1/admin/bans",
+      "policy": "authenticated administrator with branch authority checked by owning object",
+      "positive": {
+        "file": "tests/features/api-expansion-boundaries.test.ts",
+        "title": "new admin audit, bans, scopes and account-session aliases enforce authority and preserve independent accounts",
+        "assertions": "Root POST creates a ban for Alice and the returned ID appears in the subsequent list.",
+        "status": "snapshot23 focused 4-case run passed: /tmp/flarc-feature-expansion/api-alias-23.json"
+      },
+      "denial": {
+        "file": "tests/features/api-expansion-boundaries.test.ts",
+        "title": "new admin audit, bans, scopes and account-session aliases enforce authority and preserve independent accounts",
+        "assertions": "Bob POST for Alice returns 403 on each prefix.",
+        "status": "snapshot23 focused 4-case run passed: /tmp/flarc-feature-expansion/api-alias-23.json"
+      },
+      "runtimeStatus": "snapshot23 focused 4-case run passed: /tmp/flarc-feature-expansion/api-alias-23.json"
+    },
+    {
+      "method": "DELETE",
+      "route": "/admin/bans/{id}",
+      "policy": "authenticated administrator with branch authority checked by owning object",
+      "positive": {
+        "file": "tests/features/api-expansion-boundaries.test.ts",
+        "title": "new admin audit, bans, scopes and account-session aliases enforce authority and preserve independent accounts",
+        "assertions": "Root DELETE of the freshly created ban returns 200; final post-restart list is empty.",
+        "status": "snapshot23 focused 4-case run passed: /tmp/flarc-feature-expansion/api-alias-23.json"
+      },
+      "denial": {
+        "file": "tests/features/api-expansion-boundaries.test.ts",
+        "title": "new admin audit, bans, scopes and account-session aliases enforce authority and preserve independent accounts",
+        "assertions": "Bob DELETE of that same created ban returns 403.",
+        "status": "snapshot23 focused 4-case run passed: /tmp/flarc-feature-expansion/api-alias-23.json"
+      },
+      "runtimeStatus": "snapshot23 focused 4-case run passed: /tmp/flarc-feature-expansion/api-alias-23.json"
+    },
+    {
+      "method": "DELETE",
+      "route": "/api/v1/admin/bans/{id}",
+      "policy": "authenticated administrator with branch authority checked by owning object",
+      "positive": {
+        "file": "tests/features/api-expansion-boundaries.test.ts",
+        "title": "new admin audit, bans, scopes and account-session aliases enforce authority and preserve independent accounts",
+        "assertions": "Root DELETE of the freshly created ban returns 200; final post-restart list is empty.",
+        "status": "snapshot23 focused 4-case run passed: /tmp/flarc-feature-expansion/api-alias-23.json"
+      },
+      "denial": {
+        "file": "tests/features/api-expansion-boundaries.test.ts",
+        "title": "new admin audit, bans, scopes and account-session aliases enforce authority and preserve independent accounts",
+        "assertions": "Bob DELETE of that same created ban returns 403.",
+        "status": "snapshot23 focused 4-case run passed: /tmp/flarc-feature-expansion/api-alias-23.json"
+      },
+      "runtimeStatus": "snapshot23 focused 4-case run passed: /tmp/flarc-feature-expansion/api-alias-23.json"
+    },
+    {
+      "method": "DELETE",
+      "route": "/admin/accounts/{username}/sessions/{id}",
+      "policy": "authenticated administrator with branch authority checked by owning object",
+      "positive": {
+        "file": "tests/features/api-expansion-boundaries.test.ts",
+        "title": "new admin audit, bans, scopes and account-session aliases enforce authority and preserve independent accounts",
+        "assertions": "Root DELETE of Alice second session returns 200; its profile request becomes 401.",
+        "status": "snapshot23 focused 4-case run passed: /tmp/flarc-feature-expansion/api-alias-23.json"
+      },
+      "denial": {
+        "file": "tests/features/api-expansion-boundaries.test.ts",
+        "title": "new admin audit, bans, scopes and account-session aliases enforce authority and preserve independent accounts",
+        "assertions": "Bob DELETE of the exact second session returns 403; that session remains usable before root deletion.",
+        "status": "snapshot23 focused 4-case run passed: /tmp/flarc-feature-expansion/api-alias-23.json"
+      },
+      "runtimeStatus": "snapshot23 focused 4-case run passed: /tmp/flarc-feature-expansion/api-alias-23.json"
+    },
+    {
+      "method": "DELETE",
+      "route": "/api/v1/admin/accounts/{username}/sessions/{id}",
+      "policy": "authenticated administrator with branch authority checked by owning object",
+      "positive": {
+        "file": "tests/features/api-expansion-boundaries.test.ts",
+        "title": "new admin audit, bans, scopes and account-session aliases enforce authority and preserve independent accounts",
+        "assertions": "Root DELETE of Alice second session returns 200; its profile request becomes 401.",
+        "status": "snapshot23 focused 4-case run passed: /tmp/flarc-feature-expansion/api-alias-23.json"
+      },
+      "denial": {
+        "file": "tests/features/api-expansion-boundaries.test.ts",
+        "title": "new admin audit, bans, scopes and account-session aliases enforce authority and preserve independent accounts",
+        "assertions": "Bob DELETE of the exact second session returns 403; that session remains usable before root deletion.",
+        "status": "snapshot23 focused 4-case run passed: /tmp/flarc-feature-expansion/api-alias-23.json"
+      },
+      "runtimeStatus": "snapshot23 focused 4-case run passed: /tmp/flarc-feature-expansion/api-alias-23.json"
+    },
+    {
+      "method": "GET",
+      "route": "/admin/accounts/{username}/scopes",
+      "policy": "authenticated administrator with branch authority checked by owning object",
+      "positive": {
+        "file": "tests/features/api-expansion-boundaries.test.ts",
+        "title": "new admin audit, bans, scopes and account-session aliases enforce authority and preserve independent accounts",
+        "assertions": "Root GET returns restricted true and the exact scope just assigned to Alice.",
+        "status": "snapshot23 focused 4-case run passed: /tmp/flarc-feature-expansion/api-alias-23.json"
+      },
+      "denial": {
+        "file": "tests/features/api-expansion-boundaries.test.ts",
+        "title": "new admin audit, bans, scopes and account-session aliases enforce authority and preserve independent accounts",
+        "assertions": "Bob GET of Alice scopes returns 403 on each prefix.",
+        "status": "snapshot23 focused 4-case run passed: /tmp/flarc-feature-expansion/api-alias-23.json"
+      },
+      "runtimeStatus": "snapshot23 focused 4-case run passed: /tmp/flarc-feature-expansion/api-alias-23.json"
+    },
+    {
+      "method": "GET",
+      "route": "/api/v1/admin/accounts/{username}/scopes",
+      "policy": "authenticated administrator with branch authority checked by owning object",
+      "positive": {
+        "file": "tests/features/api-expansion-boundaries.test.ts",
+        "title": "new admin audit, bans, scopes and account-session aliases enforce authority and preserve independent accounts",
+        "assertions": "Root GET returns restricted true and the exact scope just assigned to Alice.",
+        "status": "snapshot23 focused 4-case run passed: /tmp/flarc-feature-expansion/api-alias-23.json"
+      },
+      "denial": {
+        "file": "tests/features/api-expansion-boundaries.test.ts",
+        "title": "new admin audit, bans, scopes and account-session aliases enforce authority and preserve independent accounts",
+        "assertions": "Bob GET of Alice scopes returns 403 on each prefix.",
+        "status": "snapshot23 focused 4-case run passed: /tmp/flarc-feature-expansion/api-alias-23.json"
+      },
+      "runtimeStatus": "snapshot23 focused 4-case run passed: /tmp/flarc-feature-expansion/api-alias-23.json"
+    },
+    {
+      "method": "PUT",
+      "route": "/admin/accounts/{username}/scopes",
+      "policy": "authenticated administrator with branch authority checked by owning object",
+      "positive": {
+        "file": "tests/features/api-expansion-boundaries.test.ts",
+        "title": "new admin audit, bans, scopes and account-session aliases enforce authority and preserve independent accounts",
+        "assertions": "Root PUT sets Alice scoped account read and subsequent GET returns that exact scope.",
+        "status": "snapshot23 focused 4-case run passed: /tmp/flarc-feature-expansion/api-alias-23.json"
+      },
+      "denial": {
+        "file": "tests/features/api-expansion-boundaries.test.ts",
+        "title": "new admin audit, bans, scopes and account-session aliases enforce authority and preserve independent accounts",
+        "assertions": "Bob PUT of Alice scopes returns 403 on each prefix.",
+        "status": "snapshot23 focused 4-case run passed: /tmp/flarc-feature-expansion/api-alias-23.json"
+      },
+      "runtimeStatus": "snapshot23 focused 4-case run passed: /tmp/flarc-feature-expansion/api-alias-23.json"
+    },
+    {
+      "method": "PUT",
+      "route": "/api/v1/admin/accounts/{username}/scopes",
+      "policy": "authenticated administrator with branch authority checked by owning object",
+      "positive": {
+        "file": "tests/features/api-expansion-boundaries.test.ts",
+        "title": "new admin audit, bans, scopes and account-session aliases enforce authority and preserve independent accounts",
+        "assertions": "Root PUT sets Alice scoped account read and subsequent GET returns that exact scope.",
+        "status": "snapshot23 focused 4-case run passed: /tmp/flarc-feature-expansion/api-alias-23.json"
+      },
+      "denial": {
+        "file": "tests/features/api-expansion-boundaries.test.ts",
+        "title": "new admin audit, bans, scopes and account-session aliases enforce authority and preserve independent accounts",
+        "assertions": "Bob PUT of Alice scopes returns 403 on each prefix.",
+        "status": "snapshot23 focused 4-case run passed: /tmp/flarc-feature-expansion/api-alias-23.json"
+      },
+      "runtimeStatus": "snapshot23 focused 4-case run passed: /tmp/flarc-feature-expansion/api-alias-23.json"
+    },
+    {
+      "method": "GET",
+      "route": "/admin/accounts/{username}/sessions",
+      "policy": "authenticated administrator with branch authority checked by owning object",
+      "positive": {
+        "file": "tests/features/api-expansion-boundaries.test.ts",
+        "title": "new admin audit, bans, scopes and account-session aliases enforce authority and preserve independent accounts",
+        "assertions": "Root GET returns sessions including Alice second login current session ID.",
+        "status": "snapshot23 focused 4-case run passed: /tmp/flarc-feature-expansion/api-alias-23.json"
+      },
+      "denial": {
+        "file": "tests/features/api-expansion-boundaries.test.ts",
+        "title": "new admin audit, bans, scopes and account-session aliases enforce authority and preserve independent accounts",
+        "assertions": "Bob GET of Alice sessions returns 403 on each prefix.",
+        "status": "snapshot23 focused 4-case run passed: /tmp/flarc-feature-expansion/api-alias-23.json"
+      },
+      "runtimeStatus": "snapshot23 focused 4-case run passed: /tmp/flarc-feature-expansion/api-alias-23.json"
+    },
+    {
+      "method": "GET",
+      "route": "/api/v1/admin/accounts/{username}/sessions",
+      "policy": "authenticated administrator with branch authority checked by owning object",
+      "positive": {
+        "file": "tests/features/api-expansion-boundaries.test.ts",
+        "title": "new admin audit, bans, scopes and account-session aliases enforce authority and preserve independent accounts",
+        "assertions": "Root GET returns sessions including Alice second login current session ID.",
+        "status": "snapshot23 focused 4-case run passed: /tmp/flarc-feature-expansion/api-alias-23.json"
+      },
+      "denial": {
+        "file": "tests/features/api-expansion-boundaries.test.ts",
+        "title": "new admin audit, bans, scopes and account-session aliases enforce authority and preserve independent accounts",
+        "assertions": "Bob GET of Alice sessions returns 403 on each prefix.",
+        "status": "snapshot23 focused 4-case run passed: /tmp/flarc-feature-expansion/api-alias-23.json"
+      },
+      "runtimeStatus": "snapshot23 focused 4-case run passed: /tmp/flarc-feature-expansion/api-alias-23.json"
+    }
+  ],
+  "onHold": [
+    "Audit-log API",
+    "Global-ban administration",
+    "Targeted API bearer revocation",
+    "Other unimplemented administrative capabilities"
+  ],
+  "scope": "Infrastructure catchalls delegate to explicit covered branches; only safe unknown GET behavior is exercised, not an exhaustive assertion for arbitrary methods."
+}

@@ -1,0 +1,1657 @@
+{
+  "version": 2,
+  "evidence": [
+    {
+      "id": "ADMIN-001",
+      "kind": "test",
+      "executionId": "admin-positive-03",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-admin-positive.test.ts",
+      "testTitle": "matrix administrative positive controls and complete branch inventory ADMIN-001 ADMIN-002 ADMIN-003 ADMIN-004 ADMIN-007 ADMIN-008 ADMIN-019 ADMIN-020 ADMIN-021 ADMIN-022 ADMIN-023 AUTH-009 AUTH-023 USER-009: account provisioning, profile, credentials, roles, enable/disable and deletion across aliases",
+      "outcome": "PASS",
+      "scenarioScope": "Administrator can list accounts.",
+      "rationale": "rootadmin lists accounts via /admin/accounts and /api/v1/admin/accounts with role filters while unprivileged users receive 403.",
+      "assertionDetails": [
+        "rootadmin lists accounts omitting password/SCRAM secrets",
+        "alice gets 403 on both aliases",
+        "role filter query returns only matching accounts"
+      ],
+      "transports": [
+        "REST over real Miniflare/workerd",
+        "IRC over real WebSocket",
+        "SQLite inspection after workerd disposal"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "routeBehavior": [
+        {
+          "route": "/accounts",
+          "method": "get",
+          "alias": "/admin/accounts",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/accounts",
+          "method": "get",
+          "alias": "/api/v1/admin/accounts",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/accounts",
+          "method": "get",
+          "alias": "/admin/accounts",
+          "outcome": "negative",
+          "responseKind": "secure-denial"
+        },
+        {
+          "route": "/accounts",
+          "method": "get",
+          "alias": "/api/v1/admin/accounts",
+          "outcome": "negative",
+          "responseKind": "secure-denial"
+        }
+      ]
+    },
+    {
+      "id": "ADMIN-002",
+      "kind": "test",
+      "executionId": "admin-positive-03",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-admin-positive.test.ts",
+      "testTitle": "matrix administrative positive controls and complete branch inventory ADMIN-002: user and channel KV metadata administration across aliases and restart persistence",
+      "outcome": "PASS",
+      "scenarioScope": "Administrator can inspect permitted account administration metadata.",
+      "rationale": "rootadmin inspects account details and manages user KV metadata with durable persistence across restart.",
+      "assertionDetails": [
+        "rootadmin reads and writes user KV metadata",
+        "unprivileged users get 403 on both aliases",
+        "stopped SQLite confirms persistence across restart"
+      ],
+      "transports": [
+        "REST over real Miniflare/workerd",
+        "IRC over real WebSocket",
+        "SQLite inspection after workerd disposal"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "routeBehavior": [
+        {
+          "route": "/metadata/users/{username}",
+          "method": "put",
+          "alias": "/admin/metadata/users/{username}",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/metadata/users/{username}",
+          "method": "get",
+          "alias": "/admin/metadata/users/{username}",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/metadata/users/{username}",
+          "method": "put",
+          "alias": "/api/v1/admin/metadata/users/{username}",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/metadata/users/{username}",
+          "method": "get",
+          "alias": "/api/v1/admin/metadata/users/{username}",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/metadata/users/{username}",
+          "method": "put",
+          "alias": "/admin/metadata/users/{username}",
+          "outcome": "negative",
+          "responseKind": "secure-denial"
+        },
+        {
+          "route": "/metadata/users/{username}",
+          "method": "get",
+          "alias": "/admin/metadata/users/{username}",
+          "outcome": "negative",
+          "responseKind": "secure-denial"
+        },
+        {
+          "route": "/metadata/users/{username}",
+          "method": "put",
+          "alias": "/api/v1/admin/metadata/users/{username}",
+          "outcome": "negative",
+          "responseKind": "secure-denial"
+        },
+        {
+          "route": "/metadata/users/{username}",
+          "method": "get",
+          "alias": "/api/v1/admin/metadata/users/{username}",
+          "outcome": "negative",
+          "responseKind": "secure-denial"
+        }
+      ]
+    },
+    {
+      "id": "ADMIN-003",
+      "kind": "test",
+      "executionId": "admin-positive-03",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-admin-positive.test.ts",
+      "testTitle": "matrix administrative positive controls and complete branch inventory ADMIN-001 ADMIN-002 ADMIN-003 ADMIN-004 ADMIN-007 ADMIN-008 ADMIN-019 ADMIN-020 ADMIN-021 ADMIN-022 ADMIN-023 AUTH-009 AUTH-023 USER-009: account provisioning, profile, credentials, roles, enable/disable and deletion across aliases",
+      "outcome": "PASS",
+      "scenarioScope": "Administrator can disable an account.",
+      "rationale": "rootadmin disables an account via /admin/accounts/disable and /accounts/:username/disable, invalidating active sessions.",
+      "assertionDetails": [
+        "rootadmin disables account across aliases",
+        "disabled account cannot login or use active session",
+        "unrelated accounts remain unaffected"
+      ],
+      "transports": [
+        "REST over real Miniflare/workerd",
+        "IRC over real WebSocket",
+        "SQLite inspection after workerd disposal"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "routeBehavior": [
+        {
+          "route": "/accounts/disable",
+          "method": "post",
+          "alias": "/admin/accounts/disable",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/accounts/disable",
+          "method": "post",
+          "alias": "/admin/accounts/disable",
+          "outcome": "negative",
+          "responseKind": "secure-denial"
+        },
+        {
+          "route": "/accounts/{username}/disable",
+          "method": "post",
+          "alias": "/api/v1/admin/accounts/{username}/disable",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/accounts/{username}/disable",
+          "method": "post",
+          "alias": "/admin/accounts/{username}/disable",
+          "outcome": "negative",
+          "responseKind": "secure-denial"
+        }
+      ]
+    },
+    {
+      "id": "ADMIN-004",
+      "kind": "test",
+      "executionId": "admin-positive-03",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-admin-positive.test.ts",
+      "testTitle": "matrix administrative positive controls and complete branch inventory ADMIN-001 ADMIN-002 ADMIN-003 ADMIN-004 ADMIN-007 ADMIN-008 ADMIN-019 ADMIN-020 ADMIN-021 ADMIN-022 ADMIN-023 AUTH-009 AUTH-023 USER-009: account provisioning, profile, credentials, roles, enable/disable and deletion across aliases",
+      "outcome": "PASS",
+      "scenarioScope": "Administrator can reenable an account.",
+      "rationale": "rootadmin reenables a disabled account via /accounts/:username/enable, restoring authentication capability.",
+      "assertionDetails": [
+        "rootadmin enables account across aliases",
+        "account can login again",
+        "unrelated accounts preserved"
+      ],
+      "transports": [
+        "REST over real Miniflare/workerd",
+        "IRC over real WebSocket",
+        "SQLite inspection after workerd disposal"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "routeBehavior": [
+        {
+          "route": "/accounts/{username}/enable",
+          "method": "post",
+          "alias": "/api/v1/admin/accounts/{username}/enable",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/accounts/{username}/enable",
+          "method": "post",
+          "alias": "/admin/accounts/{username}/enable",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/accounts/{username}/enable",
+          "method": "post",
+          "alias": "/admin/accounts/{username}/enable",
+          "outcome": "negative",
+          "responseKind": "secure-denial"
+        }
+      ]
+    },
+    {
+      "id": "ADMIN-005",
+      "kind": "test",
+      "executionId": "admin-positive-03",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-admin-positive.test.ts",
+      "testTitle": "matrix administrative positive controls and complete branch inventory ADMIN-005 ADMIN-006 USER-009: session inspection, revocation, and active IRC user disconnection without secret exposure",
+      "outcome": "PASS",
+      "scenarioScope": "Administrator can revoke a session.",
+      "rationale": "rootadmin revokes an active IRC WebSocket session by sessionId via /admin/sessions/disconnect while preserving account bearer credentials.",
+      "assertionDetails": [
+        "rootadmin revokes active IRC session by sessionId",
+        "target WebSocket connection is closed",
+        "account bearer token remains valid for REST requests",
+        "other sessions remain active"
+      ],
+      "transports": [
+        "REST over real Miniflare/workerd",
+        "IRC over real WebSocket",
+        "SQLite inspection after workerd disposal"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "routeBehavior": [
+        {
+          "route": "/sessions/disconnect",
+          "method": "post",
+          "alias": "/admin/sessions/disconnect",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/sessions/disconnect",
+          "method": "post",
+          "alias": "/admin/sessions/disconnect",
+          "outcome": "negative",
+          "responseKind": "secure-denial"
+        }
+      ]
+    },
+    {
+      "id": "ADMIN-006",
+      "kind": "test",
+      "executionId": "admin-positive-03",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-admin-positive.test.ts",
+      "testTitle": "matrix administrative positive controls and complete branch inventory ADMIN-005 ADMIN-006 USER-009: session inspection, revocation, and active IRC user disconnection without secret exposure",
+      "outcome": "PASS",
+      "scenarioScope": "Administrator can disconnect an active IRC user.",
+      "rationale": "rootadmin disconnects an active IRC user by nickname delivering Closing Link ERROR.",
+      "assertionDetails": [
+        "rootadmin disconnects user by nickname",
+        "target WebSocket receives ERROR and closes",
+        "unrelated IRC clients remain connected"
+      ],
+      "transports": [
+        "REST over real Miniflare/workerd",
+        "IRC over real WebSocket",
+        "SQLite inspection after workerd disposal"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "routeBehavior": [
+        {
+          "route": "/sessions/disconnect",
+          "method": "post",
+          "alias": "/api/v1/admin/sessions/disconnect",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/sessions/disconnect",
+          "method": "post",
+          "alias": "/api/v1/admin/sessions/disconnect",
+          "outcome": "negative",
+          "responseKind": "secure-denial"
+        }
+      ]
+    },
+    {
+      "id": "ADMIN-007",
+      "kind": "test",
+      "executionId": "admin-positive-03",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-admin-positive.test.ts",
+      "testTitle": "matrix administrative positive controls and complete branch inventory ADMIN-001 ADMIN-002 ADMIN-003 ADMIN-004 ADMIN-007 ADMIN-008 ADMIN-019 ADMIN-020 ADMIN-021 ADMIN-022 ADMIN-023 AUTH-009 AUTH-023 USER-009: account provisioning, profile, credentials, roles, enable/disable and deletion across aliases",
+      "outcome": "PASS",
+      "scenarioScope": "Administrator can assign network roles within their authority.",
+      "rationale": "rootadmin grants network roles (oper, bot) to users via /admin/accounts/:username/roles.",
+      "assertionDetails": [
+        "rootadmin grants role across aliases",
+        "account roles updated in SQLite",
+        "unprivileged users cannot grant roles"
+      ],
+      "transports": [
+        "REST over real Miniflare/workerd",
+        "IRC over real WebSocket",
+        "SQLite inspection after workerd disposal"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "routeBehavior": [
+        {
+          "route": "/accounts/{username}/roles",
+          "method": "post",
+          "alias": "/admin/accounts/{username}/roles",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/accounts/{username}/roles",
+          "method": "get",
+          "alias": "/admin/accounts/{username}/roles",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/accounts/{username}/roles",
+          "method": "post",
+          "alias": "/api/v1/admin/accounts/{username}/roles",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/accounts/{username}/roles",
+          "method": "get",
+          "alias": "/api/v1/admin/accounts/{username}/roles",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/accounts/{username}/roles",
+          "method": "post",
+          "alias": "/admin/accounts/{username}/roles",
+          "outcome": "negative",
+          "responseKind": "secure-denial"
+        }
+      ]
+    },
+    {
+      "id": "ADMIN-008",
+      "kind": "test",
+      "executionId": "admin-positive-03",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-admin-positive.test.ts",
+      "testTitle": "matrix administrative positive controls and complete branch inventory ADMIN-001 ADMIN-002 ADMIN-003 ADMIN-004 ADMIN-007 ADMIN-008 ADMIN-019 ADMIN-020 ADMIN-021 ADMIN-022 ADMIN-023 AUTH-009 AUTH-023 USER-009: account provisioning, profile, credentials, roles, enable/disable and deletion across aliases",
+      "outcome": "PASS",
+      "scenarioScope": "Administrator can remove network roles.",
+      "rationale": "rootadmin revokes network roles via /admin/accounts/:username/roles.",
+      "assertionDetails": [
+        "rootadmin revokes role across aliases",
+        "role removed from SQLite",
+        "unrelated accounts unaffected"
+      ],
+      "transports": [
+        "REST over real Miniflare/workerd",
+        "IRC over real WebSocket",
+        "SQLite inspection after workerd disposal"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "routeBehavior": [
+        {
+          "route": "/accounts/{username}/roles",
+          "method": "post",
+          "alias": "/admin/accounts/{username}/roles",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/accounts/{username}/roles",
+          "method": "post",
+          "alias": "/admin/accounts/{username}/roles",
+          "outcome": "negative",
+          "responseKind": "secure-denial"
+        }
+      ]
+    },
+    {
+      "id": "ADMIN-009",
+      "kind": "test",
+      "executionId": "admin-positive-03",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-admin-positive.test.ts",
+      "testTitle": "matrix administrative positive controls and complete branch inventory ADMIN-009 ADMIN-010 ADMIN-011 ADMIN-017: channel lifecycle, registration, info, bot F configuration, and channel deletion across aliases",
+      "outcome": "PASS",
+      "scenarioScope": "Administrator can register a channel administratively.",
+      "rationale": "rootadmin registers a channel via /admin/channels/:channel/register setting founder.",
+      "assertionDetails": [
+        "rootadmin registers channel across aliases",
+        "registered flag and founder set in metadata",
+        "ordinary users rejected"
+      ],
+      "transports": [
+        "REST over real Miniflare/workerd",
+        "IRC over real WebSocket",
+        "SQLite inspection after workerd disposal"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "routeBehavior": [
+        {
+          "route": "/channels/{channel}/register",
+          "method": "post",
+          "alias": "/admin/channels/{channel}/register",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/channels/{channel}/register",
+          "method": "post",
+          "alias": "/api/v1/admin/channels/{channel}/register",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/channels/{channel}/register",
+          "method": "post",
+          "alias": "/admin/channels/{channel}/register",
+          "outcome": "negative",
+          "responseKind": "secure-denial"
+        }
+      ]
+    },
+    {
+      "id": "ADMIN-010",
+      "kind": "test",
+      "executionId": "admin-positive-03",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-admin-positive.test.ts",
+      "testTitle": "matrix administrative positive controls and complete branch inventory ADMIN-009 ADMIN-010 ADMIN-011 ADMIN-017: channel lifecycle, registration, info, bot F configuration, and channel deletion across aliases",
+      "outcome": "PASS",
+      "scenarioScope": "Administrator can inspect channel configuration.",
+      "rationale": "rootadmin inspects channel configuration via /admin/channels/:channel/info and /channels/:channel.",
+      "assertionDetails": [
+        "rootadmin reads channel info and full details across aliases",
+        "ordinary users rejected with 403",
+        "unrelated channels isolated"
+      ],
+      "transports": [
+        "REST over real Miniflare/workerd",
+        "IRC over real WebSocket",
+        "SQLite inspection after workerd disposal"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "routeBehavior": [
+        {
+          "route": "/channels/{channel}/info",
+          "method": "get",
+          "alias": "/admin/channels/{channel}/info",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/channels/{channel}/info",
+          "method": "get",
+          "alias": "/api/v1/admin/channels/{channel}/info",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/channels/{channel}",
+          "method": "get",
+          "alias": "/admin/channels/{channel}",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/channels/{channel}",
+          "method": "get",
+          "alias": "/api/v1/admin/channels/{channel}",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/channels/{channel}/info",
+          "method": "get",
+          "alias": "/admin/channels/{channel}/info",
+          "outcome": "negative",
+          "responseKind": "secure-denial"
+        },
+        {
+          "route": "/channels/{channel}",
+          "method": "get",
+          "alias": "/admin/channels/{channel}",
+          "outcome": "negative",
+          "responseKind": "secure-denial"
+        }
+      ]
+    },
+    {
+      "id": "ADMIN-011",
+      "kind": "test",
+      "executionId": "admin-positive-03",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-admin-positive.test.ts",
+      "testTitle": "matrix administrative positive controls and complete branch inventory ADMIN-011: channel moderation, message inspection, redaction, purge, modes, topic, and kick with IRC delivery and alias parity",
+      "outcome": "PASS",
+      "scenarioScope": "Administrator can change network-controlled channel settings.",
+      "rationale": "rootadmin updates topic and mode settings via /admin/channels/:channel/topic and /modes across both aliases with IRC broadcast.",
+      "assertionDetails": [
+        "rootadmin sets topic and modes across /admin and /api/v1/admin aliases",
+        "IRC members receive TOPIC and MODE events",
+        "outsiders receive nothing"
+      ],
+      "transports": [
+        "REST over real Miniflare/workerd",
+        "IRC over real WebSocket",
+        "SQLite inspection after workerd disposal"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "routeBehavior": [
+        {
+          "route": "/channels/{channel}/topic",
+          "method": "post",
+          "alias": "/admin/channels/{channel}/topic",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/channels/{channel}/topic",
+          "method": "post",
+          "alias": "/api/v1/admin/channels/{channel}/topic",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/channels/{channel}/modes",
+          "method": "post",
+          "alias": "/admin/channels/{channel}/modes",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/channels/{channel}/modes",
+          "method": "post",
+          "alias": "/api/v1/admin/channels/{channel}/modes",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/channels/{channel}/messages",
+          "method": "get",
+          "alias": "/admin/channels/{channel}/messages",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/channels/{channel}/messages",
+          "method": "get",
+          "alias": "/api/v1/admin/channels/{channel}/messages",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/messages/redact",
+          "method": "post",
+          "alias": "/admin/messages/redact",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/messages/redact",
+          "method": "post",
+          "alias": "/api/v1/admin/messages/redact",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/channels/{channel}/messages/purge",
+          "method": "post",
+          "alias": "/admin/channels/{channel}/messages/purge",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/channels/{channel}/messages/purge",
+          "method": "post",
+          "alias": "/api/v1/admin/channels/{channel}/messages/purge",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/channels/{channel}/kick",
+          "method": "post",
+          "alias": "/admin/channels/{channel}/kick",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/channels/{channel}/kick",
+          "method": "post",
+          "alias": "/api/v1/admin/channels/{channel}/kick",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/channels/{channel}/topic",
+          "method": "post",
+          "alias": "/admin/channels/{channel}/topic",
+          "outcome": "negative",
+          "responseKind": "secure-denial"
+        },
+        {
+          "route": "/channels/{channel}/modes",
+          "method": "post",
+          "alias": "/admin/channels/{channel}/modes",
+          "outcome": "negative",
+          "responseKind": "secure-denial"
+        },
+        {
+          "route": "/channels/{channel}/messages",
+          "method": "get",
+          "alias": "/admin/channels/{channel}/messages",
+          "outcome": "negative",
+          "responseKind": "secure-denial"
+        },
+        {
+          "route": "/messages/redact",
+          "method": "post",
+          "alias": "/admin/messages/redact",
+          "outcome": "negative",
+          "responseKind": "secure-denial"
+        },
+        {
+          "route": "/channels/{channel}/messages/purge",
+          "method": "post",
+          "alias": "/admin/channels/{channel}/messages/purge",
+          "outcome": "negative",
+          "responseKind": "secure-denial"
+        },
+        {
+          "route": "/channels/{channel}/kick",
+          "method": "post",
+          "alias": "/admin/channels/{channel}/kick",
+          "outcome": "negative",
+          "responseKind": "secure-denial"
+        }
+      ]
+    },
+    {
+      "id": "ADMIN-012",
+      "kind": "disposition",
+      "outcome": "NOT IMPLEMENTED",
+      "scenarioScope": "Administrator can apply global bans.",
+      "rationale": "FlaRC does not implement network-wide global bans (KLINE/GLINE); bans are strictly channel-scoped.",
+      "basis": "docs/security/threat-model.md notes lack of network-wide ban facility; server/handlers/admin.ts exposes no global ban route.",
+      "capability": "global bans"
+    },
+    {
+      "id": "ADMIN-013",
+      "kind": "disposition",
+      "outcome": "NOT IMPLEMENTED",
+      "scenarioScope": "Administrator can remove global bans.",
+      "rationale": "FlaRC does not implement global ban removal since network-wide bans do not exist.",
+      "basis": "server/handlers/admin.ts exposes no global ban removal route.",
+      "capability": "global bans"
+    },
+    {
+      "id": "ADMIN-014",
+      "kind": "test",
+      "executionId": "admin-positive-03",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-admin-positive.test.ts",
+      "testTitle": "matrix administrative positive controls and complete branch inventory ADMIN-014 ADMIN-015 ADMIN-024: operational statistics, configuration and broadcast with alias parity and recipient isolation",
+      "outcome": "PASS",
+      "scenarioScope": "Administrator can broadcast network notices.",
+      "rationale": "rootadmin broadcasts network notices via /admin/broadcast and /api/v1/admin/broadcast to connected clients.",
+      "assertionDetails": [
+        "rootadmin sends NOTICE and standard broadcasts",
+        "all connected IRC clients receive announcements",
+        "ordinary users rejected with 403"
+      ],
+      "transports": [
+        "REST over real Miniflare/workerd",
+        "IRC over real WebSocket",
+        "SQLite inspection after workerd disposal"
+      ],
+      "assertions": [
+        "authorization",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "routeBehavior": [
+        {
+          "route": "/broadcast",
+          "method": "post",
+          "alias": "/admin/broadcast",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/broadcast",
+          "method": "post",
+          "alias": "/api/v1/admin/broadcast",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/broadcast",
+          "method": "post",
+          "alias": "/admin/broadcast",
+          "outcome": "negative",
+          "responseKind": "secure-denial"
+        },
+        {
+          "route": "/broadcast",
+          "method": "post",
+          "alias": "/api/v1/admin/broadcast",
+          "outcome": "negative",
+          "responseKind": "secure-denial"
+        }
+      ]
+    },
+    {
+      "id": "ADMIN-015",
+      "kind": "test",
+      "executionId": "admin-positive-03",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-admin-positive.test.ts",
+      "testTitle": "matrix administrative positive controls and complete branch inventory ADMIN-014 ADMIN-015 ADMIN-024: operational statistics, configuration and broadcast with alias parity and recipient isolation",
+      "outcome": "PASS",
+      "scenarioScope": "Administrator can inspect operational statistics.",
+      "rationale": "rootadmin inspects server statistics via /admin/stats and /api/v1/admin/stats.",
+      "assertionDetails": [
+        "rootadmin reads stats with activeConnections/registeredSessions",
+        "ordinary users rejected with 403",
+        "anonymous callers rejected with 401"
+      ],
+      "transports": [
+        "REST over real Miniflare/workerd",
+        "IRC over real WebSocket",
+        "SQLite inspection after workerd disposal"
+      ],
+      "assertions": ["authorization", "transport", "unrelatedResources"],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "routeBehavior": [
+        {
+          "route": "/stats",
+          "method": "get",
+          "alias": "/admin/stats",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/stats",
+          "method": "get",
+          "alias": "/api/v1/admin/stats",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/stats",
+          "method": "get",
+          "alias": "/admin/stats",
+          "outcome": "negative",
+          "responseKind": "secure-denial"
+        },
+        {
+          "route": "/stats",
+          "method": "get",
+          "alias": "/api/v1/admin/stats",
+          "outcome": "negative",
+          "responseKind": "secure-denial"
+        }
+      ]
+    },
+    {
+      "id": "ADMIN-016",
+      "kind": "disposition",
+      "outcome": "NOT IMPLEMENTED",
+      "scenarioScope": "Administrator can inspect appropriate administrative audit logs.",
+      "rationale": "Administrative audit logs are not persisted in SQLite or accessible through an administrative endpoint.",
+      "basis": "server/handlers/admin.ts exposes no audit log route.",
+      "capability": "administrative audit logs"
+    },
+    {
+      "id": "ADMIN-017",
+      "kind": "test",
+      "executionId": "admin-positive-03",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-admin-positive.test.ts",
+      "testTitle": "matrix administrative positive controls and complete branch inventory ADMIN-009 ADMIN-010 ADMIN-011 ADMIN-017: channel lifecycle, registration, info, bot F configuration, and channel deletion across aliases",
+      "outcome": "PASS",
+      "scenarioScope": "Administrator can manage service-bot configuration.",
+      "rationale": "rootadmin inspects and updates bot F configuration via /admin/channels/:channel/bot.",
+      "assertionDetails": [
+        "rootadmin reads and sets bot F enabled flag and welcome greeting across aliases",
+        "ordinary users rejected with 403",
+        "unrelated channels preserved"
+      ],
+      "transports": [
+        "REST over real Miniflare/workerd",
+        "IRC over real WebSocket",
+        "SQLite inspection after workerd disposal"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "routeBehavior": [
+        {
+          "route": "/channels/{channel}/bot",
+          "method": "get",
+          "alias": "/admin/channels/{channel}/bot",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/channels/{channel}/bot",
+          "method": "post",
+          "alias": "/admin/channels/{channel}/bot",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/channels/{channel}/bot",
+          "method": "get",
+          "alias": "/api/v1/admin/channels/{channel}/bot",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/channels/{channel}/bot",
+          "method": "post",
+          "alias": "/api/v1/admin/channels/{channel}/bot",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/channels/{channel}/bot",
+          "method": "get",
+          "alias": "/admin/channels/{channel}/bot",
+          "outcome": "negative",
+          "responseKind": "secure-denial"
+        },
+        {
+          "route": "/channels/{channel}/bot",
+          "method": "post",
+          "alias": "/admin/channels/{channel}/bot",
+          "outcome": "negative",
+          "responseKind": "secure-denial"
+        }
+      ]
+    },
+    {
+      "id": "ADMIN-018",
+      "kind": "disposition",
+      "outcome": "NOT IMPLEMENTED",
+      "scenarioScope": "Administrator can revoke compromised bot credentials.",
+      "rationale": "Service bot credentials do not exist as distinct revocable API tokens in FlaRC.",
+      "basis": "Bot configuration is stored per-channel; no dedicated bot credentials table or revocation endpoint exists.",
+      "capability": "service bot credentials"
+    },
+    {
+      "id": "ADMIN-019",
+      "kind": "test",
+      "executionId": "admin-positive-03",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-admin-positive.test.ts",
+      "testTitle": "matrix administrative positive controls and complete branch inventory ADMIN-001 ADMIN-002 ADMIN-003 ADMIN-004 ADMIN-007 ADMIN-008 ADMIN-019 ADMIN-020 ADMIN-021 ADMIN-022 ADMIN-023 AUTH-009 AUTH-023 USER-009: account provisioning, profile, credentials, roles, enable/disable and deletion across aliases",
+      "outcome": "PASS",
+      "scenarioScope": "Ordinary users cannot enumerate all accounts through admin APIs.",
+      "rationale": "Ordinary user Alice is denied listing accounts on /admin/accounts and /api/v1/admin/accounts.",
+      "assertionDetails": [
+        "alice rejected with 403 on /admin/accounts",
+        "alice rejected with 403 on /api/v1/admin/accounts",
+        "anonymous rejected with 401"
+      ],
+      "transports": [
+        "REST over real Miniflare/workerd",
+        "IRC over real WebSocket",
+        "SQLite inspection after workerd disposal"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "routeBehavior": [
+        {
+          "route": "/accounts",
+          "method": "get",
+          "alias": "/admin/accounts",
+          "outcome": "negative",
+          "responseKind": "secure-denial"
+        },
+        {
+          "route": "/accounts",
+          "method": "get",
+          "alias": "/api/v1/admin/accounts",
+          "outcome": "negative",
+          "responseKind": "secure-denial"
+        }
+      ]
+    },
+    {
+      "id": "ADMIN-020",
+      "kind": "test",
+      "executionId": "admin-positive-03",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-admin-positive.test.ts",
+      "testTitle": "matrix administrative positive controls and complete branch inventory ADMIN-001 ADMIN-002 ADMIN-003 ADMIN-004 ADMIN-007 ADMIN-008 ADMIN-019 ADMIN-020 ADMIN-021 ADMIN-022 ADMIN-023 AUTH-009 AUTH-023 USER-009: account provisioning, profile, credentials, roles, enable/disable and deletion across aliases",
+      "outcome": "PASS",
+      "scenarioScope": "Ordinary users cannot disable other accounts.",
+      "rationale": "Ordinary users cannot disable accounts via /admin/accounts/disable or /admin/accounts/:username/disable.",
+      "assertionDetails": [
+        "alice rejected with 403 attempting to disable target",
+        "target account remains enabled and functional",
+        "unrelated accounts untouched"
+      ],
+      "transports": [
+        "REST over real Miniflare/workerd",
+        "IRC over real WebSocket",
+        "SQLite inspection after workerd disposal"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "routeBehavior": [
+        {
+          "route": "/accounts/disable",
+          "method": "post",
+          "alias": "/admin/accounts/disable",
+          "outcome": "negative",
+          "responseKind": "secure-denial"
+        },
+        {
+          "route": "/accounts/{username}/disable",
+          "method": "post",
+          "alias": "/admin/accounts/{username}/disable",
+          "outcome": "negative",
+          "responseKind": "secure-denial"
+        }
+      ]
+    },
+    {
+      "id": "ADMIN-021",
+      "kind": "test",
+      "executionId": "admin-positive-03",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-admin-positive.test.ts",
+      "testTitle": "matrix administrative positive controls and complete branch inventory ADMIN-001 ADMIN-002 ADMIN-003 ADMIN-004 ADMIN-007 ADMIN-008 ADMIN-019 ADMIN-020 ADMIN-021 ADMIN-022 ADMIN-023 AUTH-009 AUTH-023 USER-009: account provisioning, profile, credentials, roles, enable/disable and deletion across aliases",
+      "outcome": "PASS",
+      "scenarioScope": "Ordinary users cannot reset other users passwords.",
+      "rationale": "Ordinary users cannot reset passwords via /admin/accounts/:username/password.",
+      "assertionDetails": [
+        "alice rejected with 403 resetting target password",
+        "target password remains unchanged",
+        "active sessions remain valid"
+      ],
+      "transports": [
+        "REST over real Miniflare/workerd",
+        "IRC over real WebSocket",
+        "SQLite inspection after workerd disposal"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "routeBehavior": [
+        {
+          "route": "/accounts/{username}/password",
+          "method": "post",
+          "alias": "/admin/accounts/{username}/password",
+          "outcome": "negative",
+          "responseKind": "secure-denial"
+        }
+      ]
+    },
+    {
+      "id": "ADMIN-022",
+      "kind": "test",
+      "executionId": "admin-positive-03",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-admin-positive.test.ts",
+      "testTitle": "matrix administrative positive controls and complete branch inventory ADMIN-001 ADMIN-002 ADMIN-003 ADMIN-004 ADMIN-007 ADMIN-008 ADMIN-019 ADMIN-020 ADMIN-021 ADMIN-022 ADMIN-023 AUTH-009 AUTH-023 USER-009: account provisioning, profile, credentials, roles, enable/disable and deletion across aliases",
+      "outcome": "PASS",
+      "scenarioScope": "Ordinary users cannot assign network-wide roles.",
+      "rationale": "Ordinary users cannot grant or revoke roles via /admin/accounts/:username/roles.",
+      "assertionDetails": [
+        "alice rejected with 403 granting admin/oper role",
+        "target roles remain unmodified in SQLite",
+        "unrelated accounts unaffected"
+      ],
+      "transports": [
+        "REST over real Miniflare/workerd",
+        "IRC over real WebSocket",
+        "SQLite inspection after workerd disposal"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "routeBehavior": [
+        {
+          "route": "/accounts/{username}/roles",
+          "method": "post",
+          "alias": "/admin/accounts/{username}/roles",
+          "outcome": "negative",
+          "responseKind": "secure-denial"
+        }
+      ]
+    },
+    {
+      "id": "ADMIN-023",
+      "kind": "test",
+      "executionId": "admin-positive-03",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-admin-positive.test.ts",
+      "testTitle": "matrix administrative positive controls and complete branch inventory ADMIN-001 ADMIN-002 ADMIN-003 ADMIN-004 ADMIN-007 ADMIN-008 ADMIN-019 ADMIN-020 ADMIN-021 ADMIN-022 ADMIN-023 AUTH-009 AUTH-023 USER-009: account provisioning, profile, credentials, roles, enable/disable and deletion across aliases",
+      "outcome": "PASS",
+      "scenarioScope": "Ordinary users cannot revoke other users sessions.",
+      "rationale": "Ordinary users cannot revoke sessions or disconnect users via admin endpoints.",
+      "assertionDetails": [
+        "alice rejected with 403 on /admin/sessions/disconnect",
+        "target user connection remains alive",
+        "unrelated clients preserved"
+      ],
+      "transports": [
+        "REST over real Miniflare/workerd",
+        "IRC over real WebSocket",
+        "SQLite inspection after workerd disposal"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "routeBehavior": [
+        {
+          "route": "/sessions/disconnect",
+          "method": "post",
+          "alias": "/admin/sessions/disconnect",
+          "outcome": "negative",
+          "responseKind": "secure-denial"
+        }
+      ]
+    },
+    {
+      "id": "ADMIN-024",
+      "kind": "test",
+      "executionId": "admin-positive-03",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-admin-positive.test.ts",
+      "testTitle": "matrix administrative positive controls and complete branch inventory ADMIN-014 ADMIN-015 ADMIN-024: operational statistics, configuration and broadcast with alias parity and recipient isolation",
+      "outcome": "PASS",
+      "scenarioScope": "Ordinary users cannot issue network-wide announcements.",
+      "rationale": "Ordinary users are denied POST /admin/broadcast and /api/v1/admin/broadcast with no IRC delivery.",
+      "assertionDetails": [
+        "alice rejected with 403 on both broadcast aliases",
+        "active IRC clients receive zero forbidden messages after barriers",
+        "unrelated channels unaffected"
+      ],
+      "transports": [
+        "REST over real Miniflare/workerd",
+        "IRC over real WebSocket",
+        "SQLite inspection after workerd disposal"
+      ],
+      "assertions": [
+        "authorization",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "routeBehavior": [
+        {
+          "route": "/broadcast",
+          "method": "post",
+          "alias": "/admin/broadcast",
+          "outcome": "negative",
+          "responseKind": "secure-denial"
+        },
+        {
+          "route": "/broadcast",
+          "method": "post",
+          "alias": "/api/v1/admin/broadcast",
+          "outcome": "negative",
+          "responseKind": "secure-denial"
+        }
+      ]
+    },
+    {
+      "id": "ADMIN-027",
+      "kind": "disposition",
+      "outcome": "NOT IMPLEMENTED",
+      "scenarioScope": "Administrators cannot exceed their configured privilege scope.",
+      "rationale": "FlaRC does not implement fine-grained administrative scoping; administrator authority is binary network-wide.",
+      "basis": "server/handlers/admin.ts checks only administrator.isAdmin without sub-scope partitioning.",
+      "capability": "scoped administrative privilege"
+    },
+    {
+      "id": "ADMIN-028",
+      "kind": "test",
+      "executionId": "admin-positive-03",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-admin-positive.test.ts",
+      "testTitle": "matrix administrative positive controls and complete branch inventory ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations",
+      "outcome": "PASS",
+      "scenarioScope": "No administrator API can be accessed through an unprotected legacy alias.",
+      "rationale": "All 40 operations across /admin and /api/v1/admin require authentication and administrator role.",
+      "assertionDetails": [
+        "alice rejected with 403 across all 40 operations on both aliases",
+        "anonymous rejected with 401 across all 40 operations on both aliases",
+        "unrelated resources unaffected"
+      ],
+      "transports": [
+        "REST over real Miniflare/workerd",
+        "IRC over real WebSocket",
+        "SQLite inspection after workerd disposal"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "ADMIN-029",
+      "kind": "disposition",
+      "outcome": "NOT IMPLEMENTED",
+      "scenarioScope": "Administrative requests are audited with actor, action, target and outcome.",
+      "rationale": "Administrative requests are not recorded in a persistent, queryable audit log table.",
+      "basis": "server/handlers/admin.ts emits no durable audit log records.",
+      "capability": "administrative audit log"
+    },
+    {
+      "id": "ADMIN-030",
+      "kind": "test",
+      "executionId": "admin-positive-03",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-admin-positive.test.ts",
+      "testTitle": "matrix administrative positive controls and complete branch inventory ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations",
+      "outcome": "PASS",
+      "scenarioScope": "Rejected administrative attempts do not modify state.",
+      "rationale": "Stopped SQLite snapshot comparison across 8 tables confirms zero mutation from rejected calls.",
+      "assertionDetails": [
+        "before and after stopped SQLite snapshots across 8 tables are bit-for-bit identical",
+        "no rows added or modified across users, roles, channels, or messages",
+        "unrelated accounts unaffected"
+      ],
+      "transports": [
+        "REST over real Miniflare/workerd",
+        "IRC over real WebSocket",
+        "SQLite inspection after workerd disposal"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "AUTH-009",
+      "kind": "test",
+      "executionId": "admin-positive-03",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-admin-positive.test.ts",
+      "testTitle": "matrix administrative positive controls and complete branch inventory ADMIN-001 ADMIN-002 ADMIN-003 ADMIN-004 ADMIN-007 ADMIN-008 ADMIN-019 ADMIN-020 ADMIN-021 ADMIN-022 ADMIN-023 AUTH-009 AUTH-023 USER-009: account provisioning, profile, credentials, roles, enable/disable and deletion across aliases",
+      "outcome": "PASS",
+      "scenarioScope": "Deleted accounts cannot authenticate.",
+      "rationale": "rootadmin deletes accounts via DELETE /admin/accounts/:username and DELETE /api/v1/admin/accounts/:username; subsequent authentication attempts fail with 401.",
+      "assertionDetails": [
+        "ordinary user alice denied DELETE /admin/accounts/managed2 with 403",
+        "rootadmin successfully deletes managed2 via /api/v1/admin/accounts/managed2 and managed3 via /admin/accounts/managed3",
+        "deleted accounts managed2 and managed3 fail POST /api/v1/auth/login with 401",
+        "unrelated account remains healthy and accessible",
+        "stopped SQLite confirms accounts removed from database"
+      ],
+      "transports": [
+        "REST over real Miniflare/workerd",
+        "IRC over real WebSocket",
+        "SQLite inspection after workerd disposal"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "routeBehavior": [
+        {
+          "route": "/accounts/{username}",
+          "method": "delete",
+          "alias": "/admin/accounts/{username}",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/accounts/{username}",
+          "method": "delete",
+          "alias": "/api/v1/admin/accounts/{username}",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/accounts/{username}",
+          "method": "delete",
+          "alias": "/admin/accounts/{username}",
+          "outcome": "negative",
+          "responseKind": "secure-denial"
+        }
+      ]
+    },
+    {
+      "id": "AUTH-023",
+      "kind": "test",
+      "executionId": "admin-positive-03",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-admin-positive.test.ts",
+      "testTitle": "matrix administrative positive controls and complete branch inventory ADMIN-001 ADMIN-002 ADMIN-003 ADMIN-004 ADMIN-007 ADMIN-008 ADMIN-019 ADMIN-020 ADMIN-021 ADMIN-022 ADMIN-023 AUTH-009 AUTH-023 USER-009: account provisioning, profile, credentials, roles, enable/disable and deletion across aliases",
+      "outcome": "PASS",
+      "scenarioScope": "Password reset invalidates sessions according to the defined security policy.",
+      "rationale": "Administrative password reset invalidates existing sessions and rejects prior passwords.",
+      "assertionDetails": [
+        "rootadmin resets managed account password",
+        "old password rejected for authentication",
+        "prior active session tokens invalidated",
+        "unrelated accounts unaffected"
+      ],
+      "transports": [
+        "REST over real Miniflare/workerd",
+        "IRC over real WebSocket",
+        "SQLite inspection after workerd disposal"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "routeBehavior": [
+        {
+          "route": "/accounts/{username}/password",
+          "method": "post",
+          "alias": "/admin/accounts/{username}/password",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/accounts/{username}/password",
+          "method": "post",
+          "alias": "/api/v1/admin/accounts/{username}/password",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/accounts/{username}/password",
+          "method": "post",
+          "alias": "/admin/accounts/{username}/password",
+          "outcome": "negative",
+          "responseKind": "secure-denial"
+        }
+      ]
+    },
+    {
+      "id": "USER-009",
+      "kind": "test",
+      "executionId": "admin-positive-03",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-admin-positive.test.ts",
+      "testTitle": "matrix administrative positive controls and complete branch inventory ADMIN-001 ADMIN-002 ADMIN-003 ADMIN-004 ADMIN-007 ADMIN-008 ADMIN-019 ADMIN-020 ADMIN-021 ADMIN-022 ADMIN-023 AUTH-009 AUTH-023 USER-009: account provisioning, profile, credentials, roles, enable/disable and deletion across aliases",
+      "outcome": "PASS",
+      "scenarioScope": "Alice cannot retrieve Bob's password hashes or SCRAM credential material.",
+      "rationale": "Public and administrative account responses omit password and SCRAM material.",
+      "assertionDetails": [
+        "account listing and detail responses omit password_hash, storedKey, serverKey, and salt",
+        "responses verified via regex and substring checks",
+        "unrelated secrets unexposed"
+      ],
+      "transports": [
+        "REST over real Miniflare/workerd",
+        "IRC over real WebSocket",
+        "SQLite inspection after workerd disposal"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "routeBehavior": [
+        {
+          "route": "/accounts",
+          "method": "get",
+          "alias": "/admin/accounts",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/accounts/{username}",
+          "method": "get",
+          "alias": "/admin/accounts/{username}",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/accounts/{username}",
+          "method": "get",
+          "alias": "/api/v1/admin/accounts/{username}",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        }
+      ]
+    },
+    {
+      "id": "DM-021",
+      "kind": "test",
+      "executionId": "admin-positive-03",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-admin-positive.test.ts",
+      "testTitle": "matrix administrative positive controls and complete branch inventory DM-021: network administrators do not automatically gain private conversation access unless an explicit policy grants it",
+      "outcome": "PASS",
+      "scenarioScope": "Network administrators do not automatically gain private conversation access unless an explicit, documented administrative policy grants it.",
+      "rationale": "rootadmin cannot view or search private DM conversations between alice and bob without explicit policy.",
+      "assertionDetails": [
+        "rootadmin denied GET /api/v1/dms/alice/messages and /api/v1/dms/bob/messages with 403 or 404",
+        "server-side search by rootadmin excludes confidential DM contents",
+        "alice and bob retain private access to their own DM history"
+      ],
+      "transports": [
+        "REST over real Miniflare/workerd",
+        "IRC over real WebSocket",
+        "SQLite inspection after workerd disposal"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    }
+  ]
+}

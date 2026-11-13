@@ -1,4 +1,15 @@
-import { index, integer, primaryKey, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { sql } from "drizzle-orm";
+import {
+  check,
+  index,
+  integer,
+  primaryKey,
+  sqliteTable,
+  text,
+  uniqueIndex,
+} from "drizzle-orm/sqlite-core";
+
+export { schemaMigrations } from "./common";
 
 export const channelMetadata = sqliteTable("channel_metadata", {
   key: text("key").primaryKey(),
@@ -101,6 +112,7 @@ export const channelRoleGroups = sqliteTable("channel_role_groups", {
   color: text("color"),
   position: integer("position").notNull().default(0),
   updatedAt: integer("updated_at"),
+  parentId: text("parent_id"),
   ircPrefix: text("irc_prefix"), // e.g. "~", "&", "@", "%", "+"
   ircMode: text("irc_mode"), // e.g. "q", "a", "o", "h", "v"
   priority: integer("priority").notNull().default(0),
@@ -144,11 +156,133 @@ export type ChannelRoleGroup = typeof channelRoleGroups.$inferSelect;
 export type ChannelUserRole = typeof channelUserRoles.$inferSelect;
 export type ChannelWebhook = typeof channelWebhooks.$inferSelect;
 
-export const messageEdits = sqliteTable("message_edits", {
-  messageId: text("message_id")
+export const messageEdits = sqliteTable(
+  "message_edits",
+  {
+    messageId: text("message_id")
+      .primaryKey()
+      .references(() => messages.id, { onDelete: "cascade" }),
+    rootId: text("root_id")
+      .notNull()
+      .references(() => messages.id, { onDelete: "cascade" }),
+  },
+  (table) => [index("idx_message_edit_root").on(table.rootId)],
+);
+
+export const webhookLimits = sqliteTable("webhook_limits", {
+  hookId: text("hook_id")
     .primaryKey()
-    .references(() => messages.id, { onDelete: "cascade" }),
-  rootId: text("root_id")
-    .notNull()
-    .references(() => messages.id, { onDelete: "cascade" }),
+    .references(() => channelWebhooks.id, { onDelete: "cascade" }),
+  count: integer("count").notNull(),
+  resetAt: integer("reset_at").notNull(),
 });
+
+export const channelOutgoingWebhooks = sqliteTable("channel_outgoing_webhooks", {
+  id: text("id").primaryKey(),
+  targetUrl: text("target_url").notNull(),
+  secret: text("secret"),
+  eventsJson: text("events_json").notNull().default('["message.created"]'),
+  createdAt: integer("created_at").notNull(),
+});
+
+export const channelFeatureRevision = sqliteTable(
+  "channel_feature_revision",
+  {
+    id: integer("id").primaryKey(),
+    revision: integer("revision").notNull(),
+  },
+  (table) => [check("channel_feature_revision_singleton", sql`${table.id} = 1`)],
+);
+
+export const channelArchivedMessages = sqliteTable(
+  "channel_archived_messages",
+  {
+    generation: text("generation").notNull(),
+    id: text("id").notNull(),
+    expiresAt: integer("expires_at").notNull(),
+    payload: text("payload").notNull(),
+  },
+  (table) => [
+    primaryKey({ columns: [table.generation, table.id] }),
+    index("channel_archived_expiry").on(table.expiresAt),
+  ],
+);
+
+export const channelArchivedEdits = sqliteTable(
+  "channel_archived_edits",
+  {
+    generation: text("generation").notNull(),
+    messageId: text("message_id").notNull(),
+    rootId: text("root_id").notNull(),
+  },
+  (table) => [primaryKey({ columns: [table.generation, table.messageId] })],
+);
+
+export const channelFeatureOutbox = sqliteTable(
+  "channel_feature_outbox",
+  {
+    id: text("id").primaryKey(),
+    generation: text("generation").notNull(),
+    kind: text("kind").notNull(),
+    payload: text("payload").notNull(),
+    createdAt: integer("created_at").notNull(),
+    sequence: integer("sequence"),
+  },
+  (table) => [uniqueIndex("channel_feature_outbox_sequence").on(table.sequence)],
+);
+
+export const channelFeatureOutboxCounter = sqliteTable(
+  "channel_feature_outbox_counter",
+  {
+    id: integer("id").primaryKey(),
+    nextSequence: integer("next_sequence").notNull(),
+  },
+  (table) => [check("channel_feature_outbox_counter_singleton", sql`${table.id} = 1`)],
+);
+
+export const channelBulkOperations = sqliteTable(
+  "channel_bulk_operations",
+  {
+    actorId: text("actor_id").notNull(),
+    operationId: text("operation_id").notNull(),
+    generation: text("generation").notNull(),
+    payload: text("payload").notNull(),
+  },
+  (table) => [primaryKey({ columns: [table.actorId, table.operationId, table.generation] })],
+);
+
+export const channelFeatureOperations = sqliteTable(
+  "channel_feature_operations",
+  {
+    actorId: text("actor_id").notNull(),
+    operationId: text("operation_id").notNull(),
+    generation: text("generation").notNull(),
+    kind: text("kind").notNull(),
+    fingerprint: text("fingerprint").notNull(),
+    result: text("result").notNull(),
+  },
+  (table) => [primaryKey({ columns: [table.actorId, table.operationId, table.generation] })],
+);
+
+export const channelFeatureObservers = sqliteTable(
+  "channel_feature_observers",
+  {
+    accountId: text("account_id").notNull(),
+    subscriptionId: text("subscription_id").notNull(),
+    generation: text("generation").notNull(),
+    expiresAt: integer("expires_at").notNull(),
+  },
+  (table) => [primaryKey({ columns: [table.accountId, table.subscriptionId] })],
+);
+
+export const channelRestrictedMessages = sqliteTable(
+  "channel_restricted_messages",
+  {
+    id: text("id").primaryKey(),
+    generation: text("generation").notNull(),
+    senderId: text("sender_id").notNull(),
+    minimumRank: integer("minimum_rank").notNull(),
+    expiresAt: integer("expires_at").notNull(),
+  },
+  (table) => [index("channel_restricted_expiry").on(table.expiresAt)],
+);

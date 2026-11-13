@@ -48,7 +48,27 @@ export async function handleWebpush(
       );
       return;
     }
-    await accountsStub.registerWebpush(userKey, endpoint, keys);
+    const result = await accountsStub.registerWebpush(userKey, endpoint, keys);
+    if (!result.ok) {
+      session.sendLine(
+        ws,
+        attachment,
+        encodeIRCMessage({
+          tags: session.filterOutgoingTags(attachment, labelTags),
+          prefix: SERVER_CONFIG.serverName,
+          command: "FAIL",
+          params: [
+            "WEBPUSH",
+            result.code === "SUBSCRIPTION_LIMIT" ? "LIMIT_REACHED" : "INVALID_SUBSCRIPTION",
+            "REGISTER",
+            result.code === "SUBSCRIPTION_LIMIT"
+              ? "Push subscription limit reached"
+              : "Invalid push subscription",
+          ],
+        }),
+      );
+      return;
+    }
     session.sendLine(
       ws,
       attachment,

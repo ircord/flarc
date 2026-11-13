@@ -50,7 +50,11 @@ export async function handleSetname(
   sharedSessions.add(attachment.sessionId);
   for (const ch of channels) {
     const stub = session.getChannelStub(ch.channelName);
-    const members = await stub.updateMemberRealname(attachment.sessionId, newRealname);
+    const members = await stub.updateMemberRealname(
+      attachment.sessionId,
+      newRealname,
+      ch.generation,
+    );
     for (const sid of members) {
       sharedSessions.add(sid);
     }
@@ -116,7 +120,12 @@ export async function handleChghost(
   sharedSessions.add(attachment.sessionId);
   for (const ch of channels) {
     const stub = session.getChannelStub(ch.channelName);
-    const members = await stub.updateMemberHost(attachment.sessionId, newUser, newHost);
+    const members = await stub.updateMemberHost(
+      attachment.sessionId,
+      newUser,
+      newHost,
+      ch.generation,
+    );
     for (const sid of members) {
       sharedSessions.add(sid);
     }
@@ -230,7 +239,7 @@ export async function handleRename(
   await session.getAccountsStub().rebindChannelMedia(oldChan, newChan, exportedState.resourceId);
 
   for (const m of summary.members.filter((member) => !member.sessionId.startsWith("service:"))) {
-    await oldStub.part(m.sessionId, undefined, true);
+    await oldStub.part(m.sessionId, undefined, true, exportedState.resourceId);
 
     session.sql.exec(
       "DELETE FROM session_channels WHERE session_id = ? AND canonical_channel = ?",
@@ -238,10 +247,11 @@ export async function handleRename(
       canonicalizeIRCName(oldChan),
     );
     session.sql.exec(
-      "INSERT OR REPLACE INTO session_channels (session_id, canonical_channel, channel_name) VALUES (?, ?, ?)",
+      "INSERT OR REPLACE INTO session_channels (session_id, canonical_channel, channel_name,generation) VALUES (?, ?, ?,?)",
       m.sessionId,
       canonicalizeIRCName(newChan),
       newChan,
+      exportedState.resourceId,
     );
   }
 

@@ -94,6 +94,8 @@ export class TestIRCClient {
           ? Buffer.from(data as ArrayBuffer).toString("utf-8")
           : data.toString();
         this.lines.push(text);
+        const ping = /^(?::[^ ]+ )?PING (.+?)(?:\r?\n)?$/.exec(text);
+        if (ping && this.ws.readyState === WebSocket.OPEN) this.send(`PONG ${ping[1]}`);
         for (let i = this.waiters.length - 1; i >= 0; i--) {
           const w = this.waiters[i];
           if (w.predicate(text)) {

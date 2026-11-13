@@ -10,10 +10,10 @@ export default defineEventHandler(async (event) => {
   }
 
   const _actor = await requireChannelFounder(event, rawChan);
-  const { canon } = parseChannelParam(rawChan);
+  const { name, canon } = parseChannelParam(rawChan);
   const env = getEnv(event);
   const stub = env.CHANNELS.get(env.CHANNELS.idFromName(`${SERVER_CONFIG.networkId}:${canon}`));
 
-  const deleted = await clientRequest(event, stub, "role.delete", { id });
+  const deleted = await clientRequest(event, stub, "role.delete", { channelName: name, id });
   return { ok: deleted, id };
 });

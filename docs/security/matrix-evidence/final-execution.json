@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "id": "final06-integrated-full",
+  "bundleSha256": "2f7699fc944db7d62a6297952220503010e7da298e8a3fcb5a5780838d613794",
+  "vitestJson": "./integration.json",
+  "scope": "Only the final unfiltered complete 356-test run; focused runs are excluded from authoritative counts.",
+  "sourceInputSha256": "c800e2d77eaab15255ffc651d41a06908172f006459287653cd49fc1c7fe92f1",
+  "rawVitestJsonSha256": "c6b2931425ec7c3d1e1ed7f7378e880ce4a83461482770f7ed92def27ae32f6b",
+  "rawLogSha256": "279ee049c02d755d5f2260a18862f8618ee37d9457bf8d566b82bd074ab0ef0f"
+}

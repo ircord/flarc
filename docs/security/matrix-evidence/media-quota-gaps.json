@@ -1,0 +1,1470 @@
+{
+  "version": 2,
+  "capabilityGaps": [
+    "Frozen source09 exact 10 MiB SQLite positive regression and source10 above-default regressions remain preserved as distinct evidence; source11 passes those boundaries.",
+    "R2 failed-put cleanup and revoked/disabled session races have separate independent source11 evidence; a provider deletion failure or process crash can leave an inaccessible pending reservation and cross-store crash consistency is not claimed.",
+    "User-specific file limits are read per environment; malformed values fall back to the default and multipart framing is separately bounded."
+  ],
+  "evidence": [
+    {
+      "kind": "test",
+      "executionId": "media-source11-focused",
+      "bundleSha256": "4040f1888e6c2e98016ca7d00a6dd9b27b6f5cc9be7ab6d73edebaa1173fc2ed",
+      "testFile": "tests/security/matrix-media-quota-gaps.test.ts",
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "id": "MEDIA-001",
+      "testTitle": "sqlite 10485760 byte real upload limits MEDIA-009 MEDIA-012 ABUSE-007: oversized and exhausted quota denials are silent and inert across restart",
+      "outcome": "PASS",
+      "scenarioScope": "SQLite upload size and full 100 MiB quota with actual 10 MiB objects, observed denial windows and restart.",
+      "rationale": "This executed case covers only the named provider, upload sizes, aliases, observer windows and state checks.",
+      "assertionDetails": [
+        "Independent Alice, Bob and Charlie authenticate via public registration, login and IRC PASS; Alice and Bob join a secret channel and Charlie is outside it. SQLite stores real upload bytes in workerd persistence.",
+        "Both upload aliases reject actual 10 MiB+1 request bodies with 413 and no Location, content or UUID; filling exactly 100 MiB with 10 MiB objects succeeds, and both aliases reject further payloads with 403 without Location, payload or UUID.",
+        "Before and after each rejection, three live IRC clients and three ticket event streams receive shared-channel barriers; no additional IRC or event data is delivered in the rejection window. A test-only read-only SQLite metadata accessor and, for R2, actual bucket object listing remain identical across each denial.",
+        "Bob downloads a channel-scoped positive object with the expected SHA256 while Charlie gets 404; Bob\u2019s independent private object remains readable. Owner deletion frees quota and permits replacement, whose bytes are checked after an independent workerd restart.",
+        "Stopped workerd SQLite metadata matches the pre-stop state, including owner, scope, sizes, storage kind and SQLite bytes length; R2 object listing remains identical after restart. A restored six-stream observer window confirms another legacy-alias quota denial is silent and inert.",
+        "SQLite stores bounded chunks with metadata and digest in one transaction; retained payload is downloaded and compared byte-for-byte via SHA256 after restart. R2 uses the real Miniflare bucket."
+      ],
+      "transports": [
+        "REST",
+        "IRC WebSocket",
+        "ticket event WebSocket",
+        "workerd SQLite provider",
+        "SQLite restart"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "routeBehavior": [
+        {
+          "route": "/api/v1/media/upload",
+          "method": "POST",
+          "alias": "/api/v1/media/upload?channel=%23quota",
+          "outcome": "negative",
+          "responseKind": "secure-denial",
+          "status": 413
+        },
+        {
+          "route": "/api/media/upload",
+          "method": "POST",
+          "alias": "/api/media/upload?channel=%23quota",
+          "outcome": "negative",
+          "responseKind": "secure-denial",
+          "status": 413
+        },
+        {
+          "route": "/api/v1/media/upload",
+          "method": "POST",
+          "alias": "/api/v1/media/upload?channel=%23quota",
+          "outcome": "negative",
+          "responseKind": "secure-denial",
+          "status": 403
+        },
+        {
+          "route": "/api/media/upload",
+          "method": "POST",
+          "alias": "/api/media/upload?channel=%23quota",
+          "outcome": "negative",
+          "responseKind": "secure-denial",
+          "status": 403
+        },
+        {
+          "route": "/api/v1/media/upload",
+          "method": "POST",
+          "alias": "/api/v1/media/upload?channel=%23quota",
+          "outcome": "positive",
+          "responseKind": "feature-response",
+          "status": 201
+        },
+        {
+          "route": "/api/media/upload",
+          "method": "POST",
+          "alias": "/api/media/upload?channel=%23quota",
+          "outcome": "positive",
+          "responseKind": "feature-response",
+          "status": 201
+        }
+      ]
+    },
+    {
+      "kind": "test",
+      "executionId": "media-source11-focused",
+      "bundleSha256": "4040f1888e6c2e98016ca7d00a6dd9b27b6f5cc9be7ab6d73edebaa1173fc2ed",
+      "testFile": "tests/security/matrix-media-quota-gaps.test.ts",
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "id": "MEDIA-009",
+      "testTitle": "sqlite 10485760 byte real upload limits MEDIA-009 MEDIA-012 ABUSE-007: oversized and exhausted quota denials are silent and inert across restart",
+      "outcome": "PASS",
+      "scenarioScope": "SQLite upload size and full 100 MiB quota with actual 10 MiB objects, observed denial windows and restart.",
+      "rationale": "This executed case covers only the named provider, upload sizes, aliases, observer windows and state checks.",
+      "assertionDetails": [
+        "Independent Alice, Bob and Charlie authenticate via public registration, login and IRC PASS; Alice and Bob join a secret channel and Charlie is outside it. SQLite stores real upload bytes in workerd persistence.",
+        "Both upload aliases reject actual 10 MiB+1 request bodies with 413 and no Location, content or UUID; filling exactly 100 MiB with 10 MiB objects succeeds, and both aliases reject further payloads with 403 without Location, payload or UUID.",
+        "Before and after each rejection, three live IRC clients and three ticket event streams receive shared-channel barriers; no additional IRC or event data is delivered in the rejection window. A test-only read-only SQLite metadata accessor and, for R2, actual bucket object listing remain identical across each denial.",
+        "Bob downloads a channel-scoped positive object with the expected SHA256 while Charlie gets 404; Bob\u2019s independent private object remains readable. Owner deletion frees quota and permits replacement, whose bytes are checked after an independent workerd restart.",
+        "Stopped workerd SQLite metadata matches the pre-stop state, including owner, scope, sizes, storage kind and SQLite bytes length; R2 object listing remains identical after restart. A restored six-stream observer window confirms another legacy-alias quota denial is silent and inert.",
+        "SQLite stores bounded chunks with metadata and digest in one transaction; retained payload is downloaded and compared byte-for-byte via SHA256 after restart. R2 uses the real Miniflare bucket."
+      ],
+      "transports": [
+        "REST",
+        "IRC WebSocket",
+        "ticket event WebSocket",
+        "workerd SQLite provider",
+        "SQLite restart"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "routeBehavior": [
+        {
+          "route": "/api/v1/media/upload",
+          "method": "POST",
+          "alias": "/api/v1/media/upload?channel=%23quota",
+          "outcome": "negative",
+          "responseKind": "secure-denial",
+          "status": 413
+        },
+        {
+          "route": "/api/media/upload",
+          "method": "POST",
+          "alias": "/api/media/upload?channel=%23quota",
+          "outcome": "negative",
+          "responseKind": "secure-denial",
+          "status": 413
+        },
+        {
+          "route": "/api/v1/media/upload",
+          "method": "POST",
+          "alias": "/api/v1/media/upload?channel=%23quota",
+          "outcome": "negative",
+          "responseKind": "secure-denial",
+          "status": 403
+        },
+        {
+          "route": "/api/media/upload",
+          "method": "POST",
+          "alias": "/api/media/upload?channel=%23quota",
+          "outcome": "negative",
+          "responseKind": "secure-denial",
+          "status": 403
+        },
+        {
+          "route": "/api/v1/media/upload",
+          "method": "POST",
+          "alias": "/api/v1/media/upload?channel=%23quota",
+          "outcome": "positive",
+          "responseKind": "feature-response",
+          "status": 201
+        },
+        {
+          "route": "/api/media/upload",
+          "method": "POST",
+          "alias": "/api/media/upload?channel=%23quota",
+          "outcome": "positive",
+          "responseKind": "feature-response",
+          "status": 201
+        }
+      ]
+    },
+    {
+      "kind": "test",
+      "executionId": "media-source11-focused",
+      "bundleSha256": "4040f1888e6c2e98016ca7d00a6dd9b27b6f5cc9be7ab6d73edebaa1173fc2ed",
+      "testFile": "tests/security/matrix-media-quota-gaps.test.ts",
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "id": "MEDIA-012",
+      "testTitle": "sqlite 10485760 byte real upload limits MEDIA-009 MEDIA-012 ABUSE-007: oversized and exhausted quota denials are silent and inert across restart",
+      "outcome": "PASS",
+      "scenarioScope": "SQLite upload size and full 100 MiB quota with actual 10 MiB objects, observed denial windows and restart.",
+      "rationale": "This executed case covers only the named provider, upload sizes, aliases, observer windows and state checks.",
+      "assertionDetails": [
+        "Independent Alice, Bob and Charlie authenticate via public registration, login and IRC PASS; Alice and Bob join a secret channel and Charlie is outside it. SQLite stores real upload bytes in workerd persistence.",
+        "Both upload aliases reject actual 10 MiB+1 request bodies with 413 and no Location, content or UUID; filling exactly 100 MiB with 10 MiB objects succeeds, and both aliases reject further payloads with 403 without Location, payload or UUID.",
+        "Before and after each rejection, three live IRC clients and three ticket event streams receive shared-channel barriers; no additional IRC or event data is delivered in the rejection window. A test-only read-only SQLite metadata accessor and, for R2, actual bucket object listing remain identical across each denial.",
+        "Bob downloads a channel-scoped positive object with the expected SHA256 while Charlie gets 404; Bob\u2019s independent private object remains readable. Owner deletion frees quota and permits replacement, whose bytes are checked after an independent workerd restart.",
+        "Stopped workerd SQLite metadata matches the pre-stop state, including owner, scope, sizes, storage kind and SQLite bytes length; R2 object listing remains identical after restart. A restored six-stream observer window confirms another legacy-alias quota denial is silent and inert.",
+        "SQLite stores bounded chunks with metadata and digest in one transaction; retained payload is downloaded and compared byte-for-byte via SHA256 after restart. R2 uses the real Miniflare bucket."
+      ],
+      "transports": [
+        "REST",
+        "IRC WebSocket",
+        "ticket event WebSocket",
+        "workerd SQLite provider",
+        "SQLite restart"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "routeBehavior": [
+        {
+          "route": "/api/v1/media/upload",
+          "method": "POST",
+          "alias": "/api/v1/media/upload?channel=%23quota",
+          "outcome": "negative",
+          "responseKind": "secure-denial",
+          "status": 413
+        },
+        {
+          "route": "/api/media/upload",
+          "method": "POST",
+          "alias": "/api/media/upload?channel=%23quota",
+          "outcome": "negative",
+          "responseKind": "secure-denial",
+          "status": 413
+        },
+        {
+          "route": "/api/v1/media/upload",
+          "method": "POST",
+          "alias": "/api/v1/media/upload?channel=%23quota",
+          "outcome": "negative",
+          "responseKind": "secure-denial",
+          "status": 403
+        },
+        {
+          "route": "/api/media/upload",
+          "method": "POST",
+          "alias": "/api/media/upload?channel=%23quota",
+          "outcome": "negative",
+          "responseKind": "secure-denial",
+          "status": 403
+        },
+        {
+          "route": "/api/v1/media/upload",
+          "method": "POST",
+          "alias": "/api/v1/media/upload?channel=%23quota",
+          "outcome": "positive",
+          "responseKind": "feature-response",
+          "status": 201
+        },
+        {
+          "route": "/api/media/upload",
+          "method": "POST",
+          "alias": "/api/media/upload?channel=%23quota",
+          "outcome": "positive",
+          "responseKind": "feature-response",
+          "status": 201
+        }
+      ]
+    },
+    {
+      "kind": "test",
+      "executionId": "media-source11-focused",
+      "bundleSha256": "4040f1888e6c2e98016ca7d00a6dd9b27b6f5cc9be7ab6d73edebaa1173fc2ed",
+      "testFile": "tests/security/matrix-media-quota-gaps.test.ts",
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "id": "ABUSE-007",
+      "testTitle": "sqlite 10485760 byte real upload limits MEDIA-009 MEDIA-012 ABUSE-007: oversized and exhausted quota denials are silent and inert across restart",
+      "outcome": "PASS",
+      "scenarioScope": "SQLite upload size and full 100 MiB quota with actual 10 MiB objects, observed denial windows and restart.",
+      "rationale": "This executed case covers only the named provider, upload sizes, aliases, observer windows and state checks.",
+      "assertionDetails": [
+        "Independent Alice, Bob and Charlie authenticate via public registration, login and IRC PASS; Alice and Bob join a secret channel and Charlie is outside it. SQLite stores real upload bytes in workerd persistence.",
+        "Both upload aliases reject actual 10 MiB+1 request bodies with 413 and no Location, content or UUID; filling exactly 100 MiB with 10 MiB objects succeeds, and both aliases reject further payloads with 403 without Location, payload or UUID.",
+        "Before and after each rejection, three live IRC clients and three ticket event streams receive shared-channel barriers; no additional IRC or event data is delivered in the rejection window. A test-only read-only SQLite metadata accessor and, for R2, actual bucket object listing remain identical across each denial.",
+        "Bob downloads a channel-scoped positive object with the expected SHA256 while Charlie gets 404; Bob\u2019s independent private object remains readable. Owner deletion frees quota and permits replacement, whose bytes are checked after an independent workerd restart.",
+        "Stopped workerd SQLite metadata matches the pre-stop state, including owner, scope, sizes, storage kind and SQLite bytes length; R2 object listing remains identical after restart. A restored six-stream observer window confirms another legacy-alias quota denial is silent and inert.",
+        "SQLite stores bounded chunks with metadata and digest in one transaction; retained payload is downloaded and compared byte-for-byte via SHA256 after restart. R2 uses the real Miniflare bucket."
+      ],
+      "transports": [
+        "REST",
+        "IRC WebSocket",
+        "ticket event WebSocket",
+        "workerd SQLite provider",
+        "SQLite restart"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "routeBehavior": [
+        {
+          "route": "/api/v1/media/upload",
+          "method": "POST",
+          "alias": "/api/v1/media/upload?channel=%23quota",
+          "outcome": "negative",
+          "responseKind": "secure-denial",
+          "status": 413
+        },
+        {
+          "route": "/api/media/upload",
+          "method": "POST",
+          "alias": "/api/media/upload?channel=%23quota",
+          "outcome": "negative",
+          "responseKind": "secure-denial",
+          "status": 413
+        },
+        {
+          "route": "/api/v1/media/upload",
+          "method": "POST",
+          "alias": "/api/v1/media/upload?channel=%23quota",
+          "outcome": "negative",
+          "responseKind": "secure-denial",
+          "status": 403
+        },
+        {
+          "route": "/api/media/upload",
+          "method": "POST",
+          "alias": "/api/media/upload?channel=%23quota",
+          "outcome": "negative",
+          "responseKind": "secure-denial",
+          "status": 403
+        },
+        {
+          "route": "/api/v1/media/upload",
+          "method": "POST",
+          "alias": "/api/v1/media/upload?channel=%23quota",
+          "outcome": "positive",
+          "responseKind": "feature-response",
+          "status": 201
+        },
+        {
+          "route": "/api/media/upload",
+          "method": "POST",
+          "alias": "/api/media/upload?channel=%23quota",
+          "outcome": "positive",
+          "responseKind": "feature-response",
+          "status": 201
+        }
+      ]
+    },
+    {
+      "kind": "test",
+      "executionId": "media-source11-focused",
+      "bundleSha256": "4040f1888e6c2e98016ca7d00a6dd9b27b6f5cc9be7ab6d73edebaa1173fc2ed",
+      "testFile": "tests/security/matrix-media-quota-gaps.test.ts",
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "id": "MEDIA-001",
+      "testTitle": "sqlite 1048576 byte real upload limits MEDIA-009 MEDIA-012 ABUSE-007: oversized and exhausted quota denials are silent and inert across restart",
+      "outcome": "PASS",
+      "scenarioScope": "SQLite upload size and full 100 MiB quota with actual 1 MiB objects, observed denial windows and restart.",
+      "rationale": "This executed case covers only the named provider, upload sizes, aliases, observer windows and state checks.",
+      "assertionDetails": [
+        "Independent Alice, Bob and Charlie authenticate via public registration, login and IRC PASS; Alice and Bob join a secret channel and Charlie is outside it. SQLite stores real upload bytes in workerd persistence.",
+        "Both upload aliases reject actual 10 MiB+1 request bodies with 413 and no Location, content or UUID; filling exactly 100 MiB with 1 MiB objects succeeds, and both aliases reject further payloads with 403 without Location, payload or UUID.",
+        "Before and after each rejection, three live IRC clients and three ticket event streams receive shared-channel barriers; no additional IRC or event data is delivered in the rejection window. A test-only read-only SQLite metadata accessor and, for R2, actual bucket object listing remain identical across each denial.",
+        "Bob downloads a channel-scoped positive object with the expected SHA256 while Charlie gets 404; Bob\u2019s independent private object remains readable. Owner deletion frees quota and permits replacement, whose bytes are checked after an independent workerd restart.",
+        "Stopped workerd SQLite metadata matches the pre-stop state, including owner, scope, sizes, storage kind and SQLite bytes length; R2 object listing remains identical after restart. A restored six-stream observer window confirms another legacy-alias quota denial is silent and inert.",
+        "SQLite stores bounded chunks with metadata and digest in one transaction; retained payload is downloaded and compared byte-for-byte via SHA256 after restart. R2 uses the real Miniflare bucket."
+      ],
+      "transports": [
+        "REST",
+        "IRC WebSocket",
+        "ticket event WebSocket",
+        "workerd SQLite provider",
+        "SQLite restart"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "routeBehavior": [
+        {
+          "route": "/api/v1/media/upload",
+          "method": "POST",
+          "alias": "/api/v1/media/upload?channel=%23quota",
+          "outcome": "negative",
+          "responseKind": "secure-denial",
+          "status": 413
+        },
+        {
+          "route": "/api/media/upload",
+          "method": "POST",
+          "alias": "/api/media/upload?channel=%23quota",
+          "outcome": "negative",
+          "responseKind": "secure-denial",
+          "status": 413
+        },
+        {
+          "route": "/api/v1/media/upload",
+          "method": "POST",
+          "alias": "/api/v1/media/upload?channel=%23quota",
+          "outcome": "negative",
+          "responseKind": "secure-denial",
+          "status": 403
+        },
+        {
+          "route": "/api/media/upload",
+          "method": "POST",
+          "alias": "/api/media/upload?channel=%23quota",
+          "outcome": "negative",
+          "responseKind": "secure-denial",
+          "status": 403
+        },
+        {
+          "route": "/api/v1/media/upload",
+          "method": "POST",
+          "alias": "/api/v1/media/upload?channel=%23quota",
+          "outcome": "positive",
+          "responseKind": "feature-response",
+          "status": 201
+        },
+        {
+          "route": "/api/media/upload",
+          "method": "POST",
+          "alias": "/api/media/upload?channel=%23quota",
+          "outcome": "positive",
+          "responseKind": "feature-response",
+          "status": 201
+        }
+      ]
+    },
+    {
+      "kind": "test",
+      "executionId": "media-source11-focused",
+      "bundleSha256": "4040f1888e6c2e98016ca7d00a6dd9b27b6f5cc9be7ab6d73edebaa1173fc2ed",
+      "testFile": "tests/security/matrix-media-quota-gaps.test.ts",
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "id": "MEDIA-009",
+      "testTitle": "sqlite 1048576 byte real upload limits MEDIA-009 MEDIA-012 ABUSE-007: oversized and exhausted quota denials are silent and inert across restart",
+      "outcome": "PASS",
+      "scenarioScope": "SQLite upload size and full 100 MiB quota with actual 1 MiB objects, observed denial windows and restart.",
+      "rationale": "This executed case covers only the named provider, upload sizes, aliases, observer windows and state checks.",
+      "assertionDetails": [
+        "Independent Alice, Bob and Charlie authenticate via public registration, login and IRC PASS; Alice and Bob join a secret channel and Charlie is outside it. SQLite stores real upload bytes in workerd persistence.",
+        "Both upload aliases reject actual 10 MiB+1 request bodies with 413 and no Location, content or UUID; filling exactly 100 MiB with 1 MiB objects succeeds, and both aliases reject further payloads with 403 without Location, payload or UUID.",
+        "Before and after each rejection, three live IRC clients and three ticket event streams receive shared-channel barriers; no additional IRC or event data is delivered in the rejection window. A test-only read-only SQLite metadata accessor and, for R2, actual bucket object listing remain identical across each denial.",
+        "Bob downloads a channel-scoped positive object with the expected SHA256 while Charlie gets 404; Bob\u2019s independent private object remains readable. Owner deletion frees quota and permits replacement, whose bytes are checked after an independent workerd restart.",
+        "Stopped workerd SQLite metadata matches the pre-stop state, including owner, scope, sizes, storage kind and SQLite bytes length; R2 object listing remains identical after restart. A restored six-stream observer window confirms another legacy-alias quota denial is silent and inert.",
+        "SQLite stores bounded chunks with metadata and digest in one transaction; retained payload is downloaded and compared byte-for-byte via SHA256 after restart. R2 uses the real Miniflare bucket."
+      ],
+      "transports": [
+        "REST",
+        "IRC WebSocket",
+        "ticket event WebSocket",
+        "workerd SQLite provider",
+        "SQLite restart"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "routeBehavior": [
+        {
+          "route": "/api/v1/media/upload",
+          "method": "POST",
+          "alias": "/api/v1/media/upload?channel=%23quota",
+          "outcome": "negative",
+          "responseKind": "secure-denial",
+          "status": 413
+        },
+        {
+          "route": "/api/media/upload",
+          "method": "POST",
+          "alias": "/api/media/upload?channel=%23quota",
+          "outcome": "negative",
+          "responseKind": "secure-denial",
+          "status": 413
+        },
+        {
+          "route": "/api/v1/media/upload",
+          "method": "POST",
+          "alias": "/api/v1/media/upload?channel=%23quota",
+          "outcome": "negative",
+          "responseKind": "secure-denial",
+          "status": 403
+        },
+        {
+          "route": "/api/media/upload",
+          "method": "POST",
+          "alias": "/api/media/upload?channel=%23quota",
+          "outcome": "negative",
+          "responseKind": "secure-denial",
+          "status": 403
+        },
+        {
+          "route": "/api/v1/media/upload",
+          "method": "POST",
+          "alias": "/api/v1/media/upload?channel=%23quota",
+          "outcome": "positive",
+          "responseKind": "feature-response",
+          "status": 201
+        },
+        {
+          "route": "/api/media/upload",
+          "method": "POST",
+          "alias": "/api/media/upload?channel=%23quota",
+          "outcome": "positive",
+          "responseKind": "feature-response",
+          "status": 201
+        }
+      ]
+    },
+    {
+      "kind": "test",
+      "executionId": "media-source11-focused",
+      "bundleSha256": "4040f1888e6c2e98016ca7d00a6dd9b27b6f5cc9be7ab6d73edebaa1173fc2ed",
+      "testFile": "tests/security/matrix-media-quota-gaps.test.ts",
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "id": "MEDIA-012",
+      "testTitle": "sqlite 1048576 byte real upload limits MEDIA-009 MEDIA-012 ABUSE-007: oversized and exhausted quota denials are silent and inert across restart",
+      "outcome": "PASS",
+      "scenarioScope": "SQLite upload size and full 100 MiB quota with actual 1 MiB objects, observed denial windows and restart.",
+      "rationale": "This executed case covers only the named provider, upload sizes, aliases, observer windows and state checks.",
+      "assertionDetails": [
+        "Independent Alice, Bob and Charlie authenticate via public registration, login and IRC PASS; Alice and Bob join a secret channel and Charlie is outside it. SQLite stores real upload bytes in workerd persistence.",
+        "Both upload aliases reject actual 10 MiB+1 request bodies with 413 and no Location, content or UUID; filling exactly 100 MiB with 1 MiB objects succeeds, and both aliases reject further payloads with 403 without Location, payload or UUID.",
+        "Before and after each rejection, three live IRC clients and three ticket event streams receive shared-channel barriers; no additional IRC or event data is delivered in the rejection window. A test-only read-only SQLite metadata accessor and, for R2, actual bucket object listing remain identical across each denial.",
+        "Bob downloads a channel-scoped positive object with the expected SHA256 while Charlie gets 404; Bob\u2019s independent private object remains readable. Owner deletion frees quota and permits replacement, whose bytes are checked after an independent workerd restart.",
+        "Stopped workerd SQLite metadata matches the pre-stop state, including owner, scope, sizes, storage kind and SQLite bytes length; R2 object listing remains identical after restart. A restored six-stream observer window confirms another legacy-alias quota denial is silent and inert.",
+        "SQLite stores bounded chunks with metadata and digest in one transaction; retained payload is downloaded and compared byte-for-byte via SHA256 after restart. R2 uses the real Miniflare bucket."
+      ],
+      "transports": [
+        "REST",
+        "IRC WebSocket",
+        "ticket event WebSocket",
+        "workerd SQLite provider",
+        "SQLite restart"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "routeBehavior": [
+        {
+          "route": "/api/v1/media/upload",
+          "method": "POST",
+          "alias": "/api/v1/media/upload?channel=%23quota",
+          "outcome": "negative",
+          "responseKind": "secure-denial",
+          "status": 413
+        },
+        {
+          "route": "/api/media/upload",
+          "method": "POST",
+          "alias": "/api/media/upload?channel=%23quota",
+          "outcome": "negative",
+          "responseKind": "secure-denial",
+          "status": 413
+        },
+        {
+          "route": "/api/v1/media/upload",
+          "method": "POST",
+          "alias": "/api/v1/media/upload?channel=%23quota",
+          "outcome": "negative",
+          "responseKind": "secure-denial",
+          "status": 403
+        },
+        {
+          "route": "/api/media/upload",
+          "method": "POST",
+          "alias": "/api/media/upload?channel=%23quota",
+          "outcome": "negative",
+          "responseKind": "secure-denial",
+          "status": 403
+        },
+        {
+          "route": "/api/v1/media/upload",
+          "method": "POST",
+          "alias": "/api/v1/media/upload?channel=%23quota",
+          "outcome": "positive",
+          "responseKind": "feature-response",
+          "status": 201
+        },
+        {
+          "route": "/api/media/upload",
+          "method": "POST",
+          "alias": "/api/media/upload?channel=%23quota",
+          "outcome": "positive",
+          "responseKind": "feature-response",
+          "status": 201
+        }
+      ]
+    },
+    {
+      "kind": "test",
+      "executionId": "media-source11-focused",
+      "bundleSha256": "4040f1888e6c2e98016ca7d00a6dd9b27b6f5cc9be7ab6d73edebaa1173fc2ed",
+      "testFile": "tests/security/matrix-media-quota-gaps.test.ts",
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "id": "ABUSE-007",
+      "testTitle": "sqlite 1048576 byte real upload limits MEDIA-009 MEDIA-012 ABUSE-007: oversized and exhausted quota denials are silent and inert across restart",
+      "outcome": "PASS",
+      "scenarioScope": "SQLite upload size and full 100 MiB quota with actual 1 MiB objects, observed denial windows and restart.",
+      "rationale": "This executed case covers only the named provider, upload sizes, aliases, observer windows and state checks.",
+      "assertionDetails": [
+        "Independent Alice, Bob and Charlie authenticate via public registration, login and IRC PASS; Alice and Bob join a secret channel and Charlie is outside it. SQLite stores real upload bytes in workerd persistence.",
+        "Both upload aliases reject actual 10 MiB+1 request bodies with 413 and no Location, content or UUID; filling exactly 100 MiB with 1 MiB objects succeeds, and both aliases reject further payloads with 403 without Location, payload or UUID.",
+        "Before and after each rejection, three live IRC clients and three ticket event streams receive shared-channel barriers; no additional IRC or event data is delivered in the rejection window. A test-only read-only SQLite metadata accessor and, for R2, actual bucket object listing remain identical across each denial.",
+        "Bob downloads a channel-scoped positive object with the expected SHA256 while Charlie gets 404; Bob\u2019s independent private object remains readable. Owner deletion frees quota and permits replacement, whose bytes are checked after an independent workerd restart.",
+        "Stopped workerd SQLite metadata matches the pre-stop state, including owner, scope, sizes, storage kind and SQLite bytes length; R2 object listing remains identical after restart. A restored six-stream observer window confirms another legacy-alias quota denial is silent and inert.",
+        "SQLite stores bounded chunks with metadata and digest in one transaction; retained payload is downloaded and compared byte-for-byte via SHA256 after restart. R2 uses the real Miniflare bucket."
+      ],
+      "transports": [
+        "REST",
+        "IRC WebSocket",
+        "ticket event WebSocket",
+        "workerd SQLite provider",
+        "SQLite restart"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "routeBehavior": [
+        {
+          "route": "/api/v1/media/upload",
+          "method": "POST",
+          "alias": "/api/v1/media/upload?channel=%23quota",
+          "outcome": "negative",
+          "responseKind": "secure-denial",
+          "status": 413
+        },
+        {
+          "route": "/api/media/upload",
+          "method": "POST",
+          "alias": "/api/media/upload?channel=%23quota",
+          "outcome": "negative",
+          "responseKind": "secure-denial",
+          "status": 413
+        },
+        {
+          "route": "/api/v1/media/upload",
+          "method": "POST",
+          "alias": "/api/v1/media/upload?channel=%23quota",
+          "outcome": "negative",
+          "responseKind": "secure-denial",
+          "status": 403
+        },
+        {
+          "route": "/api/media/upload",
+          "method": "POST",
+          "alias": "/api/media/upload?channel=%23quota",
+          "outcome": "negative",
+          "responseKind": "secure-denial",
+          "status": 403
+        },
+        {
+          "route": "/api/v1/media/upload",
+          "method": "POST",
+          "alias": "/api/v1/media/upload?channel=%23quota",
+          "outcome": "positive",
+          "responseKind": "feature-response",
+          "status": 201
+        },
+        {
+          "route": "/api/media/upload",
+          "method": "POST",
+          "alias": "/api/media/upload?channel=%23quota",
+          "outcome": "positive",
+          "responseKind": "feature-response",
+          "status": 201
+        }
+      ]
+    },
+    {
+      "kind": "test",
+      "executionId": "media-source11-focused",
+      "bundleSha256": "4040f1888e6c2e98016ca7d00a6dd9b27b6f5cc9be7ab6d73edebaa1173fc2ed",
+      "testFile": "tests/security/matrix-media-quota-gaps.test.ts",
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "id": "MEDIA-001",
+      "testTitle": "r2 10485760 byte real upload limits MEDIA-009 MEDIA-012 ABUSE-007: oversized and exhausted quota denials are silent and inert across restart",
+      "outcome": "PASS",
+      "scenarioScope": "R2 upload size and full 100 MiB quota with actual 10 MiB objects, observed denial windows and restart.",
+      "rationale": "This executed case covers only the named provider, upload sizes, aliases, observer windows and state checks.",
+      "assertionDetails": [
+        "Independent Alice, Bob and Charlie authenticate via public registration, login and IRC PASS; Alice and Bob join a secret channel and Charlie is outside it. R2 stores real upload bytes in workerd persistence.",
+        "Both upload aliases reject actual 10 MiB+1 request bodies with 413 and no Location, content or UUID; filling exactly 100 MiB with 10 MiB objects succeeds, and both aliases reject further payloads with 403 without Location, payload or UUID.",
+        "Before and after each rejection, three live IRC clients and three ticket event streams receive shared-channel barriers; no additional IRC or event data is delivered in the rejection window. A test-only read-only SQLite metadata accessor and, for R2, actual bucket object listing remain identical across each denial.",
+        "Bob downloads a channel-scoped positive object with the expected SHA256 while Charlie gets 404; Bob\u2019s independent private object remains readable. Owner deletion frees quota and permits replacement, whose bytes are checked after an independent workerd restart.",
+        "Stopped workerd SQLite metadata matches the pre-stop state, including owner, scope, sizes, storage kind and SQLite bytes length; R2 object listing remains identical after restart. A restored six-stream observer window confirms another legacy-alias quota denial is silent and inert.",
+        "SQLite stores bounded chunks with metadata and digest in one transaction; retained payload is downloaded and compared byte-for-byte via SHA256 after restart. R2 uses the real Miniflare bucket."
+      ],
+      "transports": [
+        "REST",
+        "IRC WebSocket",
+        "ticket event WebSocket",
+        "workerd R2 provider",
+        "SQLite restart"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "routeBehavior": [
+        {
+          "route": "/api/v1/media/upload",
+          "method": "POST",
+          "alias": "/api/v1/media/upload?channel=%23quota",
+          "outcome": "negative",
+          "responseKind": "secure-denial",
+          "status": 413
+        },
+        {
+          "route": "/api/media/upload",
+          "method": "POST",
+          "alias": "/api/media/upload?channel=%23quota",
+          "outcome": "negative",
+          "responseKind": "secure-denial",
+          "status": 413
+        },
+        {
+          "route": "/api/v1/media/upload",
+          "method": "POST",
+          "alias": "/api/v1/media/upload?channel=%23quota",
+          "outcome": "negative",
+          "responseKind": "secure-denial",
+          "status": 403
+        },
+        {
+          "route": "/api/media/upload",
+          "method": "POST",
+          "alias": "/api/media/upload?channel=%23quota",
+          "outcome": "negative",
+          "responseKind": "secure-denial",
+          "status": 403
+        },
+        {
+          "route": "/api/v1/media/upload",
+          "method": "POST",
+          "alias": "/api/v1/media/upload?channel=%23quota",
+          "outcome": "positive",
+          "responseKind": "feature-response",
+          "status": 201
+        },
+        {
+          "route": "/api/media/upload",
+          "method": "POST",
+          "alias": "/api/media/upload?channel=%23quota",
+          "outcome": "positive",
+          "responseKind": "feature-response",
+          "status": 201
+        }
+      ]
+    },
+    {
+      "kind": "test",
+      "executionId": "media-source11-focused",
+      "bundleSha256": "4040f1888e6c2e98016ca7d00a6dd9b27b6f5cc9be7ab6d73edebaa1173fc2ed",
+      "testFile": "tests/security/matrix-media-quota-gaps.test.ts",
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "id": "MEDIA-009",
+      "testTitle": "r2 10485760 byte real upload limits MEDIA-009 MEDIA-012 ABUSE-007: oversized and exhausted quota denials are silent and inert across restart",
+      "outcome": "PASS",
+      "scenarioScope": "R2 upload size and full 100 MiB quota with actual 10 MiB objects, observed denial windows and restart.",
+      "rationale": "This executed case covers only the named provider, upload sizes, aliases, observer windows and state checks.",
+      "assertionDetails": [
+        "Independent Alice, Bob and Charlie authenticate via public registration, login and IRC PASS; Alice and Bob join a secret channel and Charlie is outside it. R2 stores real upload bytes in workerd persistence.",
+        "Both upload aliases reject actual 10 MiB+1 request bodies with 413 and no Location, content or UUID; filling exactly 100 MiB with 10 MiB objects succeeds, and both aliases reject further payloads with 403 without Location, payload or UUID.",
+        "Before and after each rejection, three live IRC clients and three ticket event streams receive shared-channel barriers; no additional IRC or event data is delivered in the rejection window. A test-only read-only SQLite metadata accessor and, for R2, actual bucket object listing remain identical across each denial.",
+        "Bob downloads a channel-scoped positive object with the expected SHA256 while Charlie gets 404; Bob\u2019s independent private object remains readable. Owner deletion frees quota and permits replacement, whose bytes are checked after an independent workerd restart.",
+        "Stopped workerd SQLite metadata matches the pre-stop state, including owner, scope, sizes, storage kind and SQLite bytes length; R2 object listing remains identical after restart. A restored six-stream observer window confirms another legacy-alias quota denial is silent and inert.",
+        "SQLite stores bounded chunks with metadata and digest in one transaction; retained payload is downloaded and compared byte-for-byte via SHA256 after restart. R2 uses the real Miniflare bucket."
+      ],
+      "transports": [
+        "REST",
+        "IRC WebSocket",
+        "ticket event WebSocket",
+        "workerd R2 provider",
+        "SQLite restart"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "routeBehavior": [
+        {
+          "route": "/api/v1/media/upload",
+          "method": "POST",
+          "alias": "/api/v1/media/upload?channel=%23quota",
+          "outcome": "negative",
+          "responseKind": "secure-denial",
+          "status": 413
+        },
+        {
+          "route": "/api/media/upload",
+          "method": "POST",
+          "alias": "/api/media/upload?channel=%23quota",
+          "outcome": "negative",
+          "responseKind": "secure-denial",
+          "status": 413
+        },
+        {
+          "route": "/api/v1/media/upload",
+          "method": "POST",
+          "alias": "/api/v1/media/upload?channel=%23quota",
+          "outcome": "negative",
+          "responseKind": "secure-denial",
+          "status": 403
+        },
+        {
+          "route": "/api/media/upload",
+          "method": "POST",
+          "alias": "/api/media/upload?channel=%23quota",
+          "outcome": "negative",
+          "responseKind": "secure-denial",
+          "status": 403
+        },
+        {
+          "route": "/api/v1/media/upload",
+          "method": "POST",
+          "alias": "/api/v1/media/upload?channel=%23quota",
+          "outcome": "positive",
+          "responseKind": "feature-response",
+          "status": 201
+        },
+        {
+          "route": "/api/media/upload",
+          "method": "POST",
+          "alias": "/api/media/upload?channel=%23quota",
+          "outcome": "positive",
+          "responseKind": "feature-response",
+          "status": 201
+        }
+      ]
+    },
+    {
+      "kind": "test",
+      "executionId": "media-source11-focused",
+      "bundleSha256": "4040f1888e6c2e98016ca7d00a6dd9b27b6f5cc9be7ab6d73edebaa1173fc2ed",
+      "testFile": "tests/security/matrix-media-quota-gaps.test.ts",
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "id": "MEDIA-012",
+      "testTitle": "r2 10485760 byte real upload limits MEDIA-009 MEDIA-012 ABUSE-007: oversized and exhausted quota denials are silent and inert across restart",
+      "outcome": "PASS",
+      "scenarioScope": "R2 upload size and full 100 MiB quota with actual 10 MiB objects, observed denial windows and restart.",
+      "rationale": "This executed case covers only the named provider, upload sizes, aliases, observer windows and state checks.",
+      "assertionDetails": [
+        "Independent Alice, Bob and Charlie authenticate via public registration, login and IRC PASS; Alice and Bob join a secret channel and Charlie is outside it. R2 stores real upload bytes in workerd persistence.",
+        "Both upload aliases reject actual 10 MiB+1 request bodies with 413 and no Location, content or UUID; filling exactly 100 MiB with 10 MiB objects succeeds, and both aliases reject further payloads with 403 without Location, payload or UUID.",
+        "Before and after each rejection, three live IRC clients and three ticket event streams receive shared-channel barriers; no additional IRC or event data is delivered in the rejection window. A test-only read-only SQLite metadata accessor and, for R2, actual bucket object listing remain identical across each denial.",
+        "Bob downloads a channel-scoped positive object with the expected SHA256 while Charlie gets 404; Bob\u2019s independent private object remains readable. Owner deletion frees quota and permits replacement, whose bytes are checked after an independent workerd restart.",
+        "Stopped workerd SQLite metadata matches the pre-stop state, including owner, scope, sizes, storage kind and SQLite bytes length; R2 object listing remains identical after restart. A restored six-stream observer window confirms another legacy-alias quota denial is silent and inert.",
+        "SQLite stores bounded chunks with metadata and digest in one transaction; retained payload is downloaded and compared byte-for-byte via SHA256 after restart. R2 uses the real Miniflare bucket."
+      ],
+      "transports": [
+        "REST",
+        "IRC WebSocket",
+        "ticket event WebSocket",
+        "workerd R2 provider",
+        "SQLite restart"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "routeBehavior": [
+        {
+          "route": "/api/v1/media/upload",
+          "method": "POST",
+          "alias": "/api/v1/media/upload?channel=%23quota",
+          "outcome": "negative",
+          "responseKind": "secure-denial",
+          "status": 413
+        },
+        {
+          "route": "/api/media/upload",
+          "method": "POST",
+          "alias": "/api/media/upload?channel=%23quota",
+          "outcome": "negative",
+          "responseKind": "secure-denial",
+          "status": 413
+        },
+        {
+          "route": "/api/v1/media/upload",
+          "method": "POST",
+          "alias": "/api/v1/media/upload?channel=%23quota",
+          "outcome": "negative",
+          "responseKind": "secure-denial",
+          "status": 403
+        },
+        {
+          "route": "/api/media/upload",
+          "method": "POST",
+          "alias": "/api/media/upload?channel=%23quota",
+          "outcome": "negative",
+          "responseKind": "secure-denial",
+          "status": 403
+        },
+        {
+          "route": "/api/v1/media/upload",
+          "method": "POST",
+          "alias": "/api/v1/media/upload?channel=%23quota",
+          "outcome": "positive",
+          "responseKind": "feature-response",
+          "status": 201
+        },
+        {
+          "route": "/api/media/upload",
+          "method": "POST",
+          "alias": "/api/media/upload?channel=%23quota",
+          "outcome": "positive",
+          "responseKind": "feature-response",
+          "status": 201
+        }
+      ]
+    },
+    {
+      "kind": "test",
+      "executionId": "media-source11-focused",
+      "bundleSha256": "4040f1888e6c2e98016ca7d00a6dd9b27b6f5cc9be7ab6d73edebaa1173fc2ed",
+      "testFile": "tests/security/matrix-media-quota-gaps.test.ts",
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "id": "ABUSE-007",
+      "testTitle": "r2 10485760 byte real upload limits MEDIA-009 MEDIA-012 ABUSE-007: oversized and exhausted quota denials are silent and inert across restart",
+      "outcome": "PASS",
+      "scenarioScope": "R2 upload size and full 100 MiB quota with actual 10 MiB objects, observed denial windows and restart.",
+      "rationale": "This executed case covers only the named provider, upload sizes, aliases, observer windows and state checks.",
+      "assertionDetails": [
+        "Independent Alice, Bob and Charlie authenticate via public registration, login and IRC PASS; Alice and Bob join a secret channel and Charlie is outside it. R2 stores real upload bytes in workerd persistence.",
+        "Both upload aliases reject actual 10 MiB+1 request bodies with 413 and no Location, content or UUID; filling exactly 100 MiB with 10 MiB objects succeeds, and both aliases reject further payloads with 403 without Location, payload or UUID.",
+        "Before and after each rejection, three live IRC clients and three ticket event streams receive shared-channel barriers; no additional IRC or event data is delivered in the rejection window. A test-only read-only SQLite metadata accessor and, for R2, actual bucket object listing remain identical across each denial.",
+        "Bob downloads a channel-scoped positive object with the expected SHA256 while Charlie gets 404; Bob\u2019s independent private object remains readable. Owner deletion frees quota and permits replacement, whose bytes are checked after an independent workerd restart.",
+        "Stopped workerd SQLite metadata matches the pre-stop state, including owner, scope, sizes, storage kind and SQLite bytes length; R2 object listing remains identical after restart. A restored six-stream observer window confirms another legacy-alias quota denial is silent and inert.",
+        "SQLite stores bounded chunks with metadata and digest in one transaction; retained payload is downloaded and compared byte-for-byte via SHA256 after restart. R2 uses the real Miniflare bucket."
+      ],
+      "transports": [
+        "REST",
+        "IRC WebSocket",
+        "ticket event WebSocket",
+        "workerd R2 provider",
+        "SQLite restart"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "routeBehavior": [
+        {
+          "route": "/api/v1/media/upload",
+          "method": "POST",
+          "alias": "/api/v1/media/upload?channel=%23quota",
+          "outcome": "negative",
+          "responseKind": "secure-denial",
+          "status": 413
+        },
+        {
+          "route": "/api/media/upload",
+          "method": "POST",
+          "alias": "/api/media/upload?channel=%23quota",
+          "outcome": "negative",
+          "responseKind": "secure-denial",
+          "status": 413
+        },
+        {
+          "route": "/api/v1/media/upload",
+          "method": "POST",
+          "alias": "/api/v1/media/upload?channel=%23quota",
+          "outcome": "negative",
+          "responseKind": "secure-denial",
+          "status": 403
+        },
+        {
+          "route": "/api/media/upload",
+          "method": "POST",
+          "alias": "/api/media/upload?channel=%23quota",
+          "outcome": "negative",
+          "responseKind": "secure-denial",
+          "status": 403
+        },
+        {
+          "route": "/api/v1/media/upload",
+          "method": "POST",
+          "alias": "/api/v1/media/upload?channel=%23quota",
+          "outcome": "positive",
+          "responseKind": "feature-response",
+          "status": 201
+        },
+        {
+          "route": "/api/media/upload",
+          "method": "POST",
+          "alias": "/api/media/upload?channel=%23quota",
+          "outcome": "positive",
+          "responseKind": "feature-response",
+          "status": 201
+        }
+      ]
+    },
+    {
+      "id": "DB-020",
+      "kind": "test",
+      "executionId": "media-source11-chunks-legacy",
+      "bundleSha256": "4040f1888e6c2e98016ca7d00a6dd9b27b6f5cc9be7ab6d73edebaa1173fc2ed",
+      "testFile": "tests/security/matrix-media-chunks.test.ts",
+      "testTitle": "media configuration and chunk integrity sqlite: old media rows migrate to ready and stay readable across repeated runtime recreation",
+      "outcome": "PASS",
+      "scenarioScope": "Actual old-schema owned media migrated to ready and remains private and readable across repeated runtime creation.",
+      "rationale": "This row is limited to the assertions in the exact named test; omitted dimensions remain required gaps.",
+      "assertionDetails": [
+        "A test fixture stops workerd, restores an old schema without chunk/layout/digest/pending-state columns and retains a real authenticated owner row plus provider bytes; recreation migrates it to inline/ready and a second recreation retains old and newly uploaded data.",
+        "An unrelated authenticated Bob is denied the old private object; SQLite inline and R2 object bytes are verified through the public download endpoint."
+      ],
+      "transports": [
+        "REST",
+        "workerd SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "DB-023",
+      "kind": "test",
+      "executionId": "media-source11-chunks-legacy",
+      "bundleSha256": "4040f1888e6c2e98016ca7d00a6dd9b27b6f5cc9be7ab6d73edebaa1173fc2ed",
+      "testFile": "tests/security/matrix-media-chunks.test.ts",
+      "testTitle": "media configuration and chunk integrity sqlite: old media rows migrate to ready and stay readable across repeated runtime recreation",
+      "outcome": "PASS",
+      "scenarioScope": "Actual old-schema owned media migrated to ready and remains private and readable across repeated runtime creation.",
+      "rationale": "This row is limited to the assertions in the exact named test; omitted dimensions remain required gaps.",
+      "assertionDetails": [
+        "A test fixture stops workerd, restores an old schema without chunk/layout/digest/pending-state columns and retains a real authenticated owner row plus provider bytes; recreation migrates it to inline/ready and a second recreation retains old and newly uploaded data.",
+        "An unrelated authenticated Bob is denied the old private object; SQLite inline and R2 object bytes are verified through the public download endpoint."
+      ],
+      "transports": [
+        "REST",
+        "workerd SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "MEDIA-009",
+      "kind": "test",
+      "executionId": "media-source11-chunks-legacy",
+      "bundleSha256": "4040f1888e6c2e98016ca7d00a6dd9b27b6f5cc9be7ab6d73edebaa1173fc2ed",
+      "testFile": "tests/security/matrix-media-chunks.test.ts",
+      "testTitle": "media configuration and chunk integrity sqlite: raw multipart and streaming enforce per-environment file bytes through both aliases",
+      "outcome": "PASS",
+      "scenarioScope": "A configured 1024-byte limit accepts exact raw/multipart/streaming bodies and rejects 1025 bytes on both aliases.",
+      "rationale": "This row is limited to the assertions in the exact named test; omitted dimensions remain required gaps.",
+      "assertionDetails": [
+        "A non-upload mutation over 64 KiB is rejected, real downloads match the allowed raw/multipart data, and the 1025-byte denial remains after restart."
+      ],
+      "transports": [
+        "REST",
+        "workerd SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "transport",
+        "restart"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "MEDIA-009",
+      "kind": "test",
+      "executionId": "media-source11-chunks-legacy",
+      "bundleSha256": "4040f1888e6c2e98016ca7d00a6dd9b27b6f5cc9be7ab6d73edebaa1173fc2ed",
+      "testFile": "tests/security/matrix-media-chunks.test.ts",
+      "testTitle": "media configuration and chunk integrity sqlite: default multipart exact 10 MiB succeeds and plus one fails on both aliases",
+      "outcome": "PASS",
+      "scenarioScope": "Default multipart files of exactly 10 MiB succeed and 10 MiB+1 are rejected on both upload aliases.",
+      "rationale": "This row is limited to the assertions in the exact named test; omitted dimensions remain required gaps.",
+      "assertionDetails": [
+        "Successful files are downloaded byte-for-byte and deleted; query strings on each actual alias do not alter middleware classification."
+      ],
+      "transports": [
+        "REST",
+        "workerd SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "MEDIA-009",
+      "kind": "test",
+      "executionId": "media-source11-chunks-legacy",
+      "bundleSha256": "4040f1888e6c2e98016ca7d00a6dd9b27b6f5cc9be7ab6d73edebaa1173fc2ed",
+      "testFile": "tests/security/matrix-media-chunks.test.ts",
+      "testTitle": "media configuration and chunk integrity sqlite: above-default raw and multipart file boundaries apply to both aliases",
+      "outcome": "PASS",
+      "scenarioScope": "Configured 10 MiB+1 accepts exact raw and multipart files, rejects one extra byte and preserves an allowed upload across restart on both aliases.",
+      "rationale": "This row is limited to the assertions in the exact named test; omitted dimensions remain required gaps.",
+      "assertionDetails": [
+        "Real allowed bytes are downloaded and checked, successful objects are deleted, and a retained allowed file survives restart before deletion."
+      ],
+      "transports": [
+        "REST",
+        "workerd SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "DB-020",
+      "kind": "test",
+      "executionId": "media-source11-chunks-legacy",
+      "bundleSha256": "4040f1888e6c2e98016ca7d00a6dd9b27b6f5cc9be7ab6d73edebaa1173fc2ed",
+      "testFile": "tests/security/matrix-media-chunks.test.ts",
+      "testTitle": "media configuration and chunk integrity r2: old media rows migrate to ready and stay readable across repeated runtime recreation",
+      "outcome": "PASS",
+      "scenarioScope": "Actual old-schema owned media migrated to ready and remains private and readable across repeated runtime creation.",
+      "rationale": "This row is limited to the assertions in the exact named test; omitted dimensions remain required gaps.",
+      "assertionDetails": [
+        "A test fixture stops workerd, restores an old schema without chunk/layout/digest/pending-state columns and retains a real authenticated owner row plus provider bytes; recreation migrates it to inline/ready and a second recreation retains old and newly uploaded data.",
+        "An unrelated authenticated Bob is denied the old private object; SQLite inline and R2 object bytes are verified through the public download endpoint."
+      ],
+      "transports": [
+        "REST",
+        "workerd R2"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "DB-023",
+      "kind": "test",
+      "executionId": "media-source11-chunks-legacy",
+      "bundleSha256": "4040f1888e6c2e98016ca7d00a6dd9b27b6f5cc9be7ab6d73edebaa1173fc2ed",
+      "testFile": "tests/security/matrix-media-chunks.test.ts",
+      "testTitle": "media configuration and chunk integrity r2: old media rows migrate to ready and stay readable across repeated runtime recreation",
+      "outcome": "PASS",
+      "scenarioScope": "Actual old-schema owned media migrated to ready and remains private and readable across repeated runtime creation.",
+      "rationale": "This row is limited to the assertions in the exact named test; omitted dimensions remain required gaps.",
+      "assertionDetails": [
+        "A test fixture stops workerd, restores an old schema without chunk/layout/digest/pending-state columns and retains a real authenticated owner row plus provider bytes; recreation migrates it to inline/ready and a second recreation retains old and newly uploaded data.",
+        "An unrelated authenticated Bob is denied the old private object; SQLite inline and R2 object bytes are verified through the public download endpoint."
+      ],
+      "transports": [
+        "REST",
+        "workerd R2"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "MEDIA-009",
+      "kind": "test",
+      "executionId": "media-source11-chunks-legacy",
+      "bundleSha256": "4040f1888e6c2e98016ca7d00a6dd9b27b6f5cc9be7ab6d73edebaa1173fc2ed",
+      "testFile": "tests/security/matrix-media-chunks.test.ts",
+      "testTitle": "media configuration and chunk integrity r2: raw multipart and streaming enforce per-environment file bytes through both aliases",
+      "outcome": "PASS",
+      "scenarioScope": "A configured 1024-byte limit accepts exact raw/multipart/streaming bodies and rejects 1025 bytes on both aliases.",
+      "rationale": "This row is limited to the assertions in the exact named test; omitted dimensions remain required gaps.",
+      "assertionDetails": [
+        "A non-upload mutation over 64 KiB is rejected, real downloads match the allowed raw/multipart data, and the 1025-byte denial remains after restart."
+      ],
+      "transports": [
+        "REST",
+        "workerd R2"
+      ],
+      "assertions": [
+        "authorization",
+        "transport",
+        "restart"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "MEDIA-009",
+      "kind": "test",
+      "executionId": "media-source11-chunks-legacy",
+      "bundleSha256": "4040f1888e6c2e98016ca7d00a6dd9b27b6f5cc9be7ab6d73edebaa1173fc2ed",
+      "testFile": "tests/security/matrix-media-chunks.test.ts",
+      "testTitle": "media configuration and chunk integrity r2: default multipart exact 10 MiB succeeds and plus one fails on both aliases",
+      "outcome": "PASS",
+      "scenarioScope": "Default multipart files of exactly 10 MiB succeed and 10 MiB+1 are rejected on both upload aliases.",
+      "rationale": "This row is limited to the assertions in the exact named test; omitted dimensions remain required gaps.",
+      "assertionDetails": [
+        "Successful files are downloaded byte-for-byte and deleted; query strings on each actual alias do not alter middleware classification."
+      ],
+      "transports": [
+        "REST",
+        "workerd R2"
+      ],
+      "assertions": [
+        "authorization",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "MEDIA-009",
+      "kind": "test",
+      "executionId": "media-source11-chunks-legacy",
+      "bundleSha256": "4040f1888e6c2e98016ca7d00a6dd9b27b6f5cc9be7ab6d73edebaa1173fc2ed",
+      "testFile": "tests/security/matrix-media-chunks.test.ts",
+      "testTitle": "media configuration and chunk integrity r2: above-default raw and multipart file boundaries apply to both aliases",
+      "outcome": "PASS",
+      "scenarioScope": "Configured 10 MiB+1 accepts exact raw and multipart files, rejects one extra byte and preserves an allowed upload across restart on both aliases.",
+      "rationale": "This row is limited to the assertions in the exact named test; omitted dimensions remain required gaps.",
+      "assertionDetails": [
+        "Real allowed bytes are downloaded and checked, successful objects are deleted, and a retained allowed file survives restart before deletion."
+      ],
+      "transports": [
+        "REST",
+        "workerd R2"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "DB-015",
+      "kind": "test",
+      "executionId": "media-source11-chunks-legacy",
+      "bundleSha256": "4040f1888e6c2e98016ca7d00a6dd9b27b6f5cc9be7ab6d73edebaa1173fc2ed",
+      "testFile": "tests/security/matrix-media-chunks.test.ts",
+      "testTitle": "media configuration and chunk integrity SQLite chunk failure rolls back metadata and quota, while corrupt and missing chunks fail closed and inline legacy data stays protected",
+      "outcome": "PASS",
+      "scenarioScope": "Injected failure on the second SQLite media chunk rolls back the reservation and partial chunks.",
+      "rationale": "This row is limited to the assertions in the exact named test; omitted dimensions remain required gaps.",
+      "assertionDetails": [
+        "A narrowly scoped SQLite trigger forces the second chunk insertion to abort; metadata and chunks exactly match before/after, an unrelated user\u2019s upload remains readable, and the same user can upload successfully after removing the trigger.",
+        "Corrupt and missing chunks produce safe 503 for the owner, unauthorized users get 404, deletion removes chunks, and owned inline versus unowned legacy privacy remains enforced across restart."
+      ],
+      "transports": [
+        "REST",
+        "workerd SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    }
+  ]
+}

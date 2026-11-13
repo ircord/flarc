@@ -1,0 +1,3415 @@
+{
+  "version": 2,
+  "evidence": [
+    {
+      "id": "API-004",
+      "kind": "test",
+      "executionId": "races-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-concurrency.test.ts",
+      "testTitle": "[AUTH-011 API-004 DB-025] a revoked real principal cannot mutate through REST or the owning-object session recheck",
+      "outcome": "PASS",
+      "scenarioScope": "Authoritative session recheck at both public REST and the owning ChannelDO client facade.",
+      "rationale": "Exact Vitest test completed; only the listed assertions are credited. Other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "A genuinely authenticated principal commits and reads its control, then logs out through REST.",
+        "Eight subsequent public writes return 401 and a direct internal clientRequest using the real revoked token rejects rather than trusting the earlier caller identity.",
+        "An independent permitted reader and SQLite find exactly the original authorized body and sequence, with neither attempted forbidden body."
+      ],
+      "transports": [
+        "REST",
+        "internal owning-object RPC with real session token",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "AUTH-011",
+      "kind": "test",
+      "executionId": "races-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-concurrency.test.ts",
+      "testTitle": "[AUTH-011 API-004 DB-025] a revoked real principal cannot mutate through REST or the owning-object session recheck",
+      "outcome": "PASS",
+      "scenarioScope": "Authoritative session recheck at both public REST and the owning ChannelDO client facade.",
+      "rationale": "Exact Vitest test completed; only the listed assertions are credited. Other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "A genuinely authenticated principal commits and reads its control, then logs out through REST.",
+        "Eight subsequent public writes return 401 and a direct internal clientRequest using the real revoked token rejects rather than trusting the earlier caller identity.",
+        "An independent permitted reader and SQLite find exactly the original authorized body and sequence, with neither attempted forbidden body."
+      ],
+      "transports": [
+        "REST",
+        "internal owning-object RPC with real session token",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "DB-025",
+      "kind": "test",
+      "executionId": "races-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-concurrency.test.ts",
+      "testTitle": "[AUTH-011 API-004 DB-025] a revoked real principal cannot mutate through REST or the owning-object session recheck",
+      "outcome": "PASS",
+      "scenarioScope": "Authoritative session recheck at both public REST and the owning ChannelDO client facade.",
+      "rationale": "Exact Vitest test completed; only the listed assertions are credited. Other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "A genuinely authenticated principal commits and reads its control, then logs out through REST.",
+        "Eight subsequent public writes return 401 and a direct internal clientRequest using the real revoked token rejects rather than trusting the earlier caller identity.",
+        "An independent permitted reader and SQLite find exactly the original authorized body and sequence, with neither attempted forbidden body."
+      ],
+      "transports": [
+        "REST",
+        "internal owning-object RPC with real session token",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "DB-017",
+      "kind": "test",
+      "executionId": "races-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-concurrency.test.ts",
+      "testTitle": "[MSG-023 DB-017 DB-024] concurrent idempotent retries commit once and duplicate client keys stay scoped to account and channel",
+      "outcome": "PASS",
+      "scenarioScope": "Concurrent client idempotency keys scoped to two real accounts and two independent channels.",
+      "rationale": "Exact Vitest test completed; only the listed assertions are credited. Other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "Twelve concurrent successful retries produce one canonical message ID, one stored body and exactly one IRC delivery to the permitted recipient.",
+        "The same client key across Alice/Bob and two channels yields four distinct canonical IDs; conflicting content is rejected without overwrite and an outsider write is denied.",
+        "An outsider receives a subsequent public marker without the private bodies; SQLite proves distinct sender IDs, no forbidden bodies and unique per-channel sequences."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "DB-024",
+      "kind": "test",
+      "executionId": "races-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-concurrency.test.ts",
+      "testTitle": "[MSG-023 DB-017 DB-024] concurrent idempotent retries commit once and duplicate client keys stay scoped to account and channel",
+      "outcome": "PASS",
+      "scenarioScope": "Concurrent client idempotency keys scoped to two real accounts and two independent channels.",
+      "rationale": "Exact Vitest test completed; only the listed assertions are credited. Other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "Twelve concurrent successful retries produce one canonical message ID, one stored body and exactly one IRC delivery to the permitted recipient.",
+        "The same client key across Alice/Bob and two channels yields four distinct canonical IDs; conflicting content is rejected without overwrite and an outsider write is denied.",
+        "An outsider receives a subsequent public marker without the private bodies; SQLite proves distinct sender IDs, no forbidden bodies and unique per-channel sequences."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "MSG-023",
+      "kind": "test",
+      "executionId": "races-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-concurrency.test.ts",
+      "testTitle": "[MSG-023 DB-017 DB-024] concurrent idempotent retries commit once and duplicate client keys stay scoped to account and channel",
+      "outcome": "PASS",
+      "scenarioScope": "Concurrent client idempotency keys scoped to two real accounts and two independent channels.",
+      "rationale": "Exact Vitest test completed; only the listed assertions are credited. Other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "Twelve concurrent successful retries produce one canonical message ID, one stored body and exactly one IRC delivery to the permitted recipient.",
+        "The same client key across Alice/Bob and two channels yields four distinct canonical IDs; conflicting content is rejected without overwrite and an outsider write is denied.",
+        "An outsider receives a subsequent public marker without the private bodies; SQLite proves distinct sender IDs, no forbidden bodies and unique per-channel sequences."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "MSG-024",
+      "kind": "test",
+      "executionId": "races-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-concurrency.test.ts",
+      "testTitle": "[MSG-024 MSG-028] concurrent distinct writes produce one canonical sequence and matching ordered IRC delivery",
+      "outcome": "PASS",
+      "scenarioScope": "Twenty simultaneous channel posts with canonical REST/IRC ordering and identities.",
+      "rationale": "Exact Vitest test completed; only the listed assertions are credited. Other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "Twenty REST commits produce sequences 1..20; the authorized IRC recipient receives exactly 20 messages in sequence order with the same canonical IDs and exact storage-returned timestamps.",
+        "An outsider receives the public output barrier without private bodies; REST history returns the same IDs in reverse sequence order.",
+        "Stopped SQLite contains exactly those 20 committed bodies and IDs in canonical sequence order."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "MSG-028",
+      "kind": "test",
+      "executionId": "races-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-concurrency.test.ts",
+      "testTitle": "[MSG-024 MSG-028] concurrent distinct writes produce one canonical sequence and matching ordered IRC delivery",
+      "outcome": "PASS",
+      "scenarioScope": "Twenty simultaneous channel posts with canonical REST/IRC ordering and identities.",
+      "rationale": "Exact Vitest test completed; only the listed assertions are credited. Other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "Twenty REST commits produce sequences 1..20; the authorized IRC recipient receives exactly 20 messages in sequence order with the same canonical IDs and exact storage-returned timestamps.",
+        "An outsider receives the public output barrier without private bodies; REST history returns the same IDs in reverse sequence order.",
+        "Stopped SQLite contains exactly those 20 committed bodies and IDs in canonical sequence order."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "DB-017",
+      "kind": "test",
+      "executionId": "races-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-concurrency.test.ts",
+      "testTitle": "[ROLE-027 ROLE-029 ROLE-033 DB-017] concurrent role deletion, assignment and sends cannot resurrect voice or bypass later authorization",
+      "outcome": "PASS",
+      "scenarioScope": "Concurrent founder deletion/assignment and ordinary-member sends in a moderated secret channel.",
+      "rationale": "Exact Vitest test completed; only the listed assertions are credited. Other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "A real custom voice/send_messages grant permits Bob to send a control; concurrently racing sends and repeated founder assignments may either linearize before deletion or reject safely.",
+        "Once the deletion completes, REST and IRC writes fail, self-voice MODE fails and ordinary-member role assignment is denied; public output markers prove sockets remain live.",
+        "No outsider receives the private control/racing bodies; SQLite shows no deleted group, no assignments, no persisted derived voice and no post-deletion forbidden message."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "commandBehavior": [
+        {
+          "command": "PRIVMSG",
+          "outcome": "positive"
+        },
+        {
+          "command": "MODE",
+          "outcome": "negative"
+        }
+      ]
+    },
+    {
+      "id": "ROLE-027",
+      "kind": "test",
+      "executionId": "races-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-concurrency.test.ts",
+      "testTitle": "[ROLE-027 ROLE-029 ROLE-033 DB-017] concurrent role deletion, assignment and sends cannot resurrect voice or bypass later authorization",
+      "outcome": "PASS",
+      "scenarioScope": "Concurrent founder deletion/assignment and ordinary-member sends in a moderated secret channel.",
+      "rationale": "Exact Vitest test completed; only the listed assertions are credited. Other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "A real custom voice/send_messages grant permits Bob to send a control; concurrently racing sends and repeated founder assignments may either linearize before deletion or reject safely.",
+        "Once the deletion completes, REST and IRC writes fail, self-voice MODE fails and ordinary-member role assignment is denied; public output markers prove sockets remain live.",
+        "No outsider receives the private control/racing bodies; SQLite shows no deleted group, no assignments, no persisted derived voice and no post-deletion forbidden message."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "commandBehavior": [
+        {
+          "command": "PRIVMSG",
+          "outcome": "positive"
+        },
+        {
+          "command": "MODE",
+          "outcome": "negative"
+        }
+      ]
+    },
+    {
+      "id": "ROLE-029",
+      "kind": "test",
+      "executionId": "races-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-concurrency.test.ts",
+      "testTitle": "[ROLE-027 ROLE-029 ROLE-033 DB-017] concurrent role deletion, assignment and sends cannot resurrect voice or bypass later authorization",
+      "outcome": "PASS",
+      "scenarioScope": "Concurrent founder deletion/assignment and ordinary-member sends in a moderated secret channel.",
+      "rationale": "Exact Vitest test completed; only the listed assertions are credited. Other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "A real custom voice/send_messages grant permits Bob to send a control; concurrently racing sends and repeated founder assignments may either linearize before deletion or reject safely.",
+        "Once the deletion completes, REST and IRC writes fail, self-voice MODE fails and ordinary-member role assignment is denied; public output markers prove sockets remain live.",
+        "No outsider receives the private control/racing bodies; SQLite shows no deleted group, no assignments, no persisted derived voice and no post-deletion forbidden message."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "commandBehavior": [
+        {
+          "command": "PRIVMSG",
+          "outcome": "positive"
+        },
+        {
+          "command": "MODE",
+          "outcome": "negative"
+        }
+      ]
+    },
+    {
+      "id": "ROLE-033",
+      "kind": "test",
+      "executionId": "races-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-concurrency.test.ts",
+      "testTitle": "[ROLE-027 ROLE-029 ROLE-033 DB-017] concurrent role deletion, assignment and sends cannot resurrect voice or bypass later authorization",
+      "outcome": "PASS",
+      "scenarioScope": "Concurrent founder deletion/assignment and ordinary-member sends in a moderated secret channel.",
+      "rationale": "Exact Vitest test completed; only the listed assertions are credited. Other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "A real custom voice/send_messages grant permits Bob to send a control; concurrently racing sends and repeated founder assignments may either linearize before deletion or reject safely.",
+        "Once the deletion completes, REST and IRC writes fail, self-voice MODE fails and ordinary-member role assignment is denied; public output markers prove sockets remain live.",
+        "No outsider receives the private control/racing bodies; SQLite shows no deleted group, no assignments, no persisted derived voice and no post-deletion forbidden message."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "commandBehavior": [
+        {
+          "command": "PRIVMSG",
+          "outcome": "positive"
+        },
+        {
+          "command": "MODE",
+          "outcome": "negative"
+        }
+      ]
+    },
+    {
+      "id": "WS-001",
+      "kind": "test",
+      "executionId": "races-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-concurrency.test.ts",
+      "testTitle": "[WS-001 WS-006 WS-016 WS-023] event tickets cannot authenticate IRC and cross-origin or credential-query event handshakes are denied",
+      "outcome": "PASS",
+      "scenarioScope": "Endpoint binding, fresh unauthenticated reconnection and Origin policy with real tickets.",
+      "rationale": "Exact Vitest test completed; only the listed assertions are credited. Other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "An event ticket in an IRC upgrade URL does not authenticate NICK/USER/JOIN; a PONG barrier confirms no registration or membership success.",
+        "Unauthenticated, invalid-ticket and reusable-credential-query event upgrades return 401; an untrusted Origin returns 403.",
+        "The same still-unconsumed ticket at its correct endpoint and trusted Origin receives the authorized message event, which is persisted with the real sender identity.",
+        "A new IRC connection without credentials still cannot register or join after the previous connection closes."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "events/WebSocket",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "commandBehavior": [
+        {
+          "command": "NICK",
+          "outcome": "negative"
+        },
+        {
+          "command": "USER",
+          "outcome": "negative"
+        },
+        {
+          "command": "JOIN",
+          "outcome": "negative"
+        },
+        {
+          "command": "PING",
+          "outcome": "positive"
+        }
+      ]
+    },
+    {
+      "id": "WS-006",
+      "kind": "test",
+      "executionId": "races-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-concurrency.test.ts",
+      "testTitle": "[WS-001 WS-006 WS-016 WS-023] event tickets cannot authenticate IRC and cross-origin or credential-query event handshakes are denied",
+      "outcome": "PASS",
+      "scenarioScope": "Endpoint binding, fresh unauthenticated reconnection and Origin policy with real tickets.",
+      "rationale": "Exact Vitest test completed; only the listed assertions are credited. Other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "An event ticket in an IRC upgrade URL does not authenticate NICK/USER/JOIN; a PONG barrier confirms no registration or membership success.",
+        "Unauthenticated, invalid-ticket and reusable-credential-query event upgrades return 401; an untrusted Origin returns 403.",
+        "The same still-unconsumed ticket at its correct endpoint and trusted Origin receives the authorized message event, which is persisted with the real sender identity.",
+        "A new IRC connection without credentials still cannot register or join after the previous connection closes."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "events/WebSocket",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "commandBehavior": [
+        {
+          "command": "NICK",
+          "outcome": "negative"
+        },
+        {
+          "command": "USER",
+          "outcome": "negative"
+        },
+        {
+          "command": "JOIN",
+          "outcome": "negative"
+        },
+        {
+          "command": "PING",
+          "outcome": "positive"
+        }
+      ]
+    },
+    {
+      "id": "WS-016",
+      "kind": "test",
+      "executionId": "races-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-concurrency.test.ts",
+      "testTitle": "[WS-001 WS-006 WS-016 WS-023] event tickets cannot authenticate IRC and cross-origin or credential-query event handshakes are denied",
+      "outcome": "PASS",
+      "scenarioScope": "Endpoint binding, fresh unauthenticated reconnection and Origin policy with real tickets.",
+      "rationale": "Exact Vitest test completed; only the listed assertions are credited. Other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "An event ticket in an IRC upgrade URL does not authenticate NICK/USER/JOIN; a PONG barrier confirms no registration or membership success.",
+        "Unauthenticated, invalid-ticket and reusable-credential-query event upgrades return 401; an untrusted Origin returns 403.",
+        "The same still-unconsumed ticket at its correct endpoint and trusted Origin receives the authorized message event, which is persisted with the real sender identity.",
+        "A new IRC connection without credentials still cannot register or join after the previous connection closes."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "events/WebSocket",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "commandBehavior": [
+        {
+          "command": "NICK",
+          "outcome": "negative"
+        },
+        {
+          "command": "USER",
+          "outcome": "negative"
+        },
+        {
+          "command": "JOIN",
+          "outcome": "negative"
+        },
+        {
+          "command": "PING",
+          "outcome": "positive"
+        }
+      ]
+    },
+    {
+      "id": "WS-023",
+      "kind": "test",
+      "executionId": "races-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-concurrency.test.ts",
+      "testTitle": "[WS-001 WS-006 WS-016 WS-023] event tickets cannot authenticate IRC and cross-origin or credential-query event handshakes are denied",
+      "outcome": "PASS",
+      "scenarioScope": "Endpoint binding, fresh unauthenticated reconnection and Origin policy with real tickets.",
+      "rationale": "Exact Vitest test completed; only the listed assertions are credited. Other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "An event ticket in an IRC upgrade URL does not authenticate NICK/USER/JOIN; a PONG barrier confirms no registration or membership success.",
+        "Unauthenticated, invalid-ticket and reusable-credential-query event upgrades return 401; an untrusted Origin returns 403.",
+        "The same still-unconsumed ticket at its correct endpoint and trusted Origin receives the authorized message event, which is persisted with the real sender identity.",
+        "A new IRC connection without credentials still cannot register or join after the previous connection closes."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "events/WebSocket",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "commandBehavior": [
+        {
+          "command": "NICK",
+          "outcome": "negative"
+        },
+        {
+          "command": "USER",
+          "outcome": "negative"
+        },
+        {
+          "command": "JOIN",
+          "outcome": "negative"
+        },
+        {
+          "command": "PING",
+          "outcome": "positive"
+        }
+      ]
+    },
+    {
+      "id": "ABUSE-016",
+      "kind": "test",
+      "executionId": "races-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-concurrency.test.ts",
+      "testTitle": "[WS-002 WS-004 WS-005 WS-007 ABUSE-016] eight simultaneous real WebSocket ticket redemptions have exactly one authenticated winner",
+      "outcome": "PASS",
+      "scenarioScope": "Eight simultaneous real WebSocket handshakes redeem one ticket bound to Alice despite alternate-account URL selectors.",
+      "rationale": "Exact Vitest test completed; only the listed assertions are credited. Other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "Exactly one handshake opens and seven return 401; later replay of the consumed ticket returns 401.",
+        "The winner receives Alice-only private events despite supplied Bob username/accountId selectors; Bob cannot read that channel.",
+        "SQLite has no remaining ticket row and exactly the authorized message with Alice stable sender ID."
+      ],
+      "transports": [
+        "REST",
+        "events/WebSocket",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "WS-002",
+      "kind": "test",
+      "executionId": "races-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-concurrency.test.ts",
+      "testTitle": "[WS-002 WS-004 WS-005 WS-007 ABUSE-016] eight simultaneous real WebSocket ticket redemptions have exactly one authenticated winner",
+      "outcome": "PASS",
+      "scenarioScope": "Eight simultaneous real WebSocket handshakes redeem one ticket bound to Alice despite alternate-account URL selectors.",
+      "rationale": "Exact Vitest test completed; only the listed assertions are credited. Other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "Exactly one handshake opens and seven return 401; later replay of the consumed ticket returns 401.",
+        "The winner receives Alice-only private events despite supplied Bob username/accountId selectors; Bob cannot read that channel.",
+        "SQLite has no remaining ticket row and exactly the authorized message with Alice stable sender ID."
+      ],
+      "transports": [
+        "REST",
+        "events/WebSocket",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "WS-004",
+      "kind": "test",
+      "executionId": "races-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-concurrency.test.ts",
+      "testTitle": "[WS-002 WS-004 WS-005 WS-007 ABUSE-016] eight simultaneous real WebSocket ticket redemptions have exactly one authenticated winner",
+      "outcome": "PASS",
+      "scenarioScope": "Eight simultaneous real WebSocket handshakes redeem one ticket bound to Alice despite alternate-account URL selectors.",
+      "rationale": "Exact Vitest test completed; only the listed assertions are credited. Other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "Exactly one handshake opens and seven return 401; later replay of the consumed ticket returns 401.",
+        "The winner receives Alice-only private events despite supplied Bob username/accountId selectors; Bob cannot read that channel.",
+        "SQLite has no remaining ticket row and exactly the authorized message with Alice stable sender ID."
+      ],
+      "transports": [
+        "REST",
+        "events/WebSocket",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "WS-005",
+      "kind": "test",
+      "executionId": "races-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-concurrency.test.ts",
+      "testTitle": "[WS-002 WS-004 WS-005 WS-007 ABUSE-016] eight simultaneous real WebSocket ticket redemptions have exactly one authenticated winner",
+      "outcome": "PASS",
+      "scenarioScope": "Eight simultaneous real WebSocket handshakes redeem one ticket bound to Alice despite alternate-account URL selectors.",
+      "rationale": "Exact Vitest test completed; only the listed assertions are credited. Other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "Exactly one handshake opens and seven return 401; later replay of the consumed ticket returns 401.",
+        "The winner receives Alice-only private events despite supplied Bob username/accountId selectors; Bob cannot read that channel.",
+        "SQLite has no remaining ticket row and exactly the authorized message with Alice stable sender ID."
+      ],
+      "transports": [
+        "REST",
+        "events/WebSocket",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "WS-007",
+      "kind": "test",
+      "executionId": "races-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-concurrency.test.ts",
+      "testTitle": "[WS-002 WS-004 WS-005 WS-007 ABUSE-016] eight simultaneous real WebSocket ticket redemptions have exactly one authenticated winner",
+      "outcome": "PASS",
+      "scenarioScope": "Eight simultaneous real WebSocket handshakes redeem one ticket bound to Alice despite alternate-account URL selectors.",
+      "rationale": "Exact Vitest test completed; only the listed assertions are credited. Other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "Exactly one handshake opens and seven return 401; later replay of the consumed ticket returns 401.",
+        "The winner receives Alice-only private events despite supplied Bob username/accountId selectors; Bob cannot read that channel.",
+        "SQLite has no remaining ticket row and exactly the authorized message with Alice stable sender ID."
+      ],
+      "transports": [
+        "REST",
+        "events/WebSocket",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "API-014",
+      "kind": "test",
+      "executionId": "races-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[API-014 CHAN-010 DB-025] literal FTS punctuation, phrases and malformed text remain safe across REST and IRC without changing private history",
+      "outcome": "PASS",
+      "scenarioScope": "Literal full-text terms and quoted phrase semantics after the existing structured-filter parser, in a secret channel.",
+      "rationale": "Exact Vitest test completed; only the listed assertions are credited. Other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "Hyphens, URLs, apostrophes, quoted contiguous phrases, unquoted AND terms, structured from filters, empty quoted text, punctuation and malformed text produce exact expected REST result IDs and matching IRC result bodies/counts without parser failures.",
+        "An unrelated account is denied through both REST and IRC without private search results; truly empty unfiltered REST queries reject and filter-only searches still select the correct sender.",
+        "History before and after all queries is identical and SQLite still contains exactly six messages."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "CHAN-010",
+      "kind": "test",
+      "executionId": "races-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[API-014 CHAN-010 DB-025] literal FTS punctuation, phrases and malformed text remain safe across REST and IRC without changing private history",
+      "outcome": "PASS",
+      "scenarioScope": "Literal full-text terms and quoted phrase semantics after the existing structured-filter parser, in a secret channel.",
+      "rationale": "Exact Vitest test completed; only the listed assertions are credited. Other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "Hyphens, URLs, apostrophes, quoted contiguous phrases, unquoted AND terms, structured from filters, empty quoted text, punctuation and malformed text produce exact expected REST result IDs and matching IRC result bodies/counts without parser failures.",
+        "An unrelated account is denied through both REST and IRC without private search results; truly empty unfiltered REST queries reject and filter-only searches still select the correct sender.",
+        "History before and after all queries is identical and SQLite still contains exactly six messages."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "DB-025",
+      "kind": "test",
+      "executionId": "races-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[API-014 CHAN-010 DB-025] literal FTS punctuation, phrases and malformed text remain safe across REST and IRC without changing private history",
+      "outcome": "PASS",
+      "scenarioScope": "Literal full-text terms and quoted phrase semantics after the existing structured-filter parser, in a secret channel.",
+      "rationale": "Exact Vitest test completed; only the listed assertions are credited. Other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "Hyphens, URLs, apostrophes, quoted contiguous phrases, unquoted AND terms, structured from filters, empty quoted text, punctuation and malformed text produce exact expected REST result IDs and matching IRC result bodies/counts without parser failures.",
+        "An unrelated account is denied through both REST and IRC without private search results; truly empty unfiltered REST queries reject and filter-only searches still select the correct sender.",
+        "History before and after all queries is identical and SQLite still contains exactly six messages."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "API-003",
+      "kind": "test",
+      "executionId": "races-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[AUTH-010 API-003] persisted expired parent-session cannot authorize an event stream after full runtime restart",
+      "outcome": "PASS",
+      "scenarioScope": "Persisted event-ticket or API-parent expiry across full runtime restart.",
+      "rationale": "Exact Vitest test completed; only the listed assertions are credited. Other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "Only the ticket expiry or Alice API-session expiry is moved to the past while stopped; its event handshake then returns 401.",
+        "The ticket-only case preserves Alice API access, the parent-expiry case denies it, Bob remains authorized, and a fresh public credential login/ticket receives its real control event.",
+        "SQLite contains exactly the authorized control with the stable Alice sender ID."
+      ],
+      "transports": [
+        "REST",
+        "events/WebSocket",
+        "stopped-runtime SQLite",
+        "full Miniflare restart"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "AUTH-010",
+      "kind": "test",
+      "executionId": "races-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[AUTH-010 API-003] persisted expired parent-session cannot authorize an event stream after full runtime restart",
+      "outcome": "PASS",
+      "scenarioScope": "Persisted event-ticket or API-parent expiry across full runtime restart.",
+      "rationale": "Exact Vitest test completed; only the listed assertions are credited. Other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "Only the ticket expiry or Alice API-session expiry is moved to the past while stopped; its event handshake then returns 401.",
+        "The ticket-only case preserves Alice API access, the parent-expiry case denies it, Bob remains authorized, and a fresh public credential login/ticket receives its real control event.",
+        "SQLite contains exactly the authorized control with the stable Alice sender ID."
+      ],
+      "transports": [
+        "REST",
+        "events/WebSocket",
+        "stopped-runtime SQLite",
+        "full Miniflare restart"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "CHAN-032",
+      "kind": "test",
+      "executionId": "races-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[DB-004 DB-007 DB-008 ROLE-027 ROLE-029 ROLE-030 CHAN-032] restart preserves retained grants without resurrecting removed roles or kicked private membership",
+      "outcome": "PASS",
+      "scenarioScope": "Role deletion, cross-channel retained role and kicked invite-only membership across full Miniflare disposal/recreation.",
+      "rationale": "Exact Vitest test completed; only the listed assertions are credited. Other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "Only the founder can delete the group; Bob loses management immediately and is kicked from the private invite-only channel, while a different channel role remains assigned.",
+        "Stopped SQLite has neither removed role/group assignment nor Bob membership; after restart disabled-account tokens/login reject and Bob cannot read or rejoin the private channel.",
+        "The unrelated retained role still authorizes metadata changes and IRC MODE after reconnect; founder history remains intact."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "stopped-runtime SQLite",
+        "full Miniflare restart"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "DB-004",
+      "kind": "test",
+      "executionId": "races-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[DB-004 DB-007 DB-008 ROLE-027 ROLE-029 ROLE-030 CHAN-032] restart preserves retained grants without resurrecting removed roles or kicked private membership",
+      "outcome": "PASS",
+      "scenarioScope": "Role deletion, cross-channel retained role and kicked invite-only membership across full Miniflare disposal/recreation.",
+      "rationale": "Exact Vitest test completed; only the listed assertions are credited. Other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "Only the founder can delete the group; Bob loses management immediately and is kicked from the private invite-only channel, while a different channel role remains assigned.",
+        "Stopped SQLite has neither removed role/group assignment nor Bob membership; after restart disabled-account tokens/login reject and Bob cannot read or rejoin the private channel.",
+        "The unrelated retained role still authorizes metadata changes and IRC MODE after reconnect; founder history remains intact."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "stopped-runtime SQLite",
+        "full Miniflare restart"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "DB-007",
+      "kind": "test",
+      "executionId": "races-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[DB-004 DB-007 DB-008 ROLE-027 ROLE-029 ROLE-030 CHAN-032] restart preserves retained grants without resurrecting removed roles or kicked private membership",
+      "outcome": "PASS",
+      "scenarioScope": "Role deletion, cross-channel retained role and kicked invite-only membership across full Miniflare disposal/recreation.",
+      "rationale": "Exact Vitest test completed; only the listed assertions are credited. Other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "Only the founder can delete the group; Bob loses management immediately and is kicked from the private invite-only channel, while a different channel role remains assigned.",
+        "Stopped SQLite has neither removed role/group assignment nor Bob membership; after restart disabled-account tokens/login reject and Bob cannot read or rejoin the private channel.",
+        "The unrelated retained role still authorizes metadata changes and IRC MODE after reconnect; founder history remains intact."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "stopped-runtime SQLite",
+        "full Miniflare restart"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "DB-008",
+      "kind": "test",
+      "executionId": "races-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[DB-004 DB-007 DB-008 ROLE-027 ROLE-029 ROLE-030 CHAN-032] restart preserves retained grants without resurrecting removed roles or kicked private membership",
+      "outcome": "PASS",
+      "scenarioScope": "Role deletion, cross-channel retained role and kicked invite-only membership across full Miniflare disposal/recreation.",
+      "rationale": "Exact Vitest test completed; only the listed assertions are credited. Other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "Only the founder can delete the group; Bob loses management immediately and is kicked from the private invite-only channel, while a different channel role remains assigned.",
+        "Stopped SQLite has neither removed role/group assignment nor Bob membership; after restart disabled-account tokens/login reject and Bob cannot read or rejoin the private channel.",
+        "The unrelated retained role still authorizes metadata changes and IRC MODE after reconnect; founder history remains intact."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "stopped-runtime SQLite",
+        "full Miniflare restart"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "ROLE-027",
+      "kind": "test",
+      "executionId": "races-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[DB-004 DB-007 DB-008 ROLE-027 ROLE-029 ROLE-030 CHAN-032] restart preserves retained grants without resurrecting removed roles or kicked private membership",
+      "outcome": "PASS",
+      "scenarioScope": "Role deletion, cross-channel retained role and kicked invite-only membership across full Miniflare disposal/recreation.",
+      "rationale": "Exact Vitest test completed; only the listed assertions are credited. Other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "Only the founder can delete the group; Bob loses management immediately and is kicked from the private invite-only channel, while a different channel role remains assigned.",
+        "Stopped SQLite has neither removed role/group assignment nor Bob membership; after restart disabled-account tokens/login reject and Bob cannot read or rejoin the private channel.",
+        "The unrelated retained role still authorizes metadata changes and IRC MODE after reconnect; founder history remains intact."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "stopped-runtime SQLite",
+        "full Miniflare restart"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "ROLE-029",
+      "kind": "test",
+      "executionId": "races-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[DB-004 DB-007 DB-008 ROLE-027 ROLE-029 ROLE-030 CHAN-032] restart preserves retained grants without resurrecting removed roles or kicked private membership",
+      "outcome": "PASS",
+      "scenarioScope": "Role deletion, cross-channel retained role and kicked invite-only membership across full Miniflare disposal/recreation.",
+      "rationale": "Exact Vitest test completed; only the listed assertions are credited. Other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "Only the founder can delete the group; Bob loses management immediately and is kicked from the private invite-only channel, while a different channel role remains assigned.",
+        "Stopped SQLite has neither removed role/group assignment nor Bob membership; after restart disabled-account tokens/login reject and Bob cannot read or rejoin the private channel.",
+        "The unrelated retained role still authorizes metadata changes and IRC MODE after reconnect; founder history remains intact."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "stopped-runtime SQLite",
+        "full Miniflare restart"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "ROLE-030",
+      "kind": "test",
+      "executionId": "races-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[DB-004 DB-007 DB-008 ROLE-027 ROLE-029 ROLE-030 CHAN-032] restart preserves retained grants without resurrecting removed roles or kicked private membership",
+      "outcome": "PASS",
+      "scenarioScope": "Role deletion, cross-channel retained role and kicked invite-only membership across full Miniflare disposal/recreation.",
+      "rationale": "Exact Vitest test completed; only the listed assertions are credited. Other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "Only the founder can delete the group; Bob loses management immediately and is kicked from the private invite-only channel, while a different channel role remains assigned.",
+        "Stopped SQLite has neither removed role/group assignment nor Bob membership; after restart disabled-account tokens/login reject and Bob cannot read or rejoin the private channel.",
+        "The unrelated retained role still authorizes metadata changes and IRC MODE after reconnect; founder history remains intact."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "stopped-runtime SQLite",
+        "full Miniflare restart"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "DB-009",
+      "kind": "test",
+      "executionId": "races-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[DB-009 DB-010 DB-011 MSG-026 DM-017 DB-027] independent runtime restart preserves private messages, edits and redactions and rejects foreign cursors",
+      "outcome": "PASS",
+      "scenarioScope": "Private channel edit/redaction and participant DM history across full runtime restart, with cross-channel cursors.",
+      "rationale": "Exact Vitest test completed; only the listed assertions are credited. Other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "After restart the founder sees the edited message and the redacted body never reappears; Alice/Bob DM history persists and Charlie cannot retrieve it.",
+        "Negative/extreme limits and a foreign-channel before cursor cannot grant secret-channel access; an authorized unrelated-channel around cursor cannot return private rows and remains bounded.",
+        "SQLite confirms the redaction is scrubbed and its FTS row is absent."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket for DM setup",
+        "stopped-runtime SQLite",
+        "full Miniflare restart"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "DB-010",
+      "kind": "test",
+      "executionId": "races-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[DB-009 DB-010 DB-011 MSG-026 DM-017 DB-027] independent runtime restart preserves private messages, edits and redactions and rejects foreign cursors",
+      "outcome": "PASS",
+      "scenarioScope": "Private channel edit/redaction and participant DM history across full runtime restart, with cross-channel cursors.",
+      "rationale": "Exact Vitest test completed; only the listed assertions are credited. Other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "After restart the founder sees the edited message and the redacted body never reappears; Alice/Bob DM history persists and Charlie cannot retrieve it.",
+        "Negative/extreme limits and a foreign-channel before cursor cannot grant secret-channel access; an authorized unrelated-channel around cursor cannot return private rows and remains bounded.",
+        "SQLite confirms the redaction is scrubbed and its FTS row is absent."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket for DM setup",
+        "stopped-runtime SQLite",
+        "full Miniflare restart"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "DB-011",
+      "kind": "test",
+      "executionId": "races-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[DB-009 DB-010 DB-011 MSG-026 DM-017 DB-027] independent runtime restart preserves private messages, edits and redactions and rejects foreign cursors",
+      "outcome": "PASS",
+      "scenarioScope": "Private channel edit/redaction and participant DM history across full runtime restart, with cross-channel cursors.",
+      "rationale": "Exact Vitest test completed; only the listed assertions are credited. Other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "After restart the founder sees the edited message and the redacted body never reappears; Alice/Bob DM history persists and Charlie cannot retrieve it.",
+        "Negative/extreme limits and a foreign-channel before cursor cannot grant secret-channel access; an authorized unrelated-channel around cursor cannot return private rows and remains bounded.",
+        "SQLite confirms the redaction is scrubbed and its FTS row is absent."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket for DM setup",
+        "stopped-runtime SQLite",
+        "full Miniflare restart"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "DB-027",
+      "kind": "test",
+      "executionId": "races-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[DB-009 DB-010 DB-011 MSG-026 DM-017 DB-027] independent runtime restart preserves private messages, edits and redactions and rejects foreign cursors",
+      "outcome": "PASS",
+      "scenarioScope": "Private channel edit/redaction and participant DM history across full runtime restart, with cross-channel cursors.",
+      "rationale": "Exact Vitest test completed; only the listed assertions are credited. Other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "After restart the founder sees the edited message and the redacted body never reappears; Alice/Bob DM history persists and Charlie cannot retrieve it.",
+        "Negative/extreme limits and a foreign-channel before cursor cannot grant secret-channel access; an authorized unrelated-channel around cursor cannot return private rows and remains bounded.",
+        "SQLite confirms the redaction is scrubbed and its FTS row is absent."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket for DM setup",
+        "stopped-runtime SQLite",
+        "full Miniflare restart"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "DM-017",
+      "kind": "test",
+      "executionId": "races-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[DB-009 DB-010 DB-011 MSG-026 DM-017 DB-027] independent runtime restart preserves private messages, edits and redactions and rejects foreign cursors",
+      "outcome": "PASS",
+      "scenarioScope": "Private channel edit/redaction and participant DM history across full runtime restart, with cross-channel cursors.",
+      "rationale": "Exact Vitest test completed; only the listed assertions are credited. Other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "After restart the founder sees the edited message and the redacted body never reappears; Alice/Bob DM history persists and Charlie cannot retrieve it.",
+        "Negative/extreme limits and a foreign-channel before cursor cannot grant secret-channel access; an authorized unrelated-channel around cursor cannot return private rows and remains bounded.",
+        "SQLite confirms the redaction is scrubbed and its FTS row is absent."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket for DM setup",
+        "stopped-runtime SQLite",
+        "full Miniflare restart"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "MSG-026",
+      "kind": "test",
+      "executionId": "races-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[DB-009 DB-010 DB-011 MSG-026 DM-017 DB-027] independent runtime restart preserves private messages, edits and redactions and rejects foreign cursors",
+      "outcome": "PASS",
+      "scenarioScope": "Private channel edit/redaction and participant DM history across full runtime restart, with cross-channel cursors.",
+      "rationale": "Exact Vitest test completed; only the listed assertions are credited. Other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "After restart the founder sees the edited message and the redacted body never reappears; Alice/Bob DM history persists and Charlie cannot retrieve it.",
+        "Negative/extreme limits and a foreign-channel before cursor cannot grant secret-channel access; an authorized unrelated-channel around cursor cannot return private rows and remains bounded.",
+        "SQLite confirms the redaction is scrubbed and its FTS row is absent."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket for DM setup",
+        "stopped-runtime SQLite",
+        "full Miniflare restart"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "DB-013",
+      "kind": "test",
+      "executionId": "races-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[DB-013 DB-014 DB-028] actual SQLite foreign keys, unique sequences and indexed bounded history queries enforce integrity",
+      "outcome": "PASS",
+      "scenarioScope": "Actual persisted schema constraints plus representative 120-message before-pagination/index plans.",
+      "rationale": "Exact Vitest test completed; only the listed assertions are credited. Other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "Real public sends populate 120 rows; an authenticated reader receives 100 then 20 disjoint records using the oldest-ID cursor despite an extreme requested limit.",
+        "The stopped actual database rejects missing-role foreign keys, duplicate role assignments and duplicate message sequences; foreign_key_check is clean and the 120 original rows remain.",
+        "EXPLAIN QUERY PLAN shows indexed sequence-range history and indexed user-role lookup; around/time cursor plans and production-scale load are not established."
+      ],
+      "transports": [
+        "REST",
+        "stopped-runtime SQLite constraints and EXPLAIN"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "DB-014",
+      "kind": "test",
+      "executionId": "races-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[DB-013 DB-014 DB-028] actual SQLite foreign keys, unique sequences and indexed bounded history queries enforce integrity",
+      "outcome": "PASS",
+      "scenarioScope": "Actual persisted schema constraints plus representative 120-message before-pagination/index plans.",
+      "rationale": "Exact Vitest test completed; only the listed assertions are credited. Other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "Real public sends populate 120 rows; an authenticated reader receives 100 then 20 disjoint records using the oldest-ID cursor despite an extreme requested limit.",
+        "The stopped actual database rejects missing-role foreign keys, duplicate role assignments and duplicate message sequences; foreign_key_check is clean and the 120 original rows remain.",
+        "EXPLAIN QUERY PLAN shows indexed sequence-range history and indexed user-role lookup; around/time cursor plans and production-scale load are not established."
+      ],
+      "transports": [
+        "REST",
+        "stopped-runtime SQLite constraints and EXPLAIN"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "DB-028",
+      "kind": "test",
+      "executionId": "races-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[DB-013 DB-014 DB-028] actual SQLite foreign keys, unique sequences and indexed bounded history queries enforce integrity",
+      "outcome": "PASS",
+      "scenarioScope": "Actual persisted schema constraints plus representative 120-message before-pagination/index plans.",
+      "rationale": "Exact Vitest test completed; only the listed assertions are credited. Other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "Real public sends populate 120 rows; an authenticated reader receives 100 then 20 disjoint records using the oldest-ID cursor despite an extreme requested limit.",
+        "The stopped actual database rejects missing-role foreign keys, duplicate role assignments and duplicate message sequences; foreign_key_check is clean and the 120 original rows remain.",
+        "EXPLAIN QUERY PLAN shows indexed sequence-range history and indexed user-role lookup; around/time cursor plans and production-scale load are not established."
+      ],
+      "transports": [
+        "REST",
+        "stopped-runtime SQLite constraints and EXPLAIN"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "DB-002",
+      "kind": "test",
+      "executionId": "races-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[DB-015 DB-002] SQL credential failure rolls back hashes, SCRAM credentials, credential version and existing sessions",
+      "outcome": "PASS",
+      "scenarioScope": "Atomic password/SCRAM/session rollback under an actual credential-table ABORT trigger.",
+      "rationale": "Exact Vitest test completed; only the listed assertions are credited. Other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "An ordinary account cannot reset Alice password; the legitimate administrator reset reaches the injected SQLite failure and returns 500.",
+        "Existing API access remains valid and complete users, SCRAM credentials, versions and API session tables equal their pre-fault snapshots, including unrelated accounts.",
+        "After a further full restart the rejected replacement password fails and the original password still authenticates through public login."
+      ],
+      "transports": [
+        "REST",
+        "stopped-runtime SQLite fault trigger"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "DB-015",
+      "kind": "test",
+      "executionId": "races-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[DB-015 DB-002] SQL credential failure rolls back hashes, SCRAM credentials, credential version and existing sessions",
+      "outcome": "PASS",
+      "scenarioScope": "Atomic password/SCRAM/session rollback under an actual credential-table ABORT trigger.",
+      "rationale": "Exact Vitest test completed; only the listed assertions are credited. Other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "An ordinary account cannot reset Alice password; the legitimate administrator reset reaches the injected SQLite failure and returns 500.",
+        "Existing API access remains valid and complete users, SCRAM credentials, versions and API session tables equal their pre-fault snapshots, including unrelated accounts.",
+        "After a further full restart the rejected replacement password fails and the original password still authenticates through public login."
+      ],
+      "transports": [
+        "REST",
+        "stopped-runtime SQLite fault trigger"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "DB-016",
+      "kind": "test",
+      "executionId": "races-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[DB-016 DB-025] destination commit followed by a real Accounts SQL fault keeps both rename generations fail-closed after restart",
+      "outcome": "PASS",
+      "scenarioScope": "A genuine destination rename commit followed by a real Accounts media-rebind SQL fault, not a simulated network timeout.",
+      "rationale": "Exact Vitest test completed; only the listed assertions are credited. Other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "The private source message/media are created through public authenticated operations; an Accounts UPDATE trigger aborts only after the destination snapshot has committed.",
+        "IRC returns FAIL rather than rename success; both generations reject unrelated history and owner writes, private media conceals existence, and no unauthorized partial write commits.",
+        "Stopped SQLite confirms the original body exists in both protected generations with persisted rename_pending journals; a further restart preserves private access denial."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "cross-Durable-Object RPC",
+        "stopped-runtime SQLite fault trigger",
+        "full Miniflare restart"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "DB-025",
+      "kind": "test",
+      "executionId": "races-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[DB-016 DB-025] destination commit followed by a real Accounts SQL fault keeps both rename generations fail-closed after restart",
+      "outcome": "PASS",
+      "scenarioScope": "A genuine destination rename commit followed by a real Accounts media-rebind SQL fault, not a simulated network timeout.",
+      "rationale": "Exact Vitest test completed; only the listed assertions are credited. Other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "The private source message/media are created through public authenticated operations; an Accounts UPDATE trigger aborts only after the destination snapshot has committed.",
+        "IRC returns FAIL rather than rename success; both generations reject unrelated history and owner writes, private media conceals existence, and no unauthorized partial write commits.",
+        "Stopped SQLite confirms the original body exists in both protected generations with persisted rename_pending journals; a further restart preserves private access denial."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "cross-Durable-Object RPC",
+        "stopped-runtime SQLite fault trigger",
+        "full Miniflare restart"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "DB-018",
+      "kind": "test",
+      "executionId": "races-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[DB-018 DB-019] actual workerd alarms delete expired rows and reschedule after both deletion and a no-op",
+      "outcome": "PASS",
+      "scenarioScope": "Actual scheduled local workerd alarms through a test-only subclass importing an unchanged copied frozen ChannelDO.",
+      "rationale": "Exact Vitest test completed; only the listed assertions are credited. Other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "Two distinct retained messages and an unrelated channel control are created through real public accounts; only the expired row is backdated with workerd stopped.",
+        "The wrapper schedules an immediate actual workerd alarm and waits on an observed alarm-completion barrier; the overridden handler invokes production super.alarm and must reschedule about 24 hours ahead.",
+        "A second scheduled alarm runs with no expired rows and must again schedule a future alarm; authenticated history and SQLite confirm exact old-row/FTS deletion, fresh-row retention and unrelated-channel preservation.",
+        "The wrapper exists only in the isolated temporary test runtime and adds no production endpoint or authentication bypass."
+      ],
+      "transports": [
+        "REST",
+        "actual local workerd scheduled alarm",
+        "test-only subclass observer RPC",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "state",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "DB-019",
+      "kind": "test",
+      "executionId": "races-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[DB-018 DB-019] actual workerd alarms delete expired rows and reschedule after both deletion and a no-op",
+      "outcome": "PASS",
+      "scenarioScope": "Actual scheduled local workerd alarms through a test-only subclass importing an unchanged copied frozen ChannelDO.",
+      "rationale": "Exact Vitest test completed; only the listed assertions are credited. Other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "Two distinct retained messages and an unrelated channel control are created through real public accounts; only the expired row is backdated with workerd stopped.",
+        "The wrapper schedules an immediate actual workerd alarm and waits on an observed alarm-completion barrier; the overridden handler invokes production super.alarm and must reschedule about 24 hours ahead.",
+        "A second scheduled alarm runs with no expired rows and must again schedule a future alarm; authenticated history and SQLite confirm exact old-row/FTS deletion, fresh-row retention and unrelated-channel preservation.",
+        "The wrapper exists only in the isolated temporary test runtime and adds no production endpoint or authentication bypass."
+      ],
+      "transports": [
+        "REST",
+        "actual local workerd scheduled alarm",
+        "test-only subclass observer RPC",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "state",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "DB-018",
+      "kind": "test",
+      "executionId": "races-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[DB-018 DB-019] production retention cleanup deletes distinct expired rows and FTS while preserving unexpired rows across restart",
+      "outcome": "PASS",
+      "scenarioScope": "Production cleanup RPC with distinct old/new persisted messages, separate from scheduler verification.",
+      "rationale": "Exact Vitest test completed; only the listed assertions are credited. Other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "Public sends use the exact ninety-day expiry interval; only one selected row is backdated while the runtime is stopped.",
+        "The production cleanup returns 1 then 0, history contains only the unexpired ID, and SQLite confirms old-row/FTS deletion while preserving the distinct fresh body."
+      ],
+      "transports": [
+        "REST",
+        "internal production retention RPC",
+        "stopped-runtime SQLite",
+        "full Miniflare restart"
+      ],
+      "assertions": [
+        "state",
+        "restart"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "DB-019",
+      "kind": "test",
+      "executionId": "races-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[DB-018 DB-019] production retention cleanup deletes distinct expired rows and FTS while preserving unexpired rows across restart",
+      "outcome": "PASS",
+      "scenarioScope": "Production cleanup RPC with distinct old/new persisted messages, separate from scheduler verification.",
+      "rationale": "Exact Vitest test completed; only the listed assertions are credited. Other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "Public sends use the exact ninety-day expiry interval; only one selected row is backdated while the runtime is stopped.",
+        "The production cleanup returns 1 then 0, history contains only the unexpired ID, and SQLite confirms old-row/FTS deletion while preserving the distinct fresh body."
+      ],
+      "transports": [
+        "REST",
+        "internal production retention RPC",
+        "stopped-runtime SQLite",
+        "full Miniflare restart"
+      ],
+      "assertions": [
+        "state",
+        "restart"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "DB-015",
+      "kind": "test",
+      "executionId": "races-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[MSG-025 DB-015] a failed edit commit never reaches the outbound webhook sink while authorized controls do",
+      "outcome": "PASS",
+      "scenarioScope": "Real workerd outgoing dispatch to a controlled local outbound service, with public authenticated webhook configuration.",
+      "rationale": "Exact Vitest test completed; only the listed assertions are credited. Other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "An unrelated account cannot configure either channel webhook; the founder configures them through the real REST API.",
+        "A successful normal message and a subsequent output barrier reach the configured HTTP sink; the SQL-faulted edit returns 500 and never reaches the webhook sink.",
+        "After workerd disposal drains waitUntil, the sink has exactly its two authorized bodies and SQLite equals the pre-fault message snapshot."
+      ],
+      "transports": [
+        "REST",
+        "workerd outbound HTTP service sink",
+        "stopped-runtime SQLite fault trigger"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "MSG-025",
+      "kind": "test",
+      "executionId": "races-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[MSG-025 DB-015] a failed edit commit never reaches the outbound webhook sink while authorized controls do",
+      "outcome": "PASS",
+      "scenarioScope": "Real workerd outgoing dispatch to a controlled local outbound service, with public authenticated webhook configuration.",
+      "rationale": "Exact Vitest test completed; only the listed assertions are credited. Other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "An unrelated account cannot configure either channel webhook; the founder configures them through the real REST API.",
+        "A successful normal message and a subsequent output barrier reach the configured HTTP sink; the SQL-faulted edit returns 500 and never reaches the webhook sink.",
+        "After workerd disposal drains waitUntil, the sink has exactly its two authorized bodies and SQLite equals the pre-fault message snapshot."
+      ],
+      "transports": [
+        "REST",
+        "workerd outbound HTTP service sink",
+        "stopped-runtime SQLite fault trigger"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "DB-015",
+      "kind": "test",
+      "executionId": "races-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[MSG-025 DB-015] a real SQL edit-lineage fault cannot leave an unacknowledged partial message in history",
+      "outcome": "PASS",
+      "scenarioScope": "A real BEFORE INSERT ABORT in message_edits after the append would otherwise have inserted its message row.",
+      "rationale": "Exact Vitest test completed; only the listed assertions are credited. Other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "A REST +ircord/edit post returns sanitized HTTP 500; the authorized receiver gets a later output marker without an edit delivery.",
+        "An independent REST read and stopped-runtime SELECT must both equal the original one-message pre-fault state, rejecting an unacknowledged partial edit."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "stopped-runtime SQLite fault trigger"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "MSG-025",
+      "kind": "test",
+      "executionId": "races-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[MSG-025 DB-015] a real SQL edit-lineage fault cannot leave an unacknowledged partial message in history",
+      "outcome": "PASS",
+      "scenarioScope": "A real BEFORE INSERT ABORT in message_edits after the append would otherwise have inserted its message row.",
+      "rationale": "Exact Vitest test completed; only the listed assertions are credited. Other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "A REST +ircord/edit post returns sanitized HTTP 500; the authorized receiver gets a later output marker without an edit delivery.",
+        "An independent REST read and stopped-runtime SELECT must both equal the original one-message pre-fault state, rejecting an unacknowledged partial edit."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "stopped-runtime SQLite fault trigger"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "DB-015",
+      "kind": "test",
+      "executionId": "races-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[MSG-025 DB-015] an original-message UPDATE fault rolls back the append, lineage and FTS before publishing any event",
+      "outcome": "PASS",
+      "scenarioScope": "A real original-content UPDATE ABORT after sequence, append and edit-lineage writes.",
+      "rationale": "Exact Vitest test completed; only the listed assertions are credited. Other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "The faulted REST edit fails; three real event sockets and the IRC receiver receive public markers without message.created or message.updated carrying the failed body.",
+        "Independent history and SQLite retain only the original row; edit lineage is empty, FTS has no failed-body tokens and the sequence reservation is unchanged."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "events/WebSocket",
+        "stopped-runtime SQLite fault trigger"
+      ],
+      "assertions": [
+        "state",
+        "events",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "MSG-025",
+      "kind": "test",
+      "executionId": "races-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[MSG-025 DB-015] an original-message UPDATE fault rolls back the append, lineage and FTS before publishing any event",
+      "outcome": "PASS",
+      "scenarioScope": "A real original-content UPDATE ABORT after sequence, append and edit-lineage writes.",
+      "rationale": "Exact Vitest test completed; only the listed assertions are credited. Other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "The faulted REST edit fails; three real event sockets and the IRC receiver receive public markers without message.created or message.updated carrying the failed body.",
+        "Independent history and SQLite retain only the original row; edit lineage is empty, FTS has no failed-body tokens and the sequence reservation is unchanged."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "events/WebSocket",
+        "stopped-runtime SQLite fault trigger"
+      ],
+      "assertions": [
+        "state",
+        "events",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "DB-015",
+      "kind": "test",
+      "executionId": "races-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[MSG-025 DB-015] failed SQL insertion emits no durable acknowledgement and rolls back the sequence reservation",
+      "outcome": "PASS",
+      "scenarioScope": "A real persisted BEFORE INSERT ABORT fault in messages, injected only while workerd is stopped.",
+      "rationale": "Exact Vitest test completed; only the listed assertions are credited. Other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "The failed write returns sanitized HTTP 500, produces no private IRC delivery before public output barriers, and an unrelated account cannot overwrite the retained original.",
+        "Stopped SQLite message rows equal their pre-fault snapshot, no failed-body FTS row exists, and next_sequence exactly matches the pre-fault value."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "stopped-runtime SQLite fault trigger"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "MSG-025",
+      "kind": "test",
+      "executionId": "races-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[MSG-025 DB-015] failed SQL insertion emits no durable acknowledgement and rolls back the sequence reservation",
+      "outcome": "PASS",
+      "scenarioScope": "A real persisted BEFORE INSERT ABORT fault in messages, injected only while workerd is stopped.",
+      "rationale": "Exact Vitest test completed; only the listed assertions are credited. Other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "The failed write returns sanitized HTTP 500, produces no private IRC delivery before public output barriers, and an unrelated account cannot overwrite the retained original.",
+        "Stopped SQLite message rows equal their pre-fault snapshot, no failed-body FTS row exists, and next_sequence exactly matches the pre-fault value."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "stopped-runtime SQLite fault trigger"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "WS-003",
+      "kind": "test",
+      "executionId": "races-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[WS-003] persisted expired ticket cannot authorize an event stream after full runtime restart",
+      "outcome": "PASS",
+      "scenarioScope": "Persisted event-ticket or API-parent expiry across full runtime restart.",
+      "rationale": "Exact Vitest test completed; only the listed assertions are credited. Other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "Only the ticket expiry or Alice API-session expiry is moved to the past while stopped; its event handshake then returns 401.",
+        "The ticket-only case preserves Alice API access, the parent-expiry case denies it, Bob remains authorized, and a fresh public credential login/ticket receives its real control event.",
+        "SQLite contains exactly the authorized control with the stable Alice sender ID."
+      ],
+      "transports": [
+        "REST",
+        "events/WebSocket",
+        "stopped-runtime SQLite",
+        "full Miniflare restart"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "AUTH-022",
+      "kind": "test",
+      "executionId": "races-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-revocation.test.ts",
+      "testTitle": "[AUTH-022 DM-015 WS-024] logout invalidates an idle receiving event credential and preserves independent authorization",
+      "outcome": "PASS",
+      "scenarioScope": "API logout, administrator disable/reenable, or administrator password reset while the receiving clients remain idle.",
+      "rationale": "Exact Vitest test completed; only the listed assertions are credited. Other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "Independent credentials authenticate the founder, recipient, outsider and administrator; the recipient receives private IRC/event and DM controls before revocation.",
+        "The selected revocation invalidates the old REST and DM credential and closes its event stream before later private delivery; disable/reset also close the independent IRC login, while API logout deliberately preserves independently authenticated IRC access.",
+        "The legitimate founder still receives the private event, an outsider receives the public output marker without private contents, and unrelated stored messages remain intact.",
+        "Reenable does not reactivate the old token; fresh permitted login works, and SQLite contains exactly one replacement Bob API session and one committed post-revocation message."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "events/WebSocket",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "commandBehavior": [
+        {
+          "command": "PRIVMSG",
+          "outcome": "positive"
+        }
+      ]
+    },
+    {
+      "id": "DM-015",
+      "kind": "test",
+      "executionId": "races-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-revocation.test.ts",
+      "testTitle": "[AUTH-022 DM-015 WS-024] logout invalidates an idle receiving event credential and preserves independent authorization",
+      "outcome": "PASS",
+      "scenarioScope": "API logout, administrator disable/reenable, or administrator password reset while the receiving clients remain idle.",
+      "rationale": "Exact Vitest test completed; only the listed assertions are credited. Other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "Independent credentials authenticate the founder, recipient, outsider and administrator; the recipient receives private IRC/event and DM controls before revocation.",
+        "The selected revocation invalidates the old REST and DM credential and closes its event stream before later private delivery; disable/reset also close the independent IRC login, while API logout deliberately preserves independently authenticated IRC access.",
+        "The legitimate founder still receives the private event, an outsider receives the public output marker without private contents, and unrelated stored messages remain intact.",
+        "Reenable does not reactivate the old token; fresh permitted login works, and SQLite contains exactly one replacement Bob API session and one committed post-revocation message."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "events/WebSocket",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "commandBehavior": [
+        {
+          "command": "PRIVMSG",
+          "outcome": "positive"
+        }
+      ]
+    },
+    {
+      "id": "WS-024",
+      "kind": "test",
+      "executionId": "races-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-revocation.test.ts",
+      "testTitle": "[AUTH-022 DM-015 WS-024] logout invalidates an idle receiving event credential and preserves independent authorization",
+      "outcome": "PASS",
+      "scenarioScope": "API logout, administrator disable/reenable, or administrator password reset while the receiving clients remain idle.",
+      "rationale": "Exact Vitest test completed; only the listed assertions are credited. Other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "Independent credentials authenticate the founder, recipient, outsider and administrator; the recipient receives private IRC/event and DM controls before revocation.",
+        "The selected revocation invalidates the old REST and DM credential and closes its event stream before later private delivery; disable/reset also close the independent IRC login, while API logout deliberately preserves independently authenticated IRC access.",
+        "The legitimate founder still receives the private event, an outsider receives the public output marker without private contents, and unrelated stored messages remain intact.",
+        "Reenable does not reactivate the old token; fresh permitted login works, and SQLite contains exactly one replacement Bob API session and one committed post-revocation message."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "events/WebSocket",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "commandBehavior": [
+        {
+          "command": "PRIVMSG",
+          "outcome": "positive"
+        }
+      ]
+    },
+    {
+      "id": "AUTH-023",
+      "kind": "test",
+      "executionId": "races-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-revocation.test.ts",
+      "testTitle": "[AUTH-023 WS-024] reset invalidates an idle receiving event credential and preserves independent authorization",
+      "outcome": "PASS",
+      "scenarioScope": "API logout, administrator disable/reenable, or administrator password reset while the receiving clients remain idle.",
+      "rationale": "Exact Vitest test completed; only the listed assertions are credited. Other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "Independent credentials authenticate the founder, recipient, outsider and administrator; the recipient receives private IRC/event and DM controls before revocation.",
+        "The selected revocation invalidates the old REST and DM credential and closes its event stream before later private delivery; disable/reset also close the independent IRC login, while API logout deliberately preserves independently authenticated IRC access.",
+        "The legitimate founder still receives the private event, an outsider receives the public output marker without private contents, and unrelated stored messages remain intact.",
+        "Reenable does not reactivate the old token; fresh permitted login works, and SQLite contains exactly one replacement Bob API session and one committed post-revocation message."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "events/WebSocket",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "commandBehavior": [
+        {
+          "command": "PRIVMSG",
+          "outcome": "positive"
+        }
+      ]
+    },
+    {
+      "id": "WS-024",
+      "kind": "test",
+      "executionId": "races-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-revocation.test.ts",
+      "testTitle": "[AUTH-023 WS-024] reset invalidates an idle receiving event credential and preserves independent authorization",
+      "outcome": "PASS",
+      "scenarioScope": "API logout, administrator disable/reenable, or administrator password reset while the receiving clients remain idle.",
+      "rationale": "Exact Vitest test completed; only the listed assertions are credited. Other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "Independent credentials authenticate the founder, recipient, outsider and administrator; the recipient receives private IRC/event and DM controls before revocation.",
+        "The selected revocation invalidates the old REST and DM credential and closes its event stream before later private delivery; disable/reset also close the independent IRC login, while API logout deliberately preserves independently authenticated IRC access.",
+        "The legitimate founder still receives the private event, an outsider receives the public output marker without private contents, and unrelated stored messages remain intact.",
+        "Reenable does not reactivate the old token; fresh permitted login works, and SQLite contains exactly one replacement Bob API session and one committed post-revocation message."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "events/WebSocket",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "commandBehavior": [
+        {
+          "command": "PRIVMSG",
+          "outcome": "positive"
+        }
+      ]
+    },
+    {
+      "id": "AUTH-024",
+      "kind": "test",
+      "executionId": "races-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-revocation.test.ts",
+      "testTitle": "[AUTH-024 AUTH-025 WS-013 WS-024] disable invalidates an idle receiving event credential and preserves independent authorization",
+      "outcome": "PASS",
+      "scenarioScope": "API logout, administrator disable/reenable, or administrator password reset while the receiving clients remain idle.",
+      "rationale": "Exact Vitest test completed; only the listed assertions are credited. Other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "Independent credentials authenticate the founder, recipient, outsider and administrator; the recipient receives private IRC/event and DM controls before revocation.",
+        "The selected revocation invalidates the old REST and DM credential and closes its event stream before later private delivery; disable/reset also close the independent IRC login, while API logout deliberately preserves independently authenticated IRC access.",
+        "The legitimate founder still receives the private event, an outsider receives the public output marker without private contents, and unrelated stored messages remain intact.",
+        "Reenable does not reactivate the old token; fresh permitted login works, and SQLite contains exactly one replacement Bob API session and one committed post-revocation message."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "events/WebSocket",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "commandBehavior": [
+        {
+          "command": "PRIVMSG",
+          "outcome": "positive"
+        }
+      ]
+    },
+    {
+      "id": "AUTH-025",
+      "kind": "test",
+      "executionId": "races-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-revocation.test.ts",
+      "testTitle": "[AUTH-024 AUTH-025 WS-013 WS-024] disable invalidates an idle receiving event credential and preserves independent authorization",
+      "outcome": "PASS",
+      "scenarioScope": "API logout, administrator disable/reenable, or administrator password reset while the receiving clients remain idle.",
+      "rationale": "Exact Vitest test completed; only the listed assertions are credited. Other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "Independent credentials authenticate the founder, recipient, outsider and administrator; the recipient receives private IRC/event and DM controls before revocation.",
+        "The selected revocation invalidates the old REST and DM credential and closes its event stream before later private delivery; disable/reset also close the independent IRC login, while API logout deliberately preserves independently authenticated IRC access.",
+        "The legitimate founder still receives the private event, an outsider receives the public output marker without private contents, and unrelated stored messages remain intact.",
+        "Reenable does not reactivate the old token; fresh permitted login works, and SQLite contains exactly one replacement Bob API session and one committed post-revocation message."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "events/WebSocket",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "commandBehavior": [
+        {
+          "command": "PRIVMSG",
+          "outcome": "positive"
+        }
+      ]
+    },
+    {
+      "id": "WS-013",
+      "kind": "test",
+      "executionId": "races-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-revocation.test.ts",
+      "testTitle": "[AUTH-024 AUTH-025 WS-013 WS-024] disable invalidates an idle receiving event credential and preserves independent authorization",
+      "outcome": "PASS",
+      "scenarioScope": "API logout, administrator disable/reenable, or administrator password reset while the receiving clients remain idle.",
+      "rationale": "Exact Vitest test completed; only the listed assertions are credited. Other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "Independent credentials authenticate the founder, recipient, outsider and administrator; the recipient receives private IRC/event and DM controls before revocation.",
+        "The selected revocation invalidates the old REST and DM credential and closes its event stream before later private delivery; disable/reset also close the independent IRC login, while API logout deliberately preserves independently authenticated IRC access.",
+        "The legitimate founder still receives the private event, an outsider receives the public output marker without private contents, and unrelated stored messages remain intact.",
+        "Reenable does not reactivate the old token; fresh permitted login works, and SQLite contains exactly one replacement Bob API session and one committed post-revocation message."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "events/WebSocket",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "commandBehavior": [
+        {
+          "command": "PRIVMSG",
+          "outcome": "positive"
+        }
+      ]
+    },
+    {
+      "id": "WS-024",
+      "kind": "test",
+      "executionId": "races-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-revocation.test.ts",
+      "testTitle": "[AUTH-024 AUTH-025 WS-013 WS-024] disable invalidates an idle receiving event credential and preserves independent authorization",
+      "outcome": "PASS",
+      "scenarioScope": "API logout, administrator disable/reenable, or administrator password reset while the receiving clients remain idle.",
+      "rationale": "Exact Vitest test completed; only the listed assertions are credited. Other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "Independent credentials authenticate the founder, recipient, outsider and administrator; the recipient receives private IRC/event and DM controls before revocation.",
+        "The selected revocation invalidates the old REST and DM credential and closes its event stream before later private delivery; disable/reset also close the independent IRC login, while API logout deliberately preserves independently authenticated IRC access.",
+        "The legitimate founder still receives the private event, an outsider receives the public output marker without private contents, and unrelated stored messages remain intact.",
+        "Reenable does not reactivate the old token; fresh permitted login works, and SQLite contains exactly one replacement Bob API session and one committed post-revocation message."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "events/WebSocket",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "commandBehavior": [
+        {
+          "command": "PRIVMSG",
+          "outcome": "positive"
+        }
+      ]
+    },
+    {
+      "id": "CHAN-014",
+      "kind": "test",
+      "executionId": "races-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-revocation.test.ts",
+      "testTitle": "[WS-012 WS-024 CHAN-014 CHAN-028] idle ban revokes private IRC and event delivery while unrelated delivery stays live",
+      "outcome": "PASS",
+      "scenarioScope": "Idle private membership revocation, paired with an unauthorized moderation request and continuously live public output barriers.",
+      "rationale": "Exact Vitest test completed; only the listed assertions are credited. Other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "Before revocation Bob receives the private IRC message and event; the unrelated account cannot perform the same admin mutation and protected history remains unchanged.",
+        "After the owner KICK or ban has completed, Bob and the outsider receive a later public IRC/event marker on the same sockets but neither receives the intervening private message.",
+        "Bob history and POST are denied, original history is retained, the denied body is absent from stopped-runtime SQLite, and the vault membership or ban record is checked independently."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "events/WebSocket",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "commandBehavior": [
+        {
+          "command": "MODE",
+          "outcome": "positive"
+        },
+        {
+          "command": "PRIVMSG",
+          "outcome": "positive"
+        }
+      ]
+    },
+    {
+      "id": "CHAN-028",
+      "kind": "test",
+      "executionId": "races-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-revocation.test.ts",
+      "testTitle": "[WS-012 WS-024 CHAN-014 CHAN-028] idle ban revokes private IRC and event delivery while unrelated delivery stays live",
+      "outcome": "PASS",
+      "scenarioScope": "Idle private membership revocation, paired with an unauthorized moderation request and continuously live public output barriers.",
+      "rationale": "Exact Vitest test completed; only the listed assertions are credited. Other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "Before revocation Bob receives the private IRC message and event; the unrelated account cannot perform the same admin mutation and protected history remains unchanged.",
+        "After the owner KICK or ban has completed, Bob and the outsider receive a later public IRC/event marker on the same sockets but neither receives the intervening private message.",
+        "Bob history and POST are denied, original history is retained, the denied body is absent from stopped-runtime SQLite, and the vault membership or ban record is checked independently."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "events/WebSocket",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "commandBehavior": [
+        {
+          "command": "MODE",
+          "outcome": "positive"
+        },
+        {
+          "command": "PRIVMSG",
+          "outcome": "positive"
+        }
+      ]
+    },
+    {
+      "id": "WS-012",
+      "kind": "test",
+      "executionId": "races-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-revocation.test.ts",
+      "testTitle": "[WS-012 WS-024 CHAN-014 CHAN-028] idle ban revokes private IRC and event delivery while unrelated delivery stays live",
+      "outcome": "PASS",
+      "scenarioScope": "Idle private membership revocation, paired with an unauthorized moderation request and continuously live public output barriers.",
+      "rationale": "Exact Vitest test completed; only the listed assertions are credited. Other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "Before revocation Bob receives the private IRC message and event; the unrelated account cannot perform the same admin mutation and protected history remains unchanged.",
+        "After the owner KICK or ban has completed, Bob and the outsider receive a later public IRC/event marker on the same sockets but neither receives the intervening private message.",
+        "Bob history and POST are denied, original history is retained, the denied body is absent from stopped-runtime SQLite, and the vault membership or ban record is checked independently."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "events/WebSocket",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "commandBehavior": [
+        {
+          "command": "MODE",
+          "outcome": "positive"
+        },
+        {
+          "command": "PRIVMSG",
+          "outcome": "positive"
+        }
+      ]
+    },
+    {
+      "id": "WS-024",
+      "kind": "test",
+      "executionId": "races-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-revocation.test.ts",
+      "testTitle": "[WS-012 WS-024 CHAN-014 CHAN-028] idle ban revokes private IRC and event delivery while unrelated delivery stays live",
+      "outcome": "PASS",
+      "scenarioScope": "Idle private membership revocation, paired with an unauthorized moderation request and continuously live public output barriers.",
+      "rationale": "Exact Vitest test completed; only the listed assertions are credited. Other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "Before revocation Bob receives the private IRC message and event; the unrelated account cannot perform the same admin mutation and protected history remains unchanged.",
+        "After the owner KICK or ban has completed, Bob and the outsider receive a later public IRC/event marker on the same sockets but neither receives the intervening private message.",
+        "Bob history and POST are denied, original history is retained, the denied body is absent from stopped-runtime SQLite, and the vault membership or ban record is checked independently."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "events/WebSocket",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "commandBehavior": [
+        {
+          "command": "MODE",
+          "outcome": "positive"
+        },
+        {
+          "command": "PRIVMSG",
+          "outcome": "positive"
+        }
+      ]
+    },
+    {
+      "id": "CHAN-014",
+      "kind": "test",
+      "executionId": "races-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-revocation.test.ts",
+      "testTitle": "[WS-012 WS-024 CHAN-014 CHAN-032] idle kick revokes private IRC and event delivery while unrelated delivery stays live",
+      "outcome": "PASS",
+      "scenarioScope": "Idle private membership revocation, paired with an unauthorized moderation request and continuously live public output barriers.",
+      "rationale": "Exact Vitest test completed; only the listed assertions are credited. Other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "Before revocation Bob receives the private IRC message and event; the unrelated account cannot perform the same admin mutation and protected history remains unchanged.",
+        "After the owner KICK or ban has completed, Bob and the outsider receive a later public IRC/event marker on the same sockets but neither receives the intervening private message.",
+        "Bob history and POST are denied, original history is retained, the denied body is absent from stopped-runtime SQLite, and the vault membership or ban record is checked independently."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "events/WebSocket",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "commandBehavior": [
+        {
+          "command": "KICK",
+          "outcome": "positive"
+        },
+        {
+          "command": "PRIVMSG",
+          "outcome": "positive"
+        }
+      ]
+    },
+    {
+      "id": "CHAN-032",
+      "kind": "test",
+      "executionId": "races-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-revocation.test.ts",
+      "testTitle": "[WS-012 WS-024 CHAN-014 CHAN-032] idle kick revokes private IRC and event delivery while unrelated delivery stays live",
+      "outcome": "PASS",
+      "scenarioScope": "Idle private membership revocation, paired with an unauthorized moderation request and continuously live public output barriers.",
+      "rationale": "Exact Vitest test completed; only the listed assertions are credited. Other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "Before revocation Bob receives the private IRC message and event; the unrelated account cannot perform the same admin mutation and protected history remains unchanged.",
+        "After the owner KICK or ban has completed, Bob and the outsider receive a later public IRC/event marker on the same sockets but neither receives the intervening private message.",
+        "Bob history and POST are denied, original history is retained, the denied body is absent from stopped-runtime SQLite, and the vault membership or ban record is checked independently."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "events/WebSocket",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "commandBehavior": [
+        {
+          "command": "KICK",
+          "outcome": "positive"
+        },
+        {
+          "command": "PRIVMSG",
+          "outcome": "positive"
+        }
+      ]
+    },
+    {
+      "id": "WS-012",
+      "kind": "test",
+      "executionId": "races-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-revocation.test.ts",
+      "testTitle": "[WS-012 WS-024 CHAN-014 CHAN-032] idle kick revokes private IRC and event delivery while unrelated delivery stays live",
+      "outcome": "PASS",
+      "scenarioScope": "Idle private membership revocation, paired with an unauthorized moderation request and continuously live public output barriers.",
+      "rationale": "Exact Vitest test completed; only the listed assertions are credited. Other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "Before revocation Bob receives the private IRC message and event; the unrelated account cannot perform the same admin mutation and protected history remains unchanged.",
+        "After the owner KICK or ban has completed, Bob and the outsider receive a later public IRC/event marker on the same sockets but neither receives the intervening private message.",
+        "Bob history and POST are denied, original history is retained, the denied body is absent from stopped-runtime SQLite, and the vault membership or ban record is checked independently."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "events/WebSocket",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "commandBehavior": [
+        {
+          "command": "KICK",
+          "outcome": "positive"
+        },
+        {
+          "command": "PRIVMSG",
+          "outcome": "positive"
+        }
+      ]
+    },
+    {
+      "id": "WS-024",
+      "kind": "test",
+      "executionId": "races-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-revocation.test.ts",
+      "testTitle": "[WS-012 WS-024 CHAN-014 CHAN-032] idle kick revokes private IRC and event delivery while unrelated delivery stays live",
+      "outcome": "PASS",
+      "scenarioScope": "Idle private membership revocation, paired with an unauthorized moderation request and continuously live public output barriers.",
+      "rationale": "Exact Vitest test completed; only the listed assertions are credited. Other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "Before revocation Bob receives the private IRC message and event; the unrelated account cannot perform the same admin mutation and protected history remains unchanged.",
+        "After the owner KICK or ban has completed, Bob and the outsider receive a later public IRC/event marker on the same sockets but neither receives the intervening private message.",
+        "Bob history and POST are denied, original history is retained, the denied body is absent from stopped-runtime SQLite, and the vault membership or ban record is checked independently."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "events/WebSocket",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "commandBehavior": [
+        {
+          "command": "KICK",
+          "outcome": "positive"
+        },
+        {
+          "command": "PRIVMSG",
+          "outcome": "positive"
+        }
+      ]
+    },
+    {
+      "id": "WS-014",
+      "kind": "test",
+      "executionId": "races-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-revocation.test.ts",
+      "testTitle": "[WS-014] local workerd hibernating eviction rechecks logout without a receiving-client reconnect",
+      "outcome": "PASS",
+      "scenarioScope": "Actual local workerd hibernating eviction via installed Miniflare unsafeEvictDurableObject, retaining receiving sockets and reconstructing attachments.",
+      "rationale": "Exact Vitest test completed; only the listed assertions are credited. Other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "A valid event connection receives a private control using either real membership or an administrator role granted through the public admin interface.",
+        "After parent logout or admin-role revocation, SessionDO is evicted with webSockets=hibernate; its reconstructed sender still delivers authorized events.",
+        "The revoked child stream closes, or the downgraded stream receives a public barrier without the intervening private event; downgraded REST administrator and private-history requests are forbidden.",
+        "The committed private message is checked in persisted SQLite. This is local hibernation, not a deployed Cloudflare verification."
+      ],
+      "transports": [
+        "REST",
+        "events/WebSocket",
+        "Miniflare local hibernating eviction",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "commandBehavior": [
+        {
+          "command": "PRIVMSG",
+          "outcome": "positive"
+        }
+      ]
+    },
+    {
+      "id": "WS-015",
+      "kind": "test",
+      "executionId": "races-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-revocation.test.ts",
+      "testTitle": "[WS-015] local workerd hibernating eviction rechecks admin-role without a receiving-client reconnect",
+      "outcome": "PASS",
+      "scenarioScope": "Actual local workerd hibernating eviction via installed Miniflare unsafeEvictDurableObject, retaining receiving sockets and reconstructing attachments.",
+      "rationale": "Exact Vitest test completed; only the listed assertions are credited. Other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "A valid event connection receives a private control using either real membership or an administrator role granted through the public admin interface.",
+        "After parent logout or admin-role revocation, SessionDO is evicted with webSockets=hibernate; its reconstructed sender still delivers authorized events.",
+        "The revoked child stream closes, or the downgraded stream receives a public barrier without the intervening private event; downgraded REST administrator and private-history requests are forbidden.",
+        "The committed private message is checked in persisted SQLite. This is local hibernation, not a deployed Cloudflare verification."
+      ],
+      "transports": [
+        "REST",
+        "events/WebSocket",
+        "Miniflare local hibernating eviction",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "commandBehavior": [
+        {
+          "command": "PRIVMSG",
+          "outcome": "positive"
+        }
+      ]
+    },
+    {
+      "id": "DB-015",
+      "kind": "test",
+      "executionId": "races-v1-history",
+      "bundleSha256": "6a58f6b9fd8f938777db4fcce55c336f21fa9e8de694c85e155d66c898c0e0a8",
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[MSG-025 DB-015] failed SQL insertion emits no durable acknowledgement and rolls back the sequence reservation",
+      "outcome": "FAIL",
+      "scenarioScope": "Historical pre-remediation execution; see evidence-normalization.json.",
+      "rationale": "Exact Vitest test completed; only the listed assertions are credited. Other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "Historical test asserted a failed SQL mutation must not acknowledge/publish the failed body and must roll back stored message state; the old run failed its stated rollback or acknowledgement assertion."
+      ],
+      "transports": [
+        "REST",
+        "SQLite"
+      ],
+      "assertions": [
+        "state",
+        "events",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "MSG-025",
+      "kind": "test",
+      "executionId": "races-v1-history",
+      "bundleSha256": "6a58f6b9fd8f938777db4fcce55c336f21fa9e8de694c85e155d66c898c0e0a8",
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[MSG-025 DB-015] failed SQL insertion emits no durable acknowledgement and rolls back the sequence reservation",
+      "outcome": "FAIL",
+      "scenarioScope": "Historical pre-remediation execution; see evidence-normalization.json.",
+      "rationale": "Exact Vitest test completed; only the listed assertions are credited. Other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "Historical test asserted a failed SQL mutation must not acknowledge/publish the failed body and must roll back stored message state; the old run failed its stated rollback or acknowledgement assertion."
+      ],
+      "transports": [
+        "REST",
+        "SQLite"
+      ],
+      "assertions": [
+        "state",
+        "events",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "DB-015",
+      "kind": "test",
+      "executionId": "races-v1-history",
+      "bundleSha256": "6a58f6b9fd8f938777db4fcce55c336f21fa9e8de694c85e155d66c898c0e0a8",
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[MSG-025 DB-015] a real SQL edit-lineage fault cannot leave an unacknowledged partial message in history",
+      "outcome": "FAIL",
+      "scenarioScope": "Historical pre-remediation execution; see evidence-normalization.json.",
+      "rationale": "Exact Vitest test completed; only the listed assertions are credited. Other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "Historical test asserted a failed SQL mutation must not acknowledge/publish the failed body and must roll back stored message state; the old run failed its stated rollback or acknowledgement assertion."
+      ],
+      "transports": [
+        "REST",
+        "SQLite"
+      ],
+      "assertions": [
+        "state",
+        "events",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "MSG-025",
+      "kind": "test",
+      "executionId": "races-v1-history",
+      "bundleSha256": "6a58f6b9fd8f938777db4fcce55c336f21fa9e8de694c85e155d66c898c0e0a8",
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[MSG-025 DB-015] a real SQL edit-lineage fault cannot leave an unacknowledged partial message in history",
+      "outcome": "FAIL",
+      "scenarioScope": "Historical pre-remediation execution; see evidence-normalization.json.",
+      "rationale": "Exact Vitest test completed; only the listed assertions are credited. Other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "Historical test asserted a failed SQL mutation must not acknowledge/publish the failed body and must roll back stored message state; the old run failed its stated rollback or acknowledgement assertion."
+      ],
+      "transports": [
+        "REST",
+        "SQLite"
+      ],
+      "assertions": [
+        "state",
+        "events",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "DB-015",
+      "kind": "test",
+      "executionId": "races-v1-history",
+      "bundleSha256": "6a58f6b9fd8f938777db4fcce55c336f21fa9e8de694c85e155d66c898c0e0a8",
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[MSG-025 DB-015] an original-message UPDATE fault rolls back the append, lineage and FTS before publishing any event",
+      "outcome": "FAIL",
+      "scenarioScope": "Historical pre-remediation execution; see evidence-normalization.json.",
+      "rationale": "Exact Vitest test completed; only the listed assertions are credited. Other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "Historical test asserted a failed SQL mutation must not acknowledge/publish the failed body and must roll back stored message state; the old run failed its stated rollback or acknowledgement assertion."
+      ],
+      "transports": [
+        "REST",
+        "SQLite"
+      ],
+      "assertions": [
+        "state",
+        "events",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "MSG-025",
+      "kind": "test",
+      "executionId": "races-v1-history",
+      "bundleSha256": "6a58f6b9fd8f938777db4fcce55c336f21fa9e8de694c85e155d66c898c0e0a8",
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[MSG-025 DB-015] an original-message UPDATE fault rolls back the append, lineage and FTS before publishing any event",
+      "outcome": "FAIL",
+      "scenarioScope": "Historical pre-remediation execution; see evidence-normalization.json.",
+      "rationale": "Exact Vitest test completed; only the listed assertions are credited. Other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "Historical test asserted a failed SQL mutation must not acknowledge/publish the failed body and must roll back stored message state; the old run failed its stated rollback or acknowledgement assertion."
+      ],
+      "transports": [
+        "REST",
+        "SQLite"
+      ],
+      "assertions": [
+        "state",
+        "events",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "API-014",
+      "kind": "test",
+      "executionId": "races-v1-history",
+      "bundleSha256": "6a58f6b9fd8f938777db4fcce55c336f21fa9e8de694c85e155d66c898c0e0a8",
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[API-014 CHAN-010 DB-025] literal FTS punctuation, phrases and malformed text remain safe across REST and IRC without changing private history",
+      "outcome": "FAIL",
+      "scenarioScope": "Historical pre-remediation execution; see evidence-normalization.json.",
+      "rationale": "Exact Vitest test completed; only the listed assertions are credited. Other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "Historical test asserted REST and IRC search of literal FTS punctuation/phrases/malformed text while preserving private history; the old run failed because REST returned 500 instead of expected 200."
+      ],
+      "transports": [
+        "REST",
+        "SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "CHAN-010",
+      "kind": "test",
+      "executionId": "races-v1-history",
+      "bundleSha256": "6a58f6b9fd8f938777db4fcce55c336f21fa9e8de694c85e155d66c898c0e0a8",
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[API-014 CHAN-010 DB-025] literal FTS punctuation, phrases and malformed text remain safe across REST and IRC without changing private history",
+      "outcome": "FAIL",
+      "scenarioScope": "Historical pre-remediation execution; see evidence-normalization.json.",
+      "rationale": "Exact Vitest test completed; only the listed assertions are credited. Other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "Historical test asserted REST and IRC search of literal FTS punctuation/phrases/malformed text while preserving private history; the old run failed because REST returned 500 instead of expected 200."
+      ],
+      "transports": [
+        "REST",
+        "SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "DB-025",
+      "kind": "test",
+      "executionId": "races-v1-history",
+      "bundleSha256": "6a58f6b9fd8f938777db4fcce55c336f21fa9e8de694c85e155d66c898c0e0a8",
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[API-014 CHAN-010 DB-025] literal FTS punctuation, phrases and malformed text remain safe across REST and IRC without changing private history",
+      "outcome": "FAIL",
+      "scenarioScope": "Historical pre-remediation execution; see evidence-normalization.json.",
+      "rationale": "Exact Vitest test completed; only the listed assertions are credited. Other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "Historical test asserted REST and IRC search of literal FTS punctuation/phrases/malformed text while preserving private history; the old run failed because REST returned 500 instead of expected 200."
+      ],
+      "transports": [
+        "REST",
+        "SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "DB-015",
+      "kind": "test",
+      "executionId": "races-v1-history",
+      "bundleSha256": "6a58f6b9fd8f938777db4fcce55c336f21fa9e8de694c85e155d66c898c0e0a8",
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[MSG-025 DB-015] a failed edit commit never reaches the outbound webhook sink while authorized controls do",
+      "outcome": "FAIL",
+      "scenarioScope": "Historical pre-remediation execution; see evidence-normalization.json.",
+      "rationale": "Exact Vitest test completed; only the listed assertions are credited. Other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "Historical test asserted the failed edit does not reach the webhook sink while authorized control delivery does; the old run timed out waiting for the authorized control."
+      ],
+      "transports": [
+        "REST",
+        "SQLite"
+      ],
+      "assertions": [
+        "events",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "MSG-025",
+      "kind": "test",
+      "executionId": "races-v1-history",
+      "bundleSha256": "6a58f6b9fd8f938777db4fcce55c336f21fa9e8de694c85e155d66c898c0e0a8",
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[MSG-025 DB-015] a failed edit commit never reaches the outbound webhook sink while authorized controls do",
+      "outcome": "FAIL",
+      "scenarioScope": "Historical pre-remediation execution; see evidence-normalization.json.",
+      "rationale": "Exact Vitest test completed; only the listed assertions are credited. Other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "Historical test asserted the failed edit does not reach the webhook sink while authorized control delivery does; the old run timed out waiting for the authorized control."
+      ],
+      "transports": [
+        "REST",
+        "SQLite"
+      ],
+      "assertions": [
+        "events",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    }
+  ]
+}

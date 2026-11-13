@@ -1,0 +1,2905 @@
+{
+  "version": 1,
+  "status": "source30 assertion candidates only; not execution evidence, not a scenario result and not reporter-ready",
+  "matrixRequirements": "docs/security/matrix-requirements.md",
+  "historicalReference": "docs/security/matrix-evidence/current-evidence-17.json",
+  "reviewedTestFiles": {
+    "tests/features/accounts-admin.test.ts": "9af3f1b761b05b189afc3b482ee6129857f2b6a69754f67090b78b482d98556f",
+    "tests/features/api-expansion-boundaries.test.ts": "9f9b32cc024479dcddda7a0996bf76a449d52f37b4b0342af859d1daee128a64",
+    "tests/features/channels-roles.test.ts": "941646651482b4aeb56190e29e67bd417e518188786577bc4ca73bd1db658531",
+    "tests/features/conversations-events.test.ts": "61ba8d400748d12e0aa1196ead6fd3c71435404f181a7fd506778b5b46742025",
+    "tests/features/media-list.test.ts": "9c97263048b6a3b7802357039e8097b0b1fc0de203c28f26466d6ee72d47b4f8",
+    "tests/features/media-reconciliation.test.ts": "ba6c617dc644565b365dbc3abf6adeee594b12dfc1d050d0ee9bac793a7e48dc",
+    "tests/features/outbound-network.test.ts": "281b522997f99da4826f51d47c4ba4ac01877d335bb0f5cfd807bf1cee50494e",
+    "tests/features/request-source.test.ts": "d7a8daf82a0dc42c1fd6ea5e17c0e7f34fac2da7c040f42d5f1269e93e48455c",
+    "tests/features/schema-startup.test.ts": "87343e1cf9ea4ec60c014ea8b5f91d7074bd90b36dad9449d4ab576092f697db",
+    "tests/features/service-audit-credentials.test.ts": "3043669c1516a3baecd18e7d04b8a9344351f480482786ceb7af506888a087c2",
+    "tests/features/shards-backpressure.test.ts": "734fd99569646eaa0a76e43a94749f781c26341cef93620c56b829d7c78ec3be",
+    "tests/features/webpush-delivery.test.ts": "162fa4f0d86d8017f3ee71c1d77c84770c77efad6b6f0317b07e61ea4c77ec7f",
+    "tests/features/webpush-policy.test.ts": "00ed579b88b30c76ba09e679b27642b28e83fecbcb072c2b4f84bfca3546ed87",
+    "tests/security/matrix-dm-gaps.test.ts": "1118e6893710614ab07d755fda73210a9c6c3c51754ded4e0a604ad068dacf42",
+    "tests/security/matrix-media-recovery.test.ts": "1c8d6fe3fd1c2d8d2098338a72f6e430950e4f16540cba70fe4924bc721c85ed"
+  },
+  "requiredDimensions": [
+    "authorization",
+    "state",
+    "events",
+    "transport",
+    "restart",
+    "unrelatedResources"
+  ],
+  "dimensionPolicy": "All six dimensions remain required pending final reconciliation; dimensions absent from a candidate assertions list are unproven by that candidate, not implicitly not applicable.",
+  "globalBoundaries": [
+    "No claim of execution, outcome, current bundle, deployed Cloudflare behavior or provider memory guarantees.",
+    "Cross-object service audit writes are best effort and auditing defaults off.",
+    "Candidate scope is limited to the cited assertion; companion claims must not be conflated with one execution."
+  ],
+  "scenarios": {
+    "ADMIN-005": {
+      "scenario": "Administrator can revoke a session.",
+      "uncoveredOrBoundaries": [
+        "Only these two dispatcher aliases and a second password login are exercised."
+      ]
+    },
+    "ADMIN-012": {
+      "scenario": "Administrator can apply global bans.",
+      "uncoveredOrBoundaries": [
+        "Account and hostmask bans have separate source candidates; no separate IP-ban kind is asserted."
+      ]
+    },
+    "ADMIN-013": {
+      "scenario": "Administrator can remove global bans.",
+      "uncoveredOrBoundaries": [
+        "Account-ban and hostmask-ban deletion have separate source candidates; not every possible ban selector."
+      ]
+    },
+    "ADMIN-016": {
+      "scenario": "Administrator can inspect appropriate administrative audit logs.",
+      "uncoveredOrBoundaries": [
+        "Audit defaults off; provider write failure and deployed retention guarantees are not established."
+      ]
+    },
+    "ADMIN-018": {
+      "scenario": "Administrator can revoke compromised bot credentials.",
+      "uncoveredOrBoundaries": [
+        "One real targeted integration credential and independent credential/device are exercised."
+      ]
+    },
+    "ADMIN-023": {
+      "scenario": "Ordinary users cannot revoke other users' sessions.",
+      "uncoveredOrBoundaries": [
+        "This proves ordinary-account denial for a real existing session."
+      ]
+    },
+    "ADMIN-027": {
+      "scenario": "Administrators cannot exceed their configured privilege scope.",
+      "uncoveredOrBoundaries": [
+        "This covers the configured grants in the case, not all scope combinations."
+      ]
+    },
+    "ADMIN-029": {
+      "scenario": "Administrative requests are audited with actor, action, target and outcome.",
+      "uncoveredOrBoundaries": [
+        "Audit defaults off; audit write and the audited action are not a cross-object transaction."
+      ]
+    },
+    "API-019": {
+      "scenario": "Cookie-based mutations enforce CSRF protection.",
+      "uncoveredOrBoundaries": [
+        "Local same-origin fixture only; no physical browser or deployed ingress."
+      ]
+    },
+    "SVC-016": {
+      "scenario": "Service actions produce the correct audit events.",
+      "uncoveredOrBoundaries": [
+        "Service audit covers explicit selected service actions and is best effort; provider failure cannot guarantee a durable audit record."
+      ]
+    },
+    "CHAN-022": {
+      "scenario": "REST and IRC enforce identical JOIN policies.",
+      "uncoveredOrBoundaries": [
+        "Case exercises selected policies and does not establish exhaustive parity."
+      ]
+    },
+    "CHAN-023": {
+      "scenario": "API-created membership cannot bypass invite/key restrictions.",
+      "uncoveredOrBoundaries": [
+        "Local account membership fixture."
+      ]
+    },
+    "CHAN-033": {
+      "scenario": "Channel removal and re-registration do not accidentally retain stale permissions.",
+      "uncoveredOrBoundaries": [
+        "Tests one concrete retirement and recreation sequence."
+      ]
+    },
+    "ROLE-034": {
+      "scenario": "Role inheritance cannot create privilege-escalation cycles.",
+      "uncoveredOrBoundaries": [
+        "Bounded example rather than exhaustive graph enumeration."
+      ]
+    },
+    "API-016": {
+      "scenario": "Bulk operations enforce authorization for every target resource.",
+      "uncoveredOrBoundaries": [
+        "Covers channel bulk redaction only."
+      ]
+    },
+    "USER-017": {
+      "scenario": "Profile updates propagate correctly to authorized REST/event clients.",
+      "uncoveredOrBoundaries": [
+        "The exact recipients in this fixture are tested, not all possible audiences."
+      ]
+    },
+    "USER-018": {
+      "scenario": "Private profile metadata is excluded from public metadata synchronization.",
+      "uncoveredOrBoundaries": [
+        "Explicit private: keys are covered; arbitrary unprefixed metadata visibility classification is a policy boundary."
+      ]
+    },
+    "DM-005": {
+      "scenario": "Charlie cannot retrieve an Alice/Bob message by ID.",
+      "uncoveredOrBoundaries": [
+        "Tests a concrete generated message ID."
+      ]
+    },
+    "DM-008": {
+      "scenario": "Charlie cannot subscribe to Alice/Bob events.",
+      "uncoveredOrBoundaries": [
+        "This is the account-bound replay/subscription case, not the original conversation selector case."
+      ]
+    },
+    "DM-009": {
+      "scenario": "Charlie cannot retrieve Alice/Bob unread counts.",
+      "uncoveredOrBoundaries": [
+        "The alias-parity companion case supplies the outsider unread denial."
+      ]
+    },
+    "DM-010": {
+      "scenario": "Charlie cannot enumerate Alice/Bob private attachments.",
+      "uncoveredOrBoundaries": [
+        "No claim about provider-side object enumeration."
+      ]
+    },
+    "DM-012": {
+      "scenario": "Alice cannot substitute Bob's account ID to access Bob/Charlie history.",
+      "uncoveredOrBoundaries": [
+        "One concrete forged legacy selector and real Bob/Charlie message are exercised."
+      ]
+    },
+    "DM-013": {
+      "scenario": "Conversation IDs cannot be manipulated to gain unauthorized access.",
+      "uncoveredOrBoundaries": [
+        "No exhaustive malformed or guessed ID manipulation campaign is claimed."
+      ]
+    },
+    "DM-016": {
+      "scenario": "Offline DM persistence preserves the correct recipient identity.",
+      "uncoveredOrBoundaries": [
+        "Local runtime recreation and nickname reuse are covered."
+      ]
+    },
+    "DM-019": {
+      "scenario": "DM API and IRC PRIVMSG paths apply consistent access policies.",
+      "uncoveredOrBoundaries": [
+        "Selected IRC send/selector and REST operations only; exhaustive parity across all IRC commands is not established."
+      ]
+    },
+    "DM-022": {
+      "scenario": "No legacy API endpoint bypasses DM participant checks.",
+      "uncoveredOrBoundaries": [
+        "Covers the enumerated current aliases and legacy history selector, not unenumerated historical endpoints."
+      ]
+    },
+    "WS-010": {
+      "scenario": "Alice cannot subscribe to `#staff` without permission.",
+      "uncoveredOrBoundaries": [
+        "The fixture uses a secret channel named #eventsecret; it does not separately test every restricted channel policy."
+      ]
+    },
+    "WS-011": {
+      "scenario": "Charlie cannot subscribe to Alice/Bob DM events.",
+      "uncoveredOrBoundaries": [
+        "Account-bound subscription case supplies the explicit denial."
+      ]
+    },
+    "WS-017": {
+      "scenario": "Event replay does not expose data outside the current access policy.",
+      "uncoveredOrBoundaries": [
+        "Specific tested authorization changes, not all replay policy permutations."
+      ]
+    },
+    "WS-018": {
+      "scenario": "Event cursors cannot be used to retrieve another user's private events.",
+      "uncoveredOrBoundaries": [
+        "One foreign-account cursor and account pair."
+      ]
+    },
+    "WS-022": {
+      "scenario": "Duplicate event delivery does not result in unauthorized duplicate mutations.",
+      "uncoveredOrBoundaries": [
+        "This tests application idempotency for a conversation send."
+      ]
+    },
+    "MEDIA-015": {
+      "scenario": "Unauthorized users cannot enumerate private upload metadata.",
+      "uncoveredOrBoundaries": [
+        "Local SQLite/R2 fixture, not external provider enumeration."
+      ]
+    },
+    "PUSH-006": {
+      "scenario": "Revoked subscriptions stop receiving notifications.",
+      "uncoveredOrBoundaries": [
+        "Mock provider and local runtime only; network/provider delivery is not established."
+      ]
+    },
+    "PUSH-007": {
+      "scenario": "Private notifications are delivered only to intended accounts.",
+      "uncoveredOrBoundaries": [
+        "Late membership in one secret channel with mock provider; other delivery histories are not exhaustive."
+      ]
+    },
+    "PUSH-008": {
+      "scenario": "No private message bodies leak into unrelated notifications.",
+      "uncoveredOrBoundaries": [
+        "Mock provider endpoint; production delivery and device decryption are not established."
+      ]
+    },
+    "PUSH-009": {
+      "scenario": "Notification preferences are enforced.",
+      "uncoveredOrBoundaries": [
+        "Specific all, mentions and nothing preferences with a mock provider."
+      ]
+    },
+    "PUSH-010": {
+      "scenario": "Invalid or expired push subscriptions are handled safely.",
+      "uncoveredOrBoundaries": [
+        "Mock 404 provider behavior; companion 410 candidate is separate."
+      ]
+    },
+    "PUSH-011": {
+      "scenario": "Repeated delivery failures do not cause unbounded retries.",
+      "uncoveredOrBoundaries": [
+        "One mock 429 retry schedule; companion 503 candidate is separate."
+      ]
+    },
+    "DB-016": {
+      "scenario": "Cross-Durable-Object failures do not produce unauthorized permanent state.",
+      "uncoveredOrBoundaries": [
+        "Recovery is explicitly invoked by fixture, not proof of alarm scheduling in a deployed provider; cross-object operations are not atomic and inaccessible orphan bytes can exist until recovery."
+      ]
+    },
+    "ABUSE-017": {
+      "scenario": "Untrusted embed URLs cannot trigger SSRF to private network or cloud metadata endpoints.",
+      "uncoveredOrBoundaries": [
+        "Uses injected DNS and transport; deployed provider networking, real DNS rebinding and egress controls are not established."
+      ]
+    },
+    "WS-019": {
+      "scenario": "Cross-shard delivery respects channel subscription authorization.",
+      "uncoveredOrBoundaries": [
+        "Local workerd shard routing and hibernation, not deployed Cloudflare topology or provider buffer limits."
+      ]
+    },
+    "WS-021": {
+      "scenario": "Slow clients cannot exhaust unbounded buffers.",
+      "uncoveredOrBoundaries": [
+        "Application charged output and actual local socket close are bounded in this case; provider/native buffer memory ceiling and deployed behavior remain unproven."
+      ]
+    },
+    "ABUSE-012": {
+      "scenario": "Slow consumers are disconnected or throttled safely.",
+      "uncoveredOrBoundaries": [
+        "Exercises native local paused IRC reader and challenge checks, not an external provider memory ceiling."
+      ]
+    },
+    "DB-022": {
+      "scenario": "Drizzle models match the actual deployed SQLite schema.",
+      "uncoveredOrBoundaries": [
+        "Explicit requirement says deployed SQLite schema; the named test introspects only fresh local workerd databases and cannot establish deployed schema parity."
+      ]
+    }
+  },
+  "candidates": [
+    {
+      "id": "ADMIN-005",
+      "kind": "test",
+      "testFile": "tests/features/api-expansion-boundaries.test.ts",
+      "testTitle": "new admin audit, bans, scopes and account-session aliases enforce authority and preserve independent accounts",
+      "testFileSha256": "9f9b32cc024479dcddda7a0996bf76a449d52f37b4b0342af859d1daee128a64",
+      "sourceLine": 4,
+      "scenarioScope": "Root deletes Alice second login by real session ID on each admin prefix; second token subsequently receives 401.",
+      "rationale": "Source assertion candidate only; requires exact-title and file-hash matching against final execution before any outcome is assigned.",
+      "assertionDetails": [
+        "Root deletes Alice second login by real session ID on each admin prefix; second token subsequently receives 401.",
+        "The same independently logged-in session ID is listed by each administrator alias and becomes unusable after DELETE; Bob cannot delete it."
+      ],
+      "transports": [
+        "REST",
+        "IRC observer"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "dimensionReview": {
+        "authorization": "Candidate scope is limited to: Root deletes Alice second login by real session ID on each admin prefix; second token subsequently receives 401.",
+        "state": "Candidate scope is limited to: Root deletes Alice second login by real session ID on each admin prefix; second token subsequently receives 401.",
+        "events": "Required by the matrix; this candidate does not assert this dimension.",
+        "transport": "Candidate scope is limited to: Root deletes Alice second login by real session ID on each admin prefix; second token subsequently receives 401.",
+        "restart": "Required by the matrix; this candidate does not assert this dimension.",
+        "unrelatedResources": "Candidate scope is limited to: Root deletes Alice second login by real session ID on each admin prefix; second token subsequently receives 401."
+      },
+      "coverageLimitations": [
+        "Only these two dispatcher aliases and a second password login are exercised."
+      ]
+    },
+    {
+      "id": "ADMIN-012",
+      "kind": "test",
+      "testFile": "tests/features/accounts-admin.test.ts",
+      "testTitle": "scoped administrator grants do not cross account resources or aliases, and network bans revoke only the target",
+      "testFileSha256": "9af3f1b761b05b189afc3b482ee6129857f2b6a69754f67090b78b482d98556f",
+      "sourceLine": 366,
+      "scenarioScope": "Root creates an account ban for Alice; Alice is denied while Bob remains usable; stored ban has exact target ID.",
+      "rationale": "Source assertion candidate only; requires exact-title and file-hash matching against final execution before any outcome is assigned.",
+      "assertionDetails": [
+        "Bob\u2019s unauthorized account-ban creation returns 403 and the root-visible ban list remains exactly unchanged. Root creates an account ban bound to Alice\u2019s exact account ID; Alice\u2019s profile request becomes 401 while Bob\u2019s remains 200.",
+        "Before the ban both Alice and Bob receive the same positive IRC and v2 event marker. After the ban Bob\u2019s actual channel POST returns 201 and his IRC and v2 event observers receive the marker, while Alice\u2019s bounded IRC and event slices do not.",
+        "Stopped SQLite retains the exact account-ban ID and Alice target and the unrelated Bob account. After recreation Alice remains denied; root deletes the exact ban through /api/v1/admin and both existing Alice and Bob tokens return 200."
+      ],
+      "transports": [
+        "REST over local workerd",
+        "IRC WebSocket",
+        "ticket-authenticated v2 event WebSocket",
+        "stopped local SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "dimensionReview": {
+        "authorization": "Candidate scope is limited to: Root creates an account ban for Alice; Alice is denied while Bob remains usable; stored ban has exact target ID.",
+        "state": "Candidate scope is limited to: Root creates an account ban for Alice; Alice is denied while Bob remains usable; stored ban has exact target ID.",
+        "events": "The same test asserts pre-ban delivery to both actors and post-ban marker exclusion for Alice with independent Bob IRC and v2 event progress; no post-unban event delivery is asserted.",
+        "transport": "Candidate scope is limited to: Root creates an account ban for Alice; Alice is denied while Bob remains usable; stored ban has exact target ID.",
+        "restart": "The stored ban still denies Alice after recreation; deletion then restores Alice\u2019s existing token and Bob remains usable.",
+        "unrelatedResources": "Candidate scope is limited to: Root creates an account ban for Alice; Alice is denied while Bob remains usable; stored ban has exact target ID."
+      },
+      "coverageLimitations": [
+        "Account and hostmask bans have separate source candidates; no separate IP-ban kind is asserted."
+      ]
+    },
+    {
+      "id": "ADMIN-013",
+      "kind": "test",
+      "testFile": "tests/features/accounts-admin.test.ts",
+      "testTitle": "scoped administrator grants do not cross account resources or aliases, and network bans revoke only the target",
+      "testFileSha256": "9af3f1b761b05b189afc3b482ee6129857f2b6a69754f67090b78b482d98556f",
+      "sourceLine": 366,
+      "scenarioScope": "Root deletes the created account ban through /api/v1/admin; the previously denied Alice token and independent Bob token both return 200.",
+      "rationale": "Source assertion candidate only; requires exact-title and file-hash matching against final execution before any outcome is assigned.",
+      "assertionDetails": [
+        "Bob\u2019s unauthorized account-ban creation returns 403 and the root-visible ban list remains exactly unchanged. Root creates an account ban bound to Alice\u2019s exact account ID; Alice\u2019s profile request becomes 401 while Bob\u2019s remains 200.",
+        "Before the ban both Alice and Bob receive the same positive IRC and v2 event marker. After the ban Bob\u2019s actual channel POST returns 201 and his IRC and v2 event observers receive the marker, while Alice\u2019s bounded IRC and event slices do not.",
+        "Stopped SQLite retains the exact account-ban ID and Alice target and the unrelated Bob account. After recreation Alice remains denied; root deletes the exact ban through /api/v1/admin and both existing Alice and Bob tokens return 200."
+      ],
+      "transports": [
+        "REST over local workerd",
+        "IRC WebSocket",
+        "ticket-authenticated v2 event WebSocket",
+        "stopped local SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "dimensionReview": {
+        "authorization": "Candidate scope is limited to: Root deletes the created account ban through /api/v1/admin; the previously denied Alice token and independent Bob token both return 200.",
+        "state": "Candidate scope is limited to: Root deletes the created account ban through /api/v1/admin; the previously denied Alice token and independent Bob token both return 200.",
+        "events": "The same test asserts pre-ban delivery to both actors and post-ban marker exclusion for Alice with independent Bob IRC and v2 event progress; no post-unban event delivery is asserted.",
+        "transport": "Candidate scope is limited to: Root deletes the created account ban through /api/v1/admin; the previously denied Alice token and independent Bob token both return 200.",
+        "restart": "The stored ban still denies Alice after recreation; deletion then restores Alice\u2019s existing token and Bob remains usable.",
+        "unrelatedResources": "Candidate scope is limited to: Root deletes the created account ban through /api/v1/admin; the previously denied Alice token and independent Bob token both return 200."
+      },
+      "coverageLimitations": [
+        "Account-ban and hostmask-ban deletion have separate source candidates; not every possible ban selector."
+      ]
+    },
+    {
+      "id": "ADMIN-016",
+      "kind": "test",
+      "testFile": "tests/features/accounts-admin.test.ts",
+      "testTitle": "audit enabled stores only sanitized admin outcomes",
+      "testFileSha256": "9af3f1b761b05b189afc3b482ee6129857f2b6a69754f67090b78b482d98556f",
+      "sourceLine": 236,
+      "scenarioScope": "Enabled audit GET returns allowed and denied stats, account mutations and an injected ban error; password and tokens are absent.",
+      "rationale": "Source assertion candidate only; requires exact-title and file-hash matching against final execution before any outcome is assigned.",
+      "assertionDetails": [
+        "Enabled audit GET returns allowed and denied stats, account mutations and an injected ban error; password and tokens are absent.",
+        "The enabled case checks allowed and denied stats actions, error classification for an injected ban failure, and exclusion of actual credentials from records."
+      ],
+      "transports": [
+        "REST",
+        "SQLite fault injection"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "dimensionReview": {
+        "authorization": "Candidate scope is limited to: Enabled audit GET returns allowed and denied stats, account mutations and an injected ban error; password and tokens are absent.",
+        "state": "Candidate scope is limited to: Enabled audit GET returns allowed and denied stats, account mutations and an injected ban error; password and tokens are absent.",
+        "events": "Candidate scope is limited to: Enabled audit GET returns allowed and denied stats, account mutations and an injected ban error; password and tokens are absent.",
+        "transport": "Candidate scope is limited to: Enabled audit GET returns allowed and denied stats, account mutations and an injected ban error; password and tokens are absent.",
+        "restart": "Required by the matrix; this candidate does not assert this dimension.",
+        "unrelatedResources": "Required by the matrix; this candidate does not assert this dimension."
+      },
+      "coverageLimitations": [
+        "Audit defaults off; provider write failure and deployed retention guarantees are not established."
+      ]
+    },
+    {
+      "id": "ADMIN-018",
+      "kind": "test",
+      "testFile": "tests/features/service-audit-credentials.test.ts",
+      "testTitle": "administrator revokes another account integration credential and audit records exact actor IDs",
+      "testFileSha256": "3043669c1516a3baecd18e7d04b8a9344351f480482786ceb7af506888a087c2",
+      "sourceLine": 85,
+      "scenarioScope": "An ordinary Alice cannot revoke another account servicebot integration credential; administrator deletes its actual session ID, closing the real IRC token device and invalidating that REST token while an independent token and password device survive.",
+      "rationale": "Source assertion candidate only; requires exact-title and file-hash matching against final execution before any outcome is assigned.",
+      "assertionDetails": [
+        "An ordinary Alice cannot revoke another account servicebot integration credential; administrator deletes its actual session ID, closing the real IRC token device and invalidating that REST token while an independent token and password device survive.",
+        "The credential is used in IRC PASS before hibernation; the test checks real close and revoked REST access, independent token and password device, audit SQLite rows and restart."
+      ],
+      "transports": [
+        "REST",
+        "IRC WebSocket",
+        "SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "dimensionReview": {
+        "authorization": "Candidate scope is limited to: An ordinary Alice cannot revoke another account servicebot integration credential; administrator deletes its actual session ID, closing the real IRC token device and invalidating that REST token while an independent token and password device survive.",
+        "state": "Candidate scope is limited to: An ordinary Alice cannot revoke another account servicebot integration credential; administrator deletes its actual session ID, closing the real IRC token device and invalidating that REST token while an independent token and password device survive.",
+        "events": "Candidate scope is limited to: An ordinary Alice cannot revoke another account servicebot integration credential; administrator deletes its actual session ID, closing the real IRC token device and invalidating that REST token while an independent token and password device survive.",
+        "transport": "Candidate scope is limited to: An ordinary Alice cannot revoke another account servicebot integration credential; administrator deletes its actual session ID, closing the real IRC token device and invalidating that REST token while an independent token and password device survive.",
+        "restart": "Candidate scope is limited to: An ordinary Alice cannot revoke another account servicebot integration credential; administrator deletes its actual session ID, closing the real IRC token device and invalidating that REST token while an independent token and password device survive.",
+        "unrelatedResources": "Candidate scope is limited to: An ordinary Alice cannot revoke another account servicebot integration credential; administrator deletes its actual session ID, closing the real IRC token device and invalidating that REST token while an independent token and password device survive."
+      },
+      "coverageLimitations": [
+        "One actual targeted integration credential and independent credential/device are exercised."
+      ]
+    },
+    {
+      "id": "ADMIN-023",
+      "kind": "test",
+      "testFile": "tests/features/accounts-admin.test.ts",
+      "testTitle": "targeted durable API sessions and scoped credentials revoke independently of other accounts",
+      "testFileSha256": "9af3f1b761b05b189afc3b482ee6129857f2b6a69754f67090b78b482d98556f",
+      "sourceLine": 86,
+      "scenarioScope": "Bob attempts DELETE of Alice second session ID and receives 403; Alice second session and complete session list remain unchanged.",
+      "rationale": "Source assertion candidate only; requires exact-title and file-hash matching against final execution before any outcome is assigned.",
+      "assertionDetails": [
+        "Bob attempts DELETE of Alice second session ID and receives 403; Alice second session and complete session list remain unchanged.",
+        "Before and after the forbidden request, exact session list and account SQLite snapshot match, and live IRC/event observer windows are silent."
+      ],
+      "transports": [
+        "REST",
+        "IRC WebSocket",
+        "event WebSocket",
+        "SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "dimensionReview": {
+        "authorization": "Candidate scope is limited to: Bob attempts DELETE of Alice second session ID and receives 403; Alice second session and complete session list remain unchanged.",
+        "state": "Candidate scope is limited to: Bob attempts DELETE of Alice second session ID and receives 403; Alice second session and complete session list remain unchanged.",
+        "events": "Candidate scope is limited to: Bob attempts DELETE of Alice second session ID and receives 403; Alice second session and complete session list remain unchanged.",
+        "transport": "Candidate scope is limited to: Bob attempts DELETE of Alice second session ID and receives 403; Alice second session and complete session list remain unchanged.",
+        "restart": "Required by the matrix; this candidate does not assert this dimension.",
+        "unrelatedResources": "Candidate scope is limited to: Bob attempts DELETE of Alice second session ID and receives 403; Alice second session and complete session list remain unchanged."
+      },
+      "coverageLimitations": [
+        "This proves ordinary-account denial for a real existing session."
+      ]
+    },
+    {
+      "id": "ADMIN-027",
+      "kind": "test",
+      "testFile": "tests/features/accounts-admin.test.ts",
+      "testTitle": "scoped administrator grants do not cross account resources or aliases, and network bans revoke only the target",
+      "testFileSha256": "9af3f1b761b05b189afc3b482ee6129857f2b6a69754f67090b78b482d98556f",
+      "sourceLine": 366,
+      "scenarioScope": "Restricted delegate cannot update grants or access out-of-scope account resources across admin aliases; a scoped root credential also cannot broaden delegation.",
+      "rationale": "Source assertion candidate only; requires exact-title and file-hash matching against final execution before any outcome is assigned.",
+      "assertionDetails": [
+        "Restricted delegate cannot update grants or access out-of-scope account resources across admin aliases; a scoped root credential also cannot broaden delegation.",
+        "A constrained root credential cannot broaden delegate grants, and a delegated administrator is denied out-of-scope account and scope writes under both aliases."
+      ],
+      "transports": [
+        "REST",
+        "SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "dimensionReview": {
+        "authorization": "Candidate scope is limited to: Restricted delegate cannot update grants or access out-of-scope account resources across admin aliases; a scoped root credential also cannot broaden delegation.",
+        "state": "Candidate scope is limited to: Restricted delegate cannot update grants or access out-of-scope account resources across admin aliases; a scoped root credential also cannot broaden delegation.",
+        "events": "Required by the matrix; this candidate does not assert this dimension.",
+        "transport": "Candidate scope is limited to: Restricted delegate cannot update grants or access out-of-scope account resources across admin aliases; a scoped root credential also cannot broaden delegation.",
+        "restart": "Required by the matrix; this candidate does not assert this dimension.",
+        "unrelatedResources": "Candidate scope is limited to: Restricted delegate cannot update grants or access out-of-scope account resources across admin aliases; a scoped root credential also cannot broaden delegation."
+      },
+      "coverageLimitations": [
+        "This covers the configured grants in the case, not all scope combinations."
+      ]
+    },
+    {
+      "id": "ADMIN-029",
+      "kind": "test",
+      "testFile": "tests/features/service-audit-credentials.test.ts",
+      "testTitle": "administrator revokes another account integration credential and audit records exact actor IDs",
+      "testFileSha256": "3043669c1516a3baecd18e7d04b8a9344351f480482786ceb7af506888a087c2",
+      "sourceLine": 85,
+      "scenarioScope": "Audit GET includes exact root and Alice actor IDs, session.revoke, hashed target, outcomes and REST transport; stopped SQLite asserts the same actor, action, target and outcomes.",
+      "rationale": "Source assertion candidate only; requires exact-title and file-hash matching against final execution before any outcome is assigned.",
+      "assertionDetails": [
+        "Audit GET includes exact root and Alice actor IDs, session.revoke, hashed target, outcomes and REST transport; stopped SQLite asserts the same actor, action, target and outcomes.",
+        "The audited target is independently computed from the actual admin path; allowed and denied records contain actual root and Alice account IDs."
+      ],
+      "transports": [
+        "REST",
+        "IRC WebSocket",
+        "SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "dimensionReview": {
+        "authorization": "Candidate scope is limited to: Audit GET includes exact root and Alice actor IDs, session.revoke, hashed target, outcomes and REST transport; stopped SQLite asserts the same actor, action, target and outcomes.",
+        "state": "Candidate scope is limited to: Audit GET includes exact root and Alice actor IDs, session.revoke, hashed target, outcomes and REST transport; stopped SQLite asserts the same actor, action, target and outcomes.",
+        "events": "Candidate scope is limited to: Audit GET includes exact root and Alice actor IDs, session.revoke, hashed target, outcomes and REST transport; stopped SQLite asserts the same actor, action, target and outcomes.",
+        "transport": "Candidate scope is limited to: Audit GET includes exact root and Alice actor IDs, session.revoke, hashed target, outcomes and REST transport; stopped SQLite asserts the same actor, action, target and outcomes.",
+        "restart": "Required by the matrix; this candidate does not assert this dimension.",
+        "unrelatedResources": "Candidate scope is limited to: Audit GET includes exact root and Alice actor IDs, session.revoke, hashed target, outcomes and REST transport; stopped SQLite asserts the same actor, action, target and outcomes."
+      },
+      "coverageLimitations": [
+        "Audit defaults off and the service/REST audit write is best effort, not a cross-object transaction."
+      ]
+    },
+    {
+      "id": "API-019",
+      "kind": "test",
+      "testFile": "tests/features/accounts-admin.test.ts",
+      "testTitle": "opt-in cookie sessions require exact origin and session-bound CSRF while bearer remains compatible",
+      "testFileSha256": "9af3f1b761b05b189afc3b482ee6129857f2b6a69754f67090b78b482d98556f",
+      "sourceLine": 171,
+      "scenarioScope": "Cookie mutation rejects missing/wrong origin and CSRF while correct origin and token succeed, including after restart; bearer remains usable.",
+      "rationale": "Source assertion candidate only; requires exact-title and file-hash matching against final execution before any outcome is assigned.",
+      "assertionDetails": [
+        "Cookie mutation rejects missing/wrong origin and CSRF while correct origin and token succeed, including after restart; bearer remains usable.",
+        "Missing origin, untrusted origin, incorrect CSRF and invalid explicit bearer are rejected; observer windows and account snapshot remain unchanged before the correct cookie mutation."
+      ],
+      "transports": [
+        "REST",
+        "IRC WebSocket",
+        "event WebSocket"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "dimensionReview": {
+        "authorization": "Candidate scope is limited to: Cookie mutation rejects missing/wrong origin and CSRF while correct origin and token succeed, including after restart; bearer remains usable.",
+        "state": "Candidate scope is limited to: Cookie mutation rejects missing/wrong origin and CSRF while correct origin and token succeed, including after restart; bearer remains usable.",
+        "events": "Candidate scope is limited to: Cookie mutation rejects missing/wrong origin and CSRF while correct origin and token succeed, including after restart; bearer remains usable.",
+        "transport": "Candidate scope is limited to: Cookie mutation rejects missing/wrong origin and CSRF while correct origin and token succeed, including after restart; bearer remains usable.",
+        "restart": "Candidate scope is limited to: Cookie mutation rejects missing/wrong origin and CSRF while correct origin and token succeed, including after restart; bearer remains usable.",
+        "unrelatedResources": "Candidate scope is limited to: Cookie mutation rejects missing/wrong origin and CSRF while correct origin and token succeed, including after restart; bearer remains usable."
+      },
+      "coverageLimitations": [
+        "Local same-origin fixture only; no physical browser or deployed ingress."
+      ]
+    },
+    {
+      "id": "SVC-016",
+      "kind": "test",
+      "testFile": "tests/features/service-audit-credentials.test.ts",
+      "testTitle": "service mutation audit is accurate and default off (enabled=true)",
+      "testFileSha256": "3043669c1516a3baecd18e7d04b8a9344351f480482786ceb7af506888a087c2",
+      "sourceLine": 7,
+      "scenarioScope": "Direct CS, F and NS successes and denied PRIVMSG service operations yield exact actor, hashed target, action, outcome and service transport; REST checks privileges and SQLite checks founder, bot and nickname state.",
+      "rationale": "Source assertion candidate only; requires exact-title and file-hash matching against final execution before any outcome is assigned.",
+      "assertionDetails": [
+        "Direct CS, F and NS successes and denied PRIVMSG service operations yield exact actor, hashed target, action, outcome and service transport; REST checks privileges and SQLite checks founder, bot and nickname state.",
+        "The enabled case checks six exact action/actor/target/outcome/transport tuples, SQLite founder/bot/nickname state, denied Bob privileges and audit rows after recreation."
+      ],
+      "transports": [
+        "IRC service commands",
+        "IRC PRIVMSG service aliases",
+        "REST audit",
+        "SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "dimensionReview": {
+        "authorization": "Candidate scope is limited to: Direct CS, F and NS successes and denied PRIVMSG service operations yield exact actor, hashed target, action, outcome and service transport; REST checks privileges and SQLite checks founder, bot and nickname state.",
+        "state": "Candidate scope is limited to: Direct CS, F and NS successes and denied PRIVMSG service operations yield exact actor, hashed target, action, outcome and service transport; REST checks privileges and SQLite checks founder, bot and nickname state.",
+        "events": "Candidate scope is limited to: Direct CS, F and NS successes and denied PRIVMSG service operations yield exact actor, hashed target, action, outcome and service transport; REST checks privileges and SQLite checks founder, bot and nickname state.",
+        "transport": "Candidate scope is limited to: Direct CS, F and NS successes and denied PRIVMSG service operations yield exact actor, hashed target, action, outcome and service transport; REST checks privileges and SQLite checks founder, bot and nickname state.",
+        "restart": "Candidate scope is limited to: Direct CS, F and NS successes and denied PRIVMSG service operations yield exact actor, hashed target, action, outcome and service transport; REST checks privileges and SQLite checks founder, bot and nickname state.",
+        "unrelatedResources": "Candidate scope is limited to: Direct CS, F and NS successes and denied PRIVMSG service operations yield exact actor, hashed target, action, outcome and service transport; REST checks privileges and SQLite checks founder, bot and nickname state."
+      },
+      "coverageLimitations": [
+        "The named case covers ChanServ, F and NickServ; HostServ/HistServ and default-off are separate candidates. Audit writes are best effort across Durable Objects."
+      ]
+    },
+    {
+      "id": "CHAN-022",
+      "kind": "test",
+      "testFile": "tests/features/channels-roles.test.ts",
+      "testTitle": "REST account membership enforces IRC key and invitation policy without a socket",
+      "testFileSha256": "941646651482b4aeb56190e29e67bd417e518188786577bc4ca73bd1db658531",
+      "sourceLine": 841,
+      "scenarioScope": "IRC JOIN receives 475 for wrong key, 473 without invite and 474 for ban; REST join rejects no invitation and ban, then admits a valid invited keyed account.",
+      "rationale": "Source assertion candidate only; requires exact-title and file-hash matching against final execution before any outcome is assigned.",
+      "assertionDetails": [
+        "IRC JOIN receives 475 for wrong key, 473 without invite and 474 for ban; REST join rejects no invitation and ban, then admits a valid invited keyed account.",
+        "The same secret invite-only keyed channel is exercised using IRC and REST; wrong key, missing invitation and ban are rejected while a valid invited account joins."
+      ],
+      "transports": [
+        "REST",
+        "IRC",
+        "event WebSocket"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "dimensionReview": {
+        "authorization": "Candidate scope is limited to: IRC JOIN receives 475 for wrong key, 473 without invite and 474 for ban; REST join rejects no invitation and ban, then admits a valid invited keyed account.",
+        "state": "Candidate scope is limited to: IRC JOIN receives 475 for wrong key, 473 without invite and 474 for ban; REST join rejects no invitation and ban, then admits a valid invited keyed account.",
+        "events": "Candidate scope is limited to: IRC JOIN receives 475 for wrong key, 473 without invite and 474 for ban; REST join rejects no invitation and ban, then admits a valid invited keyed account.",
+        "transport": "Candidate scope is limited to: IRC JOIN receives 475 for wrong key, 473 without invite and 474 for ban; REST join rejects no invitation and ban, then admits a valid invited keyed account.",
+        "restart": "Candidate scope is limited to: IRC JOIN receives 475 for wrong key, 473 without invite and 474 for ban; REST join rejects no invitation and ban, then admits a valid invited keyed account.",
+        "unrelatedResources": "Candidate scope is limited to: IRC JOIN receives 475 for wrong key, 473 without invite and 474 for ban; REST join rejects no invitation and ban, then admits a valid invited keyed account."
+      },
+      "coverageLimitations": [
+        "Case exercises selected policies and does not establish exhaustive parity."
+      ]
+    },
+    {
+      "id": "CHAN-023",
+      "kind": "test",
+      "testFile": "tests/features/channels-roles.test.ts",
+      "testTitle": "REST account membership enforces IRC key and invitation policy without a socket",
+      "testFileSha256": "941646651482b4aeb56190e29e67bd417e518188786577bc4ca73bd1db658531",
+      "sourceLine": 841,
+      "scenarioScope": "A revoked or absent invitation and a ban each reject REST JOIN; legitimate invite and key admit a real account.",
+      "rationale": "Source assertion candidate only; requires exact-title and file-hash matching against final execution before any outcome is assigned.",
+      "assertionDetails": [
+        "A revoked or absent invitation and a ban each reject REST JOIN; legitimate invite and key admit a real account.",
+        "The created room has a real generation, secret/invite/key flags, founder member listing, outsider denial and a successful invited keyed REST membership."
+      ],
+      "transports": [
+        "REST",
+        "IRC",
+        "event WebSocket"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "dimensionReview": {
+        "authorization": "Candidate scope is limited to: A revoked or absent invitation and a ban each reject REST JOIN; legitimate invite and key admit a real account.",
+        "state": "Candidate scope is limited to: A revoked or absent invitation and a ban each reject REST JOIN; legitimate invite and key admit a real account.",
+        "events": "Candidate scope is limited to: A revoked or absent invitation and a ban each reject REST JOIN; legitimate invite and key admit a real account.",
+        "transport": "Candidate scope is limited to: A revoked or absent invitation and a ban each reject REST JOIN; legitimate invite and key admit a real account.",
+        "restart": "Candidate scope is limited to: A revoked or absent invitation and a ban each reject REST JOIN; legitimate invite and key admit a real account.",
+        "unrelatedResources": "Candidate scope is limited to: A revoked or absent invitation and a ban each reject REST JOIN; legitimate invite and key admit a real account."
+      },
+      "coverageLimitations": [
+        "Local account membership fixture."
+      ]
+    },
+    {
+      "id": "CHAN-033",
+      "kind": "test",
+      "testFile": "tests/features/channels-roles.test.ts",
+      "testTitle": "retired channel history and authority stay isolated after recreation",
+      "testFileSha256": "941646651482b4aeb56190e29e67bd417e518188786577bc4ca73bd1db658531",
+      "sourceLine": 516,
+      "scenarioScope": "Deleted channel recreates with a new generation; old history, role ID, media and previous member authority remain inaccessible, including after restart.",
+      "rationale": "Source assertion candidate only; requires exact-title and file-hash matching against final execution before any outcome is assigned.",
+      "assertionDetails": [
+        "Deleted channel recreates with a new generation; old history, role ID, media and previous member authority remain inaccessible, including after restart.",
+        "The old generation, role, history and private media do not become Bob authority after recreation; stale WS topic, role and message mutations receive 409 and leave fresh state intact."
+      ],
+      "transports": [
+        "REST",
+        "event WebSocket",
+        "SQLite",
+        "internal Channel RPC stale-generation probes"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "dimensionReview": {
+        "authorization": "Candidate scope is limited to: Deleted channel recreates with a new generation; old history, role ID, media and previous member authority remain inaccessible, including after restart.",
+        "state": "Candidate scope is limited to: Deleted channel recreates with a new generation; old history, role ID, media and previous member authority remain inaccessible, including after restart.",
+        "events": "Candidate scope is limited to: Deleted channel recreates with a new generation; old history, role ID, media and previous member authority remain inaccessible, including after restart.",
+        "transport": "Candidate scope is limited to: Deleted channel recreates with a new generation; old history, role ID, media and previous member authority remain inaccessible, including after restart.",
+        "restart": "Candidate scope is limited to: Deleted channel recreates with a new generation; old history, role ID, media and previous member authority remain inaccessible, including after restart.",
+        "unrelatedResources": "Candidate scope is limited to: Deleted channel recreates with a new generation; old history, role ID, media and previous member authority remain inaccessible, including after restart."
+      },
+      "coverageLimitations": [
+        "Tests one concrete retirement and recreation sequence."
+      ]
+    },
+    {
+      "id": "ROLE-034",
+      "kind": "test",
+      "testFile": "tests/features/channels-roles.test.ts",
+      "testTitle": "role inheritance is channel scoped, bounded, persistent, and revokes inherited modes",
+      "testFileSha256": "941646651482b4aeb56190e29e67bd417e518188786577bc4ca73bd1db658531",
+      "sourceLine": 7,
+      "scenarioScope": "Parent-child role cycle PATCH and cross-channel parent are rejected; inheritance persists on restart and deletion clears the child parent.",
+      "rationale": "Source assertion candidate only; requires exact-title and file-hash matching against final execution before any outcome is assigned.",
+      "assertionDetails": [
+        "Parent-child role cycle PATCH and cross-channel parent are rejected; inheritance persists on restart and deletion clears the child parent.",
+        "The actual parent/child cycle, foreign-channel parent and excessive depth receive 400; an unauthorized Bob patch receives 403 and legitimate inherited operator mode is removed after parent deletion."
+      ],
+      "transports": [
+        "REST",
+        "IRC",
+        "event WebSocket"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "dimensionReview": {
+        "authorization": "Candidate scope is limited to: Parent-child role cycle PATCH and cross-channel parent are rejected; inheritance persists on restart and deletion clears the child parent.",
+        "state": "Candidate scope is limited to: Parent-child role cycle PATCH and cross-channel parent are rejected; inheritance persists on restart and deletion clears the child parent.",
+        "events": "Candidate scope is limited to: Parent-child role cycle PATCH and cross-channel parent are rejected; inheritance persists on restart and deletion clears the child parent.",
+        "transport": "Candidate scope is limited to: Parent-child role cycle PATCH and cross-channel parent are rejected; inheritance persists on restart and deletion clears the child parent.",
+        "restart": "Candidate scope is limited to: Parent-child role cycle PATCH and cross-channel parent are rejected; inheritance persists on restart and deletion clears the child parent.",
+        "unrelatedResources": "Required by the matrix; this candidate does not assert this dimension."
+      },
+      "coverageLimitations": [
+        "Bounded example rather than exhaustive graph enumeration."
+      ]
+    },
+    {
+      "id": "API-016",
+      "kind": "test",
+      "testFile": "tests/features/channels-roles.test.ts",
+      "testTitle": "same-channel bulk redaction is atomic, scoped, and idempotent across restart",
+      "testFileSha256": "941646651482b4aeb56190e29e67bd417e518188786577bc4ca73bd1db658531",
+      "sourceLine": 715,
+      "scenarioScope": "Mixed-authority and cross-channel bulk targets return 403 without partial changes; valid redaction is idempotent and persists.",
+      "rationale": "Source assertion candidate only; requires exact-title and file-hash matching against final execution before any outcome is assigned.",
+      "assertionDetails": [
+        "Mixed-authority and cross-channel bulk target sets each return 403; original IDs remain in history and barrier-bounded Alice, Bob and Charlie v2 streams contain no message.deleted events, while all IRC observers contain no REDACT #bulk line.",
+        "Bob\u2019s authorized two-message operation returns 200 with replayed false; retrying the same operation ID in reverse order returns replayed true, and reusing it with different IDs returns 409.",
+        "Both secret-channel members Alice and Bob receive exactly the two message.deleted events with matching IDs, #bulk channel and operation ID, and exactly one IRC REDACT for each ID. Outsider Charlie receives no #bulk event or IRC redaction.",
+        "After recreation Alice\u2019s history retains the foreign message and excludes Bob\u2019s redacted IDs; Charlie\u2019s independent channel remains readable, and repeating the original operation returns replayed true."
+      ],
+      "transports": [
+        "REST over local workerd",
+        "IRC WebSocket",
+        "ticket-authenticated v2 event WebSocket"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "dimensionReview": {
+        "authorization": "Candidate scope is limited to: Mixed-authority and cross-channel bulk targets return 403 without partial changes; valid redaction is idempotent and persists.",
+        "state": "Candidate scope is limited to: Mixed-authority and cross-channel bulk targets return 403 without partial changes; valid redaction is idempotent and persists.",
+        "events": "Live barrier-bounded Alice and Bob observers receive exact two authorized redaction events; all observers have no deletion from the denied operations and outsider Charlie gets no #bulk event. IRC redactions are also counted.",
+        "transport": "Candidate scope is limited to: Mixed-authority and cross-channel bulk targets return 403 without partial changes; valid redaction is idempotent and persists.",
+        "restart": "Candidate scope is limited to: Mixed-authority and cross-channel bulk targets return 403 without partial changes; valid redaction is idempotent and persists.",
+        "unrelatedResources": "Candidate scope is limited to: Mixed-authority and cross-channel bulk targets return 403 without partial changes; valid redaction is idempotent and persists."
+      },
+      "coverageLimitations": [
+        "Covers channel bulk redaction only."
+      ]
+    },
+    {
+      "id": "USER-017",
+      "kind": "test",
+      "testFile": "tests/features/conversations-events.test.ts",
+      "testTitle": "profile and explicit private metadata share persisted revisions across REST IRC events replay and recreation",
+      "testFileSha256": "61ba8d400748d12e0aa1196ead6fd3c71435404f181a7fd506778b5b46742025",
+      "sourceLine": 217,
+      "scenarioScope": "REST profile PATCH increments revision, owner and another authorized live event stream receive the update, IRC metadata and restart preserve projection.",
+      "rationale": "Source assertion candidate only; requires exact-title and file-hash matching against final execution before any outcome is assigned.",
+      "assertionDetails": [
+        "REST profile PATCH increments revision, owner and another authorized live event stream receive the update, IRC metadata and restart preserve projection.",
+        "Owner and subscribed peer live streams receive the same revision; a stale revision is rejected and REST/IRC profile fields remain readable after recreation."
+      ],
+      "transports": [
+        "REST",
+        "IRC",
+        "event WebSocket"
+      ],
+      "assertions": [
+        "state",
+        "events",
+        "transport",
+        "restart"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "dimensionReview": {
+        "authorization": "Required by the matrix; this candidate does not assert this dimension.",
+        "state": "Candidate scope is limited to: REST profile PATCH increments revision, owner and another authorized live event stream receive the update, IRC metadata and restart preserve projection.",
+        "events": "Candidate scope is limited to: REST profile PATCH increments revision, owner and another authorized live event stream receive the update, IRC metadata and restart preserve projection.",
+        "transport": "Candidate scope is limited to: REST profile PATCH increments revision, owner and another authorized live event stream receive the update, IRC metadata and restart preserve projection.",
+        "restart": "Candidate scope is limited to: REST profile PATCH increments revision, owner and another authorized live event stream receive the update, IRC metadata and restart preserve projection.",
+        "unrelatedResources": "Required by the matrix; this candidate does not assert this dimension."
+      },
+      "coverageLimitations": [
+        "The exact recipients in this fixture are tested, not all possible audiences."
+      ]
+    },
+    {
+      "id": "USER-018",
+      "kind": "test",
+      "testFile": "tests/features/conversations-events.test.ts",
+      "testTitle": "profile and explicit private metadata share persisted revisions across REST IRC events replay and recreation",
+      "testFileSha256": "61ba8d400748d12e0aa1196ead6fd3c71435404f181a7fd506778b5b46742025",
+      "sourceLine": 217,
+      "scenarioScope": "private:device is visible to owner and owner replay but absent from Bob/admin REST views, Bob IRC, live frames and Bob replay; restart retains it.",
+      "rationale": "Source assertion candidate only; requires exact-title and file-hash matching against final execution before any outcome is assigned.",
+      "assertionDetails": [
+        "private:device is visible to owner and owner replay but absent from Bob/admin REST views, Bob IRC, live frames and Bob replay; restart retains it.",
+        "Explicit private:device value is visible to its owner and absent from Bob/admin REST reads, Bob IRC and Bob replay; owner metadata survives restart."
+      ],
+      "transports": [
+        "REST",
+        "IRC",
+        "event WebSocket"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "dimensionReview": {
+        "authorization": "Candidate scope is limited to: private:device is visible to owner and owner replay but absent from Bob/admin REST views, Bob IRC, live frames and Bob replay; restart retains it.",
+        "state": "Candidate scope is limited to: private:device is visible to owner and owner replay but absent from Bob/admin REST views, Bob IRC, live frames and Bob replay; restart retains it.",
+        "events": "Candidate scope is limited to: private:device is visible to owner and owner replay but absent from Bob/admin REST views, Bob IRC, live frames and Bob replay; restart retains it.",
+        "transport": "Candidate scope is limited to: private:device is visible to owner and owner replay but absent from Bob/admin REST views, Bob IRC, live frames and Bob replay; restart retains it.",
+        "restart": "Candidate scope is limited to: private:device is visible to owner and owner replay but absent from Bob/admin REST views, Bob IRC, live frames and Bob replay; restart retains it.",
+        "unrelatedResources": "Required by the matrix; this candidate does not assert this dimension."
+      },
+      "coverageLimitations": [
+        "Explicit private: keys are covered; arbitrary unprefixed metadata visibility classification is a policy boundary."
+      ]
+    },
+    {
+      "id": "DM-005",
+      "kind": "test",
+      "testFile": "tests/features/conversations-events.test.ts",
+      "testTitle": "immutable participant conversations provide REST/IRC selectors, canonical edits/read markers and durable idempotency",
+      "testFileSha256": "61ba8d400748d12e0aa1196ead6fd3c71435404f181a7fd506778b5b46742025",
+      "sourceLine": 5,
+      "scenarioScope": "Real private message is readable by Bob; other and administrator get 404 by message ID, while participant selector returns the exact message.",
+      "rationale": "Source assertion candidate only; requires exact-title and file-hash matching against final execution before any outcome is assigned.",
+      "assertionDetails": [
+        "Real private message is readable by Bob; other and administrator get 404 by message ID, while participant selector returns the exact message.",
+        "An actual Bob participant reads the exact message ID while unrelated user and network administrator each receive 404 for the message selector."
+      ],
+      "transports": [
+        "REST",
+        "IRC",
+        "event WebSocket",
+        "SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "dimensionReview": {
+        "authorization": "Candidate scope is limited to: Real private message is readable by Bob; other and administrator get 404 by message ID, while participant selector returns the exact message.",
+        "state": "Candidate scope is limited to: Real private message is readable by Bob; other and administrator get 404 by message ID, while participant selector returns the exact message.",
+        "events": "Required by the matrix; this candidate does not assert this dimension.",
+        "transport": "Candidate scope is limited to: Real private message is readable by Bob; other and administrator get 404 by message ID, while participant selector returns the exact message.",
+        "restart": "Required by the matrix; this candidate does not assert this dimension.",
+        "unrelatedResources": "Required by the matrix; this candidate does not assert this dimension."
+      },
+      "coverageLimitations": [
+        "Tests a concrete generated message ID."
+      ]
+    },
+    {
+      "id": "DM-008",
+      "kind": "test",
+      "testFile": "tests/features/conversations-events.test.ts",
+      "testTitle": "account-bound replay subscriptions bootstrap and WS retries recheck live authority without duplicate mutations",
+      "testFileSha256": "61ba8d400748d12e0aa1196ead6fd3c71435404f181a7fd506778b5b46742025",
+      "sourceLine": 327,
+      "scenarioScope": "An outsider event stream attempts to subscribe to the real conversation ID and receives 403; Bob subscription succeeds.",
+      "rationale": "Source assertion candidate only; requires exact-title and file-hash matching against final execution before any outcome is assigned.",
+      "assertionDetails": [
+        "An outsider event stream attempts to subscribe to the real conversation ID and receives 403; Bob subscription succeeds.",
+        "Bob subscribes to the actual conversation; the independent outsider receives a 403 WS error and cannot replay Bob cursor."
+      ],
+      "transports": [
+        "REST",
+        "event WebSocket"
+      ],
+      "assertions": [
+        "authorization",
+        "events",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "dimensionReview": {
+        "authorization": "Candidate scope is limited to: An outsider event stream attempts to subscribe to the real conversation ID and receives 403; Bob subscription succeeds.",
+        "state": "Required by the matrix; this candidate does not assert this dimension.",
+        "events": "Candidate scope is limited to: An outsider event stream attempts to subscribe to the real conversation ID and receives 403; Bob subscription succeeds.",
+        "transport": "Candidate scope is limited to: An outsider event stream attempts to subscribe to the real conversation ID and receives 403; Bob subscription succeeds.",
+        "restart": "Required by the matrix; this candidate does not assert this dimension.",
+        "unrelatedResources": "Required by the matrix; this candidate does not assert this dimension."
+      },
+      "coverageLimitations": [
+        "This is the account-bound replay/subscription case, not the original conversation selector case."
+      ]
+    },
+    {
+      "id": "DM-009",
+      "kind": "test",
+      "testFile": "tests/features/conversations-events.test.ts",
+      "testTitle": "immutable participant conversations provide REST/IRC selectors, canonical edits/read markers and durable idempotency",
+      "testFileSha256": "61ba8d400748d12e0aa1196ead6fd3c71435404f181a7fd506778b5b46742025",
+      "sourceLine": 5,
+      "scenarioScope": "Bob participant unread is one after delivery and zero after his read marker; outsider unread denial is covered by the separate alias candidate.",
+      "rationale": "Source assertion candidate only; requires exact-title and file-hash matching against final execution before any outcome is assigned.",
+      "assertionDetails": [
+        "Bob participant unread is one after delivery and zero after his read marker.",
+        "This case does not itself issue a Charlie unread request; see the separately named alias-parity case."
+      ],
+      "transports": [
+        "REST",
+        "IRC",
+        "event WebSocket"
+      ],
+      "assertions": [
+        "state",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "dimensionReview": {
+        "authorization": "Required by the matrix; this candidate does not assert this dimension.",
+        "state": "Candidate scope is limited to: Bob participant unread is one after delivery and zero after his read marker; outsider unread denial is covered by the separate alias candidate.",
+        "events": "Required by the matrix; this candidate does not assert this dimension.",
+        "transport": "Candidate scope is limited to: Bob participant unread is one after delivery and zero after his read marker; outsider unread denial is covered by the separate alias candidate.",
+        "restart": "Required by the matrix; this candidate does not assert this dimension.",
+        "unrelatedResources": "Required by the matrix; this candidate does not assert this dimension."
+      },
+      "coverageLimitations": [
+        "Outsider unread denial is not asserted by this case; it is supplied by the separate alias-parity candidate."
+      ]
+    },
+    {
+      "id": "DM-010",
+      "kind": "test",
+      "testFile": "tests/features/conversations-events.test.ts",
+      "testTitle": "immutable participant conversations provide REST/IRC selectors, canonical edits/read markers and durable idempotency",
+      "testFileSha256": "61ba8d400748d12e0aa1196ead6fd3c71435404f181a7fd506778b5b46742025",
+      "sourceLine": 5,
+      "scenarioScope": "Bob enumerates the actual uploaded private attachment ID and filename; unrelated user and administrator get 403 on legacy alias without the ID.",
+      "rationale": "Source assertion candidate only; requires exact-title and file-hash matching against final execution before any outcome is assigned.",
+      "assertionDetails": [
+        "Bob enumerates the actual uploaded private attachment ID and filename; unrelated user and administrator get 403 on legacy alias without the ID.",
+        "The test uploads real private bytes, requires Bob attachment list to contain the ID and filename, and requires unrelated and admin responses to exclude that ID."
+      ],
+      "transports": [
+        "REST",
+        "IRC",
+        "event WebSocket",
+        "SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "dimensionReview": {
+        "authorization": "Candidate scope is limited to: Bob enumerates the actual uploaded private attachment ID and filename; unrelated user and administrator get 403 on legacy alias without the ID.",
+        "state": "Candidate scope is limited to: Bob enumerates the actual uploaded private attachment ID and filename; unrelated user and administrator get 403 on legacy alias without the ID.",
+        "events": "Required by the matrix; this candidate does not assert this dimension.",
+        "transport": "Candidate scope is limited to: Bob enumerates the actual uploaded private attachment ID and filename; unrelated user and administrator get 403 on legacy alias without the ID.",
+        "restart": "Required by the matrix; this candidate does not assert this dimension.",
+        "unrelatedResources": "Required by the matrix; this candidate does not assert this dimension."
+      },
+      "coverageLimitations": [
+        "No claim about provider-side object enumeration."
+      ]
+    },
+    {
+      "id": "DM-012",
+      "kind": "test",
+      "testFile": "tests/features/api-expansion-boundaries.test.ts",
+      "testTitle": "conversation, event and metadata REST aliases enforce the same authenticated resource boundaries",
+      "testFileSha256": "9f9b32cc024479dcddda7a0996bf76a449d52f37b4b0342af859d1daee128a64",
+      "sourceLine": 70,
+      "scenarioScope": "Bob sends to Charlie and reads their legacy history; Alice requests that same history with user=bob and receives 403 with no private content.",
+      "rationale": "Source assertion candidate only; requires exact-title and file-hash matching against final execution before any outcome is assigned.",
+      "assertionDetails": [
+        "Bob sends to Charlie and reads their legacy history; Alice requests that same history with user=bob and receives 403 with no private content.",
+        "A distinct Bob-to-Charlie message is present in Bob legacy history; Alice substitution user=bob gets 403 without its content."
+      ],
+      "transports": [
+        "REST",
+        "IRC"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "dimensionReview": {
+        "authorization": "Candidate scope is limited to: Bob sends to Charlie and reads their legacy history; Alice requests that same history with user=bob and receives 403 with no private content.",
+        "state": "Candidate scope is limited to: Bob sends to Charlie and reads their legacy history; Alice requests that same history with user=bob and receives 403 with no private content.",
+        "events": "Required by the matrix; this candidate does not assert this dimension.",
+        "transport": "Candidate scope is limited to: Bob sends to Charlie and reads their legacy history; Alice requests that same history with user=bob and receives 403 with no private content.",
+        "restart": "Required by the matrix; this candidate does not assert this dimension.",
+        "unrelatedResources": "Required by the matrix; this candidate does not assert this dimension."
+      },
+      "coverageLimitations": [
+        "One concrete forged legacy selector and real Bob/Charlie message are exercised."
+      ]
+    },
+    {
+      "id": "DM-013",
+      "kind": "test",
+      "testFile": "tests/features/conversations-events.test.ts",
+      "testTitle": "immutable participant conversations provide REST/IRC selectors, canonical edits/read markers and durable idempotency",
+      "testFileSha256": "61ba8d400748d12e0aa1196ead6fd3c71435404f181a7fd506778b5b46742025",
+      "sourceLine": 5,
+      "scenarioScope": "Nonparticipants receive 403 for the real Alice/Bob conversation and messages; its membership rows contain only Alice and Bob.",
+      "rationale": "Source assertion candidate only; requires exact-title and file-hash matching against final execution before any outcome is assigned.",
+      "assertionDetails": [
+        "Nonparticipants receive 403 for the real Alice/Bob conversation and messages; its membership rows contain only Alice and Bob.",
+        "Outsider and admin detail/history fetches receive 403 and the stored conversation_members table contains only Alice and Bob IDs."
+      ],
+      "transports": [
+        "REST",
+        "IRC",
+        "event WebSocket",
+        "SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "dimensionReview": {
+        "authorization": "Candidate scope is limited to: Nonparticipants receive 403 for the real Alice/Bob conversation and messages; its membership rows contain only Alice and Bob.",
+        "state": "Candidate scope is limited to: Nonparticipants receive 403 for the real Alice/Bob conversation and messages; its membership rows contain only Alice and Bob.",
+        "events": "Required by the matrix; this candidate does not assert this dimension.",
+        "transport": "Candidate scope is limited to: Nonparticipants receive 403 for the real Alice/Bob conversation and messages; its membership rows contain only Alice and Bob.",
+        "restart": "Required by the matrix; this candidate does not assert this dimension.",
+        "unrelatedResources": "Required by the matrix; this candidate does not assert this dimension."
+      },
+      "coverageLimitations": [
+        "No exhaustive malformed or guessed ID manipulation campaign is claimed."
+      ]
+    },
+    {
+      "id": "DM-016",
+      "kind": "test",
+      "testFile": "tests/features/conversations-events.test.ts",
+      "testTitle": "offline registered-nickname DMs persist to immutable ownership and retained history never follows nickname reuse",
+      "testFileSha256": "61ba8d400748d12e0aa1196ead6fd3c71435404f181a7fd506778b5b46742025",
+      "sourceLine": 161,
+      "scenarioScope": "IRC message to offline registered BobAlias persists under Bob account ID; after alias transfer Charlie receives new traffic but cannot retrieve old history.",
+      "rationale": "Source assertion candidate only; requires exact-title and file-hash matching against final execution before any outcome is assigned.",
+      "assertionDetails": [
+        "IRC message to offline registered BobAlias persists under Bob account ID; after alias transfer Charlie receives new traffic but cannot retrieve old history.",
+        "After nickname ownership changes from Bob to Charlie, Bob retains the old message, Charlie receives only the new traffic, and stored target_id remains Bob account ID."
+      ],
+      "transports": [
+        "REST",
+        "IRC",
+        "SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "dimensionReview": {
+        "authorization": "Candidate scope is limited to: IRC message to offline registered BobAlias persists under Bob account ID; after alias transfer Charlie receives new traffic but cannot retrieve old history.",
+        "state": "Candidate scope is limited to: IRC message to offline registered BobAlias persists under Bob account ID; after alias transfer Charlie receives new traffic but cannot retrieve old history.",
+        "events": "Required by the matrix; this candidate does not assert this dimension.",
+        "transport": "Candidate scope is limited to: IRC message to offline registered BobAlias persists under Bob account ID; after alias transfer Charlie receives new traffic but cannot retrieve old history.",
+        "restart": "Candidate scope is limited to: IRC message to offline registered BobAlias persists under Bob account ID; after alias transfer Charlie receives new traffic but cannot retrieve old history.",
+        "unrelatedResources": "Candidate scope is limited to: IRC message to offline registered BobAlias persists under Bob account ID; after alias transfer Charlie receives new traffic but cannot retrieve old history."
+      },
+      "coverageLimitations": [
+        "Local runtime recreation and nickname reuse are covered."
+      ]
+    },
+    {
+      "id": "DM-019",
+      "kind": "test",
+      "testFile": "tests/features/conversations-events.test.ts",
+      "testTitle": "immutable participant conversations provide REST/IRC selectors, canonical edits/read markers and durable idempotency",
+      "testFileSha256": "61ba8d400748d12e0aa1196ead6fd3c71435404f181a7fd506778b5b46742025",
+      "sourceLine": 5,
+      "scenarioScope": "REST conversation send reaches Bob IRC; IRC conversation selector returns same ID, and outsider cannot read REST history.",
+      "rationale": "Source assertion candidate only; requires exact-title and file-hash matching against final execution before any outcome is assigned.",
+      "assertionDetails": [
+        "REST conversation send reaches Bob IRC; IRC conversation selector returns same ID, and outsider cannot read REST history.",
+        "The created REST message reaches Bob IRC, sender spoofing and outsider REST history are denied, and IRC CONVERSATION GET returns the canonical conversation ID."
+      ],
+      "transports": [
+        "REST",
+        "IRC",
+        "event WebSocket",
+        "SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "dimensionReview": {
+        "authorization": "Candidate scope is limited to: REST conversation send reaches Bob IRC; IRC conversation selector returns same ID, and outsider cannot read REST history.",
+        "state": "Candidate scope is limited to: REST conversation send reaches Bob IRC; IRC conversation selector returns same ID, and outsider cannot read REST history.",
+        "events": "Required by the matrix; this candidate does not assert this dimension.",
+        "transport": "Candidate scope is limited to: REST conversation send reaches Bob IRC; IRC conversation selector returns same ID, and outsider cannot read REST history.",
+        "restart": "Required by the matrix; this candidate does not assert this dimension.",
+        "unrelatedResources": "Required by the matrix; this candidate does not assert this dimension."
+      },
+      "coverageLimitations": [
+        "Selected IRC send/selector and REST operations only; exhaustive parity across all IRC commands is not established."
+      ]
+    },
+    {
+      "id": "DM-022",
+      "kind": "test",
+      "testFile": "tests/features/api-expansion-boundaries.test.ts",
+      "testTitle": "conversation, event and metadata REST aliases enforce the same authenticated resource boundaries",
+      "testFileSha256": "9f9b32cc024479dcddda7a0996bf76a449d52f37b4b0342af859d1daee128a64",
+      "sourceLine": 70,
+      "scenarioScope": "Both prefixes execute conversation, message, read, unread, attachment and metadata operations with real participants and outsider denials.",
+      "rationale": "Source assertion candidate only; requires exact-title and file-hash matching against final execution before any outcome is assigned.",
+      "assertionDetails": [
+        "Both prefixes execute conversation, message, read, unread, attachment and metadata operations with real participants and outsider denials.",
+        "The alias loop exercises create, list, history, message ID, edit, redaction, read, unread and attachments with outsider checks; the separate legacy history case checks account selectors."
+      ],
+      "transports": [
+        "REST aliases",
+        "IRC",
+        "event replay REST"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "dimensionReview": {
+        "authorization": "Candidate scope is limited to: Both prefixes execute conversation, message, read, unread, attachment and metadata operations with real participants and outsider denials.",
+        "state": "Candidate scope is limited to: Both prefixes execute conversation, message, read, unread, attachment and metadata operations with real participants and outsider denials.",
+        "events": "Candidate scope is limited to: Both prefixes execute conversation, message, read, unread, attachment and metadata operations with real participants and outsider denials.",
+        "transport": "Candidate scope is limited to: Both prefixes execute conversation, message, read, unread, attachment and metadata operations with real participants and outsider denials.",
+        "restart": "Required by the matrix; this candidate does not assert this dimension.",
+        "unrelatedResources": "Required by the matrix; this candidate does not assert this dimension."
+      },
+      "coverageLimitations": [
+        "Covers the enumerated current aliases and legacy history selector, not unenumerated historical endpoints."
+      ]
+    },
+    {
+      "id": "WS-010",
+      "kind": "test",
+      "testFile": "tests/features/conversations-events.test.ts",
+      "testTitle": "durable observer handshakes preserve public live observation and suppress private revoked redacted replay across recreation",
+      "testFileSha256": "61ba8d400748d12e0aa1196ead6fd3c71435404f181a7fd506778b5b46742025",
+      "sourceLine": 449,
+      "scenarioScope": "Outsider subscription to the created secret #eventsecret generation returns 403; Bob joins and his subscription succeeds.",
+      "rationale": "Source assertion candidate only; requires exact-title and file-hash matching against final execution before any outcome is assigned.",
+      "assertionDetails": [
+        "Outsider subscription to the created secret #eventsecret generation returns 403; Bob joins and his subscription succeeds.",
+        "Independent observer subscribe to an actually created secret channel gets 403 while a joined member subscription succeeds; post-leave private replay is absent."
+      ],
+      "transports": [
+        "event WebSocket",
+        "REST"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "dimensionReview": {
+        "authorization": "Candidate scope is limited to: Outsider subscription to the created secret #eventsecret generation returns 403; Bob joins and his subscription succeeds.",
+        "state": "Candidate scope is limited to: Outsider subscription to the created secret #eventsecret generation returns 403; Bob joins and his subscription succeeds.",
+        "events": "Candidate scope is limited to: Outsider subscription to the created secret #eventsecret generation returns 403; Bob joins and his subscription succeeds.",
+        "transport": "Candidate scope is limited to: Outsider subscription to the created secret #eventsecret generation returns 403; Bob joins and his subscription succeeds.",
+        "restart": "Candidate scope is limited to: Outsider subscription to the created secret #eventsecret generation returns 403; Bob joins and his subscription succeeds.",
+        "unrelatedResources": "Required by the matrix; this candidate does not assert this dimension."
+      },
+      "coverageLimitations": [
+        "The fixture uses a secret channel named #eventsecret; it does not separately test every restricted channel policy."
+      ]
+    },
+    {
+      "id": "WS-011",
+      "kind": "test",
+      "testFile": "tests/features/conversations-events.test.ts",
+      "testTitle": "account-bound replay subscriptions bootstrap and WS retries recheck live authority without duplicate mutations",
+      "testFileSha256": "61ba8d400748d12e0aa1196ead6fd3c71435404f181a7fd506778b5b46742025",
+      "sourceLine": 327,
+      "scenarioScope": "Outsider receives 403 subscribing to real Alice/Bob conversation while Bob succeeds; outsider frames exclude message payload.",
+      "rationale": "Source assertion candidate only; requires exact-title and file-hash matching against final execution before any outcome is assigned.",
+      "assertionDetails": [
+        "Outsider receives 403 subscribing to real Alice/Bob conversation while Bob succeeds; outsider frames exclude message payload.",
+        "The outsider subscription error carries status 403, Bob subscribes successfully and outsider frames do not contain the private payload."
+      ],
+      "transports": [
+        "event WebSocket",
+        "REST"
+      ],
+      "assertions": [
+        "authorization",
+        "events",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "dimensionReview": {
+        "authorization": "Candidate scope is limited to: Outsider receives 403 subscribing to real Alice/Bob conversation while Bob succeeds; outsider frames exclude message payload.",
+        "state": "Required by the matrix; this candidate does not assert this dimension.",
+        "events": "Candidate scope is limited to: Outsider receives 403 subscribing to real Alice/Bob conversation while Bob succeeds; outsider frames exclude message payload.",
+        "transport": "Candidate scope is limited to: Outsider receives 403 subscribing to real Alice/Bob conversation while Bob succeeds; outsider frames exclude message payload.",
+        "restart": "Required by the matrix; this candidate does not assert this dimension.",
+        "unrelatedResources": "Required by the matrix; this candidate does not assert this dimension."
+      },
+      "coverageLimitations": [
+        "Account-bound subscription case supplies the explicit denial."
+      ]
+    },
+    {
+      "id": "WS-017",
+      "kind": "test",
+      "testFile": "tests/features/conversations-events.test.ts",
+      "testTitle": "durable observer handshakes preserve public live observation and suppress private revoked redacted replay across recreation",
+      "testFileSha256": "61ba8d400748d12e0aa1196ead6fd3c71435404f181a7fd506778b5b46742025",
+      "sourceLine": 449,
+      "scenarioScope": "Observer case checks live and replay suppression after privacy changes, redaction and recreation.",
+      "rationale": "Source assertion candidate only; requires exact-title and file-hash matching against final execution before any outcome is assigned.",
+      "assertionDetails": [
+        "Observer case checks live and replay suppression after privacy changes, redaction and recreation.",
+        "Replay suppresses a redacted body and a private message sent after a member leaves; an independent authorized public subscription receives its event."
+      ],
+      "transports": [
+        "event WebSocket",
+        "REST",
+        "IRC"
+      ],
+      "assertions": [
+        "authorization",
+        "events",
+        "transport",
+        "restart"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "dimensionReview": {
+        "authorization": "Candidate scope is limited to: Observer case checks live and replay suppression after privacy changes, redaction and recreation.",
+        "state": "Required by the matrix; this candidate does not assert this dimension.",
+        "events": "Candidate scope is limited to: Observer case checks live and replay suppression after privacy changes, redaction and recreation.",
+        "transport": "Candidate scope is limited to: Observer case checks live and replay suppression after privacy changes, redaction and recreation.",
+        "restart": "Candidate scope is limited to: Observer case checks live and replay suppression after privacy changes, redaction and recreation.",
+        "unrelatedResources": "Required by the matrix; this candidate does not assert this dimension."
+      },
+      "coverageLimitations": [
+        "Specific tested authorization changes, not all replay policy permutations."
+      ]
+    },
+    {
+      "id": "WS-018",
+      "kind": "test",
+      "testFile": "tests/features/conversations-events.test.ts",
+      "testTitle": "account-bound replay subscriptions bootstrap and WS retries recheck live authority without duplicate mutations",
+      "testFileSha256": "61ba8d400748d12e0aa1196ead6fd3c71435404f181a7fd506778b5b46742025",
+      "sourceLine": 327,
+      "scenarioScope": "Bob bootstrap cursor used by outsider returns 403; Bob replay receives its own event.",
+      "rationale": "Source assertion candidate only; requires exact-title and file-hash matching against final execution before any outcome is assigned.",
+      "assertionDetails": [
+        "Bob bootstrap cursor used by outsider returns 403; Bob replay receives its own event.",
+        "An outsider using Bob bootstrap cursor gets REST 403; Bob receives the single authored event using the same cursor."
+      ],
+      "transports": [
+        "event WebSocket",
+        "REST"
+      ],
+      "assertions": [
+        "authorization",
+        "events",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "dimensionReview": {
+        "authorization": "Candidate scope is limited to: Bob bootstrap cursor used by outsider returns 403; Bob replay receives its own event.",
+        "state": "Required by the matrix; this candidate does not assert this dimension.",
+        "events": "Candidate scope is limited to: Bob bootstrap cursor used by outsider returns 403; Bob replay receives its own event.",
+        "transport": "Candidate scope is limited to: Bob bootstrap cursor used by outsider returns 403; Bob replay receives its own event.",
+        "restart": "Required by the matrix; this candidate does not assert this dimension.",
+        "unrelatedResources": "Required by the matrix; this candidate does not assert this dimension."
+      },
+      "coverageLimitations": [
+        "One foreign-account cursor and account pair."
+      ]
+    },
+    {
+      "id": "WS-022",
+      "kind": "test",
+      "testFile": "tests/features/conversations-events.test.ts",
+      "testTitle": "account-bound replay subscriptions bootstrap and WS retries recheck live authority without duplicate mutations",
+      "testFileSha256": "61ba8d400748d12e0aa1196ead6fd3c71435404f181a7fd506778b5b46742025",
+      "sourceLine": 327,
+      "scenarioScope": "Retry of identical WS mutation returns same message; conflicting same operation ID gets 409; history and replay contain one message event.",
+      "rationale": "Source assertion candidate only; requires exact-title and file-hash matching against final execution before any outcome is assigned.",
+      "assertionDetails": [
+        "Retry of identical WS mutation returns same message; conflicting same operation ID gets 409; history and replay contain one message event.",
+        "A repeated operation ID returns the original message, a conflicting payload returns 409 and Bob history and replay show a single mutation."
+      ],
+      "transports": [
+        "event WebSocket",
+        "REST"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "dimensionReview": {
+        "authorization": "Candidate scope is limited to: Retry of identical WS mutation returns same message; conflicting same operation ID gets 409; history and replay contain one message event.",
+        "state": "Candidate scope is limited to: Retry of identical WS mutation returns same message; conflicting same operation ID gets 409; history and replay contain one message event.",
+        "events": "Candidate scope is limited to: Retry of identical WS mutation returns same message; conflicting same operation ID gets 409; history and replay contain one message event.",
+        "transport": "Candidate scope is limited to: Retry of identical WS mutation returns same message; conflicting same operation ID gets 409; history and replay contain one message event.",
+        "restart": "Required by the matrix; this candidate does not assert this dimension.",
+        "unrelatedResources": "Required by the matrix; this candidate does not assert this dimension."
+      },
+      "coverageLimitations": [
+        "This tests application idempotency for a conversation send."
+      ]
+    },
+    {
+      "id": "MEDIA-015",
+      "kind": "test",
+      "testFile": "tests/features/media-list.test.ts",
+      "testTitle": "lists only published media in each authenticated scope and preserves isolation after recreation",
+      "testFileSha256": "9c97263048b6a3b7802357039e8097b0b1fc0de203c28f26466d6ee72d47b4f8",
+      "sourceLine": 13,
+      "scenarioScope": "Owner and authorized channel member list published upload IDs; anonymous and secret-channel outsider are denied and unrelated private upload is absent.",
+      "rationale": "Source assertion candidate only; requires exact-title and file-hash matching against final execution before any outcome is assigned.",
+      "assertionDetails": [
+        "Owner and authorized channel member list published upload IDs; anonymous and secret-channel outsider are denied and unrelated private upload is absent.",
+        "Actual private, secret-channel and DM upload IDs are compared to owner/member lists; outsider and anonymous listing are denied or empty and lists are checked after restart."
+      ],
+      "transports": [
+        "REST",
+        "IRC",
+        "local R2 and SQLite fixture"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "dimensionReview": {
+        "authorization": "Candidate scope is limited to: Owner and authorized channel member list published upload IDs; anonymous and secret-channel outsider are denied and unrelated private upload is absent.",
+        "state": "Candidate scope is limited to: Owner and authorized channel member list published upload IDs; anonymous and secret-channel outsider are denied and unrelated private upload is absent.",
+        "events": "Candidate scope is limited to: Owner and authorized channel member list published upload IDs; anonymous and secret-channel outsider are denied and unrelated private upload is absent.",
+        "transport": "Candidate scope is limited to: Owner and authorized channel member list published upload IDs; anonymous and secret-channel outsider are denied and unrelated private upload is absent.",
+        "restart": "Candidate scope is limited to: Owner and authorized channel member list published upload IDs; anonymous and secret-channel outsider are denied and unrelated private upload is absent.",
+        "unrelatedResources": "Candidate scope is limited to: Owner and authorized channel member list published upload IDs; anonymous and secret-channel outsider are denied and unrelated private upload is absent."
+      },
+      "coverageLimitations": [
+        "Local SQLite/R2 fixture, not external provider enumeration."
+      ]
+    },
+    {
+      "id": "PUSH-006",
+      "kind": "test",
+      "testFile": "tests/features/webpush-policy.test.ts",
+      "testTitle": "rechecks a removed pending subscription while another recipient remains live",
+      "testFileSha256": "00ed579b88b30c76ba09e679b27642b28e83fecbcb072c2b4f84bfca3546ed87",
+      "sourceLine": 63,
+      "scenarioScope": "Removed pending subscription is rechecked and receives no queued delivery while independent recipient remains live.",
+      "rationale": "Source assertion candidate only; requires exact-title and file-hash matching against final execution before any outcome is assigned.",
+      "assertionDetails": [
+        "Removed pending subscription is rechecked and receives no queued delivery while independent recipient remains live.",
+        "A pending Bob endpoint is unsubscribed after another endpoint is held; only the active endpoint receives the decryptable private event, and the unrelated endpoint receives nothing."
+      ],
+      "transports": [
+        "REST",
+        "mock WebPush provider",
+        "local SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "dimensionReview": {
+        "authorization": "Candidate scope is limited to: Removed pending subscription is rechecked and receives no queued delivery while independent recipient remains live.",
+        "state": "Candidate scope is limited to: Removed pending subscription is rechecked and receives no queued delivery while independent recipient remains live.",
+        "events": "Candidate scope is limited to: Removed pending subscription is rechecked and receives no queued delivery while independent recipient remains live.",
+        "transport": "Candidate scope is limited to: Removed pending subscription is rechecked and receives no queued delivery while independent recipient remains live.",
+        "restart": "Required by the matrix; this candidate does not assert this dimension.",
+        "unrelatedResources": "Candidate scope is limited to: Removed pending subscription is rechecked and receives no queued delivery while independent recipient remains live."
+      },
+      "coverageLimitations": [
+        "Mock provider and local runtime only; network/provider delivery is not established."
+      ]
+    },
+    {
+      "id": "PUSH-007",
+      "kind": "test",
+      "testFile": "tests/features/webpush-policy.test.ts",
+      "testTitle": "does not give a late channel member earlier private events and delivers later events",
+      "testFileSha256": "00ed579b88b30c76ba09e679b27642b28e83fecbcb072c2b4f84bfca3546ed87",
+      "sourceLine": 536,
+      "scenarioScope": "Late channel member receives later events but not private events queued before membership.",
+      "rationale": "Source assertion candidate only; requires exact-title and file-hash matching against final execution before any outcome is assigned.",
+      "assertionDetails": [
+        "Late channel member receives later events but not private events queued before membership.",
+        "A secret-channel event sent before Charlie joins is absent from all Charlie endpoint deliveries, while the later marker is decryptable at that endpoint."
+      ],
+      "transports": [
+        "REST",
+        "mock WebPush provider"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "dimensionReview": {
+        "authorization": "Candidate scope is limited to: Late channel member receives later events but not private events queued before membership.",
+        "state": "Candidate scope is limited to: Late channel member receives later events but not private events queued before membership.",
+        "events": "Candidate scope is limited to: Late channel member receives later events but not private events queued before membership.",
+        "transport": "Candidate scope is limited to: Late channel member receives later events but not private events queued before membership.",
+        "restart": "Required by the matrix; this candidate does not assert this dimension.",
+        "unrelatedResources": "Required by the matrix; this candidate does not assert this dimension."
+      },
+      "coverageLimitations": [
+        "Late membership in one secret channel with mock provider; other delivery histories are not exhaustive."
+      ]
+    },
+    {
+      "id": "PUSH-008",
+      "kind": "test",
+      "testFile": "tests/features/webpush-delivery.test.ts",
+      "testTitle": "delivers an encrypted private event only to the intended active subscription without channel membership",
+      "testFileSha256": "162fa4f0d86d8017f3ee71c1d77c84770c77efad6b6f0317b07e61ea4c77ec7f",
+      "sourceLine": 64,
+      "scenarioScope": "A mock provider captures encrypted private notification bytes at Bob endpoint, which Bob decrypts; outsider IRC and event streams do not receive the private content.",
+      "rationale": "Source assertion candidate only; requires exact-title and file-hash matching against final execution before any outcome is assigned.",
+      "assertionDetails": [
+        "A mock provider captures encrypted private notification bytes at Bob endpoint, which Bob decrypts; outsider IRC and event streams do not receive the private content.",
+        "The mock endpoint captures encrypted bytes, the recipient decrypts a conversation event and the outsider event stream and IRC client do not receive the secret."
+      ],
+      "transports": [
+        "REST",
+        "IRC",
+        "event WebSocket",
+        "mock WebPush provider"
+      ],
+      "assertions": [
+        "authorization",
+        "events",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "dimensionReview": {
+        "authorization": "Candidate scope is limited to: A mock provider captures encrypted private notification bytes at Bob endpoint, which Bob decrypts; outsider IRC and event streams do not receive the private content.",
+        "state": "Required by the matrix; this candidate does not assert this dimension.",
+        "events": "Candidate scope is limited to: A mock provider captures encrypted private notification bytes at Bob endpoint, which Bob decrypts; outsider IRC and event streams do not receive the private content.",
+        "transport": "Candidate scope is limited to: A mock provider captures encrypted private notification bytes at Bob endpoint, which Bob decrypts; outsider IRC and event streams do not receive the private content.",
+        "restart": "Required by the matrix; this candidate does not assert this dimension.",
+        "unrelatedResources": "Required by the matrix; this candidate does not assert this dimension."
+      },
+      "coverageLimitations": [
+        "Mock provider endpoint; production delivery and device decryption are not established."
+      ]
+    },
+    {
+      "id": "PUSH-009",
+      "kind": "test",
+      "testFile": "tests/features/webpush-policy.test.ts",
+      "testTitle": "enforces channel all, mentions and nothing preferences and rejects other-account or malformed updates",
+      "testFileSha256": "00ed579b88b30c76ba09e679b27642b28e83fecbcb072c2b4f84bfca3546ed87",
+      "sourceLine": 193,
+      "scenarioScope": "Channel all, mentions and nothing preferences change delivery; foreign-account and malformed preference updates are rejected.",
+      "rationale": "Source assertion candidate only; requires exact-title and file-hash matching against final execution before any outcome is assigned.",
+      "assertionDetails": [
+        "Channel all, mentions and nothing preferences change delivery; foreign-account and malformed preference updates are rejected.",
+        "The test checks foreign/malformed preference denials and exact delivery counts for all, mentions, muted and nothing preferences with an independent receiving endpoint."
+      ],
+      "transports": [
+        "REST",
+        "IRC service",
+        "mock WebPush provider"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "dimensionReview": {
+        "authorization": "Candidate scope is limited to: Channel all, mentions and nothing preferences change delivery; foreign-account and malformed preference updates are rejected.",
+        "state": "Candidate scope is limited to: Channel all, mentions and nothing preferences change delivery; foreign-account and malformed preference updates are rejected.",
+        "events": "Candidate scope is limited to: Channel all, mentions and nothing preferences change delivery; foreign-account and malformed preference updates are rejected.",
+        "transport": "Candidate scope is limited to: Channel all, mentions and nothing preferences change delivery; foreign-account and malformed preference updates are rejected.",
+        "restart": "Required by the matrix; this candidate does not assert this dimension.",
+        "unrelatedResources": "Candidate scope is limited to: Channel all, mentions and nothing preferences change delivery; foreign-account and malformed preference updates are rejected."
+      },
+      "coverageLimitations": [
+        "Specific all, mentions and nothing preferences with a mock provider."
+      ]
+    },
+    {
+      "id": "PUSH-010",
+      "kind": "test",
+      "testFile": "tests/features/webpush-policy.test.ts",
+      "testTitle": "removes only a provider 404 subscription and still delivers encrypted content to an independent endpoint",
+      "testFileSha256": "00ed579b88b30c76ba09e679b27642b28e83fecbcb072c2b4f84bfca3546ed87",
+      "sourceLine": 5,
+      "scenarioScope": "Provider 404 removes only failing subscription while independent endpoint receives encrypted content.",
+      "rationale": "Source assertion candidate only; requires exact-title and file-hash matching against final execution before any outcome is assigned.",
+      "assertionDetails": [
+        "Provider 404 removes only failing subscription while independent endpoint receives encrypted content.",
+        "A mock provider 404 removes only its stale subscription while another Bob endpoint receives decryptable content and Charlie subscription remains."
+      ],
+      "transports": [
+        "REST",
+        "mock WebPush provider",
+        "local SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "dimensionReview": {
+        "authorization": "Candidate scope is limited to: Provider 404 removes only failing subscription while independent endpoint receives encrypted content.",
+        "state": "Candidate scope is limited to: Provider 404 removes only failing subscription while independent endpoint receives encrypted content.",
+        "events": "Candidate scope is limited to: Provider 404 removes only failing subscription while independent endpoint receives encrypted content.",
+        "transport": "Candidate scope is limited to: Provider 404 removes only failing subscription while independent endpoint receives encrypted content.",
+        "restart": "Required by the matrix; this candidate does not assert this dimension.",
+        "unrelatedResources": "Candidate scope is limited to: Provider 404 removes only failing subscription while independent endpoint receives encrypted content."
+      },
+      "coverageLimitations": [
+        "Mock 404 provider behavior; companion 410 candidate is separate."
+      ]
+    },
+    {
+      "id": "PUSH-011",
+      "kind": "test",
+      "testFile": "tests/features/webpush-policy.test.ts",
+      "testTitle": "persists 429 retry attempts over recreation and stops after the bounded eighth attempt",
+      "testFileSha256": "00ed579b88b30c76ba09e679b27642b28e83fecbcb072c2b4f84bfca3546ed87",
+      "sourceLine": 113,
+      "scenarioScope": "Provider 429 retry state persists through recreation and terminates after eighth attempt.",
+      "rationale": "Source assertion candidate only; requires exact-title and file-hash matching against final execution before any outcome is assigned.",
+      "assertionDetails": [
+        "Provider 429 retry state persists through recreation and terminates after eighth attempt.",
+        "Exact retry attempts and next_attempt state survive recreation; fixture-triggered alarms stop at attempt eight without removing the subscription."
+      ],
+      "transports": [
+        "REST",
+        "mock WebPush provider",
+        "local SQLite"
+      ],
+      "assertions": [
+        "state",
+        "events",
+        "transport",
+        "restart"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "dimensionReview": {
+        "authorization": "Required by the matrix; this candidate does not assert this dimension.",
+        "state": "Candidate scope is limited to: Provider 429 retry state persists through recreation and terminates after eighth attempt.",
+        "events": "Candidate scope is limited to: Provider 429 retry state persists through recreation and terminates after eighth attempt.",
+        "transport": "Candidate scope is limited to: Provider 429 retry state persists through recreation and terminates after eighth attempt.",
+        "restart": "Candidate scope is limited to: Provider 429 retry state persists through recreation and terminates after eighth attempt.",
+        "unrelatedResources": "Required by the matrix; this candidate does not assert this dimension."
+      },
+      "coverageLimitations": [
+        "One mock 429 retry schedule; companion 503 candidate is separate."
+      ]
+    },
+    {
+      "id": "DB-016",
+      "kind": "test",
+      "testFile": "tests/security/matrix-media-recovery.test.ts",
+      "testTitle": "[MEDIA-009 MEDIA-012 DB-025] failed provider cleanup leaves inaccessible orphan bytes until automatic reconciliation",
+      "testFileSha256": "1c8d6fe3fd1c2d8d2098338a72f6e430950e4f16540cba70fe4924bc721c85ed",
+      "sourceLine": 112,
+      "scenarioScope": "Provider failed cleanup case asserts orphan bytes inaccessible after recreation, schedules recovery and explicitly invokes recoveryRun to remove them.",
+      "rationale": "Source assertion candidate only; requires exact-title and file-hash matching against final execution before any outcome is assigned.",
+      "assertionDetails": [
+        "Provider failed cleanup case asserts orphan bytes inaccessible after recreation, schedules recovery and explicitly invokes recoveryRun to remove them.",
+        "Injected failed provider cleanup returns 503, removes the metadata reservation and preserves inaccessible orphan bytes through restart; an explicitly invoked reconciler removes bytes while independent ready uploads remain."
+      ],
+      "transports": [
+        "REST",
+        "IRC",
+        "event WebSocket",
+        "local R2 and SQLite fixture"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "dimensionReview": {
+        "authorization": "Candidate scope is limited to: Provider failed cleanup case asserts orphan bytes inaccessible after recreation, schedules recovery and explicitly invokes recoveryRun to remove them.",
+        "state": "Candidate scope is limited to: Provider failed cleanup case asserts orphan bytes inaccessible after recreation, schedules recovery and explicitly invokes recoveryRun to remove them.",
+        "events": "Candidate scope is limited to: Provider failed cleanup case asserts orphan bytes inaccessible after recreation, schedules recovery and explicitly invokes recoveryRun to remove them.",
+        "transport": "Candidate scope is limited to: Provider failed cleanup case asserts orphan bytes inaccessible after recreation, schedules recovery and explicitly invokes recoveryRun to remove them.",
+        "restart": "Candidate scope is limited to: Provider failed cleanup case asserts orphan bytes inaccessible after recreation, schedules recovery and explicitly invokes recoveryRun to remove them.",
+        "unrelatedResources": "Candidate scope is limited to: Provider failed cleanup case asserts orphan bytes inaccessible after recreation, schedules recovery and explicitly invokes recoveryRun to remove them."
+      },
+      "coverageLimitations": [
+        "Recovery is explicitly invoked by fixture, not proof of alarm scheduling in a deployed provider; cross-object operations are not atomic and inaccessible orphan bytes can exist until recovery."
+      ]
+    },
+    {
+      "id": "ABUSE-017",
+      "kind": "test",
+      "testFile": "tests/features/outbound-network.test.ts",
+      "testTitle": "real authenticated preview endpoint uses the pinned outbound adapter without reaching a denied destination",
+      "testFileSha256": "281b522997f99da4826f51d47c4ba4ac01877d335bb0f5cfd807bf1cee50494e",
+      "sourceLine": 409,
+      "scenarioScope": "Authenticated preview succeeds through pinned public IP and TLS server name; mixed public/loopback DNS gets 404 without another outbound connection.",
+      "rationale": "Source assertion candidate only; requires exact-title and file-hash matching against final execution before any outcome is assigned.",
+      "assertionDetails": [
+        "Authenticated preview succeeds through pinned public IP and TLS server name; mixed public/loopback DNS gets 404 without another outbound connection.",
+        "Anonymous preview is 401 without DNS lookup; public address is pinned into a verified-TLS mock transport, while mixed public/loopback DNS returns 404 without an additional connection."
+      ],
+      "transports": [
+        "REST",
+        "injected DNS and pinned outbound transport"
+      ],
+      "assertions": [
+        "authorization",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "dimensionReview": {
+        "authorization": "Candidate scope is limited to: Authenticated preview succeeds through pinned public IP and TLS server name; mixed public/loopback DNS gets 404 without another outbound connection.",
+        "state": "Required by the matrix; this candidate does not assert this dimension.",
+        "events": "Required by the matrix; this candidate does not assert this dimension.",
+        "transport": "Candidate scope is limited to: Authenticated preview succeeds through pinned public IP and TLS server name; mixed public/loopback DNS gets 404 without another outbound connection.",
+        "restart": "Required by the matrix; this candidate does not assert this dimension.",
+        "unrelatedResources": "Required by the matrix; this candidate does not assert this dimension."
+      },
+      "coverageLimitations": [
+        "Uses injected DNS and transport; deployed provider networking, real DNS rebinding and egress controls are not established."
+      ]
+    },
+    {
+      "id": "WS-019",
+      "kind": "test",
+      "testFile": "tests/features/shards-backpressure.test.ts",
+      "testTitle": "distinct event SessionDO stores relay immutable private conversations and channel events with current revocation, replay and hibernation guards",
+      "testFileSha256": "734fd99569646eaa0a76e43a94749f781c26341cef93620c56b829d7c78ec3be",
+      "sourceLine": 14,
+      "scenarioScope": "Two real event-shard SessionDOs receive the same private DM and authorized channel event, an unrelated stream receives no private message, and after membership revocation neither shard replays the protected channel message.",
+      "rationale": "Source assertion candidate only; requires exact-title and file-hash matching against final execution before any outcome is assigned.",
+      "assertionDetails": [
+        "Two real event-shard SessionDOs receive the same private DM and authorized channel event, an unrelated stream receives no private message, and after membership revocation neither shard replays the protected channel message.",
+        "The test proves two different durable object IDs and account leases, asserts DM and channel event IDs on both, and checks revocation and replay after shard hibernation."
+      ],
+      "transports": [
+        "REST",
+        "IRC",
+        "event WebSocket",
+        "SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "dimensionReview": {
+        "authorization": "Candidate scope is limited to: Two real event-shard SessionDOs receive the same private DM and authorized channel event, an unrelated stream receives no private message, and after membership revocation neither shard replays the protected channel message.",
+        "state": "Candidate scope is limited to: Two real event-shard SessionDOs receive the same private DM and authorized channel event, an unrelated stream receives no private message, and after membership revocation neither shard replays the protected channel message.",
+        "events": "Candidate scope is limited to: Two real event-shard SessionDOs receive the same private DM and authorized channel event, an unrelated stream receives no private message, and after membership revocation neither shard replays the protected channel message.",
+        "transport": "Candidate scope is limited to: Two real event-shard SessionDOs receive the same private DM and authorized channel event, an unrelated stream receives no private message, and after membership revocation neither shard replays the protected channel message.",
+        "restart": "Candidate scope is limited to: Two real event-shard SessionDOs receive the same private DM and authorized channel event, an unrelated stream receives no private message, and after membership revocation neither shard replays the protected channel message.",
+        "unrelatedResources": "Candidate scope is limited to: Two real event-shard SessionDOs receive the same private DM and authorized channel event, an unrelated stream receives no private message, and after membership revocation neither shard replays the protected channel message."
+      },
+      "coverageLimitations": [
+        "Local workerd shard routing and hibernation, not deployed Cloudflare topology or provider buffer limits."
+      ]
+    },
+    {
+      "id": "WS-021",
+      "kind": "test",
+      "testFile": "tests/features/shards-backpressure.test.ts",
+      "testTitle": "native paused event reader reaches a bounded charged-output close while acknowledged independent devices preserve ordered messages",
+      "testFileSha256": "734fd99569646eaa0a76e43a94749f781c26341cef93620c56b829d7c78ec3be",
+      "sourceLine": 281,
+      "scenarioScope": "A paused native event reader is resumed to observe actual close 1008; an acknowledged independent reader receives ordered message IDs while outsider sees none, and retained SQLite rows match sent IDs.",
+      "rationale": "Source assertion candidate only; requires exact-title and file-hash matching against final execution before any outcome is assigned.",
+      "assertionDetails": [
+        "A paused native event reader is resumed to observe actual close 1008; an acknowledged independent reader receives ordered message IDs while outsider sees none, and retained SQLite rows match sent IDs.",
+        "A 72-message 7800-byte stream keeps the acknowledged reader ordered; the paused reader receives close 1008 and fewer than all messages, with measured delivered payload at most 262144 bytes."
+      ],
+      "transports": [
+        "REST",
+        "event WebSocket",
+        "local SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "dimensionReview": {
+        "authorization": "Candidate scope is limited to: A paused native event reader is resumed to observe actual close 1008; an acknowledged independent reader receives ordered message IDs while outsider sees none, and retained SQLite rows match sent IDs.",
+        "state": "Candidate scope is limited to: A paused native event reader is resumed to observe actual close 1008; an acknowledged independent reader receives ordered message IDs while outsider sees none, and retained SQLite rows match sent IDs.",
+        "events": "Candidate scope is limited to: A paused native event reader is resumed to observe actual close 1008; an acknowledged independent reader receives ordered message IDs while outsider sees none, and retained SQLite rows match sent IDs.",
+        "transport": "Candidate scope is limited to: A paused native event reader is resumed to observe actual close 1008; an acknowledged independent reader receives ordered message IDs while outsider sees none, and retained SQLite rows match sent IDs.",
+        "restart": "Required by the matrix; this candidate does not assert this dimension.",
+        "unrelatedResources": "Candidate scope is limited to: A paused native event reader is resumed to observe actual close 1008; an acknowledged independent reader receives ordered message IDs while outsider sees none, and retained SQLite rows match sent IDs."
+      },
+      "coverageLimitations": [
+        "Application charged output and actual local socket close are bounded in this case; provider/native buffer memory ceiling and deployed behavior remain unproven."
+      ]
+    },
+    {
+      "id": "ABUSE-012",
+      "kind": "test",
+      "testFile": "tests/features/shards-backpressure.test.ts",
+      "testTitle": "IRC unpredictable PING boundaries prove reader drain without changing ordinary PONG and isolate a native paused reader",
+      "testFileSha256": "734fd99569646eaa0a76e43a94749f781c26341cef93620c56b829d7c78ec3be",
+      "sourceLine": 413,
+      "scenarioScope": "A native paused IRC reader is closed after unacknowledged challenge while an independent acknowledged reader receives the last ordered message; guessed reader token is rejected.",
+      "rationale": "Source assertion candidate only; requires exact-title and file-hash matching against final execution before any outcome is assigned.",
+      "assertionDetails": [
+        "A native paused IRC reader is closed after unacknowledged challenge while an independent acknowledged reader receives the last ordered message; guessed reader token is rejected.",
+        "The slow IRC socket is paused and later resumed to observe 1008; a healthy independent client receives the final marker and a forged namespaced PONG closes the sender."
+      ],
+      "transports": [
+        "IRC WebSocket"
+      ],
+      "assertions": [
+        "authorization",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "dimensionReview": {
+        "authorization": "Candidate scope is limited to: A native paused IRC reader is closed after unacknowledged challenge while an independent acknowledged reader receives the last ordered message; guessed reader token is rejected.",
+        "state": "Required by the matrix; this candidate does not assert this dimension.",
+        "events": "Required by the matrix; this candidate does not assert this dimension.",
+        "transport": "Candidate scope is limited to: A native paused IRC reader is closed after unacknowledged challenge while an independent acknowledged reader receives the last ordered message; guessed reader token is rejected.",
+        "restart": "Required by the matrix; this candidate does not assert this dimension.",
+        "unrelatedResources": "Candidate scope is limited to: A native paused IRC reader is closed after unacknowledged challenge while an independent acknowledged reader receives the last ordered message; guessed reader token is rejected."
+      },
+      "coverageLimitations": [
+        "Exercises native local paused IRC reader and challenge checks, not an external provider memory ceiling."
+      ]
+    },
+    {
+      "id": "DB-022",
+      "kind": "test",
+      "testFile": "tests/features/schema-startup.test.ts",
+      "testTitle": "actual startup schemas match all Drizzle constraints and FTS layouts after genuine REST and IRC activity",
+      "testFileSha256": "87343e1cf9ea4ec60c014ea8b5f91d7074bd90b36dad9449d4ab576092f697db",
+      "sourceLine": 34,
+      "scenarioScope": "Fresh local workerd startup databases are compared against Accounts, Channel and Session Drizzle constraints, FTS layouts, migration version and foreign-key checks after actual IRC activity.",
+      "rationale": "Source assertion candidate only; requires exact-title and file-hash matching against final execution before any outcome is assigned.",
+      "assertionDetails": [
+        "Fresh local workerd startup databases are compared against Accounts, Channel and Session Drizzle constraints, FTS layouts, migration version and foreign-key checks after actual IRC activity.",
+        "For each initialized domain, the schema comparison requires no differences or unmodeled tables, migration version 1000 and an empty foreign_key_check."
+      ],
+      "transports": [
+        "REST",
+        "IRC",
+        "SQLite schema introspection"
+      ],
+      "assertions": [
+        "state",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "dimensionReview": {
+        "authorization": "Required by the matrix; this candidate does not assert this dimension.",
+        "state": "Candidate scope is limited to: Fresh local workerd startup databases are compared against Accounts, Channel and Session Drizzle constraints, FTS layouts, migration version and foreign-key checks after actual IRC activity.",
+        "events": "Required by the matrix; this candidate does not assert this dimension.",
+        "transport": "Candidate scope is limited to: Fresh local workerd startup databases are compared against Accounts, Channel and Session Drizzle constraints, FTS layouts, migration version and foreign-key checks after actual IRC activity.",
+        "restart": "Required by the matrix; this candidate does not assert this dimension.",
+        "unrelatedResources": "Required by the matrix; this candidate does not assert this dimension."
+      },
+      "coverageLimitations": [
+        "Explicit requirement says deployed SQLite schema; the named test introspects only fresh local workerd databases and cannot establish deployed schema parity."
+      ]
+    },
+    {
+      "id": "ADMIN-012",
+      "kind": "test",
+      "testFile": "tests/features/request-source.test.ts",
+      "testTitle": "hostmask bans protect REST login and existing sessions despite forged source headers without changing stored account state",
+      "testFileSha256": "d7a8daf82a0dc42c1fd6ea5e17c0e7f34fac2da7c040f42d5f1269e93e48455c",
+      "sourceLine": 47,
+      "scenarioScope": "Root creates a hostmask ban, then Alice login and existing-token operations return 403 despite forged IP headers; Bob remains usable and account/session SQLite rows match the pre-denial snapshot.",
+      "rationale": "Source assertion candidate only; requires exact-title and file-hash matching against final execution before any outcome is assigned.",
+      "assertionDetails": [
+        "Root creates a hostmask ban, then Alice login and existing-token operations return 403 despite forged IP headers; Bob remains usable and account/session SQLite rows match the pre-denial snapshot."
+      ],
+      "transports": [
+        "REST",
+        "SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "dimensionReview": {
+        "authorization": "Candidate scope is limited to: Root creates a hostmask ban, then Alice login and existing-token operations return 403 despite forged IP headers; Bob remains usable and account/session SQLite rows match the pre-denial snapshot.",
+        "state": "Candidate scope is limited to: Root creates a hostmask ban, then Alice login and existing-token operations return 403 despite forged IP headers; Bob remains usable and account/session SQLite rows match the pre-denial snapshot.",
+        "events": "Required by the matrix; this candidate does not assert this dimension.",
+        "transport": "Candidate scope is limited to: Root creates a hostmask ban, then Alice login and existing-token operations return 403 despite forged IP headers; Bob remains usable and account/session SQLite rows match the pre-denial snapshot.",
+        "restart": "Candidate scope is limited to: Root creates a hostmask ban, then Alice login and existing-token operations return 403 despite forged IP headers; Bob remains usable and account/session SQLite rows match the pre-denial snapshot.",
+        "unrelatedResources": "Candidate scope is limited to: Root creates a hostmask ban, then Alice login and existing-token operations return 403 despite forged IP headers; Bob remains usable and account/session SQLite rows match the pre-denial snapshot."
+      },
+      "coverageLimitations": [
+        "Exercises one local source address and hostmask, not provider-side ingress guarantees."
+      ]
+    },
+    {
+      "id": "ADMIN-013",
+      "kind": "test",
+      "testFile": "tests/features/request-source.test.ts",
+      "testTitle": "hostmask bans protect REST login and existing sessions despite forged source headers without changing stored account state",
+      "testFileSha256": "d7a8daf82a0dc42c1fd6ea5e17c0e7f34fac2da7c040f42d5f1269e93e48455c",
+      "sourceLine": 47,
+      "scenarioScope": "Root removes the created hostmask ban, Alice writes her profile again, and its allowed-after-unban value persists across recreation.",
+      "rationale": "Source assertion candidate only; requires exact-title and file-hash matching against final execution before any outcome is assigned.",
+      "assertionDetails": [
+        "Root removes the created hostmask ban, Alice writes her profile again, and its allowed-after-unban value persists across recreation."
+      ],
+      "transports": [
+        "REST",
+        "SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "dimensionReview": {
+        "authorization": "Candidate scope is limited to: Root removes the created hostmask ban, Alice writes her profile again, and its allowed-after-unban value persists across recreation.",
+        "state": "Candidate scope is limited to: Root removes the created hostmask ban, Alice writes her profile again, and its allowed-after-unban value persists across recreation.",
+        "events": "Required by the matrix; this candidate does not assert this dimension.",
+        "transport": "Candidate scope is limited to: Root removes the created hostmask ban, Alice writes her profile again, and its allowed-after-unban value persists across recreation.",
+        "restart": "Candidate scope is limited to: Root removes the created hostmask ban, Alice writes her profile again, and its allowed-after-unban value persists across recreation.",
+        "unrelatedResources": "Candidate scope is limited to: Root removes the created hostmask ban, Alice writes her profile again, and its allowed-after-unban value persists across recreation."
+      },
+      "coverageLimitations": [
+        "Exercises one hostmask selector."
+      ]
+    },
+    {
+      "id": "DB-016",
+      "kind": "test",
+      "testFile": "tests/features/media-reconciliation.test.ts",
+      "testTitle": "retries provider deletion failure without exposing expired bytes or harming another upload",
+      "testFileSha256": "ba6c617dc644565b365dbc3abf6adeee594b12dfc1d050d0ee9bac793a7e48dc",
+      "sourceLine": 46,
+      "scenarioScope": "A failed local R2 deletion leaves expired bytes inaccessible, quota released and Bob independent upload readable; after recreation an explicitly invoked recovery removes the orphan.",
+      "rationale": "Source assertion candidate only; requires exact-title and file-hash matching against final execution before any outcome is assigned.",
+      "assertionDetails": [
+        "A failed local R2 deletion leaves expired bytes inaccessible, quota released and Bob independent upload readable; after recreation an explicitly invoked recovery removes the orphan."
+      ],
+      "transports": [
+        "REST",
+        "local R2 and SQLite fixture"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "dimensionReview": {
+        "authorization": "Candidate scope is limited to: A failed local R2 deletion leaves expired bytes inaccessible, quota released and Bob independent upload readable; after recreation an explicitly invoked recovery removes the orphan.",
+        "state": "Candidate scope is limited to: A failed local R2 deletion leaves expired bytes inaccessible, quota released and Bob independent upload readable; after recreation an explicitly invoked recovery removes the orphan.",
+        "events": "Required by the matrix; this candidate does not assert this dimension.",
+        "transport": "Candidate scope is limited to: A failed local R2 deletion leaves expired bytes inaccessible, quota released and Bob independent upload readable; after recreation an explicitly invoked recovery removes the orphan.",
+        "restart": "Candidate scope is limited to: A failed local R2 deletion leaves expired bytes inaccessible, quota released and Bob independent upload readable; after recreation an explicitly invoked recovery removes the orphan.",
+        "unrelatedResources": "Candidate scope is limited to: A failed local R2 deletion leaves expired bytes inaccessible, quota released and Bob independent upload readable; after recreation an explicitly invoked recovery removes the orphan."
+      },
+      "coverageLimitations": [
+        "Fixture explicitly invokes recovery; no deployed provider alarm or cross-object atomicity is established."
+      ]
+    },
+    {
+      "id": "ADMIN-029",
+      "kind": "test",
+      "testFile": "tests/features/accounts-admin.test.ts",
+      "testTitle": "audit enabled stores only sanitized admin outcomes",
+      "testFileSha256": "9af3f1b761b05b189afc3b482ee6129857f2b6a69754f67090b78b482d98556f",
+      "sourceLine": 236,
+      "scenarioScope": "Enabled audit exposes successful and denied stats, account actions, an injected ban error, and excludes password and token material.",
+      "rationale": "Source assertion candidate only; requires exact-title and file-hash matching against final execution before any outcome is assigned.",
+      "assertionDetails": [
+        "Enabled audit exposes successful and denied stats, account actions, an injected ban error, and excludes password and token material."
+      ],
+      "transports": [
+        "REST",
+        "SQLite fault injection"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "dimensionReview": {
+        "authorization": "Candidate scope is limited to: Enabled audit exposes successful and denied stats, account actions, an injected ban error, and excludes password and token material.",
+        "state": "Candidate scope is limited to: Enabled audit exposes successful and denied stats, account actions, an injected ban error, and excludes password and token material.",
+        "events": "Candidate scope is limited to: Enabled audit exposes successful and denied stats, account actions, an injected ban error, and excludes password and token material.",
+        "transport": "Candidate scope is limited to: Enabled audit exposes successful and denied stats, account actions, an injected ban error, and excludes password and token material.",
+        "restart": "Required by the matrix; this candidate does not assert this dimension.",
+        "unrelatedResources": "Required by the matrix; this candidate does not assert this dimension."
+      },
+      "coverageLimitations": [
+        "This case checks anonymous null actor; exact authenticated actor IDs are asserted by the companion credential case."
+      ]
+    },
+    {
+      "id": "SVC-016",
+      "kind": "test",
+      "testFile": "tests/features/service-audit-credentials.test.ts",
+      "testTitle": "service mutation audit is accurate and default off (enabled=false)",
+      "testFileSha256": "3043669c1516a3baecd18e7d04b8a9344351f480482786ceb7af506888a087c2",
+      "sourceLine": 7,
+      "scenarioScope": "With auditing disabled, real authorized service actions still execute and the stored and queried service audit records remain empty across restart.",
+      "rationale": "Source assertion candidate only; requires exact-title and file-hash matching against final execution before any outcome is assigned.",
+      "assertionDetails": [
+        "With auditing disabled, real authorized service actions still execute and the stored and queried service audit records remain empty across restart."
+      ],
+      "transports": [
+        "IRC service commands",
+        "IRC PRIVMSG service aliases",
+        "REST audit",
+        "SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "dimensionReview": {
+        "authorization": "Candidate scope is limited to: With auditing disabled, real authorized service actions still execute and the stored and queried service audit records remain empty across restart.",
+        "state": "Candidate scope is limited to: With auditing disabled, real authorized service actions still execute and the stored and queried service audit records remain empty across restart.",
+        "events": "Candidate scope is limited to: With auditing disabled, real authorized service actions still execute and the stored and queried service audit records remain empty across restart.",
+        "transport": "Candidate scope is limited to: With auditing disabled, real authorized service actions still execute and the stored and queried service audit records remain empty across restart.",
+        "restart": "Candidate scope is limited to: With auditing disabled, real authorized service actions still execute and the stored and queried service audit records remain empty across restart.",
+        "unrelatedResources": "Required by the matrix; this candidate does not assert this dimension."
+      },
+      "coverageLimitations": [
+        "Audit default-off is intentional."
+      ]
+    },
+    {
+      "id": "SVC-016",
+      "kind": "test",
+      "testFile": "tests/features/service-audit-credentials.test.ts",
+      "testTitle": "HostServ and HistServ audit real authorized mutations and rejected foreign actions",
+      "testFileSha256": "3043669c1516a3baecd18e7d04b8a9344351f480482786ceb7af506888a087c2",
+      "sourceLine": 201,
+      "scenarioScope": "HostServ SET and HistServ DELETE authorized and rejected actions have exact actors, hashed targets, outcomes and service transport; deleted history and persisted audit rows are checked.",
+      "rationale": "Source assertion candidate only; requires exact-title and file-hash matching against final execution before any outcome is assigned.",
+      "assertionDetails": [
+        "HostServ SET and HistServ DELETE authorized and rejected actions have exact actors, hashed targets, outcomes and service transport; deleted history and persisted audit rows are checked."
+      ],
+      "transports": [
+        "IRC service commands",
+        "IRC PRIVMSG service aliases",
+        "REST audit"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "dimensionReview": {
+        "authorization": "Candidate scope is limited to: HostServ SET and HistServ DELETE authorized and rejected actions have exact actors, hashed targets, outcomes and service transport; deleted history and persisted audit rows are checked.",
+        "state": "Candidate scope is limited to: HostServ SET and HistServ DELETE authorized and rejected actions have exact actors, hashed targets, outcomes and service transport; deleted history and persisted audit rows are checked.",
+        "events": "Candidate scope is limited to: HostServ SET and HistServ DELETE authorized and rejected actions have exact actors, hashed targets, outcomes and service transport; deleted history and persisted audit rows are checked.",
+        "transport": "Candidate scope is limited to: HostServ SET and HistServ DELETE authorized and rejected actions have exact actors, hashed targets, outcomes and service transport; deleted history and persisted audit rows are checked.",
+        "restart": "Candidate scope is limited to: HostServ SET and HistServ DELETE authorized and rejected actions have exact actors, hashed targets, outcomes and service transport; deleted history and persisted audit rows are checked.",
+        "unrelatedResources": "Required by the matrix; this candidate does not assert this dimension."
+      },
+      "coverageLimitations": [
+        "HistServ FORGET and provider audit failure are not exercised by this case."
+      ]
+    },
+    {
+      "id": "DM-009",
+      "kind": "test",
+      "testFile": "tests/features/api-expansion-boundaries.test.ts",
+      "testTitle": "conversation, event and metadata REST aliases enforce the same authenticated resource boundaries",
+      "testFileSha256": "9f9b32cc024479dcddda7a0996bf76a449d52f37b4b0342af859d1daee128a64",
+      "sourceLine": 70,
+      "scenarioScope": "On both REST prefixes Bob sees a positive unread count and zero after reading; unrelated Charlie receives 403 for the real conversation unread count.",
+      "rationale": "Source assertion candidate only; requires exact-title and file-hash matching against final execution before any outcome is assigned.",
+      "assertionDetails": [
+        "On both REST prefixes Bob sees a positive unread count and zero after reading; unrelated Charlie receives 403 for the real conversation unread count."
+      ],
+      "transports": [
+        "REST aliases",
+        "IRC",
+        "event replay REST"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "dimensionReview": {
+        "authorization": "Candidate scope is limited to: On both REST prefixes Bob sees a positive unread count and zero after reading; unrelated Charlie receives 403 for the real conversation unread count.",
+        "state": "Candidate scope is limited to: On both REST prefixes Bob sees a positive unread count and zero after reading; unrelated Charlie receives 403 for the real conversation unread count.",
+        "events": "Required by the matrix; this candidate does not assert this dimension.",
+        "transport": "Candidate scope is limited to: On both REST prefixes Bob sees a positive unread count and zero after reading; unrelated Charlie receives 403 for the real conversation unread count.",
+        "restart": "Required by the matrix; this candidate does not assert this dimension.",
+        "unrelatedResources": "Required by the matrix; this candidate does not assert this dimension."
+      },
+      "coverageLimitations": [
+        "One generated two-party conversation per prefix."
+      ]
+    },
+    {
+      "id": "DM-022",
+      "kind": "test",
+      "testFile": "tests/security/matrix-dm-gaps.test.ts",
+      "testTitle": "direct-message privacy gaps DM selectors, public event streams, search and revoked sessions remain confined to real participants",
+      "testFileSha256": "1118e6893710614ab07d755fda73210a9c6c3c51754ded4e0a604ad068dacf42",
+      "sourceLine": 77,
+      "scenarioScope": "Three real account-pair histories and message IDs remain participant-bound over legacy history, IRC and authenticated event streams, including after recreation and session revocation.",
+      "rationale": "Source assertion candidate only; requires exact-title and file-hash matching against final execution before any outcome is assigned.",
+      "assertionDetails": [
+        "Three real account-pair histories and message IDs remain participant-bound over legacy history, IRC and authenticated event streams, including after recreation and session revocation."
+      ],
+      "transports": [
+        "REST legacy history",
+        "IRC",
+        "event WebSocket",
+        "SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "dimensionReview": {
+        "authorization": "Candidate scope is limited to: Three real account-pair histories and message IDs remain participant-bound over legacy history, IRC and authenticated event streams, including after recreation and session revocation.",
+        "state": "Candidate scope is limited to: Three real account-pair histories and message IDs remain participant-bound over legacy history, IRC and authenticated event streams, including after recreation and session revocation.",
+        "events": "Candidate scope is limited to: Three real account-pair histories and message IDs remain participant-bound over legacy history, IRC and authenticated event streams, including after recreation and session revocation.",
+        "transport": "Candidate scope is limited to: Three real account-pair histories and message IDs remain participant-bound over legacy history, IRC and authenticated event streams, including after recreation and session revocation.",
+        "restart": "Candidate scope is limited to: Three real account-pair histories and message IDs remain participant-bound over legacy history, IRC and authenticated event streams, including after recreation and session revocation.",
+        "unrelatedResources": "Candidate scope is limited to: Three real account-pair histories and message IDs remain participant-bound over legacy history, IRC and authenticated event streams, including after recreation and session revocation."
+      },
+      "coverageLimitations": [
+        "Covers the tested legacy selector and current APIs, not all unenumerated historical endpoints."
+      ]
+    },
+    {
+      "id": "PUSH-008",
+      "kind": "test",
+      "testFile": "tests/features/webpush-delivery.test.ts",
+      "testTitle": "delivers an encrypted private event only to the intended active subscription after channel membership",
+      "testFileSha256": "162fa4f0d86d8017f3ee71c1d77c84770c77efad6b6f0317b07e61ea4c77ec7f",
+      "sourceLine": 64,
+      "scenarioScope": "After channel creation a mock provider receives an encrypted private conversation notification, which the intended subscription decrypts without plaintext on the wire.",
+      "rationale": "Source assertion candidate only; requires exact-title and file-hash matching against final execution before any outcome is assigned.",
+      "assertionDetails": [
+        "After channel creation a mock provider receives an encrypted private conversation notification, which the intended subscription decrypts without plaintext on the wire."
+      ],
+      "transports": [
+        "REST",
+        "IRC",
+        "event WebSocket",
+        "mock WebPush provider"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "dimensionReview": {
+        "authorization": "Candidate scope is limited to: After channel creation a mock provider receives an encrypted private conversation notification, which the intended subscription decrypts without plaintext on the wire.",
+        "state": "Candidate scope is limited to: After channel creation a mock provider receives an encrypted private conversation notification, which the intended subscription decrypts without plaintext on the wire.",
+        "events": "Candidate scope is limited to: After channel creation a mock provider receives an encrypted private conversation notification, which the intended subscription decrypts without plaintext on the wire.",
+        "transport": "Candidate scope is limited to: After channel creation a mock provider receives an encrypted private conversation notification, which the intended subscription decrypts without plaintext on the wire.",
+        "restart": "Required by the matrix; this candidate does not assert this dimension.",
+        "unrelatedResources": "Required by the matrix; this candidate does not assert this dimension."
+      },
+      "coverageLimitations": [
+        "Mock provider and local workerd only."
+      ]
+    },
+    {
+      "id": "PUSH-010",
+      "kind": "test",
+      "testFile": "tests/features/webpush-policy.test.ts",
+      "testTitle": "removes only a provider 410 subscription and still delivers encrypted content to an independent endpoint",
+      "testFileSha256": "00ed579b88b30c76ba09e679b27642b28e83fecbcb072c2b4f84bfca3546ed87",
+      "sourceLine": 5,
+      "scenarioScope": "A mock 410 provider response removes the failing subscription while an independent recipient endpoint receives decryptable encrypted content.",
+      "rationale": "Source assertion candidate only; requires exact-title and file-hash matching against final execution before any outcome is assigned.",
+      "assertionDetails": [
+        "A mock 410 provider response removes the failing subscription while an independent recipient endpoint receives decryptable encrypted content."
+      ],
+      "transports": [
+        "REST",
+        "mock WebPush provider",
+        "local SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "dimensionReview": {
+        "authorization": "Candidate scope is limited to: A mock 410 provider response removes the failing subscription while an independent recipient endpoint receives decryptable encrypted content.",
+        "state": "Candidate scope is limited to: A mock 410 provider response removes the failing subscription while an independent recipient endpoint receives decryptable encrypted content.",
+        "events": "Candidate scope is limited to: A mock 410 provider response removes the failing subscription while an independent recipient endpoint receives decryptable encrypted content.",
+        "transport": "Candidate scope is limited to: A mock 410 provider response removes the failing subscription while an independent recipient endpoint receives decryptable encrypted content.",
+        "restart": "Required by the matrix; this candidate does not assert this dimension.",
+        "unrelatedResources": "Candidate scope is limited to: A mock 410 provider response removes the failing subscription while an independent recipient endpoint receives decryptable encrypted content."
+      },
+      "coverageLimitations": [
+        "Mock provider response only."
+      ]
+    },
+    {
+      "id": "PUSH-011",
+      "kind": "test",
+      "testFile": "tests/features/webpush-policy.test.ts",
+      "testTitle": "persists 503 retry attempts over recreation and stops after the bounded eighth attempt",
+      "testFileSha256": "00ed579b88b30c76ba09e679b27642b28e83fecbcb072c2b4f84bfca3546ed87",
+      "sourceLine": 113,
+      "scenarioScope": "A mock 503 response preserves scheduled retry state across recreation and stops at the eighth attempt without deleting the subscription.",
+      "rationale": "Source assertion candidate only; requires exact-title and file-hash matching against final execution before any outcome is assigned.",
+      "assertionDetails": [
+        "A mock 503 response preserves scheduled retry state across recreation and stops at the eighth attempt without deleting the subscription."
+      ],
+      "transports": [
+        "REST",
+        "mock WebPush provider",
+        "local SQLite"
+      ],
+      "assertions": [
+        "state",
+        "events",
+        "transport",
+        "restart"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "dimensionReview": {
+        "authorization": "Required by the matrix; this candidate does not assert this dimension.",
+        "state": "Candidate scope is limited to: A mock 503 response preserves scheduled retry state across recreation and stops at the eighth attempt without deleting the subscription.",
+        "events": "Candidate scope is limited to: A mock 503 response preserves scheduled retry state across recreation and stops at the eighth attempt without deleting the subscription.",
+        "transport": "Candidate scope is limited to: A mock 503 response preserves scheduled retry state across recreation and stops at the eighth attempt without deleting the subscription.",
+        "restart": "Candidate scope is limited to: A mock 503 response preserves scheduled retry state across recreation and stops at the eighth attempt without deleting the subscription.",
+        "unrelatedResources": "Required by the matrix; this candidate does not assert this dimension."
+      },
+      "coverageLimitations": [
+        "Fixture explicitly advances the local alarm; external scheduling is not established."
+      ]
+    },
+    {
+      "id": "WS-019",
+      "kind": "test",
+      "testFile": "tests/features/shards-backpressure.test.ts",
+      "testTitle": "current authorization suppresses a real in-flight shard candidate after channel removal and credential revocation",
+      "testFileSha256": "734fd99569646eaa0a76e43a94749f781c26341cef93620c56b829d7c78ec3be",
+      "sourceLine": 480,
+      "scenarioScope": "A held in-flight shard candidate is rechecked after channel removal and credential revocation while another authorized account remains live.",
+      "rationale": "Source assertion candidate only; requires exact-title and file-hash matching against final execution before any outcome is assigned.",
+      "assertionDetails": [
+        "A held in-flight shard candidate is rechecked after channel removal and credential revocation while another authorized account remains live."
+      ],
+      "transports": [
+        "REST",
+        "IRC",
+        "event WebSocket",
+        "local SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "dimensionReview": {
+        "authorization": "Candidate scope is limited to: A held in-flight shard candidate is rechecked after channel removal and credential revocation while another authorized account remains live.",
+        "state": "Candidate scope is limited to: A held in-flight shard candidate is rechecked after channel removal and credential revocation while another authorized account remains live.",
+        "events": "Candidate scope is limited to: A held in-flight shard candidate is rechecked after channel removal and credential revocation while another authorized account remains live.",
+        "transport": "Candidate scope is limited to: A held in-flight shard candidate is rechecked after channel removal and credential revocation while another authorized account remains live.",
+        "restart": "Required by the matrix; this candidate does not assert this dimension.",
+        "unrelatedResources": "Candidate scope is limited to: A held in-flight shard candidate is rechecked after channel removal and credential revocation while another authorized account remains live."
+      },
+      "coverageLimitations": [
+        "One controlled local scheduling race."
+      ]
+    },
+    {
+      "id": "ABUSE-012",
+      "kind": "test",
+      "testFile": "tests/features/shards-backpressure.test.ts",
+      "testTitle": "native paused event reader reaches a bounded charged-output close while acknowledged independent devices preserve ordered messages",
+      "testFileSha256": "734fd99569646eaa0a76e43a94749f781c26341cef93620c56b829d7c78ec3be",
+      "sourceLine": 281,
+      "scenarioScope": "A real paused event reader reaches close 1008 while the independent acknowledged reader receives ordered events and the unrelated stream receives no private message.",
+      "rationale": "Source assertion candidate only; requires exact-title and file-hash matching against final execution before any outcome is assigned.",
+      "assertionDetails": [
+        "A real paused event reader reaches close 1008 while the independent acknowledged reader receives ordered events and the unrelated stream receives no private message."
+      ],
+      "transports": [
+        "REST",
+        "event WebSocket",
+        "local SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "dimensionReview": {
+        "authorization": "Candidate scope is limited to: A real paused event reader reaches close 1008 while the independent acknowledged reader receives ordered events and the unrelated stream receives no private message.",
+        "state": "Candidate scope is limited to: A real paused event reader reaches close 1008 while the independent acknowledged reader receives ordered events and the unrelated stream receives no private message.",
+        "events": "Candidate scope is limited to: A real paused event reader reaches close 1008 while the independent acknowledged reader receives ordered events and the unrelated stream receives no private message.",
+        "transport": "Candidate scope is limited to: A real paused event reader reaches close 1008 while the independent acknowledged reader receives ordered events and the unrelated stream receives no private message.",
+        "restart": "Required by the matrix; this candidate does not assert this dimension.",
+        "unrelatedResources": "Candidate scope is limited to: A real paused event reader reaches close 1008 while the independent acknowledged reader receives ordered events and the unrelated stream receives no private message."
+      },
+      "coverageLimitations": [
+        "Application window and local native close only; not a deployed provider memory bound."
+      ]
+    }
+  ],
+  "reviewedContextFiles": {
+    "docs/security/matrix-requirements.md": "71d185a00734a1614820e6a731afa2ae65bd9f0071694581011285d05253c588",
+    "server/features/session/event-shards.ts": "9ccfd3a1d21712c2549a5219aa8d56db5969eae426fda94d7022e7f3943e4075",
+    "server/features/session/reader-transport.ts": "ef548ce07232875652b8d0503643850c02044d845fac1071d2c4f3432ee5070a",
+    "server/protocol/irc/commands/services/audit.ts": "4752b68cf68c021f0b69a9775bcf7ebf791c6f43f74b2597dc298b27ae2e262b",
+    "docs/security/service-audit.md": "8aca8b5b4dab1904ed6a73b48f36fa5974b0eb4a6cf8e7c136c95ad839235f16",
+    "server/durable-objects/accounts.ts": "282ea9e447c4f40a92c930dcad711592f551ca78a9a0bfa37ab1aaca4b358b26",
+    "tests/helpers/media-recovery-fixture.ts": "586af868cca85be3cfdb82610a8da6f44114a1c41a9721730026bfc7bf77950d",
+    "tests/helpers/webpush-policy-fixture.ts": "d70289e043d8b68bdd0cd67b0e11ccd7c6f581304272aca4f19f6198fe7f94f0",
+    "scripts/verify-schema.ts": "d1b278a5a030db32b2d055e2dd150d3102ce580b735ec4f42d23e3f94fad0adb",
+    "scripts/safe-outbound.mjs": "bf090cb3be2ebad8e870d4bc4059a8a4e22539c381bced6091074cb1a72b26f4"
+  },
+  "uncoveredRequirements": [
+    {
+      "id": "DB-022",
+      "missing": "No cited test inspects the deployed Cloudflare SQLite schema; the source case compares fresh local workerd databases.",
+      "sourceEvidence": [
+        "tests/features/schema-startup.test.ts",
+        "scripts/verify-schema.ts"
+      ]
+    },
+    {
+      "id": "WS-021",
+      "missing": "The source proves only the specified application-window and local native-close bounds; no provider-level memory ceiling or deployed Cloudflare buffer measurement.",
+      "sourceEvidence": [
+        "tests/features/shards-backpressure.test.ts",
+        "server/features/session/reader-transport.ts"
+      ]
+    },
+    {
+      "id": "ABUSE-012",
+      "missing": "The local paused IRC/event tests do not establish an external provider memory ceiling.",
+      "sourceEvidence": [
+        "tests/features/shards-backpressure.test.ts",
+        "server/features/session/reader-transport.ts"
+      ]
+    },
+    {
+      "id": "DB-016",
+      "missing": "Explicitly invoked local cleanup is not an atomic cross-object transaction or evidence of deployed automatic provider failure recovery.",
+      "sourceEvidence": [
+        "tests/features/media-reconciliation.test.ts",
+        "tests/security/matrix-media-recovery.test.ts"
+      ]
+    },
+    {
+      "id": "USER-018",
+      "missing": "Explicit private: metadata is tested; general unprefixed metadata visibility classification remains a policy boundary.",
+      "sourceEvidence": [
+        "tests/features/conversations-events.test.ts",
+        "docs/security/matrix-requirements.md"
+      ]
+    },
+    {
+      "id": "SVC-016",
+      "missing": "The selected service actions are covered; best-effort cross-object audit writes do not guarantee an audit record on storage or provider failure.",
+      "sourceEvidence": [
+        "tests/features/service-audit-credentials.test.ts",
+        "docs/security/service-audit.md"
+      ]
+    },
+    {
+      "id": "ABUSE-017",
+      "missing": "Injected DNS and mock transport do not establish deployed egress enforcement against actual DNS rebinding and provider network behavior.",
+      "sourceEvidence": [
+        "tests/features/outbound-network.test.ts",
+        "scripts/safe-outbound.mjs"
+      ]
+    }
+  ],
+  "source30Amendments": {
+    "historicalCandidates": "/tmp/flarc-feature-expansion/feature44-current-evidence-candidates.json",
+    "sourceRoot": "/tmp/flarc-feature-expansion/source30-final/",
+    "scope": "Only the accounts-admin and channels-roles test-file hashes and line references were advanced; ADMIN-012/013 and API-016 assertions were updated for their strengthened observers. Execution has not been matched."
+  }
+}

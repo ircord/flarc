@@ -20,6 +20,8 @@ export default defineEventHandler(async (event) => {
   await env.SESSION.get(env.SESSION.idFromName(SERVER_CONFIG.networkId)).broadcastLineToChannel(
     rawChan,
     `:${actor.username}!api@gateway.api REDACT ${rawChan} ${messageId}`,
+    result.generation,
+    true,
   );
   return { ok: true, id: messageId };
 });

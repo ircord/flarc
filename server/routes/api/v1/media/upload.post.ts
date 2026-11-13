@@ -7,7 +7,7 @@ import {
   setResponseStatus,
   toRequest,
 } from "nitro/h3";
-import { SERVER_CONFIG } from "~/core/config";
+import { filehostMaxRequestBytes, filehostMaxUploadBytes, SERVER_CONFIG } from "~/core/config";
 import { getEnv, getSessionToken, parseChannelParam, requireAuthenticatedUser } from "~/utils/auth";
 import { readBoundedBody } from "~/utils/body";
 
@@ -25,17 +25,15 @@ export default defineEventHandler(async (event) => {
   const _sessionStub = env.SESSION.get(env.SESSION.idFromName(SERVER_CONFIG.networkId));
 
   const actor = await requireAuthenticatedUser(event);
-  const maxBytes = 10 * 1024 * 1024;
-  const contentLength = Number(getHeader(event, "content-length"));
-  if (contentLength > maxBytes)
-    throw createError({ statusCode: 413, statusMessage: "Upload exceeds 10 MiB" });
-  const bytes = await readBoundedBody(req, maxBytes);
+  const maxBytes = filehostMaxUploadBytes(env);
   const contentType = getHeader(event, "content-type") || "";
+  const requestLimit = filehostMaxRequestBytes(env, contentType);
+  const bytes = await readBoundedBody(req, requestLimit);
   let filename = `upload-${Date.now()}`;
   let mimeType = "application/octet-stream";
   let data: ArrayBuffer;
 
-  if (contentType.includes("multipart/form-data")) {
+  if (contentType.toLowerCase().includes("multipart/form-data")) {
     try {
       const formData = await new Response(bytes, {
         headers: { "Content-Type": contentType },
@@ -75,7 +73,7 @@ export default defineEventHandler(async (event) => {
   }
 
   if (data.byteLength > maxBytes)
-    throw createError({ statusCode: 413, statusMessage: "Upload exceeds 10 MiB" });
+    throw createError({ statusCode: 413, statusMessage: "Upload exceeds configured file limit" });
 
   let ext = "";
   if (filename.includes(".")) {
@@ -101,9 +99,10 @@ export default defineEventHandler(async (event) => {
         ? { kind: "dm" as const, target: query.dm }
         : { kind: "private" as const };
   const token = getSessionToken(event)!;
+  let reservation: "ok" | "denied" | "too_large";
   try {
     // Reserve quota and persist access metadata before writing external storage.
-    await accountsStub.storePrivateMedia(
+    reservation = await accountsStub.storePrivateMedia(
       token,
       {
         id: fileId,
@@ -115,19 +114,36 @@ export default defineEventHandler(async (event) => {
       },
       scope,
     );
-    if (env.MEDIA_BUCKET) {
-      try {
-        await env.MEDIA_BUCKET.put(fileId, data, { httpMetadata: { contentType: mimeType } });
-      } catch (error) {
-        await accountsStub.deletePrivateMedia(token, fileId);
-        throw error;
-      }
-    }
   } catch {
-    throw createError({
-      statusCode: 403,
-      statusMessage: "Upload denied by scope, quota or storage policy",
-    });
+    throw createError({ statusCode: 503, statusMessage: "Media storage unavailable" });
+  }
+  if (reservation === "too_large")
+    throw createError({ statusCode: 413, statusMessage: "Upload exceeds configured file limit" });
+  if (reservation !== "ok")
+    throw createError({ statusCode: 403, statusMessage: "Upload denied by scope or quota policy" });
+  if (env.MEDIA_BUCKET) {
+    let published: boolean;
+    try {
+      const objectKey = await accountsStub.getMediaReservationKey(token, fileId, actor.id);
+      if (!objectKey) throw new Error("Media reservation expired");
+      await env.MEDIA_BUCKET.put(objectKey, data, { httpMetadata: { contentType: mimeType } });
+      published = await accountsStub.finalizeMediaReservation(token, fileId, actor.id, objectKey);
+      if (!published) await accountsStub.rollbackMediaReservation(fileId, actor.id);
+    } catch {
+      // A failed put can have written an object; cleanup is limited to the
+      // unpublished reservation and does not rely on a still-valid token.
+      try {
+        await accountsStub.rollbackMediaReservation(fileId, actor.id);
+      } catch {
+        // The pending row remains inaccessible if provider cleanup fails.
+      }
+      throw createError({ statusCode: 503, statusMessage: "Media storage unavailable" });
+    }
+    if (!published)
+      throw createError({
+        statusCode: 403,
+        statusMessage: "Upload denied by scope or quota policy",
+      });
   }
 
   const uploadUrl = `/media/${fileId}`;

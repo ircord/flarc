@@ -2,7 +2,8 @@ import { createError, defineEventHandler, getRouterParam, readBody } from "nitro
 import { z } from "zod";
 import { SERVER_CONFIG } from "~/core/config";
 import { allowedOutboundUrl } from "~/services/outbound";
-import { getEnv, parseChannelParam, requireChannelOpOrOwner } from "~/utils/auth";
+import { outboundHosts } from "~/services/outbound-policy";
+import { clientRequest, getEnv, parseChannelParam, requireChannelOpOrOwner } from "~/utils/auth";
 
 const outgoingWebhookSchema = z.object({
   target_url: z.string().url(),
@@ -28,12 +29,7 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  if (
-    !allowedOutboundUrl(
-      parsed.data.target_url,
-      (getEnv(event).OUTGOING_WEBHOOK_ALLOWED_HOSTS ?? "").split(","),
-    )
-  )
+  if (!allowedOutboundUrl(parsed.data.target_url, outboundHosts(getEnv(event), "webhooks")))
     throw createError({
       statusCode: 400,
       statusMessage: "Webhook destination is not allowed by the server",
@@ -42,11 +38,12 @@ export default defineEventHandler(async (event) => {
   const env = getEnv(event);
   const stub = env.CHANNELS.get(env.CHANNELS.idFromName(`${SERVER_CONFIG.networkId}:${canon}`));
 
-  const result = await (stub as any).createOutgoingWebhook(
-    parsed.data.target_url,
-    parsed.data.secret,
-    parsed.data.events,
-  );
+  const result = await clientRequest(event, stub, "outgoing.create", {
+    url: parsed.data.target_url,
+    secret: parsed.data.secret,
+    events: parsed.data.events,
+    channelName: rawChan,
+  });
 
   return { ok: true, webhook: result.webhook };
 });

@@ -1,0 +1,41 @@
+{
+  "scope": "Bounded integration lint cleanup from /tmp/flarc-matrix-run_01d0e4aeb274/final-lint.log",
+  "files": [
+    "server/durable-objects/session.ts",
+    "tests/helpers/matrix-fixture.ts",
+    "tests/security/matrix-admin-positive.test.ts",
+    "tests/security/matrix-admin.test.ts",
+    "tests/security/matrix-dm.test.ts",
+    "tests/security/matrix-identity.test.ts",
+    "tests/security/matrix-services.test.ts"
+  ],
+  "changes": [
+    "Applied formatting to the assigned session and test fixture files, and import ordering to the fixture and identity test.",
+    "Removed unused fixture variable bindings while preserving each awaited createActor call and its account-creation side effect.",
+    "Changed flagged forEach callbacks to statement bodies while preserving each close action.",
+    "No assertions were removed or changed; no behavioral source logic was changed."
+  ],
+  "commands": [
+    {
+      "command": "bunx biome check --write <7 assigned files>",
+      "result": "exit 0; fixed formatting/import ordering in 7 files"
+    },
+    {
+      "command": "bunx biome check <7 assigned files>",
+      "result": "exit 0; checked 7 files, no fixes applied"
+    },
+    {
+      "command": "bun run typecheck",
+      "result": "exit 0; tsc --noEmit"
+    },
+    {
+      "command": "git diff --check",
+      "result": "exit 0"
+    },
+    {
+      "command": "bun run lint",
+      "result": "exit 0; Biome checked 201 files with no fixes"
+    }
+  ],
+  "tests": "Vitest, build, and irctest were not run, as instructed."
+}

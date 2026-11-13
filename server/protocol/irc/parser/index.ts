@@ -75,12 +75,13 @@ export function parseIRCMessage(rawLine: string): IRCMessage {
     if (spaceIdx === -1) {
       throw new IRCProtocolError("Malformed IRC message: tags without command");
     }
-    // Tag section including initial '@' and separating ' ' must not exceed 4096 bytes (spaceIdx <= 4095)
-    if (spaceIdx > 4095) {
+    // These protocol limits count UTF-8 octets, not UTF-16 code units.
+    const utf8 = new TextEncoder();
+    if (utf8.encode(line.slice(0, spaceIdx + 1)).byteLength > 4096) {
       throw new IRCProtocolError("Input line was too long", Numerics.ERR_INPUTTOOLONG);
     }
     const remainder = line.slice(spaceIdx + 1);
-    if (remainder.length > 510) {
+    if (utf8.encode(remainder).byteLength > 510) {
       throw new IRCProtocolError("Input line was too long", Numerics.ERR_INPUTTOOLONG);
     }
     const tagStr = line.slice(idx + 1, spaceIdx);
@@ -103,8 +104,8 @@ export function parseIRCMessage(rawLine: string): IRCMessage {
     idx = spaceIdx + 1;
     while (idx < len && line[idx] === " ") idx++;
   } else {
-    // Standard IRC message without tags cannot exceed 510 characters (512 with \r\n)
-    if (line.length > 510) {
+    // Standard IRC messages allow 510 UTF-8 bytes, plus the two CRLF octets.
+    if (new TextEncoder().encode(line).byteLength > 510) {
       throw new IRCProtocolError("Input line was too long", Numerics.ERR_INPUTTOOLONG);
     }
   }

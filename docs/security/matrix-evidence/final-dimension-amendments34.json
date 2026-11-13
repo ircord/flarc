@@ -1,0 +1,2063 @@
+{
+  "version": 2,
+  "status": "source-only candidates; no executionId, bundle hash or outcome; coordinator must hydrate from exact final execution",
+  "evidence": [
+    {
+      "id": "ADMIN-005",
+      "kind": "test",
+      "testFile": "tests/features/api-expansion-boundaries.test.ts",
+      "testFileSha256": "dc92aa320119582ede70cc5d653495b55042307c4af55dea5683f12218fab076",
+      "testTitle": "new admin audit, bans, scopes and account-session aliases enforce authority and preserve independent accounts",
+      "scenarioScope": "Administrator revokes actual independent Alice sessions through both admin prefixes and scoped streams.",
+      "rationale": "Source assertion candidate; final execution and bundle identity must be matched before an outcome is assigned.",
+      "assertionDetails": [
+        "Root lists each victim session and deletes it; ordinary Bob is denied and the victim token becomes 401.",
+        "Before deletion victim, independent Alice and Bob streams receive the real channel marker; afterward safe Alice and Bob receive the next marker while the victim excludes its ID and content.",
+        "After recreation both administrator-revoked tokens get 401 for profile and event-ticket requests; independent Alice and Bob sessions remain valid."
+      ],
+      "transports": [
+        "REST over local workerd",
+        "IRC WebSocket",
+        "v2 event WebSocket",
+        "local SQLite and runtime recreation"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "previousSourceHash": "43557ce75f85bb1cb31485a4fde4ae298bddd2692c9238686ef33293e81e84f7"
+    },
+    {
+      "id": "ADMIN-023",
+      "kind": "test",
+      "testFile": "tests/features/accounts-admin.test.ts",
+      "testFileSha256": "7146aaa9d63a80290ffc6bdacc420ea20ee289c4c61f372a3cb4a3493d3d67c3",
+      "testTitle": "targeted durable API sessions and scoped credentials revoke independently of other accounts",
+      "scenarioScope": "Foreign account cannot revoke Alice\u2019s second durable session.",
+      "rationale": "Source assertion candidate; final execution and bundle identity must be matched before an outcome is assigned.",
+      "assertionDetails": [
+        "Bob\u2019s DELETE of Alice\u2019s actual second session returns 403; target remains usable, full session listing and account SQLite state remain unchanged, and bounded IRC/event windows contain only barriers.",
+        "After recreation the same target and independent Bob tokens remain usable and the session IDs match; Alice\u2019s later own revocation succeeds."
+      ],
+      "transports": [
+        "REST over local workerd",
+        "IRC WebSocket",
+        "v2 event WebSocket",
+        "local SQLite and runtime recreation"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "ADMIN-027",
+      "kind": "test",
+      "testFile": "tests/features/accounts-admin.test.ts",
+      "testFileSha256": "7146aaa9d63a80290ffc6bdacc420ea20ee289c4c61f372a3cb4a3493d3d67c3",
+      "testTitle": "scoped administrator grants do not cross account resources or aliases, and network bans revoke only the target",
+      "scenarioScope": "Delegated and scoped administrator credentials cannot exceed their configured account resource grants.",
+      "rationale": "Source assertion candidate; final execution and bundle identity must be matched before an outcome is assigned.",
+      "assertionDetails": [
+        "Constrained root cannot broaden delegate scopes and delegate cannot access Bob or rewrite scopes through either admin alias; allowed Alice access returns her actual ID.",
+        "Account state is compared exactly and live Alice/Bob IRC and event windows are silent except barriers around the denied scope operations.",
+        "After recreation root reads the original restricted grant and delegate retains Alice access but receives 403 for Bob through both aliases."
+      ],
+      "transports": [
+        "REST over local workerd",
+        "IRC WebSocket",
+        "v2 event WebSocket",
+        "local SQLite and runtime recreation"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "ADMIN-029",
+      "kind": "test",
+      "testFile": "tests/features/service-audit-credentials.test.ts",
+      "testFileSha256": "f5f319ee7f6172361f548006b457e2e1a713cc149527b9a90a6a52b85a80b942",
+      "testTitle": "administrator revokes another account integration credential and audit records exact actor IDs",
+      "scenarioScope": "Exact actor/action/target/outcome audit records for an administrator credential revocation.",
+      "rationale": "Source assertion candidate; final execution and bundle identity must be matched before an outcome is assigned.",
+      "assertionDetails": [
+        "Root revokes a real other-account integration credential while Alice\u2019s attempt is denied; exact root and Alice IDs, session.revoke action, hashed target and outcomes appear in the audit response and stopped SQLite without credentials.",
+        "After recreation audit GET includes the same matching records; revoked and independent credentials and unrelated Bob access retain their respective status.",
+        "After recreation both /admin/audit and /api/v1/admin/audit return 200 and include the same exact pre-restart session.revoke records for the target."
+      ],
+      "transports": [
+        "REST",
+        "IRC WebSocket",
+        "local SQLite and runtime recreation"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "previousSourceHash": "3062ef0310c06e635be047d81a8afd89f585d3bb03edc8fe35120562dc75fbcf"
+    },
+    {
+      "id": "USER-018",
+      "kind": "test",
+      "testFile": "tests/features/conversations-events.test.ts",
+      "testFileSha256": "43db70640f9c62a0093d3a93509943a5e629fc10d487be9b547571b25246ef04",
+      "testTitle": "profile and explicit private metadata share persisted revisions across REST IRC events replay and recreation",
+      "scenarioScope": "Explicit private metadata stays owner-scoped while another owner\u2019s private metadata is preserved.",
+      "rationale": "Source assertion candidate; final execution and bundle identity must be matched before an outcome is assigned.",
+      "assertionDetails": [
+        "Alice private:device appears for Alice and her event/replay, but not Bob/admin metadata views, Bob IRC, Bob event stream or Bob replay; foreign writes are denied.",
+        "Bob\u2019s independent private:device value is read as owner and his full owner-visible metadata is identical before Alice\u2019s restart and after her update and removal."
+      ],
+      "transports": [
+        "REST over local workerd",
+        "IRC WebSocket",
+        "v2 event WebSocket",
+        "local SQLite and runtime recreation"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "previousSourceHash": "70f5d3fc6c5f17c88fbf836560c898ecf2e842fff3355b3f1ac822147aeaef23"
+    },
+    {
+      "id": "ROLE-034",
+      "kind": "test",
+      "testFile": "tests/features/channels-roles.test.ts",
+      "testFileSha256": "649671104b36cf4c2c980f4c76fe475cffd73f09f42b2c1067553d37e30b8ea8",
+      "testTitle": "role inheritance is channel scoped, bounded, persistent, and revokes inherited modes",
+      "scenarioScope": "Rejected inheritance cycle and cross-channel parent do not publish role mutations or alter independent roles.",
+      "rationale": "Source assertion candidate; final execution and bundle identity must be matched before an outcome is assigned.",
+      "assertionDetails": [
+        "Parent-child cycle and foreign-channel parent return 400; unauthorized Bob edit returns 403.",
+        "Actual message-event barriers bracket each denial and no channel.role_* event appears in the bounded window.",
+        "Charlie\u2019s foreign role list is identical after denial and after recreation/rejoin; Alice\u2019s child retains its valid parent and deletion subsequently clears inheritance."
+      ],
+      "transports": [
+        "REST over local workerd",
+        "IRC WebSocket",
+        "v2 event WebSocket",
+        "local SQLite and runtime recreation"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "DM-005",
+      "kind": "test",
+      "testFile": "tests/features/conversations-events.test.ts",
+      "testFileSha256": "43db70640f9c62a0093d3a93509943a5e629fc10d487be9b547571b25246ef04",
+      "testTitle": "immutable participant conversations provide REST/IRC selectors, canonical edits/read markers and durable idempotency",
+      "scenarioScope": "Outsider and administrator cannot retrieve Alice/Bob message by its real ID.",
+      "rationale": "Source assertion candidate; final execution and bundle identity must be matched before an outcome is assigned.",
+      "assertionDetails": [
+        "Bob reads the exact canonical message; outsider and administrator receive 404 for its ID, including after recreation, when Bob still reads the canonical redacted record.",
+        "A real outsider event stream excludes the private marker and the independent other/admin conversation is unchanged around forged requests and restart.",
+        "Outsider/admin message-ID and related selector denials are enclosed by actual v2 channel-message barriers; authorized Bob and unrelated account event streams show no other frames in that window."
+      ],
+      "transports": [
+        "REST over local workerd",
+        "IRC WebSocket",
+        "v2 event WebSocket",
+        "local SQLite and runtime recreation"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "previousSourceHash": "70f5d3fc6c5f17c88fbf836560c898ecf2e842fff3355b3f1ac822147aeaef23"
+    },
+    {
+      "id": "DM-008",
+      "kind": "test",
+      "testFile": "tests/features/conversations-events.test.ts",
+      "testFileSha256": "43db70640f9c62a0093d3a93509943a5e629fc10d487be9b547571b25246ef04",
+      "testTitle": "foreign conversation subscriptions preserve independent durable interests across recreation",
+      "scenarioScope": "Foreign account cannot register interest in an existing Alice/Bob conversation.",
+      "rationale": "Source assertion candidate; final execution and bundle identity must be matched before an outcome is assigned.",
+      "assertionDetails": [
+        "Bob subscribes to his actual target and other subscribes to an independently owned conversation; stopped SQLite confirms both account-specific preferences.",
+        "Other account receives WS 403 for the target before and after recreation; canonical stopped subscription and preference rows remain identical.",
+        "After recreation the independent conversation delivers its real message to its subscriber while unrelated Bob\u2019s stream excludes the marker."
+      ],
+      "transports": [
+        "REST over local workerd",
+        "IRC WebSocket",
+        "v2 event WebSocket",
+        "local SQLite and runtime recreation"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "previousSourceHash": "70f5d3fc6c5f17c88fbf836560c898ecf2e842fff3355b3f1ac822147aeaef23"
+    },
+    {
+      "id": "WS-011",
+      "kind": "test",
+      "testFile": "tests/features/conversations-events.test.ts",
+      "testFileSha256": "43db70640f9c62a0093d3a93509943a5e629fc10d487be9b547571b25246ef04",
+      "testTitle": "foreign conversation subscriptions preserve independent durable interests across recreation",
+      "scenarioScope": "Foreign account cannot register interest in an existing Alice/Bob conversation.",
+      "rationale": "Source assertion candidate; final execution and bundle identity must be matched before an outcome is assigned.",
+      "assertionDetails": [
+        "Bob subscribes to his actual target and other subscribes to an independently owned conversation; stopped SQLite confirms both account-specific preferences.",
+        "Other account receives WS 403 for the target before and after recreation; canonical stopped subscription and preference rows remain identical.",
+        "After recreation the independent conversation delivers its real message to its subscriber while unrelated Bob\u2019s stream excludes the marker."
+      ],
+      "transports": [
+        "REST over local workerd",
+        "IRC WebSocket",
+        "v2 event WebSocket",
+        "local SQLite and runtime recreation"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "previousSourceHash": "70f5d3fc6c5f17c88fbf836560c898ecf2e842fff3355b3f1ac822147aeaef23"
+    },
+    {
+      "id": "DM-009",
+      "kind": "test",
+      "testFile": "tests/features/api-expansion-boundaries.test.ts",
+      "testFileSha256": "dc92aa320119582ede70cc5d653495b55042307c4af55dea5683f12218fab076",
+      "testTitle": "conversation, event and metadata REST aliases enforce the same authenticated resource boundaries",
+      "scenarioScope": "Unread counts are available to the participant and denied to the outsider through both aliases.",
+      "rationale": "Source assertion candidate; final execution and bundle identity must be matched before an outcome is assigned.",
+      "assertionDetails": [
+        "For each alias Bob sees unread greater than zero; outsider GET and read-marker POST return 403 and Bob\u2019s authorized read changes unread to zero.",
+        "After recreation outsider unread GET is again 403 on both aliases and Bob still sees zero; this case does not observe event streams around the unread denials.",
+        "Each current/legacy replay also contains the exact conversation.message_redacted event for its conversation/message ID and excludes the original and edited bodies; this does not by itself prove events around the separate unread or impersonation denial.",
+        "Each outsider unread GET and denied read-marker POST is bracketed with Alice, Bob and Charlie v2 streams receiving real shared-channel barriers only; after recreation the unread denials are again barrier-bounded, with the independent Bob/Charlie conversation compared exactly."
+      ],
+      "transports": [
+        "REST over local workerd",
+        "IRC WebSocket",
+        "runtime recreation"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "events",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "previousSourceHash": "43557ce75f85bb1cb31485a4fde4ae298bddd2692c9238686ef33293e81e84f7"
+    },
+    {
+      "id": "DM-010",
+      "kind": "test",
+      "testFile": "tests/features/conversations-events.test.ts",
+      "testFileSha256": "43db70640f9c62a0093d3a93509943a5e629fc10d487be9b547571b25246ef04",
+      "testTitle": "immutable participant conversations provide REST/IRC selectors, canonical edits/read markers and durable idempotency",
+      "scenarioScope": "Attachment list access is limited to real conversation participants.",
+      "rationale": "Source assertion candidate; final execution and bundle identity must be matched before an outcome is assigned.",
+      "assertionDetails": [
+        "Bob lists the actual uploaded attachment with its ID and filename; outsider and administrator receive 403 without that ID both before and after recreation.",
+        "Bob still lists the same attachment after recreation; a separately seeded other/admin conversation retains its history.",
+        "Bob\u2019s actual uploaded attachment is listed before outsider/admin attachment GET denials; two real v2 observers receive only the bounded positive barrier around those denials and the independent conversation history is unchanged."
+      ],
+      "transports": [
+        "REST over local workerd",
+        "IRC WebSocket",
+        "v2 event WebSocket",
+        "local SQLite and runtime recreation"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources",
+        "events"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "previousSourceHash": "70f5d3fc6c5f17c88fbf836560c898ecf2e842fff3355b3f1ac822147aeaef23"
+    },
+    {
+      "id": "DM-012",
+      "kind": "test",
+      "testFile": "tests/features/api-expansion-boundaries.test.ts",
+      "testFileSha256": "dc92aa320119582ede70cc5d653495b55042307c4af55dea5683f12218fab076",
+      "testTitle": "conversation, event and metadata REST aliases enforce the same authenticated resource boundaries",
+      "scenarioScope": "Alice cannot impersonate Bob using either his username or his actual account UUID to retrieve Bob/Charlie history.",
+      "rationale": "Source assertion candidate; final execution and bundle identity must be matched before an outcome is assigned.",
+      "assertionDetails": [
+        "Alice\u2019s forged user=bob and user=<actual Bob account UUID> queries against Bob/Charlie history each receive 403 without the private marker before and after recreation.",
+        "All three real v2 event observers receive only positive shared-channel barriers around the paired denial windows, while Bob\u2019s independent conversation history remains exactly equal as JSON objects.",
+        "Bob\u2019s own legitimate history read is 200 and contains the real Bob/Charlie message."
+      ],
+      "transports": [
+        "REST over local workerd",
+        "IRC WebSocket",
+        "runtime recreation"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources",
+        "events"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "previousSourceHash": "43557ce75f85bb1cb31485a4fde4ae298bddd2692c9238686ef33293e81e84f7"
+    },
+    {
+      "id": "DM-013",
+      "kind": "test",
+      "testFile": "tests/features/conversations-events.test.ts",
+      "testFileSha256": "43db70640f9c62a0093d3a93509943a5e629fc10d487be9b547571b25246ef04",
+      "testTitle": "immutable participant conversations provide REST/IRC selectors, canonical edits/read markers and durable idempotency",
+      "scenarioScope": "Conversation ID and sender substitutions remain bound to actual participants.",
+      "rationale": "Source assertion candidate; final execution and bundle identity must be matched before an outcome is assigned.",
+      "assertionDetails": [
+        "Outsider/admin detail and message history are denied and forged sender ID is rejected; stopped membership rows for the target are exactly Alice and Bob.",
+        "After recreation outsider/admin conversation detail and message-ID requests remain denied while Bob\u2019s redacted message remains readable; independent other/admin conversation history remains identical."
+      ],
+      "transports": [
+        "REST over local workerd",
+        "IRC WebSocket",
+        "v2 event WebSocket",
+        "local SQLite and runtime recreation"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "previousSourceHash": "70f5d3fc6c5f17c88fbf836560c898ecf2e842fff3355b3f1ac822147aeaef23"
+    },
+    {
+      "id": "DM-019",
+      "kind": "test",
+      "testFile": "tests/features/conversations-events.test.ts",
+      "testFileSha256": "43db70640f9c62a0093d3a93509943a5e629fc10d487be9b547571b25246ef04",
+      "testTitle": "immutable participant conversations provide REST/IRC selectors, canonical edits/read markers and durable idempotency",
+      "scenarioScope": "REST and IRC mutation ownership are checked against the same real private message, alongside legitimate participant controls.",
+      "rationale": "Source assertion candidate; final execution and bundle identity must be matched before an outcome is assigned.",
+      "assertionDetails": [
+        "Other account\u2019s REST PATCH and IRC +ircord/edit of the same actual Alice/Bob message are denied with 403 and IRC 404; participant history is exactly unchanged and bounded v2 observers receive only the barrier.",
+        "Alice subsequently performs a successful REST edit and a successful IRC edit of that same canonical message; Bob\u2019s readback verifies Alice\u2019s sender ID, updated content and revision.",
+        "After recreation outsider REST send and IRC edit remain denied, a fresh authorized IRC message reaches Bob, and the independent other/admin conversation remains unchanged."
+      ],
+      "transports": [
+        "REST over local workerd",
+        "IRC WebSocket",
+        "v2 event WebSocket",
+        "local SQLite and runtime recreation"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "previousSourceHash": "70f5d3fc6c5f17c88fbf836560c898ecf2e842fff3355b3f1ac822147aeaef23"
+    },
+    {
+      "id": "WS-018",
+      "kind": "test",
+      "testFile": "tests/features/conversations-events.test.ts",
+      "testFileSha256": "43db70640f9c62a0093d3a93509943a5e629fc10d487be9b547571b25246ef04",
+      "testTitle": "account-bound replay subscriptions bootstrap and WS retries recheck live authority without duplicate mutations",
+      "scenarioScope": "A cursor bound to Bob cannot be replayed by another account.",
+      "rationale": "Source assertion candidate; final execution and bundle identity must be matched before an outcome is assigned.",
+      "assertionDetails": [
+        "Other account\u2019s Bob-cursor REST replay returns 403; Bob\u2019s own replay contains the created event.",
+        "After recreation other again receives 403 for Bob\u2019s cursor and a fresh Bob login replays the same message event; an independent conversation remains unchanged."
+      ],
+      "transports": [
+        "REST over local workerd",
+        "IRC WebSocket",
+        "v2 event WebSocket",
+        "local SQLite and runtime recreation"
+      ],
+      "assertions": [
+        "authorization",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": {
+          "status": "not-applicable",
+          "rationale": "This scoped check is a read-only replay GET with another account\u2019s cursor; it neither creates a subscription nor performs a domain-state mutation."
+        },
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "previousSourceHash": "70f5d3fc6c5f17c88fbf836560c898ecf2e842fff3355b3f1ac822147aeaef23"
+    },
+    {
+      "id": "WS-022",
+      "kind": "test",
+      "testFile": "tests/features/conversations-events.test.ts",
+      "testFileSha256": "43db70640f9c62a0093d3a93509943a5e629fc10d487be9b547571b25246ef04",
+      "testTitle": "account-bound replay subscriptions bootstrap and WS retries recheck live authority without duplicate mutations",
+      "scenarioScope": "A repeated WS operation cannot create an extra message or be used by a nonparticipant.",
+      "rationale": "Source assertion candidate; final execution and bundle identity must be matched before an outcome is assigned.",
+      "assertionDetails": [
+        "Alice\u2019s duplicate mutation returns the same canonical message; conflicting payload gets 409 and a nonparticipant\u2019s identical mutation gets 403.",
+        "Bob\u2019s history and replay contain one original event and independent conversation history is unchanged.",
+        "After recreation the original ID occurs once, Alice\u2019s retry returns the original message, and stopped SQLite has exactly one matching direct_messages row."
+      ],
+      "transports": [
+        "REST over local workerd",
+        "IRC WebSocket",
+        "v2 event WebSocket",
+        "local SQLite and runtime recreation"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "previousSourceHash": "70f5d3fc6c5f17c88fbf836560c898ecf2e842fff3355b3f1ac822147aeaef23"
+    },
+    {
+      "id": "ADMIN-016",
+      "kind": "test",
+      "testFile": "tests/features/accounts-admin.test.ts",
+      "testFileSha256": "7146aaa9d63a80290ffc6bdacc420ea20ee289c4c61f372a3cb4a3493d3d67c3",
+      "testTitle": "audit enabled stores only sanitized admin outcomes",
+      "scenarioScope": "Enabled audit GET returns allowed and denied stats, account mutations and an injected ban error; password and tokens are absent.",
+      "rationale": "Source assertion candidate; final execution and bundle identity must be matched before an outcome is assigned.",
+      "assertionDetails": [
+        "Enabled audit GET returns allowed and denied stats, account mutations and an injected ban error; password and tokens are absent.",
+        "The enabled case checks allowed and denied stats actions, error classification for an injected ban failure, and exclusion of actual credentials from records."
+      ],
+      "transports": [
+        "REST over local workerd",
+        "local SQLite and runtime recreation"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": {
+          "status": "not-applicable",
+          "rationale": "The named operation is authorized reading of an audit listing across entries, rather than mutation of another resource; separate scope/actor audit requirements cover unauthorized access."
+        }
+      }
+    },
+    {
+      "id": "ADMIN-016",
+      "kind": "test",
+      "testFile": "tests/features/accounts-admin.test.ts",
+      "testFileSha256": "7146aaa9d63a80290ffc6bdacc420ea20ee289c4c61f372a3cb4a3493d3d67c3",
+      "testTitle": "audit enabled stores only sanitized admin outcomes",
+      "scenarioScope": "With audit enabled, the server is disposed and recreated before audit GET; records from pre-disposal allowed/denied stats and account changes are still checked, together with the later injected ban error.",
+      "rationale": "Source assertion candidate; final execution and bundle identity must be matched before an outcome is assigned.",
+      "assertionDetails": [
+        "With audit enabled, the server is disposed and recreated before audit GET; records from pre-disposal allowed/denied stats and account changes are still checked, together with the later injected ban error."
+      ],
+      "transports": [
+        "REST over local workerd",
+        "local SQLite and runtime recreation"
+      ],
+      "assertions": [
+        "restart"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": {
+          "status": "not-applicable",
+          "rationale": "The named operation is authorized reading of an audit listing across entries, rather than mutation of another resource; separate scope/actor audit requirements cover unauthorized access."
+        }
+      }
+    },
+    {
+      "id": "DB-022",
+      "kind": "test",
+      "testFile": "tests/features/schema-startup.test.ts",
+      "testFileSha256": "87343e1cf9ea4ec60c014ea8b5f91d7074bd90b36dad9449d4ab576092f697db",
+      "testTitle": "actual startup schemas match all Drizzle constraints and FTS layouts after genuine REST and IRC activity",
+      "scenarioScope": "Fresh local workerd startup databases are compared against Accounts, Channel and Session Drizzle constraints, FTS layouts, migration version and foreign-key checks after actual IRC activity.",
+      "rationale": "Source assertion candidate; final execution and bundle identity must be matched before an outcome is assigned.",
+      "assertionDetails": [
+        "Fresh local workerd startup databases are compared against Accounts, Channel and Session Drizzle constraints, FTS layouts, migration version and foreign-key checks after actual IRC activity.",
+        "For each initialized domain, the schema comparison requires no differences or unmodeled tables, migration version 1000 and an empty foreign_key_check."
+      ],
+      "transports": [
+        "REST over local workerd",
+        "IRC WebSocket",
+        "local SQLite schema inspection"
+      ],
+      "assertions": [
+        "state",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": {
+          "status": "not-applicable",
+          "rationale": "Schema/model parity is a structural SQLite invariant, not an authorization operation; access-control scenarios independently test principals."
+        },
+        "state": "required",
+        "events": {
+          "status": "not-applicable",
+          "rationale": "Schema/model parity is not an event producer or subscription operation."
+        },
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": {
+          "status": "not-applicable",
+          "rationale": "The comparison is applied independently to each modeled domain; it does not target a distinct mutable business resource."
+        }
+      }
+    },
+    {
+      "id": "DB-022",
+      "kind": "test",
+      "testFile": "tests/security/matrix-database-identity-completion.test.ts",
+      "testFileSha256": "9b79e4c40d8017c8aff0059ee4969fd8d7cb3d5e3c89d06255ec37131f44eb5d",
+      "testTitle": "[DB-022] initialized local Accounts SQLite matches declared Drizzle models",
+      "scenarioScope": "Local initialized Accounts physical SQLite schema compared with current Drizzle declarations.",
+      "rationale": "Source assertion candidate; final execution and bundle identity must be matched before an outcome is assigned.",
+      "assertionDetails": [
+        "The initialized local Accounts SQLite database is compared with its Drizzle domain through compareDomainSchema; status is PASS with empty differences and empty unmodeledTables.",
+        "The fixture registers a real account and joins an IRC channel before stopping the local runtime. This is local SQLite evidence, not a live Cloudflare deployment.",
+        "The Accounts row has the stable registered ID and canonical_username alice; this assertion does not establish a separate legacy nullable-column policy."
+      ],
+      "transports": [
+        "REST over local workerd",
+        "IRC WebSocket",
+        "local SQLite schema inspection"
+      ],
+      "assertions": [
+        "state",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": {
+          "status": "not-applicable",
+          "rationale": "Schema/model parity is a structural SQLite invariant, not an authorization operation; access-control scenarios independently test principals."
+        },
+        "state": "required",
+        "events": {
+          "status": "not-applicable",
+          "rationale": "Schema/model parity is not an event producer or subscription operation."
+        },
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": {
+          "status": "not-applicable",
+          "rationale": "The comparison is applied independently to each modeled domain; it does not target a distinct mutable business resource."
+        }
+      }
+    },
+    {
+      "id": "DB-022",
+      "kind": "test",
+      "testFile": "tests/security/matrix-database-identity-completion.test.ts",
+      "testFileSha256": "9b79e4c40d8017c8aff0059ee4969fd8d7cb3d5e3c89d06255ec37131f44eb5d",
+      "testTitle": "[DB-022] initialized local Channel SQLite matches declared Drizzle models",
+      "scenarioScope": "Local initialized Channel physical SQLite schema compared with current Drizzle declarations.",
+      "rationale": "Source assertion candidate; final execution and bundle identity must be matched before an outcome is assigned.",
+      "assertionDetails": [
+        "The initialized local Channel SQLite database is compared with its Drizzle domain through compareDomainSchema; status is PASS with empty differences and empty unmodeledTables.",
+        "The fixture registers a real account and joins an IRC channel before stopping the local runtime. This is local SQLite evidence, not a live Cloudflare deployment."
+      ],
+      "transports": [
+        "REST over local workerd",
+        "IRC WebSocket",
+        "local SQLite schema inspection"
+      ],
+      "assertions": [
+        "state",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": {
+          "status": "not-applicable",
+          "rationale": "Schema/model parity is a structural SQLite invariant, not an authorization operation; access-control scenarios independently test principals."
+        },
+        "state": "required",
+        "events": {
+          "status": "not-applicable",
+          "rationale": "Schema/model parity is not an event producer or subscription operation."
+        },
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": {
+          "status": "not-applicable",
+          "rationale": "The comparison is applied independently to each modeled domain; it does not target a distinct mutable business resource."
+        }
+      }
+    },
+    {
+      "id": "DB-022",
+      "kind": "test",
+      "testFile": "tests/security/matrix-database-identity-completion.test.ts",
+      "testFileSha256": "9b79e4c40d8017c8aff0059ee4969fd8d7cb3d5e3c89d06255ec37131f44eb5d",
+      "testTitle": "[DB-022] initialized local Session SQLite matches declared Drizzle models",
+      "scenarioScope": "Local initialized Session physical SQLite schema compared with current Drizzle declarations.",
+      "rationale": "Source assertion candidate; final execution and bundle identity must be matched before an outcome is assigned.",
+      "assertionDetails": [
+        "The initialized local Session SQLite database is compared with its Drizzle domain through compareDomainSchema; status is PASS with empty differences and empty unmodeledTables.",
+        "The fixture registers a real account and joins an IRC channel before stopping the local runtime. This is local SQLite evidence, not a live Cloudflare deployment."
+      ],
+      "transports": [
+        "REST over local workerd",
+        "IRC WebSocket",
+        "local SQLite schema inspection"
+      ],
+      "assertions": [
+        "state",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": {
+          "status": "not-applicable",
+          "rationale": "Schema/model parity is a structural SQLite invariant, not an authorization operation; access-control scenarios independently test principals."
+        },
+        "state": "required",
+        "events": {
+          "status": "not-applicable",
+          "rationale": "Schema/model parity is not an event producer or subscription operation."
+        },
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": {
+          "status": "not-applicable",
+          "rationale": "The comparison is applied independently to each modeled domain; it does not target a distinct mutable business resource."
+        }
+      }
+    },
+    {
+      "id": "DB-022",
+      "kind": "test",
+      "testFile": "tests/features/schema-startup.test.ts",
+      "testFileSha256": "87343e1cf9ea4ec60c014ea8b5f91d7074bd90b36dad9449d4ab576092f697db",
+      "testTitle": "production constructor repairs legacy nullable keys without losing authenticated ownership, messages or dependent rows",
+      "scenarioScope": "Production startup repairs intentionally recreated legacy nullable primary keys across three local SQLite domains; after restart preserved hashes, schema comparison and foreign_key_check are asserted.",
+      "rationale": "Source assertion candidate; final execution and bundle identity must be matched before an outcome is assigned.",
+      "assertionDetails": [
+        "Production startup repairs intentionally recreated legacy nullable primary keys across three local SQLite domains; after restart preserved hashes, schema comparison and foreign_key_check are asserted."
+      ],
+      "transports": [
+        "REST over local workerd",
+        "IRC WebSocket",
+        "local SQLite schema inspection"
+      ],
+      "assertions": [
+        "restart",
+        "state",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": {
+          "status": "not-applicable",
+          "rationale": "Schema/model parity is a structural SQLite invariant, not an authorization operation; access-control scenarios independently test principals."
+        },
+        "state": "required",
+        "events": {
+          "status": "not-applicable",
+          "rationale": "Schema/model parity is not an event producer or subscription operation."
+        },
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": {
+          "status": "not-applicable",
+          "rationale": "The comparison is applied independently to each modeled domain; it does not target a distinct mutable business resource."
+        }
+      }
+    },
+    {
+      "id": "DB-022",
+      "kind": "test",
+      "testFile": "tests/features/schema-domain-migration.test.ts",
+      "testFileSha256": "fe0cd80ac4c555f6bf2a5c109b0da00e7b00196c9a0781b85447c93dee21db9e",
+      "testTitle": "preserves Channel identities, role authorization and FTS across dropped-table rollback, retry and restart",
+      "scenarioScope": "Channel migration rollback/retry preserves application rows and FTS object state; this supports local migration/recreation, not a live Cloudflare deployment.",
+      "rationale": "Source assertion candidate; final execution and bundle identity must be matched before an outcome is assigned.",
+      "assertionDetails": [
+        "Channel migration rollback/retry preserves application rows and FTS object state; this supports local migration/recreation, not a live Cloudflare deployment."
+      ],
+      "transports": [
+        "REST over local workerd",
+        "local SQLite schema inspection and recreation"
+      ],
+      "assertions": [
+        "restart",
+        "state"
+      ],
+      "dimensionDisposition": {
+        "authorization": {
+          "status": "not-applicable",
+          "rationale": "Schema/model parity is a structural SQLite invariant, not an authorization operation; access-control scenarios independently test principals."
+        },
+        "state": "required",
+        "events": {
+          "status": "not-applicable",
+          "rationale": "Schema/model parity is not an event producer or subscription operation."
+        },
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": {
+          "status": "not-applicable",
+          "rationale": "The comparison is applied independently to each modeled domain; it does not target a distinct mutable business resource."
+        }
+      }
+    },
+    {
+      "id": "DM-016",
+      "kind": "test",
+      "testFile": "tests/features/conversations-events.test.ts",
+      "testFileSha256": "43db70640f9c62a0093d3a93509943a5e629fc10d487be9b547571b25246ef04",
+      "testTitle": "offline registered-nickname DMs persist to immutable ownership and retained history never follows nickname reuse",
+      "scenarioScope": "IRC message to offline registered BobAlias persists under Bob account ID; after alias transfer Charlie receives new traffic but cannot retrieve old history.",
+      "rationale": "Source assertion candidate; final execution and bundle identity must be matched before an outcome is assigned.",
+      "assertionDetails": [
+        "IRC message to offline registered BobAlias persists under Bob account ID; after alias transfer Charlie receives new traffic but cannot retrieve old history.",
+        "After nickname ownership changes from Bob to Charlie, Bob retains the old message, Charlie receives only the new traffic, and stored target_id remains Bob account ID."
+      ],
+      "transports": [
+        "IRC WebSocket",
+        "REST over local workerd",
+        "local SQLite and runtime recreation"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": {
+          "status": "not-applicable",
+          "rationale": "The requirement concerns stable recipient ownership and persisted offline IRC delivery; it does not prescribe a live notification while the intended recipient is offline."
+        },
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "previousSourceHash": "70f5d3fc6c5f17c88fbf836560c898ecf2e842fff3355b3f1ac822147aeaef23"
+    },
+    {
+      "id": "WS-017",
+      "kind": "test",
+      "testFile": "tests/features/conversations-events.test.ts",
+      "testFileSha256": "43db70640f9c62a0093d3a93509943a5e629fc10d487be9b547571b25246ef04",
+      "testTitle": "durable observer handshakes preserve public live observation and suppress private revoked redacted replay across recreation",
+      "scenarioScope": "Observer case checks live and replay suppression after privacy changes, redaction and recreation.",
+      "rationale": "Source assertion candidate; final execution and bundle identity must be matched before an outcome is assigned.",
+      "assertionDetails": [
+        "Observer case checks live and replay suppression after privacy changes, redaction and recreation.",
+        "Replay suppresses a redacted body and a private message sent after a member leaves; an independent authorized public subscription receives its event."
+      ],
+      "transports": [
+        "REST",
+        "IRC WebSocket",
+        "v2 event WebSocket",
+        "runtime recreation"
+      ],
+      "assertions": [
+        "authorization",
+        "events",
+        "transport",
+        "restart"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "previousSourceHash": "70f5d3fc6c5f17c88fbf836560c898ecf2e842fff3355b3f1ac822147aeaef23"
+    },
+    {
+      "id": "WS-017",
+      "kind": "test",
+      "testFile": "tests/features/conversations-events.test.ts",
+      "testFileSha256": "43db70640f9c62a0093d3a93509943a5e629fc10d487be9b547571b25246ef04",
+      "testTitle": "durable observer handshakes preserve public live observation and suppress private revoked redacted replay across recreation",
+      "scenarioScope": "The test sends then redacts a real secret-channel message, asserts its deletion event and no redacted body in replay, leaves the channel, and separately asserts a public observer receives and replays its own allowed event.",
+      "rationale": "Source assertion candidate; final execution and bundle identity must be matched before an outcome is assigned.",
+      "assertionDetails": [
+        "The test sends then redacts a real secret-channel message, asserts its deletion event and no redacted body in replay, leaves the channel, and separately asserts a public observer receives and replays its own allowed event."
+      ],
+      "transports": [
+        "REST",
+        "IRC WebSocket",
+        "v2 event WebSocket",
+        "runtime recreation"
+      ],
+      "assertions": [
+        "state",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "previousSourceHash": "70f5d3fc6c5f17c88fbf836560c898ecf2e842fff3355b3f1ac822147aeaef23"
+    },
+    {
+      "id": "USER-017",
+      "kind": "test",
+      "testFile": "tests/features/conversations-events.test.ts",
+      "testFileSha256": "43db70640f9c62a0093d3a93509943a5e629fc10d487be9b547571b25246ef04",
+      "testTitle": "profile and explicit private metadata share persisted revisions across REST IRC events replay and recreation",
+      "scenarioScope": "REST profile PATCH increments revision, owner and another authorized live event stream receive the update, IRC metadata and restart preserve projection.",
+      "rationale": "Source assertion candidate; final execution and bundle identity must be matched before an outcome is assigned.",
+      "assertionDetails": [
+        "REST profile PATCH increments revision, owner and another authorized live event stream receive the update, IRC metadata and restart preserve projection.",
+        "Owner and subscribed peer live streams receive the same revision; a stale revision is rejected and REST/IRC profile fields remain readable after recreation."
+      ],
+      "transports": [
+        "REST",
+        "IRC WebSocket",
+        "v2 event WebSocket",
+        "runtime recreation"
+      ],
+      "assertions": [
+        "state",
+        "events",
+        "transport",
+        "restart"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "previousSourceHash": "70f5d3fc6c5f17c88fbf836560c898ecf2e842fff3355b3f1ac822147aeaef23"
+    },
+    {
+      "id": "USER-017",
+      "kind": "test",
+      "testFile": "tests/security/matrix-identity.test.ts",
+      "testFileSha256": "ff4938e54d411cea66e8c489f0f9cff416d0c0001aa7df89eb558c0bd87a33db",
+      "testTitle": "matrix identity USER-001 USER-002 USER-003 USER-004 USER-005 USER-006 USER-012 USER-013 USER-014: profile path and body identity are bound to session",
+      "scenarioScope": "Alice\u2019s foreign Bob-profile PATCH returns 403; Bob\u2019s baseline profile is unchanged through Alice\u2019s valid own update and stopped metadata contains only the permitted values.",
+      "rationale": "Source assertion candidate; final execution and bundle identity must be matched before an outcome is assigned.",
+      "assertionDetails": [
+        "Alice\u2019s foreign Bob-profile PATCH returns 403; Bob\u2019s baseline profile is unchanged through Alice\u2019s valid own update and stopped metadata contains only the permitted values."
+      ],
+      "transports": [
+        "REST over local workerd",
+        "stopped local SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "DM-009",
+      "kind": "test",
+      "testFile": "tests/features/conversations-events.test.ts",
+      "testFileSha256": "43db70640f9c62a0093d3a93509943a5e629fc10d487be9b547571b25246ef04",
+      "testTitle": "immutable participant conversations provide REST/IRC selectors, canonical edits/read markers and durable idempotency",
+      "scenarioScope": "Participant conversation event visibility and independent conversation control.",
+      "rationale": "Source assertion candidate; final execution and bundle identity must be matched before an outcome is assigned.",
+      "assertionDetails": [
+        "Bob receives the real conversation message event, while the other account\u2019s stream excludes its private body; independent other/admin conversation history remains unchanged across recreation.",
+        "This is a message visibility control and does not by itself assert an event generated by a denied unread or attachment-list GET."
+      ],
+      "transports": [
+        "REST over local workerd",
+        "IRC WebSocket",
+        "v2 event WebSocket",
+        "local SQLite and runtime recreation"
+      ],
+      "assertions": [
+        "events",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "previousSourceHash": "70f5d3fc6c5f17c88fbf836560c898ecf2e842fff3355b3f1ac822147aeaef23"
+    },
+    {
+      "id": "DM-010",
+      "kind": "test",
+      "testFile": "tests/features/conversations-events.test.ts",
+      "testFileSha256": "43db70640f9c62a0093d3a93509943a5e629fc10d487be9b547571b25246ef04",
+      "testTitle": "immutable participant conversations provide REST/IRC selectors, canonical edits/read markers and durable idempotency",
+      "scenarioScope": "Participant conversation event visibility and independent conversation control.",
+      "rationale": "Source assertion candidate; final execution and bundle identity must be matched before an outcome is assigned.",
+      "assertionDetails": [
+        "Bob receives the real conversation message event, while the other account\u2019s stream excludes its private body; independent other/admin conversation history remains unchanged across recreation.",
+        "This is a message visibility control and does not by itself assert an event generated by a denied unread or attachment-list GET.",
+        "Bob\u2019s actual uploaded attachment is listed before outsider/admin attachment GET denials; two real v2 observers receive only the bounded positive barrier around those denials and the independent conversation history is unchanged."
+      ],
+      "transports": [
+        "REST over local workerd",
+        "IRC WebSocket",
+        "v2 event WebSocket",
+        "local SQLite and runtime recreation"
+      ],
+      "assertions": [
+        "events",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "previousSourceHash": "70f5d3fc6c5f17c88fbf836560c898ecf2e842fff3355b3f1ac822147aeaef23"
+    },
+    {
+      "id": "DM-012",
+      "kind": "test",
+      "testFile": "tests/security/matrix-dm-gaps.test.ts",
+      "testFileSha256": "1118e6893710614ab07d755fda73210a9c6c3c51754ded4e0a604ad068dacf42",
+      "testTitle": "direct-message privacy gaps DM selectors, public event streams, search and revoked sessions remain confined to real participants",
+      "scenarioScope": "Account IDs are supported peer targets for Alice\u2019s own Bob and Charlie histories; forged user selectors and cross-conversation isolation are checked, including after restart.",
+      "rationale": "Source assertion candidate; final execution and bundle identity must be matched before an outcome is assigned.",
+      "assertionDetails": [
+        "Four independently registered actors use real IRC and v2 acknowledged event streams. Alice/Bob, Bob/Charlie and Alice/Charlie messages reach exactly their two participant streams; rootadmin receives none, and public channel barriers prove observer liveness.",
+        "Account-name histories and Alice\u2019s Bob/Charlie account-ID targets return the correct message IDs and contents; forged user selectors receive 403, while empty responses for unrecognized targets or cursors are not represented as denial statuses.",
+        "After local hibernation the Alice/Bob follow-up reaches those two event participants and not Charlie or rootadmin; unauthorized edits remain absent. Logout, independent SQLite sender/recipient rows, recreated authorized reads and both search aliases are checked."
+      ],
+      "transports": [
+        "REST",
+        "IRC WebSocket",
+        "v2 event WebSocket",
+        "local SQLite and runtime recreation"
+      ],
+      "assertions": [
+        "authorization",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "DM-012",
+      "kind": "test",
+      "testFile": "tests/security/matrix-dm-gaps.test.ts",
+      "testFileSha256": "1118e6893710614ab07d755fda73210a9c6c3c51754ded4e0a604ad068dacf42",
+      "testTitle": "direct-message privacy gaps DM selectors, public event streams, search and revoked sessions remain confined to real participants",
+      "scenarioScope": "Three participant event streams receive only their relevant conversation bodies, with administrator exclusion; public barriers establish liveness.",
+      "rationale": "Source assertion candidate; final execution and bundle identity must be matched before an outcome is assigned.",
+      "assertionDetails": [
+        "Three participant event streams receive only their relevant conversation bodies, with administrator exclusion; public barriers establish liveness."
+      ],
+      "transports": [
+        "REST",
+        "IRC WebSocket",
+        "v2 event WebSocket",
+        "local SQLite and runtime recreation"
+      ],
+      "assertions": [
+        "events"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "PUSH-006",
+      "kind": "test",
+      "testFile": "tests/features/webpush-policy.test.ts",
+      "testFileSha256": "807eeb8562f0a63b8b9a81f60b62abb2c0d5c23942b8faf3e68ac8d13dc9c1b0",
+      "testTitle": "rechecks a removed pending subscription while another recipient remains live",
+      "scenarioScope": "A queued subscription removed by its owner is not revived after recreation, while another endpoint receives the pending event.",
+      "rationale": "Source assertion candidate only; final execution, exact test identity and bundle hash must be matched by the coordinator.",
+      "assertionDetails": [
+        "An actual Bob subscription has an attempts=0 delivery row; outsider DELETE returns 403, Bob DELETE succeeds and the removed endpoint\u2019s queued row disappears.",
+        "A separate Bob endpoint returns 503 and its retry row persists exactly through recreation; after the fixture invokes its alarm, that endpoint receives a decryptable conversation event while the removed and Charlie endpoints receive none.",
+        "Afterward Bob retains only the intended blocker endpoint and Charlie retains his unrelated endpoint."
+      ],
+      "transports": [
+        "REST over local workerd",
+        "mock Web Push provider with real encryption",
+        "local SQLite and runtime recreation"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "PUSH-007",
+      "kind": "test",
+      "testFile": "tests/features/webpush-policy.test.ts",
+      "testFileSha256": "807eeb8562f0a63b8b9a81f60b62abb2c0d5c23942b8faf3e68ac8d13dc9c1b0",
+      "testTitle": "does not give a late channel member earlier private events and delivers later events",
+      "scenarioScope": "A late member\u2019s persisted endpoint cannot receive events sent before membership.",
+      "rationale": "Source assertion candidate only; final execution, exact test identity and bundle hash must be matched by the coordinator.",
+      "assertionDetails": [
+        "Alice posts a secret-channel event while Bob is a member and Charlie is not; Bob\u2019s endpoint decrypts it and Charlie\u2019s receives none.",
+        "After recreation both exact endpoint subscriptions persist, and Charlie still has no old delivery; after Charlie joins, both Bob and Charlie decrypt the later authorized event and Charlie never receives the earlier body."
+      ],
+      "transports": [
+        "REST over local workerd",
+        "mock Web Push provider with real encryption",
+        "local SQLite and runtime recreation"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "PUSH-008",
+      "kind": "test",
+      "testFile": "tests/features/webpush-delivery.test.ts",
+      "testFileSha256": "7e3a3a00e17f2e883c1fcbdae05355d77bcee0504407ee886c971229cc2c6963",
+      "testTitle": "delivers an encrypted private event only to the intended active subscription without channel membership",
+      "scenarioScope": "A private conversation notification is encrypted and confined to the correct subscription, before and after local recreation (without channel membership).",
+      "rationale": "Source assertion candidate only; final execution, exact test identity and bundle hash must be matched by the coordinator.",
+      "assertionDetails": [
+        "Outsider attempts to register Bob\u2019s endpoint are 403; the genuine Bob endpoint receives a VAPID-authorized encrypted conversation event whose plaintext is absent on the wire, while Charlie\u2019s endpoint and IRC/event streams exclude the private body.",
+        "After recreation Bob and Charlie retain their independent subscriptions; a new Alice/Bob message decrypts only at Bob\u2019s endpoint and remains absent from Charlie\u2019s endpoint and event stream.",
+        "A separate Alice/Charlie conversation then produces Charlie\u2019s own decryptable VAPID-authorized notification and event control, while Bob\u2019s endpoint and event stream exclude that independent body."
+      ],
+      "transports": [
+        "REST over local workerd",
+        "mock Web Push provider with real encryption",
+        "local SQLite and runtime recreation",
+        "IRC and event WebSockets"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "PUSH-008",
+      "kind": "test",
+      "testFile": "tests/features/webpush-delivery.test.ts",
+      "testFileSha256": "7e3a3a00e17f2e883c1fcbdae05355d77bcee0504407ee886c971229cc2c6963",
+      "testTitle": "delivers an encrypted private event only to the intended active subscription after channel membership",
+      "scenarioScope": "A private conversation notification is encrypted and confined to the correct subscription, before and after local recreation (after channel membership).",
+      "rationale": "Source assertion candidate only; final execution, exact test identity and bundle hash must be matched by the coordinator.",
+      "assertionDetails": [
+        "Outsider attempts to register Bob\u2019s endpoint are 403; the genuine Bob endpoint receives a VAPID-authorized encrypted conversation event whose plaintext is absent on the wire, while Charlie\u2019s endpoint and IRC/event streams exclude the private body.",
+        "After recreation Bob and Charlie retain their independent subscriptions; a new Alice/Bob message decrypts only at Bob\u2019s endpoint and remains absent from Charlie\u2019s endpoint and event stream.",
+        "A separate Alice/Charlie conversation then produces Charlie\u2019s own decryptable VAPID-authorized notification and event control, while Bob\u2019s endpoint and event stream exclude that independent body."
+      ],
+      "transports": [
+        "REST over local workerd",
+        "mock Web Push provider with real encryption",
+        "local SQLite and runtime recreation",
+        "IRC and event WebSockets"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "PUSH-009",
+      "kind": "test",
+      "testFile": "tests/features/webpush-policy.test.ts",
+      "testFileSha256": "807eeb8562f0a63b8b9a81f60b62abb2c0d5c23942b8faf3e68ac8d13dc9c1b0",
+      "testTitle": "enforces channel all, mentions and nothing preferences and rejects other-account or malformed updates",
+      "scenarioScope": "Actual channel notification preferences are owner-bound, persist and control encrypted delivery.",
+      "rationale": "Source assertion candidate only; final execution, exact test identity and bundle hash must be matched by the coordinator.",
+      "assertionDetails": [
+        "Other-account preference PUT returns 403 and malformed owner input 400 with the original preference response unchanged; actual all, mentions, temporary mute and nothing settings constrain delivery.",
+        "A nondefault mentions setting and Bob/Charlie endpoint lists survive recreation; after recreation nonmatching messages remain absent, matching nick and folded variants are delivered, and Charlie\u2019s independent all-preference endpoint receives each control."
+      ],
+      "transports": [
+        "REST over local workerd",
+        "mock Web Push provider with real encryption",
+        "local SQLite and runtime recreation",
+        "IRC and event WebSockets"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "PUSH-011",
+      "kind": "test",
+      "testFile": "tests/features/webpush-policy.test.ts",
+      "testFileSha256": "807eeb8562f0a63b8b9a81f60b62abb2c0d5c23942b8faf3e68ac8d13dc9c1b0",
+      "testTitle": "persists 429 retry attempts over recreation and stops after the bounded eighth attempt",
+      "scenarioScope": "Provider 429 failures retry only to the eighth delivery attempt while an unrelated endpoint progresses.",
+      "rationale": "Source assertion candidate only; final execution, exact test identity and bundle hash must be matched by the coordinator.",
+      "assertionDetails": [
+        "A real queued Alice/Bob conversation notification receives provider 429; event ID, account ID, attempt count and future next-attempt remain equal after recreation.",
+        "The fixture invokes subsequent alarms, checks attempts and future scheduling through attempt seven, then observes the queued row removed on the eighth attempt and exactly eight encrypted provider calls while Bob\u2019s subscription remains.",
+        "While Bob\u2019s retry remains pending, a separately authenticated Alice/Charlie conversation delivers a VAPID-authorized, decryptable encrypted control at Charlie\u2019s endpoint; Bob\u2019s retry endpoint does not receive that unrelated body and both subscriptions remain."
+      ],
+      "transports": [
+        "REST over local workerd",
+        "mock Web Push provider with real encryption",
+        "local SQLite and runtime recreation"
+      ],
+      "assertions": [
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": {
+          "status": "not-applicable",
+          "rationale": "This specific operation measures system retries of an already-authorized queued notification after provider failure; actor authorization is separately exercised by subscription and notification-access scenarios."
+        },
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "PUSH-011",
+      "kind": "test",
+      "testFile": "tests/features/webpush-policy.test.ts",
+      "testFileSha256": "807eeb8562f0a63b8b9a81f60b62abb2c0d5c23942b8faf3e68ac8d13dc9c1b0",
+      "testTitle": "persists 503 retry attempts over recreation and stops after the bounded eighth attempt",
+      "scenarioScope": "Provider 503 failures retry only to the eighth delivery attempt while an unrelated endpoint progresses.",
+      "rationale": "Source assertion candidate only; final execution, exact test identity and bundle hash must be matched by the coordinator.",
+      "assertionDetails": [
+        "A real queued Alice/Bob conversation notification receives provider 503; event ID, account ID, attempt count and future next-attempt remain equal after recreation.",
+        "The fixture invokes subsequent alarms, checks attempts and future scheduling through attempt seven, then observes the queued row removed on the eighth attempt and exactly eight encrypted provider calls while Bob\u2019s subscription remains.",
+        "While Bob\u2019s retry remains pending, a separately authenticated Alice/Charlie conversation delivers a VAPID-authorized, decryptable encrypted control at Charlie\u2019s endpoint; Bob\u2019s retry endpoint does not receive that unrelated body and both subscriptions remain."
+      ],
+      "transports": [
+        "REST over local workerd",
+        "mock Web Push provider with real encryption",
+        "local SQLite and runtime recreation"
+      ],
+      "assertions": [
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": {
+          "status": "not-applicable",
+          "rationale": "This specific operation measures system retries of an already-authorized queued notification after provider failure; actor authorization is separately exercised by subscription and notification-access scenarios."
+        },
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    }
+  ],
+  "scenarios": [
+    {
+      "id": "ADMIN-005",
+      "pendingSourceIdentities": [],
+      "requirement": "Administrator can revoke a session.",
+      "review": "source candidate only; final execution matching required",
+      "candidateClaims": 1,
+      "requiredAxes": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "notApplicable": {},
+      "dimensionsWithoutClaim": [],
+      "remainingActualGaps": []
+    },
+    {
+      "id": "ADMIN-016",
+      "pendingSourceIdentities": [],
+      "requirement": "Administrator can inspect appropriate administrative audit logs.",
+      "review": "source candidate only; final execution matching required",
+      "candidateClaims": 2,
+      "requiredAxes": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart"
+      ],
+      "notApplicable": {
+        "unrelatedResources": {
+          "status": "not-applicable",
+          "rationale": "The named operation is authorized reading of an audit listing across entries, rather than mutation of another resource; separate scope/actor audit requirements cover unauthorized access."
+        }
+      },
+      "dimensionsWithoutClaim": [],
+      "remainingActualGaps": []
+    },
+    {
+      "id": "ADMIN-023",
+      "pendingSourceIdentities": [],
+      "requirement": "Ordinary users cannot revoke other users' sessions.",
+      "review": "source candidate only; final execution matching required",
+      "candidateClaims": 1,
+      "requiredAxes": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "notApplicable": {},
+      "dimensionsWithoutClaim": [],
+      "remainingActualGaps": []
+    },
+    {
+      "id": "ADMIN-027",
+      "pendingSourceIdentities": [],
+      "requirement": "Administrators cannot exceed their configured privilege scope.",
+      "review": "source candidate only; final execution matching required",
+      "candidateClaims": 1,
+      "requiredAxes": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "notApplicable": {},
+      "dimensionsWithoutClaim": [],
+      "remainingActualGaps": []
+    },
+    {
+      "id": "ADMIN-029",
+      "pendingSourceIdentities": [],
+      "requirement": "Administrative requests are audited with actor, action, target and outcome.",
+      "review": "source candidate only; final execution matching required",
+      "candidateClaims": 1,
+      "requiredAxes": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "notApplicable": {},
+      "dimensionsWithoutClaim": [],
+      "remainingActualGaps": []
+    },
+    {
+      "id": "USER-017",
+      "pendingSourceIdentities": [],
+      "requirement": "Profile updates propagate correctly to authorized REST/event clients.",
+      "review": "source candidate only; final execution matching required",
+      "candidateClaims": 2,
+      "requiredAxes": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "notApplicable": {},
+      "dimensionsWithoutClaim": [],
+      "remainingActualGaps": []
+    },
+    {
+      "id": "USER-018",
+      "pendingSourceIdentities": [],
+      "requirement": "Private profile metadata is excluded from public metadata synchronization.",
+      "review": "source candidate only; final execution matching required",
+      "candidateClaims": 1,
+      "requiredAxes": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "notApplicable": {},
+      "dimensionsWithoutClaim": [],
+      "remainingActualGaps": []
+    },
+    {
+      "id": "ROLE-034",
+      "pendingSourceIdentities": [],
+      "requirement": "Role inheritance cannot create privilege-escalation cycles.",
+      "review": "source candidate only; final execution matching required",
+      "candidateClaims": 1,
+      "requiredAxes": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "notApplicable": {},
+      "dimensionsWithoutClaim": [],
+      "remainingActualGaps": []
+    },
+    {
+      "id": "DM-005",
+      "pendingSourceIdentities": [],
+      "requirement": "Charlie cannot retrieve an Alice/Bob message by ID.",
+      "review": "source candidate only; final execution matching required",
+      "candidateClaims": 1,
+      "requiredAxes": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "notApplicable": {},
+      "dimensionsWithoutClaim": [],
+      "remainingActualGaps": []
+    },
+    {
+      "id": "DM-008",
+      "pendingSourceIdentities": [],
+      "requirement": "Charlie cannot subscribe to Alice/Bob events.",
+      "review": "source candidate only; final execution matching required",
+      "candidateClaims": 1,
+      "requiredAxes": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "notApplicable": {},
+      "dimensionsWithoutClaim": [],
+      "remainingActualGaps": []
+    },
+    {
+      "id": "DM-009",
+      "pendingSourceIdentities": [],
+      "requirement": "Charlie cannot retrieve Alice/Bob unread counts.",
+      "review": "source candidate only; exact final execution matching required",
+      "candidateClaims": 2,
+      "requiredAxes": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "notApplicable": {},
+      "dimensionsWithoutClaim": [],
+      "remainingActualGaps": []
+    },
+    {
+      "id": "DM-010",
+      "pendingSourceIdentities": [],
+      "requirement": "Charlie cannot enumerate Alice/Bob private attachments.",
+      "review": "source candidate only; exact final execution matching required",
+      "candidateClaims": 2,
+      "requiredAxes": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "notApplicable": {},
+      "dimensionsWithoutClaim": [],
+      "remainingActualGaps": []
+    },
+    {
+      "id": "DM-012",
+      "pendingSourceIdentities": [],
+      "requirement": "Alice cannot substitute Bob's account ID to access Bob/Charlie history.",
+      "review": "source candidate only; exact final execution matching required",
+      "candidateClaims": 3,
+      "requiredAxes": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "notApplicable": {},
+      "dimensionsWithoutClaim": [],
+      "remainingActualGaps": []
+    },
+    {
+      "id": "DM-013",
+      "pendingSourceIdentities": [],
+      "requirement": "Conversation IDs cannot be manipulated to gain unauthorized access.",
+      "review": "source candidate only; final execution matching required",
+      "candidateClaims": 1,
+      "requiredAxes": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "notApplicable": {},
+      "dimensionsWithoutClaim": [],
+      "remainingActualGaps": []
+    },
+    {
+      "id": "DM-016",
+      "pendingSourceIdentities": [],
+      "requirement": "Offline DM persistence preserves the correct recipient identity.",
+      "review": "source candidate only; final execution matching required",
+      "candidateClaims": 1,
+      "requiredAxes": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "notApplicable": {
+        "events": {
+          "status": "not-applicable",
+          "rationale": "The requirement concerns stable recipient ownership and persisted offline IRC delivery; it does not prescribe a live notification while the intended recipient is offline."
+        }
+      },
+      "dimensionsWithoutClaim": [],
+      "remainingActualGaps": []
+    },
+    {
+      "id": "DM-019",
+      "pendingSourceIdentities": [],
+      "requirement": "DM API and IRC PRIVMSG paths apply consistent access policies.",
+      "review": "source candidate only; exact final execution matching required",
+      "candidateClaims": 1,
+      "requiredAxes": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "notApplicable": {},
+      "dimensionsWithoutClaim": [],
+      "remainingActualGaps": []
+    },
+    {
+      "id": "WS-011",
+      "pendingSourceIdentities": [],
+      "requirement": "Charlie cannot subscribe to Alice/Bob DM events.",
+      "review": "source candidate only; final execution matching required",
+      "candidateClaims": 1,
+      "requiredAxes": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "notApplicable": {},
+      "dimensionsWithoutClaim": [],
+      "remainingActualGaps": []
+    },
+    {
+      "id": "WS-017",
+      "pendingSourceIdentities": [],
+      "requirement": "Event replay does not expose data outside the current access policy.",
+      "review": "source candidate only; final execution matching required",
+      "candidateClaims": 2,
+      "requiredAxes": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "notApplicable": {},
+      "dimensionsWithoutClaim": [],
+      "remainingActualGaps": []
+    },
+    {
+      "id": "WS-018",
+      "pendingSourceIdentities": [],
+      "requirement": "Event cursors cannot be used to retrieve another user's private events.",
+      "review": "source candidate only; final execution matching required",
+      "candidateClaims": 1,
+      "requiredAxes": [
+        "authorization",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "notApplicable": {
+        "state": {
+          "status": "not-applicable",
+          "rationale": "The scoped operation is a read-only replay GET; it does not create subscriptions or mutate domain state."
+        }
+      },
+      "dimensionsWithoutClaim": [],
+      "remainingActualGaps": []
+    },
+    {
+      "id": "WS-022",
+      "pendingSourceIdentities": [],
+      "requirement": "Duplicate event delivery does not result in unauthorized duplicate mutations.",
+      "review": "source candidate only; final execution matching required",
+      "candidateClaims": 1,
+      "requiredAxes": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "notApplicable": {},
+      "dimensionsWithoutClaim": [],
+      "remainingActualGaps": []
+    },
+    {
+      "id": "PUSH-006",
+      "pendingSourceIdentities": [],
+      "requirement": "Revoked subscriptions stop receiving notifications.",
+      "review": "source candidate only; final execution matching required",
+      "candidateClaims": 1,
+      "requiredAxes": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "notApplicable": {},
+      "dimensionsWithoutClaim": [],
+      "remainingActualGaps": []
+    },
+    {
+      "id": "PUSH-007",
+      "pendingSourceIdentities": [],
+      "requirement": "Private notifications are delivered only to intended accounts.",
+      "review": "source candidate only; final execution matching required",
+      "candidateClaims": 1,
+      "requiredAxes": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "notApplicable": {},
+      "dimensionsWithoutClaim": [],
+      "remainingActualGaps": []
+    },
+    {
+      "id": "PUSH-008",
+      "pendingSourceIdentities": [],
+      "requirement": "No private message bodies leak into unrelated notifications.",
+      "review": "source candidate only; final execution matching required",
+      "candidateClaims": 2,
+      "requiredAxes": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "notApplicable": {},
+      "dimensionsWithoutClaim": [],
+      "remainingActualGaps": []
+    },
+    {
+      "id": "PUSH-009",
+      "pendingSourceIdentities": [],
+      "requirement": "Notification preferences are enforced.",
+      "review": "source candidate only; final execution matching required",
+      "candidateClaims": 1,
+      "requiredAxes": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "notApplicable": {},
+      "dimensionsWithoutClaim": [],
+      "remainingActualGaps": []
+    },
+    {
+      "id": "PUSH-011",
+      "pendingSourceIdentities": [],
+      "requirement": "Repeated delivery failures do not cause unbounded retries.",
+      "review": "source candidate only; final execution matching required",
+      "candidateClaims": 2,
+      "requiredAxes": [
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "notApplicable": {
+        "authorization": {
+          "status": "not-applicable",
+          "rationale": "The scoped case measures system retry bounds for an already-authorized queued notification; actor authorization is separately tested."
+        }
+      },
+      "dimensionsWithoutClaim": [],
+      "remainingActualGaps": []
+    },
+    {
+      "id": "DB-022",
+      "pendingSourceIdentities": [],
+      "requirement": "Drizzle models match the actual deployed SQLite schema.",
+      "review": "source candidate only; final execution matching required",
+      "candidateClaims": 6,
+      "requiredAxes": [
+        "state",
+        "transport",
+        "restart"
+      ],
+      "notApplicable": {
+        "authorization": {
+          "status": "not-applicable",
+          "rationale": "Schema/model parity is a structural SQLite invariant, not an authorization operation; access-control scenarios independently test principals."
+        },
+        "events": {
+          "status": "not-applicable",
+          "rationale": "Schema/model parity is not an event producer or subscription operation."
+        },
+        "unrelatedResources": {
+          "status": "not-applicable",
+          "rationale": "The comparison is applied independently to each modeled domain; it does not target a distinct mutable business resource."
+        }
+      },
+      "dimensionsWithoutClaim": [],
+      "remainingActualGaps": []
+    }
+  ],
+  "changedBaselineClaims": [
+    {
+      "testFile": "tests/security/matrix-abuse-gaps.test.ts",
+      "previousSha256": "1cb92ae217e5fdb6bf915de7b1455b9d8489d846091fadb42c083a4bea210be3",
+      "currentSha256": "fdb967a1972f6f9b1660355bc634aba9ab6bcfdf307bc8c72f3ab3e9b35e1f58",
+      "affected": [
+        873,
+        874,
+        875,
+        876,
+        877,
+        878,
+        879,
+        880,
+        1035,
+        1036,
+        1037
+      ],
+      "review": "11 rows need source32 abuse body/hash reconciliation; pressure-case workload was changed"
+    }
+  ],
+  "changedFeatureCandidateClaims": [
+    {
+      "testFile": "tests/features/api-expansion-boundaries.test.ts",
+      "previousSha256": "9f9b32cc024479dcddda7a0996bf76a449d52f37b4b0342af859d1daee128a64",
+      "currentSha256": "dc92aa320119582ede70cc5d653495b55042307c4af55dea5683f12218fab076",
+      "affected": [
+        "ADMIN-005",
+        "DM-012",
+        "DM-022",
+        "DM-009"
+      ],
+      "review": "New operation-specific denial, state and bounded event assertions reviewed; final execution and source hash matching remains."
+    },
+    {
+      "testFile": "tests/features/accounts-admin.test.ts",
+      "previousSha256": "9af3f1b761b05b189afc3b482ee6129857f2b6a69754f67090b78b482d98556f",
+      "currentSha256": "7146aaa9d63a80290ffc6bdacc420ea20ee289c4c61f372a3cb4a3493d3d67c3",
+      "affected": [
+        "ADMIN-012",
+        "ADMIN-013",
+        "ADMIN-016",
+        "ADMIN-023",
+        "ADMIN-027",
+        "API-019",
+        "ADMIN-029"
+      ],
+      "review": "refresh file hash and changed case assertions; unchanged titles still require exact final execution"
+    },
+    {
+      "testFile": "tests/features/service-audit-credentials.test.ts",
+      "previousSha256": "3043669c1516a3baecd18e7d04b8a9344351f480482786ceb7af506888a087c2",
+      "currentSha256": "f5f319ee7f6172361f548006b457e2e1a713cc149527b9a90a6a52b85a80b942",
+      "affected": [
+        "ADMIN-018",
+        "ADMIN-029",
+        "SVC-016",
+        "SVC-016",
+        "SVC-016"
+      ],
+      "review": "Root added explicit audit status and both audit aliases after restart; refresh the exact source hash and final execution match."
+    },
+    {
+      "testFile": "tests/features/channels-roles.test.ts",
+      "previousSha256": "941646651482b4aeb56190e29e67bd417e518188786577bc4ca73bd1db658531",
+      "currentSha256": "649671104b36cf4c2c980f4c76fe475cffd73f09f42b2c1067553d37e30b8ea8",
+      "affected": [
+        "CHAN-022",
+        "CHAN-023",
+        "CHAN-033",
+        "ROLE-034",
+        "API-016"
+      ],
+      "review": "refresh file hash and changed case assertions; unchanged titles still require exact final execution"
+    },
+    {
+      "testFile": "tests/features/conversations-events.test.ts",
+      "previousSha256": "61ba8d400748d12e0aa1196ead6fd3c71435404f181a7fd506778b5b46742025",
+      "currentSha256": "43db70640f9c62a0093d3a93509943a5e629fc10d487be9b547571b25246ef04",
+      "affected": [
+        "USER-017",
+        "USER-018",
+        "DM-005",
+        "DM-008",
+        "DM-009",
+        "DM-010",
+        "DM-013",
+        "DM-016",
+        "DM-019",
+        "WS-010",
+        "WS-011",
+        "WS-017",
+        "WS-018",
+        "WS-022"
+      ],
+      "review": "New operation-specific denial, state and bounded event assertions reviewed; final execution and source hash matching remains."
+    },
+    {
+      "testFile": "tests/features/webpush-policy.test.ts",
+      "previousSha256": "00ed579b88b30c76ba09e679b27642b28e83fecbcb072c2b4f84bfca3546ed87",
+      "currentSha256": "807eeb8562f0a63b8b9a81f60b62abb2c0d5c23942b8faf3e68ac8d13dc9c1b0",
+      "affected": [
+        "PUSH-006",
+        "PUSH-007",
+        "PUSH-009",
+        "PUSH-010",
+        "PUSH-011",
+        "PUSH-010",
+        "PUSH-011"
+      ],
+      "review": "Push source assertions reviewed; seven source-only candidate claims added, final execution matching remains."
+    },
+    {
+      "testFile": "tests/features/webpush-delivery.test.ts",
+      "previousSha256": "162fa4f0d86d8017f3ee71c1d77c84770c77efad6b6f0317b07e61ea4c77ec7f",
+      "currentSha256": "7e3a3a00e17f2e883c1fcbdae05355d77bcee0504407ee886c971229cc2c6963",
+      "affected": [
+        "PUSH-008",
+        "PUSH-008"
+      ],
+      "review": "Push source assertions reviewed; seven source-only candidate claims added, final execution matching remains."
+    }
+  ],
+  "notes": [
+    "Only the five previously source-complete scenarios carry proposed operation-specific N/A dimensions; all other candidate dimensions remain required.",
+    "Any remainingActualGaps are substantive scoped limitations even if a broader companion assertion covers the same dimension.",
+    "Local container schema comparison is not represented as a live Cloudflare deployment.",
+    "Push assertions were source-reviewed after the completed change; the bounded eighth-attempt retry cases propose authorization N/A only for the system retry operation, subject to coordinator policy review.",
+    "Root\u2019s latest API alias test hash and redacted replay assertions are reflected; no focused or full execution result is assigned here.",
+    "The DM-009/010/012/019 amendments add exact UUID impersonation, same-message REST/IRC edits and bounded denial observers; WS-018 state is scoped N/A for a read-only replay GET as directed by the coordinator."
+  ],
+  "amendmentSources": {
+    "prior": "/tmp/flarc-feature-expansion/final-dimension-amendments33.json",
+    "conversationFileSha256": "43db70640f9c62a0093d3a93509943a5e629fc10d487be9b547571b25246ef04",
+    "apiFileSha256": "dc92aa320119582ede70cc5d653495b55042307c4af55dea5683f12218fab076",
+    "pushPolicySha256": "807eeb8562f0a63b8b9a81f60b62abb2c0d5c23942b8faf3e68ac8d13dc9c1b0",
+    "pushDeliverySha256": "7e3a3a00e17f2e883c1fcbdae05355d77bcee0504407ee886c971229cc2c6963",
+    "auditFileSha256": "f5f319ee7f6172361f548006b457e2e1a713cc149527b9a90a6a52b85a80b942"
+  }
+}

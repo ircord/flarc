@@ -1,5 +1,7 @@
 # Security test results
 
+> Historical initial-audit record. Current feature-expansion results, superseded limitations, exact test totals and remaining policies are in [the final matrix report](matrix-results.md).
+
 Audit date: 2026-11-11. Original repository revision: `a9db5e6760603453bed682509b90eff457ed8f23`. Results below concern the local hardened source tree. No production deployment or production-user testing occurred.
 
 ## Baseline and test integrity

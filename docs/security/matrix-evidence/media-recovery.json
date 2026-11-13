@@ -1,0 +1,166 @@
+{
+  "version": 2,
+  "evidence": [
+    {
+      "id": "MEDIA-012",
+      "kind": "test",
+      "executionId": "media-recovery-source11",
+      "bundleSha256": "4040f1888e6c2e98016ca7d00a6dd9b27b6f5cc9be7ab6d73edebaa1173fc2ed",
+      "testFile": "tests/security/matrix-media-recovery.test.ts",
+      "testTitle": "[MEDIA-009 MEDIA-012 DB-025] failed provider cleanup leaves inaccessible pending bytes across recreation until internal retry",
+      "outcome": "PASS",
+      "scenarioScope": "Exact pending-owner quota accounting during failure/recreation and known-ID cleanup; no claim about file-size enforcement or all quota cases.",
+      "rationale": "Real independent accounts, production Worker SQLite and R2 paths, deterministic I/O faults and complete workerd recreation.",
+      "assertionDetails": [
+        "Real R2 put writes bytes then raises, actual production rollback attempts provider delete and an injected provider failure produces safe 503 with no pending ID disclosed.",
+        "Exact pending row, owner quota SUM and actual object bytes survive runtime recreation; public owner/foreign reads remain 404 and unrelated ready file stays readable.",
+        "No Accounts DO alarm is scheduled in this fixture; after provider fault resets on recreation, a direct internal retry with the original owner and inspected opaque ID removes the row, quota and object.",
+        "Live IRC/event barriers demonstrate connected observers; absence of an undocumented deadline is not asserted as a timing-policy violation."
+      ],
+      "transports": [
+        "REST",
+        "IRC",
+        "events",
+        "Worker SQLite",
+        "R2"
+      ],
+      "assertions": [
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "MEDIA-012",
+      "kind": "test",
+      "executionId": "media-recovery-source11",
+      "bundleSha256": "4040f1888e6c2e98016ca7d00a6dd9b27b6f5cc9be7ab6d73edebaa1173fc2ed",
+      "testFile": "tests/security/matrix-media-recovery.test.ts",
+      "testTitle": "[MEDIA-009 MEDIA-012 DB-025] stopping workerd during a completed R2 put preserves inaccessible pending reservation until known-id deletion",
+      "outcome": "PASS",
+      "scenarioScope": "Exact pending-owner quota accounting during failure/recreation and known-ID cleanup; no claim about file-size enforcement or all quota cases.",
+      "rationale": "Real independent accounts, production Worker SQLite and R2 paths, deterministic I/O faults and complete workerd recreation.",
+      "assertionDetails": [
+        "Actual R2 put finishes, then a test gate holds the production route before finalization; disposing workerd prevents a 201 and recreates the same persisted SQLite and bucket state twice.",
+        "Exact pending row, bytes and owner quota remain across recreations; public reads remain 404 for owner and foreign user while unrelated ready object and a healthy upload survive.",
+        "The owner can delete the reservation only after the test obtains its opaque ID from internal state; another user receives 404, and no client-facing listing endpoint was found.",
+        "Live IRC/event barriers surround the held operation and after recreation; no claim is made about offline event delivery or an unspecified cleanup deadline."
+      ],
+      "transports": [
+        "REST",
+        "IRC",
+        "events",
+        "Worker SQLite",
+        "R2"
+      ],
+      "assertions": [
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "DB-016",
+      "kind": "test",
+      "executionId": "media-recovery-source11",
+      "bundleSha256": "4040f1888e6c2e98016ca7d00a6dd9b27b6f5cc9be7ab6d73edebaa1173fc2ed",
+      "testFile": "tests/security/matrix-media-recovery.test.ts",
+      "testTitle": "[MEDIA-009 MEDIA-012 DB-025] failed provider cleanup leaves inaccessible pending bytes across recreation until internal retry",
+      "outcome": "PASS",
+      "scenarioScope": "Partial cross-DO and R2 recovery observation: pending data stays confidential while reservations persist; not a complete cross-Durable-Object failure or unauthorized-state proof.",
+      "rationale": "Passing test records observed partial behavior and an availability limitation; it does not establish the entire DB-016 security scenario.",
+      "assertionDetails": [
+        "Real R2 put writes bytes then raises, actual production rollback attempts provider delete and an injected provider failure produces safe 503 with no pending ID disclosed.",
+        "Exact pending row, owner quota SUM and actual object bytes survive runtime recreation; public owner/foreign reads remain 404 and unrelated ready file stays readable.",
+        "No Accounts DO alarm is scheduled in this fixture; after provider fault resets on recreation, a direct internal retry with the original owner and inspected opaque ID removes the row, quota and object.",
+        "Live IRC/event barriers demonstrate connected observers; absence of an undocumented deadline is not asserted as a timing-policy violation."
+      ],
+      "transports": [
+        "REST",
+        "IRC",
+        "events",
+        "Worker SQLite",
+        "R2"
+      ],
+      "assertions": [
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "DB-016",
+      "kind": "test",
+      "executionId": "media-recovery-source11",
+      "bundleSha256": "4040f1888e6c2e98016ca7d00a6dd9b27b6f5cc9be7ab6d73edebaa1173fc2ed",
+      "testFile": "tests/security/matrix-media-recovery.test.ts",
+      "testTitle": "[MEDIA-009 MEDIA-012 DB-025] stopping workerd during a completed R2 put preserves inaccessible pending reservation until known-id deletion",
+      "outcome": "PASS",
+      "scenarioScope": "Partial cross-DO and R2 recovery observation: pending data stays confidential while reservations persist; not a complete cross-Durable-Object failure or unauthorized-state proof.",
+      "rationale": "Passing test records observed partial behavior and an availability limitation; it does not establish the entire DB-016 security scenario.",
+      "assertionDetails": [
+        "Actual R2 put finishes, then a test gate holds the production route before finalization; disposing workerd prevents a 201 and recreates the same persisted SQLite and bucket state twice.",
+        "Exact pending row, bytes and owner quota remain across recreations; public reads remain 404 for owner and foreign user while unrelated ready object and a healthy upload survive.",
+        "The owner can delete the reservation only after the test obtains its opaque ID from internal state; another user receives 404, and no client-facing listing endpoint was found.",
+        "Live IRC/event barriers surround the held operation and after recreation; no claim is made about offline event delivery or an unspecified cleanup deadline."
+      ],
+      "transports": [
+        "REST",
+        "IRC",
+        "events",
+        "Worker SQLite",
+        "R2"
+      ],
+      "assertions": [
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    }
+  ],
+  "reviewDecision": {
+    "status": "significant-design-decision-requiring-review",
+    "decision": "Retain unpublished R2 object metadata and its quota reservation until cleanup succeeds; automatic abandoned-pending recovery is not implemented.",
+    "basis": "A timer alone cannot establish that an outstanding provider write has completed; a late put can recreate an object after cleanup. Pending content remains inaccessible in these tests, while automatic recovery and quota release remain absent.",
+    "notAcceptance": "No published cleanup deadline was found or imposed, and the observation tests do not establish complete DB-016, file-size enforcement or denied-client-write coverage.",
+    "nextReview": "Before implementing leases, fencing, alarms or tombstones, define bounded retention and admission policies so permanent rechecks cannot generate unbounded metadata or provider cost.",
+    "proposal": "/tmp/flarc-matrix-run_01d0e4aeb274/media-recovery-proposal.md",
+    "capabilityLimitation": "Automatic recovery of abandoned pending R2 objects and quota reservations is not implemented; this observation does not itself establish a storage-quota bypass."
+  }
+}

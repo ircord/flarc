@@ -1,0 +1,162 @@
+{
+  "version": 1,
+  "artifactKind": "portable-separate-focused-execution-ledger",
+  "bundleSha256": "5894497f55587e0e691458a6db9dad9472d93b36756e0bec50cdded299bf6446",
+  "baseline": {
+    "executionManifest": "docs/security/matrix-evidence/current-execution-09.json",
+    "sha256": "84f4dce53d9ad55818e2b3cd8003552e58d0895c6a2efccd756bf5e3a8704b73",
+    "counts": {
+      "pass": 400,
+      "fail": 0,
+      "skip": 0,
+      "todo": 0,
+      "xfail": 0,
+      "xpass": 0,
+      "deselected": 0,
+      "testFiles": 33,
+      "total": 400
+    }
+  },
+  "runs": [
+    {
+      "id": "database-gaps-denial-09",
+      "bundleSha256": "5894497f55587e0e691458a6db9dad9472d93b36756e0bec50cdded299bf6446",
+      "kind": "settled focused postbaseline execution",
+      "counts": {
+        "pass": 7,
+        "fail": 0,
+        "skip": 0,
+        "todo": 0,
+        "testFiles": 1,
+        "total": 7
+      },
+      "originalManifest": {
+        "path": "/tmp/flarc-matrix-run_01d0e4aeb274/database-gaps-denial-manifest.json",
+        "sha256": "8a80f6dee626295a46e9a820ee62552486c5dcc47b1457a2b6a04c222470968b",
+        "content": {
+          "version": 1,
+          "id": "database-gaps-denial-09",
+          "bundleSha256": "5894497f55587e0e691458a6db9dad9472d93b36756e0bec50cdded299bf6446",
+          "vitestJson": "./database-gaps-denial-final2.json"
+        }
+      },
+      "rawVitestJson": {
+        "path": "/tmp/flarc-matrix-run_01d0e4aeb274/database-gaps-denial-final2.json",
+        "sha256": "19191d706335eb7cdbd467fd29e801907c4d2bca9fa245d98a95e62de41c4387",
+        "startTime": 1794484714957
+      },
+      "testSourceSha256": {
+        "tests/security/matrix-database-gaps.test.ts": "aabf90b91dc07f5f41d9f9d8405de9209dfb2cb76bd8098398295ecbd7586e14",
+        "tests/helpers/database-gap-fixture.ts": "aca9fb30049eade12861779c1705999564019cc111255645fd9bbd185f402ed9"
+      },
+      "testResults": [
+        {
+          "name": "tests/security/matrix-database-gaps.test.ts",
+          "assertionResults": [
+            {
+              "fullName": "[DB-013] Worker SQLite enforces channel role references after recreation",
+              "title": "[DB-013] Worker SQLite enforces channel role references after recreation",
+              "status": "passed",
+              "failureMessages": []
+            },
+            {
+              "fullName": "[DB-018 DB-019] cleanup survives later runtime recreation with history and FTS intact",
+              "title": "[DB-018 DB-019] cleanup survives later runtime recreation with history and FTS intact",
+              "status": "passed",
+              "failureMessages": []
+            },
+            {
+              "fullName": "[DB-021] deleting an account retains channel history and unrelated messages after recreation",
+              "title": "[DB-021] deleting an account retains channel history and unrelated messages after recreation",
+              "status": "passed",
+              "failureMessages": []
+            },
+            {
+              "fullName": "[DB-028] Worker query plans bound history and role lookup under populated channel scope",
+              "title": "[DB-028] Worker query plans bound history and role lookup under populated channel scope",
+              "status": "passed",
+              "failureMessages": []
+            },
+            {
+              "fullName": "[DB-012] authenticated per-account MARKREAD values remain monotonic after recreation",
+              "title": "[DB-012] authenticated per-account MARKREAD values remain monotonic after recreation",
+              "status": "passed",
+              "failureMessages": []
+            },
+            {
+              "fullName": "[DB-020 DB-023] legacy account columns migrate without losing real account data on repeated recreation",
+              "title": "[DB-020 DB-023] legacy account columns migrate without losing real account data on repeated recreation",
+              "status": "passed",
+              "failureMessages": []
+            },
+            {
+              "fullName": "[DB-020 DB-023] historical accounts session and channel schemas migrate twice with real records",
+              "title": "[DB-020 DB-023] historical accounts session and channel schemas migrate twice with real records",
+              "status": "passed",
+              "failureMessages": []
+            }
+          ]
+        }
+      ],
+      "compactTestResultsSha256": "e49f07dee60bfba8633323006027c087a1eea6913f8019a86b24bcd8118a0474",
+      "scope": "A separate file-focused run, not an unfiltered full-suite rerun; earlier attempts and repeated focused executions are excluded."
+    },
+    {
+      "id": "preauth-attachments-barrier-source09",
+      "bundleSha256": "5894497f55587e0e691458a6db9dad9472d93b36756e0bec50cdded299bf6446",
+      "kind": "settled focused postbaseline execution",
+      "counts": {
+        "pass": 2,
+        "fail": 0,
+        "skip": 0,
+        "todo": 0,
+        "testFiles": 1,
+        "total": 2
+      },
+      "originalManifest": {
+        "path": "/tmp/flarc-matrix-run_01d0e4aeb274/preauth-attachments-manifest-barrier.json",
+        "sha256": "73f8d7a42fb692a78fb69d3e1c8af920f304e85d72f0de42e73d3a40b52dcfaa",
+        "content": {
+          "version": 1,
+          "id": "preauth-attachments-barrier-source09",
+          "bundleSha256": "5894497f55587e0e691458a6db9dad9472d93b36756e0bec50cdded299bf6446",
+          "vitestJson": "./preauth-attachments-results-barrier.json"
+        }
+      },
+      "rawVitestJson": {
+        "path": "/tmp/flarc-matrix-run_01d0e4aeb274/preauth-attachments-results-barrier.json",
+        "sha256": "534e2a5cc0ac307ce2abc785b90e44d27318391a2104e8b569663361a302d252",
+        "startTime": 1794484689254
+      },
+      "testSourceSha256": {
+        "tests/security/matrix-preauth-attachments.test.ts": "cb8424a5203e3c9db902a890e74fd4aebfd2b4af84914b6a8e1dcb66d346db7e",
+        "tests/helpers/auth-gap-fixture.ts": "c6a8eeb1e3f9267b3f163161d553a1ac022204d77cc858a6851d9a11c35b5aba"
+      },
+      "testResults": [
+        {
+          "name": "tests/security/matrix-preauth-attachments.test.ts",
+          "assertionResults": [
+            {
+              "fullName": "pre-authentication dispatcher inventory AUTH-030: classified dispatcher roots are denied on real sockets without protected state or events",
+              "title": "AUTH-030: classified dispatcher roots are denied on real sockets without protected state or events",
+              "status": "passed",
+              "failureMessages": []
+            },
+            {
+              "fullName": "real WebSocket attachments WS-008: PASS SASL and ticket attachments omit reusable credentials across hibernation",
+              "title": "WS-008: PASS SASL and ticket attachments omit reusable credentials across hibernation",
+              "status": "passed",
+              "failureMessages": []
+            }
+          ]
+        }
+      ],
+      "compactTestResultsSha256": "78ec5876b2a2404c2b8d2bf94c65380a6be90499c6ef3c982b15320f164e76ca",
+      "scope": "A separate file-focused run, not an unfiltered full-suite rerun; earlier attempts and repeated focused executions are excluded."
+    }
+  ],
+  "distinctSupplementalTestRecords": 9,
+  "baselineOverlap": 0,
+  "distinctEvidenceTestRecordsIncludingBaseline": 409,
+  "meaning": "Ledger of three actual executions: one prior unfiltered400-test run and separate7-test/2-test focused runs; no409-test unfiltered execution occurred. Earlier repeated focused runs are excluded."
+}

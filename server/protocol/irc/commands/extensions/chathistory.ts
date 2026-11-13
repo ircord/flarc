@@ -193,11 +193,18 @@ export async function handleChathistory(
 
   let messages: StoredChannelMessage[] = [];
   let isEnd = true;
+  let historyGeneration: string | undefined;
   // For DM history, replay each message with its ORIGINAL target (per IRCv3 chathistory spec)
   const dmOriginalTargets = new Map<string, string>();
 
   if (target.startsWith("#") || target.startsWith("&")) {
     const stub = session.getChannelStub(target);
+    historyGeneration =
+      session
+        .getSessionChannels(attachment.sessionId)
+        .find((c) => c.canonicalChannel === canonicalizeIRCName(target))?.generation ??
+      (await stub.getExistingChannelGeneration()) ??
+      undefined;
     const res = await stub.queryHistory({
       channelName: target,
       sessionId: attachment.sessionId,
@@ -233,6 +240,8 @@ export async function handleChathistory(
       return;
     }
 
+    if (!historyGeneration || (await stub.getExistingChannelGeneration()) !== historyGeneration)
+      return;
     messages = res.messages;
     isEnd = res.isEnd ?? true;
   } else {
@@ -241,6 +250,31 @@ export async function handleChathistory(
       session.getAllSessionsForNick(target)[0]?.attachment.userId ??
       (await session.getAccountsStub().resolveConversationAccount(target))?.id;
     const peerPair = session.getCanonicalDmPair(attachment.userId, targetUserId ?? "missing");
+    if (attachment.credentialSessionHash) {
+      const conversation = session.sql
+        .exec<{ id: string }>("SELECT id FROM conversations WHERE pair_key=?", peerPair)
+        .toArray()[0];
+      if (
+        !(await session
+          .getAccountsStub()
+          .authorizeSessionHash(
+            attachment.credentialSessionHash,
+            "conversation.read",
+            conversation?.id ?? "*",
+          ))
+      ) {
+        session.sendLine(
+          ws,
+          attachment,
+          encodeIRCMessage({
+            prefix: SERVER_CONFIG.serverName,
+            command: "FAIL",
+            params: ["CHATHISTORY", "FORBIDDEN", "Credential scope denied"],
+          }),
+        );
+        return;
+      }
+    }
     const hasEventPlayback = session.hasCap(attachment, "draft/event-playback");
     const cmdClause = hasEventPlayback ? "" : " AND command IN ('PRIVMSG', 'NOTICE')";
     const acctClause = attachment.accountName
@@ -513,7 +547,7 @@ export async function handleChathistory(
     }
 
     if (m.multilineLines && m.multilineLines.length > 1) {
-      deliverMultilineOrFallback(
+      await deliverMultilineOrFallback(
         session,
         ws,
         attachment,
@@ -523,6 +557,7 @@ export async function handleChathistory(
         m.multilineLines,
         undefined,
         supportsBatch ? batchId : undefined,
+        historyGeneration,
       );
       continue;
     }
@@ -535,16 +570,14 @@ export async function handleChathistory(
       ...(supportsBatch ? { batch: batchId } : {}),
     };
 
-    session.sendLine(
-      ws,
-      attachment,
-      encodeIRCMessage({
-        tags: session.filterOutgoingTags(attachment, msgTags),
-        prefix: senderPrefix,
-        command: m.command,
-        params: [msgTarget, m.content],
-      }),
-    );
+    const line = encodeIRCMessage({
+      tags: session.filterOutgoingTags(attachment, msgTags),
+      prefix: senderPrefix,
+      command: m.command,
+      params: [msgTarget, m.content],
+    });
+    if (historyGeneration) session.sendChannelLine(ws, attachment, line, target, historyGeneration);
+    else await session.sendDirectMessageLine(ws, attachment, line, m.id);
   }
 
   if (supportsBatch) {

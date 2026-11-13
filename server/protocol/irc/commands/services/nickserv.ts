@@ -2,6 +2,7 @@ import type { SessionAttachment } from "~/core/types";
 import { Numerics } from "~/protocol/irc/numerics";
 import { canonicalizeIRCName } from "~/protocol/irc/parser";
 import type { ISessionDO } from "../types";
+import { serviceAudit, serviceAuditActor, serviceAudited } from "./audit";
 import { sendServiceResponse } from "./helpers";
 
 export async function handleNickServ(
@@ -14,10 +15,19 @@ export async function handleNickServ(
   const parts = rawText.trim().split(/\s+/).filter(Boolean);
   const sub = (parts[0] ?? "HELP").toUpperCase();
   const accountsStub = session.getAccountsStub();
+  const actor = await serviceAuditActor(session, attachment);
 
   if (sub === "REGISTER" || sub === "SAREGISTER") {
     const isSa = sub === "SAREGISTER";
     if (isSa && !attachment.isOper) {
+      await serviceAudit(
+        session,
+        actor,
+        "service.nickserv.saregister",
+        "account",
+        parts[1] ?? "",
+        "denied",
+      );
       sendServiceResponse(
         session,
         ws,
@@ -30,11 +40,20 @@ export async function handleNickServ(
     }
     const accountName = isSa ? (parts[1] ?? "") : (attachment.nickname ?? "user");
     const password = isSa ? (parts[2] ?? "") : (parts[1] ?? "");
-    const res = await accountsStub.registerAccount({
-      username: accountName,
-      password,
-      registrationPolicyBypass: isSa,
-    });
+    const res = await serviceAudited(
+      session,
+      actor,
+      isSa ? "service.nickserv.saregister" : "service.nickserv.register",
+      "account",
+      accountName,
+      async () =>
+        await accountsStub.registerAccount({
+          username: accountName,
+          password,
+          registrationPolicyBypass: isSa,
+        }),
+      (result) => result.ok,
+    );
     if (!res.ok) {
       sendServiceResponse(
         session,
@@ -161,7 +180,15 @@ export async function handleNickServ(
       );
       return;
     }
-    const ok = await accountsStub.registerNickname(attachment.userId, attachment.nickname);
+    const ok = await serviceAudited(
+      session,
+      actor,
+      "service.nickserv.group",
+      "account",
+      attachment.nickname,
+      () => accountsStub.registerNickname(attachment.userId, attachment.nickname!),
+      (result) => result,
+    );
     sendServiceResponse(
       session,
       ws,
@@ -190,7 +217,15 @@ export async function handleNickServ(
       return;
     }
     const targetNick = parts[1] ?? attachment.nickname ?? "";
-    const ok = await accountsStub.dropNickname(attachment.userId, targetNick);
+    const ok = await serviceAudited(
+      session,
+      actor,
+      "service.nickserv.drop",
+      "account",
+      targetNick,
+      () => accountsStub.dropNickname(attachment.userId, targetNick),
+      (result) => result,
+    );
     sendServiceResponse(
       session,
       ws,
@@ -209,6 +244,14 @@ export async function handleNickServ(
   if (sub === "UNREGISTER" || sub === "ERASE" || sub === "SADROP") {
     const isSa = sub === "SADROP";
     if (isSa && !attachment.isOper) {
+      await serviceAudit(
+        session,
+        actor,
+        "service.nickserv.sadrop",
+        "account",
+        parts[1] ?? "",
+        "denied",
+      );
       sendServiceResponse(
         session,
         ws,
@@ -232,6 +275,14 @@ export async function handleNickServ(
       return;
     }
     if (!isSa && canonicalizeIRCName(targetAcct) !== canonicalizeIRCName(attachment.accountName!)) {
+      await serviceAudit(
+        session,
+        actor,
+        sub === "ERASE" ? "service.nickserv.erase" : "service.nickserv.unregister",
+        "account",
+        targetAcct,
+        "denied",
+      );
       sendServiceResponse(
         session,
         ws,
@@ -242,7 +293,18 @@ export async function handleNickServ(
       );
       return;
     }
-    const ok = await accountsStub.unregisterAccount(targetAcct);
+    const ok = await serviceAudited(
+      session,
+      actor,
+      `service.nickserv.${sub.toLowerCase()}` as
+        | "service.nickserv.unregister"
+        | "service.nickserv.erase"
+        | "service.nickserv.sadrop",
+      "account",
+      targetAcct,
+      () => accountsStub.unregisterAccount(targetAcct),
+      (result) => result,
+    );
     if (ok) await session.invalidateAccountPermissions(targetAcct);
     if (ok && !isSa) {
       attachment.authenticated = false;
@@ -280,7 +342,15 @@ export async function handleNickServ(
       return;
     }
     const changedAccount = attachment.accountName;
-    const ok = await accountsStub.changePassword(changedAccount, newPass);
+    const ok = await serviceAudited(
+      session,
+      actor,
+      sub === "PASSWD" ? "service.nickserv.passwd" : "service.nickserv.password",
+      "account",
+      changedAccount,
+      () => accountsStub.changePassword(changedAccount, newPass),
+      (result) => result,
+    );
     if (ok) await session.invalidateAccountPermissions(changedAccount);
     sendServiceResponse(
       session,
@@ -318,6 +388,7 @@ export async function handleNickServ(
       authorized = verify.ok;
     }
     if (!authorized) {
+      await serviceAudit(session, actor, "service.nickserv.ghost", "account", targetNick, "denied");
       sendServiceResponse(
         session,
         ws,
@@ -334,6 +405,7 @@ export async function handleNickServ(
     for (const s of sessions) {
       await session.disconnectSession(s.ws, s.attachment, "Ghosted by NickServ");
     }
+    await serviceAudit(session, actor, "service.nickserv.ghost", "account", targetNick, "allowed");
     sendServiceResponse(
       session,
       ws,
@@ -448,7 +520,15 @@ export async function handleNickServ(
       );
       return;
     }
-    await accountsStub.setAccountSetting(attachment.userId, key, val);
+    await serviceAudited(
+      session,
+      actor,
+      "service.nickserv.set",
+      "account",
+      attachment.accountName,
+      () => accountsStub.setAccountSetting(attachment.userId, key, val),
+      (result) => result,
+    );
     if (key === "always-on") {
       const isPers = val === "true" || val === "on";
       const chans = session.getSessionChannels(attachment.sessionId);
@@ -456,7 +536,7 @@ export async function handleNickServ(
         try {
           await session
             .getChannelStub(ch.channelName)
-            .setMemberPersistence(attachment.userId, isPers);
+            .setMemberPersistence(attachment.userId, isPers, ch.generation);
         } catch {
           // ignore
         }

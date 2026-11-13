@@ -1,5 +1,6 @@
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import WebSocket from "ws";
+import { isReaderControl } from "../helpers/event-reader";
 import { createMiniflareServer, TestIRCClient } from "../helpers/miniflare-harness";
 
 const PASSWORD = "Audit-password-123!";
@@ -394,9 +395,13 @@ describe("Security boundaries with independent authenticated accounts", () => {
       const res = await request("/api/v1/auth/events-ticket", user, "POST");
       expect(res.status).toBe(200);
       const { ticket } = (await res.json()) as any;
-      const ws = new WebSocket(`ws://${server.url.host}/api/v1/events?ticket=${ticket}`);
+      const ws = new WebSocket(`ws://${server.url.host}/api/v1/events?ticket=${ticket}`, [
+        "flarc.events.v2",
+      ]);
       sockets.push(ws);
-      ws.on("message", (data) => streams[user].push(JSON.parse(data.toString())));
+      ws.on("message", (data) => {
+        if (!isReaderControl(ws, data)) streams[user].push(JSON.parse(data.toString()));
+      });
       await new Promise<void>((resolve, reject) => {
         ws.once("open", resolve);
         ws.once("error", reject);
@@ -416,8 +421,7 @@ describe("Security boundaries with independent authenticated accounts", () => {
         })
       ).status,
     ).toBe(200);
-    await new Promise((resolve) => setTimeout(resolve, 80));
-    expect(JSON.stringify(streams.Alice)).toContain("event-secret");
+    await vi.waitFor(() => expect(JSON.stringify(streams.Alice)).toContain("event-secret"));
     expect(JSON.stringify(streams.Charlie)).not.toContain("event-secret");
     const charlie = await connect("Charlie");
     alice.send("INVITE Charlie #vault");
@@ -428,8 +432,9 @@ describe("Security boundaries with independent authenticated accounts", () => {
       (await request(`${path}/messages`, "Alice", "POST", { content: "event-authorized-join" }))
         .status,
     ).toBe(201);
-    await new Promise((resolve) => setTimeout(resolve, 80));
-    expect(JSON.stringify(streams.Charlie)).toContain("event-authorized-join");
+    await vi.waitFor(() =>
+      expect(JSON.stringify(streams.Charlie)).toContain("event-authorized-join"),
+    );
     alice.send("KICK #vault Charlie :removed");
     await charlie.waitForLine((l) => l.includes("KICK #vault Charlie"));
     const eventClosed = new Promise<void>((resolve) => sockets[0].once("close", () => resolve()));
@@ -824,7 +829,10 @@ HISTSERV DELETE #service ${message.id}`);
     second.send("JOIN #roledevices");
     await second.waitForNumeric(366);
     bob.send("MODE #roledevices +v Bob");
-    await bob.waitForLine((l) => l.includes(" MODE #roledevices +v Bob"));
+    const voiced = await bob.waitForLine((line) => / MODE #roledevices \+v+ /.test(line));
+    // Account-wide modes update both devices in one canonical multi-target MODE.
+    expect(voiced).toContain(" MODE #roledevices +vv Bob BobSecond");
+    await second.waitForLine((line) => line === voiced);
     expect(
       (await request(`${base}/roles/assign`, "Alice", "POST", { ...assignment, remove: true }))
         .status,

@@ -1,0 +1,283 @@
+{
+  "version": 2,
+  "capabilityGaps": [
+    "USER-018 arbitrary metadata synchronization visibility remains unresolved; USER-015 evidence only addresses the specified REST profile projection.",
+    "The media migration uses the controlled pre-chunk column/table shape and real seeded objects; it does not establish every historical revision."
+  ],
+  "evidence": [
+    {
+      "kind": "test",
+      "executionId": "read-side-effects-source11",
+      "bundleSha256": "4040f1888e6c2e98016ca7d00a6dd9b27b6f5cc9be7ab6d73edebaa1173fc2ed",
+      "testFile": "tests/security/matrix-read-side-effects.test.ts",
+      "outcome": "PASS",
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "id": "USER-015",
+      "testTitle": "USER-015: public profiles exclude real private fields and preserve a seeded unrelated profile across recreation",
+      "scenarioScope": "Cross-user public-profile projection filters actual stored credentials and private metadata while a separately seeded Charlie profile and account stay intact across recreation.",
+      "rationale": "Real public/profile aliases, stopped SQLite snapshots and live independent observers cover this REST projection; arbitrary IRC metadata visibility is outside the claim.",
+      "assertionDetails": [
+        "Bob and Charlie independently set distinct public display names and bios, and the actual admin metadata route stores distinct private-note values for both accounts.",
+        "Both profile aliases return Bob\u2019s expected public fields to Alice and exclude Bob\u2019s actual password, bearer token, stopped SQLite password hash, SCRAM salt and keys, private-note name/value and credential field names; Charlie\u2019s independently seeded profile returns expected unrelated fields.",
+        "Bob and Charlie\u2019s live IRC sockets and event streams are bracketed by positive shared-channel marker messages and remain silent during all reads.",
+        "Protected account, credential, session, channel and message snapshots plus all user_metadata rows are unchanged after the read window and after a fresh workerd recreation; the same projection and unrelated profile are checked again."
+      ],
+      "transports": [
+        "REST",
+        "IRC WebSocket",
+        "ticket event WebSocket",
+        "workerd SQLite restart"
+      ],
+      "routeBehavior": [
+        {
+          "route": "/api/v1/profiles/{username}",
+          "method": "GET",
+          "alias": "/api/v1/profiles/bob",
+          "outcome": "positive",
+          "responseKind": "feature-response",
+          "status": 200
+        },
+        {
+          "route": "/api/profile/{username}",
+          "method": "GET",
+          "alias": "/api/profile/bob",
+          "outcome": "positive",
+          "responseKind": "feature-response",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "kind": "test",
+      "executionId": "read-side-effects-source11",
+      "bundleSha256": "4040f1888e6c2e98016ca7d00a6dd9b27b6f5cc9be7ab6d73edebaa1173fc2ed",
+      "testFile": "tests/security/matrix-read-side-effects.test.ts",
+      "outcome": "PASS",
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "id": "DB-027",
+      "testTitle": "DB-027: denied history pagination is silent and cannot alter independent protected histories across recreation",
+      "scenarioScope": "Protected channel and DM history pagination rejects a real nonparticipant, stays silent and preserves unrelated history across recreation.",
+      "rationale": "This covers the actual REST history selectors and stated limits rather than asserting unimplemented pagination routes.",
+      "assertionDetails": [
+        "Alice and Bob have three identifiable protected channel messages and a private DM; Charlie independently has a separate secret channel message. A protected message is received by authorized IRC and event clients before the read window.",
+        "Charlie receives 403 for protected-channel before, after and around queries using a foreign ID at limits -1, 0, 999999999 and NaN, and for forged-user DM before/after queries; no protected content appears in denials.",
+        "Alice\u2019s legitimate protected page contains exactly two scoped messages with limit 2, her DM read contains the real sentinel, Charlie\u2019s own channel history is readable, and a foreign around cursor does not reveal protected data.",
+        "Bob and Charlie IRC/event recipients prove liveness with marker deliveries surrounding the read window and receive no additional payloads; stopped SQLite protected and unrelated account/channel/message/DM rows match before and after, including after a fresh runtime repeat."
+      ],
+      "transports": [
+        "REST",
+        "IRC WebSocket",
+        "ticket event WebSocket",
+        "workerd SQLite restart"
+      ],
+      "routeBehavior": [
+        {
+          "route": "/api/v1/channels/{channel}/messages",
+          "method": "GET",
+          "alias": "/api/v1/channels/%23protected/messages?limit=2",
+          "outcome": "positive",
+          "responseKind": "feature-response",
+          "status": 200
+        },
+        {
+          "route": "/api/v1/dms/{target}/messages",
+          "method": "GET",
+          "alias": "/api/v1/dms/bob/messages?limit=2",
+          "outcome": "positive",
+          "responseKind": "feature-response",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "kind": "test",
+      "executionId": "read-side-effects-source11",
+      "bundleSha256": "4040f1888e6c2e98016ca7d00a6dd9b27b6f5cc9be7ab6d73edebaa1173fc2ed",
+      "testFile": "tests/security/matrix-read-side-effects.test.ts",
+      "outcome": "PASS",
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "id": "DB-020",
+      "testTitle": "DB-020 DB-023: sqlite pre-chunk media migration denies wrong-owner reads without side effects",
+      "scenarioScope": "sqlite pre-chunk media schema: populated private rows migrate, wrong-owner reads are inert and repeated recreation retains target and unrelated data.",
+      "rationale": "This is a specific controlled pre-chunk media schema transition, not evidence for every historical schema revision.",
+      "assertionDetails": [
+        "Real Alice and Charlie each upload a separate private object and independently read its actual bytes. While workerd is stopped, the fixture reconstructs the predecessor media shape by dropping the chunk table and the later layout, digest and pending-state columns; SQLite objects are restored as old inline bytes and R2 bytes remain in the actual persistent bucket.",
+        "A fresh runtime migrates both real owner records to inline and ready; their owner IDs, bytes and unrelated account and credential records are checked, with R2 object keys independently compared.",
+        "After migration Bob\u2019s actual wrong-owner GET of Alice\u2019s object, with and without download query, returns 404 and excludes the object ID and content, while Alice and Charlie each read their own real object.",
+        "Three independently authenticated IRC clients and event streams prove liveness with positive channel markers before and after denied reads; no extra IRC or event payload is received. The same checks repeat after another recreation and stopped SQLite media, chunks, users and credential rows remain identical."
+      ],
+      "transports": [
+        "REST",
+        "IRC WebSocket",
+        "ticket event WebSocket",
+        "workerd sqlite media",
+        "SQLite restart"
+      ]
+    },
+    {
+      "kind": "test",
+      "executionId": "read-side-effects-source11",
+      "bundleSha256": "4040f1888e6c2e98016ca7d00a6dd9b27b6f5cc9be7ab6d73edebaa1173fc2ed",
+      "testFile": "tests/security/matrix-read-side-effects.test.ts",
+      "outcome": "PASS",
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "id": "DB-023",
+      "testTitle": "DB-020 DB-023: sqlite pre-chunk media migration denies wrong-owner reads without side effects",
+      "scenarioScope": "sqlite pre-chunk media schema: populated private rows migrate, wrong-owner reads are inert and repeated recreation retains target and unrelated data.",
+      "rationale": "This is a specific controlled pre-chunk media schema transition, not evidence for every historical schema revision.",
+      "assertionDetails": [
+        "Real Alice and Charlie each upload a separate private object and independently read its actual bytes. While workerd is stopped, the fixture reconstructs the predecessor media shape by dropping the chunk table and the later layout, digest and pending-state columns; SQLite objects are restored as old inline bytes and R2 bytes remain in the actual persistent bucket.",
+        "A fresh runtime migrates both real owner records to inline and ready; their owner IDs, bytes and unrelated account and credential records are checked, with R2 object keys independently compared.",
+        "After migration Bob\u2019s actual wrong-owner GET of Alice\u2019s object, with and without download query, returns 404 and excludes the object ID and content, while Alice and Charlie each read their own real object.",
+        "Three independently authenticated IRC clients and event streams prove liveness with positive channel markers before and after denied reads; no extra IRC or event payload is received. The same checks repeat after another recreation and stopped SQLite media, chunks, users and credential rows remain identical."
+      ],
+      "transports": [
+        "REST",
+        "IRC WebSocket",
+        "ticket event WebSocket",
+        "workerd sqlite media",
+        "SQLite restart"
+      ]
+    },
+    {
+      "kind": "test",
+      "executionId": "read-side-effects-source11",
+      "bundleSha256": "4040f1888e6c2e98016ca7d00a6dd9b27b6f5cc9be7ab6d73edebaa1173fc2ed",
+      "testFile": "tests/security/matrix-read-side-effects.test.ts",
+      "outcome": "PASS",
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "id": "DB-020",
+      "testTitle": "DB-020 DB-023: r2 pre-chunk media migration denies wrong-owner reads without side effects",
+      "scenarioScope": "r2 pre-chunk media schema: populated private rows migrate, wrong-owner reads are inert and repeated recreation retains target and unrelated data.",
+      "rationale": "This is a specific controlled pre-chunk media schema transition, not evidence for every historical schema revision.",
+      "assertionDetails": [
+        "Real Alice and Charlie each upload a separate private object and independently read its actual bytes. While workerd is stopped, the fixture reconstructs the predecessor media shape by dropping the chunk table and the later layout, digest and pending-state columns; SQLite objects are restored as old inline bytes and R2 bytes remain in the actual persistent bucket.",
+        "A fresh runtime migrates both real owner records to inline and ready; their owner IDs, bytes and unrelated account and credential records are checked, with R2 object keys independently compared.",
+        "After migration Bob\u2019s actual wrong-owner GET of Alice\u2019s object, with and without download query, returns 404 and excludes the object ID and content, while Alice and Charlie each read their own real object.",
+        "Three independently authenticated IRC clients and event streams prove liveness with positive channel markers before and after denied reads; no extra IRC or event payload is received. The same checks repeat after another recreation and stopped SQLite media, chunks, users and credential rows remain identical."
+      ],
+      "transports": [
+        "REST",
+        "IRC WebSocket",
+        "ticket event WebSocket",
+        "workerd r2 media",
+        "SQLite restart"
+      ]
+    },
+    {
+      "kind": "test",
+      "executionId": "read-side-effects-source11",
+      "bundleSha256": "4040f1888e6c2e98016ca7d00a6dd9b27b6f5cc9be7ab6d73edebaa1173fc2ed",
+      "testFile": "tests/security/matrix-read-side-effects.test.ts",
+      "outcome": "PASS",
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "id": "DB-023",
+      "testTitle": "DB-020 DB-023: r2 pre-chunk media migration denies wrong-owner reads without side effects",
+      "scenarioScope": "r2 pre-chunk media schema: populated private rows migrate, wrong-owner reads are inert and repeated recreation retains target and unrelated data.",
+      "rationale": "This is a specific controlled pre-chunk media schema transition, not evidence for every historical schema revision.",
+      "assertionDetails": [
+        "Real Alice and Charlie each upload a separate private object and independently read its actual bytes. While workerd is stopped, the fixture reconstructs the predecessor media shape by dropping the chunk table and the later layout, digest and pending-state columns; SQLite objects are restored as old inline bytes and R2 bytes remain in the actual persistent bucket.",
+        "A fresh runtime migrates both real owner records to inline and ready; their owner IDs, bytes and unrelated account and credential records are checked, with R2 object keys independently compared.",
+        "After migration Bob\u2019s actual wrong-owner GET of Alice\u2019s object, with and without download query, returns 404 and excludes the object ID and content, while Alice and Charlie each read their own real object.",
+        "Three independently authenticated IRC clients and event streams prove liveness with positive channel markers before and after denied reads; no extra IRC or event payload is received. The same checks repeat after another recreation and stopped SQLite media, chunks, users and credential rows remain identical."
+      ],
+      "transports": [
+        "REST",
+        "IRC WebSocket",
+        "ticket event WebSocket",
+        "workerd r2 media",
+        "SQLite restart"
+      ]
+    }
+  ]
+}

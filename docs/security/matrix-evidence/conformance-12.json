@@ -1,0 +1,3195 @@
+{
+  "version": 1,
+  "artifactKind": "independent-source12-protocol-conformance",
+  "bundleSha256": "12961025bd48ab4017d349ce273c6ffa515bf2f90c1a9560297b42c7f2ae124b",
+  "sourceDiffSha256": "c4ec26026031f9aa8e55850b7136e285aae37f0cf63a1f4b11fc25d73935b280",
+  "bundleProvenancePath": "/tmp/flarc-matrix-run_01d0e4aeb274/bundle-12.json",
+  "frozenModuleFilesSha256": {
+    "_id_3.delete.mjs": "789915acaf47ca17170fd5d1133454f3bd4e2349aa8c09eb9c19590e4d9895cb",
+    "_2...slug_.mjs": "8e84b1941fdff6d3c1fcecdc9bd56d4c0429a08fc0db9e5ca286b2f5d122fd82",
+    "_channel_.put.mjs": "66762dfdf8d3d90246c0af0405cd5297c4d99e03aa370909a8d77d90f7df40dd",
+    "_id_2.patch.mjs": "a6146ff60cbdee2d0696ab30a5019f52796f7e62c61393a5d5fe8b9f1ddb9508",
+    "wrangler.json": "90ef0f7dddfcaa5c85b6b58be5f67864d17b7f6540a4fcc823f6cab3f07f31d4",
+    "_username_.get.mjs": "5ad3aebb9800c16a552a6251d427eb20dd3c8b7b2f3b7b96f8e01872a7d0cde1",
+    "_username_2.get.mjs": "b3221cc9da4ce5d4afd7a34bbd013e49acbb14694c960cf6b5ca812ddb8566d1",
+    "_id_4.delete.mjs": "6acf2a3ebdadb819fa0d204d79f342a90eccc1f36ec8c932ae004f1d66691d43",
+    "_id_.get.mjs": "e8b1b70242dad185cc9da42e9e9656423c6b3b5375576d25ebfc0bd7cc68dfaa",
+    "_...slug_.mjs": "f733c2411025d16292d09fdc1c07be78bfce8c22eaf387f72d9f82beac4c1f78",
+    "_runtime.mjs": "079f9f3c36aa5189e9743a2717490376c36474fcfd07a025e97a9d7881d655f6",
+    "_id_.patch.mjs": "a6f03c41c40d372b63dcda0a4eb00653ebdd1c3dadb64ddd527e0383c7d1f530",
+    "_id_2.delete.mjs": "fb7d31a242b7da3d81c79dc02382e0f0e59251553875b5b6fcc8a717fcde1a5b",
+    "index.mjs": "12961025bd48ab4017d349ce273c6ffa515bf2f90c1a9560297b42c7f2ae124b",
+    "_token_.post.mjs": "b8d07aed75c1089ae66e257bc240736c77e44466fde967bf4abb0cda27d9b1f2",
+    "_id_.delete.mjs": "28ab06f091e00d4a1cbd20eb36e194b2bd5221aa842942f811231e1742357908",
+    "_username_.patch.mjs": "773c1c80e1e44e0c5c3950d6b391c913b4487840cf3a1303f1b52ae81d3913e9",
+    "_id_5.delete.mjs": "d15693cfe1e284be9027205c09a267276c2a12334ae70a457b57e9d3603ec9d5",
+    "_username_2.patch.mjs": "0974ed6977cc600259ca7b699fc106744115166d4b9d02808019790dbfa09520",
+    "_token_3.post.mjs": "1d7dbe9a9ba5fab8b30342d7dd470e7ecabdd99f44d7d8264559882a9f876879",
+    "_token_2.post.mjs": "8f97d81b6b40018d3b1c01b018b0c70711b7b23e6bce0160349b0ba789fe2004",
+    "_routes/status.mjs": "ba59a45774781af14e1c24611123e8caa68de7e6135171757a514db571fe876e",
+    "_routes/openapi.json.mjs": "5fb4af8d728fc58c751b9fcbc592dcc005602bd6aae9ee298e71b804b9b60d34",
+    "_routes/metrics.mjs": "8c57858a6a5a9ca0fec16156c8aca7795dc0a42720d3754bbed15ab8f10f4d3d",
+    "_routes/docs.mjs": "78e8b98eceb5cb2bac709b0ca3ea1d10969aa8c1ebfd60f65a18212bc3b46ab6",
+    "_routes/icon.svg.mjs": "a66b97bdb9d691fe67504ea5d6d7ffc1d1f8756ce6717559c3f94223ba632c39",
+    "_routes/irc.mjs": "9938b40a83282060d387462bce3e1430de11db8eac4edc7612961f956a6bcc76",
+    "_routes/health.mjs": "5edba6dbae0eea78845f75b5c33f018956140efe436bd24d4e76f3e7bc945562",
+    "_routes/index.mjs": "1be78eb05355041780090bd150e9ebc9ffb7525249777267011e388f489f677b",
+    "_chunks/notifications.mjs": "3a68c74a5c7200cb6c89a23d915949985987f543e40cb9f1a5be63f75faa05a9",
+    "_chunks/admin2.mjs": "73a91855a120ae8586df73c5392caeab93f3e567dd8770d0e475182dc19af025",
+    "_chunks/admin.mjs": "132c9fe644167ae82404de0c1cb124ec80689b27f05bc8dc41b4ea89021a4cba",
+    "_chunks/auth2.mjs": "a2664cdf74cd3d115391ec69b757a57da7b2da64361df45c1e07443ff72f3998",
+    "_chunks/messages.mjs": "c3012550d80fc07cf15d46001a7e0a49e6e9d719fc5d032ca4efa6d4aabc4f86",
+    "_chunks/profiles.mjs": "42162653fb246fb030d57da1f19cb733c997dca55e8ea8a0d0c30ccbdd82fd7d",
+    "_chunks/outbound.mjs": "2b5a964352ed6b9ee16016a03e90663a120993494c00b47d252ba6daca27c7d8",
+    "_chunks/auth.mjs": "58876982f365a81da79fbc400dcad8936d735654e03f44b5060a293f82435e7c",
+    "_chunks/body.mjs": "8043c4a5722e7fb5089f488e9c55347f2eadd4657f467bde6e4cd57c03fa94d5",
+    "_chunks/config.mjs": "1f0cbc69f5e811a51b7dd56a2fc3fbd6d3e591cfb6967366c01107bb4f29b11f",
+    "_chunks/search.mjs": "4ea249821e6186c56307d6f993971bfa52900ae6a404c43a31302400e5dcaeab",
+    "_chunks/channels.mjs": "dbe9d0b854d709c1c4e58d66015e45b817c9e0e62675b42846f0810ea61282ed",
+    "_libs/zod2.mjs": "3ca43c7a5a18eb3331e0b08a1be0b437ec22f35e66cbaf1823672352d1ef2711",
+    "_libs/h3+rou3+srvx.mjs": "5dedb2ae818162a3752f5a996007a24c7cd30b0569086d239e7d924e60265002",
+    "_libs/drizzle-orm.mjs": "50e081daa76fa6b0c01fecc49b966eebd214cada3ef667f6fabbec0252b5b024",
+    "_libs/zod.mjs": "0fef7822fb55b3746b4670d5a802a63df63d13470231f230f673f2433100a563",
+    "_routes/api/status.mjs": "e92400bf088d0a61816e12e97cb62d2b1a72eba9546faffe68c1b7e6c0ce2e4c",
+    "_routes/api/health.mjs": "4cb2c9ef8c53578400b65207066e1d27d6beb9b0959c275b2090893fe162a6d5",
+    "_routes/api/v1/embeds.mjs": "8b1d07d68d12a9bf63d8ef7104cff4795acdac78c9b9634e6b864affd1e83f29",
+    "_routes/api/v1/search.mjs": "a9bb71422e69abc1cb61ebc51b920c2d4fb47fcc6629c66853963d2f52771728",
+    "_routes/api/v1/channels.mjs": "71ea2b54434930527402a76017d983616e0e721b73188405c75b1dda4047ae04",
+    "_routes/api/v1/events.mjs": "e44973ccb3ebf6b3a41adc73c9a5f421249b76fe5153995ed3f17cf6404b933b",
+    "_routes/api/webpush/subscribe2.mjs": "8fb7934bedc59ab123b4882c6f3258dbe1520332276c506e3a8b236b201a6764",
+    "_routes/api/webpush/subscriptions.mjs": "ea284091e8ba4e06ed818dddb064cf2aae87931365ba19fea8376a67956c322b",
+    "_routes/api/webpush/subscribe.mjs": "0291ba0b584aba9b03d68e13b46e4daef8d1b602864e98aeb23a992c22de194e",
+    "_routes/api/accounts/register.mjs": "2e1be258de51d457778898f50f0e84772989dee283de2ce4c563e700b2a1226a",
+    "_routes/api/media/upload.mjs": "8128a12713083716715067e725288bc10326c36cdbc83f86c927950d20fe9ba7",
+    "_routes/api/channels/[channel]/info2.mjs": "e78455f2d018d650237aec2a0f41bcf1d1224550e2731812e5840bb2db7de74d",
+    "_routes/api/channels/[channel]/info.mjs": "ef3abeecfb0cac5fb151a079bc0bb6a9ea122b20766d85fd0cd11ccbe42c88fc",
+    "_routes/api/channels/[channel]/unread.mjs": "7fc31572f61c305fedbd38ec34cdc6857d657e4bb998680b1145b6070de6bb7f",
+    "_routes/api/users/[username]/unread.mjs": "7cb69e077bb37f90d107f0d1fc781896c0c2b126fb6249d3c2e4ecf7f889f343",
+    "_routes/api/v1/messages/search.mjs": "267f07639978f427fb4979c042927dd6d608f1a598e9f648b6f01b61936aba65",
+    "_routes/api/v1/auth/events_ticket.mjs": "d10d2d85a657b8b0fbc4fd91e98185b9f73e6bf225a2d642a637b42ea29c3eee",
+    "_routes/api/v1/auth/login.mjs": "871ccdab82d33dffacf16212af6ff0eace96201ff8ddc57c0c8234acbf29e401",
+    "_routes/api/v1/auth/logout.mjs": "25a684bb0435b97c69e004b025a46cf70116bf1ec9f0cedb3978b1740fbb0ada",
+    "_routes/api/v1/auth/register.mjs": "18d2c00c6c8c951e6c941040ff9e66dcb9bfabec1d83613a2aafbe9d7a750712",
+    "_routes/api/v1/notifications/subscribe2.mjs": "22e927b544b39e8091002b1a2888bccae2f2ca838112343ea2e1e107153d5788",
+    "_routes/api/v1/notifications/subscriptions.mjs": "354d54652aa789b656ae0ca05ef06b040721fa059751af2a56cfa91ebd0ef2ce",
+    "_routes/api/v1/notifications/subscribe.mjs": "53f518d4cb9375df3e1bebdb8db3a3d7aa3dd7a9afffcfd9bfd3cbd8c0e9a2e9",
+    "_routes/api/v1/media/upload.mjs": "22ce0a676712aa59d8a17d470dea8aa69f48e461af2576d1f26117f63773ac93",
+    "_routes/api/v1/channels/[channel]/info2.mjs": "3dc78a8121fdfa4698c36c52777fc7bd8c4c2a71b9519d3e055176717717e87c",
+    "_routes/api/v1/channels/[channel]/outgoing_webhooks.mjs": "2b30d54c336834f8456ee12ada0a12550c58a48e095121a0a062b6792fb01270",
+    "_routes/api/v1/channels/[channel]/outgoing_webhooks2.mjs": "006d9d75db82f6bed928df86771717e1d8c5c91ff5a1da503035a63d04bd1488",
+    "_routes/api/v1/channels/[channel]/messages.mjs": "c12ce065e22fd563cc349b987cdfc31dff75b569b83988c2d31e62dd5572de49",
+    "_routes/api/v1/channels/[channel]/roles2.mjs": "d1eab033006473556fbebbe3329ac5a8b105b843c596aa17fa8371d15b639098",
+    "_routes/api/v1/channels/[channel]/info.mjs": "11cdee443b34bb12ff3a47134c0e746a4cea5a9d8a10ce1ec14d1a79288ddc17",
+    "_routes/api/v1/channels/[channel]/webhooks2.mjs": "f5fc60aa9b6e532c36903f7c818cc46d84c21b37132679c308e6d56c03f4478b",
+    "_routes/api/v1/channels/[channel]/webhooks.mjs": "6dfae00580fba321592202f941518cf4a492812ebec69370c003f686ad8c9803",
+    "_routes/api/v1/channels/[channel]/roles.mjs": "bc6a04d1635bd5fd540618467774ebd6ceca9135a124ab56d782698458be1609",
+    "_routes/api/v1/channels/[channel]/messages2.mjs": "b11c6f53964bc9157226da84a9316c3925ec55eda162c2b1331b33858225c50f",
+    "_routes/api/v1/channels/[channel]/unread.mjs": "e4ce74f8df1d95bc31691ac6b3f6b48ad0be6f877a6595b2781f8dc9d6530db2",
+    "_routes/api/v1/channels/[channel]/messages/search.mjs": "959d18126e72c5684e66b463c54cc0686593f43d86f2a336e1baac97e5443d6f",
+    "_routes/api/v1/channels/[channel]/roles/assign.mjs": "0f698d5d3d4eb4b7897b73596afa2563bbe4dc27730fee42236a4646873f6312",
+    "_routes/api/v1/dms/[target]/messages.mjs": "77a0f2b4a05384404d328bd97aa69e8327a57d44efeb0a0e1814c06ae1fac985",
+    "_routes/api/v1/users/[username]/notifications.mjs": "19e28a49f1a9cf555403e7004f40c82ca04094ccb5949c99f3be00f1a731c6b3",
+    "_routes/api/v1/users/[username]/unread.mjs": "86ac4c15b2f2c8f3c0dd864767b9341b634328b316bc1abdb74b8d3cb096a6e6"
+  },
+  "frozenModulesUnchangedBeforeAfter": true,
+  "upstreamBefore": {
+    "revision": "7d5d761b7b67f9031daf7784e743d630def22a96",
+    "status": ""
+  },
+  "upstreamAfter": {
+    "revision": "7d5d761b7b67f9031daf7784e743d630def22a96",
+    "status": ""
+  },
+  "controllerAndLiveBuildInputs": {
+    "countBefore": 167,
+    "countAfter": 167,
+    "stable": true,
+    "changedPaths": [],
+    "actualExecutedBundleIsFrozen": true
+  },
+  "command": "CFCORD_BUNDLE=/tmp/flarc-matrix-run_01d0e4aeb274/server-12/index.mjs CFCORD_SKIP_BUNDLE=1 PYTHONPATH=/Users/karbowiak/Projects/CFCord/compliance /Users/karbowiak/Projects/CFCord/.compliance/venv/bin/python -m pytest --controller cfcord_controller -m '(Ergo or not implementation-specific) and not deprecated' -p no:cacheprovider --timeout=30 irctest/server_tests -n 8 -rA --junitxml=/tmp/flarc-matrix-run_01d0e4aeb274/source12-irctest.xml",
+  "cwd": "/Users/karbowiak/Projects/CFCord/.compliance/irctest",
+  "exitCode": 0,
+  "collectionOnlyExitCodes": {
+    "all": 0,
+    "selected": 0
+  },
+  "counts": {
+    "passed": 470,
+    "failed": 0,
+    "skipped": 18,
+    "xpass": 3,
+    "error": 0,
+    "xfail": 0,
+    "warnings": 16,
+    "deselected": 47,
+    "selected": 491,
+    "collected": 538
+  },
+  "exactCases": [
+    {
+      "nodeid": "irctest/server_tests/chmodes/limit.py::LimitTestCase::testLimitDecrease",
+      "classname": "irctest.server_tests.chmodes.limit.LimitTestCase",
+      "name": "testLimitDecrease",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/chmodes/ergo.py::RegisteredOnlySpeakModeTestCase::testRegisteredOnlySpeakMode",
+      "classname": "irctest.server_tests.chmodes.ergo.RegisteredOnlySpeakModeTestCase",
+      "name": "testRegisteredOnlySpeakMode",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/away.py::AwayTestCase::testAwayEmptyMessage",
+      "classname": "irctest.server_tests.away.AwayTestCase",
+      "name": "testAwayEmptyMessage",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/chathistory.py::ChathistoryTestCase::testChathistory[LATEST]",
+      "classname": "irctest.server_tests.chathistory.ChathistoryTestCase",
+      "name": "testChathistory[LATEST]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/account_registration.py::RegisterTestCase::testRegisterDefaultName",
+      "classname": "irctest.server_tests.account_registration.RegisterTestCase",
+      "name": "testRegisterDefaultName",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/cap.py::CapTestCase::testNakWhole",
+      "classname": "irctest.server_tests.cap.CapTestCase",
+      "name": "testNakWhole",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/chathistory.py::ChathistoryTestCase::testChathistoryDMs[AROUND]",
+      "classname": "irctest.server_tests.chathistory.ChathistoryTestCase",
+      "name": "testChathistoryDMs[AROUND]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/cap.py::CapTestCase::testCapRemovalByClient",
+      "classname": "irctest.server_tests.cap.CapTestCase",
+      "name": "testCapRemovalByClient",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/bouncer.py::BouncerTestCase::testDisableAutomaticResumption",
+      "classname": "irctest.server_tests.bouncer.BouncerTestCase",
+      "name": "testDisableAutomaticResumption",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/account_registration.py::RegisterTestCase::testRegisterSameName",
+      "classname": "irctest.server_tests.account_registration.RegisterTestCase",
+      "name": "testRegisterSameName",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/buffering.py::BufferingTestCase::testNoTags[whole-no colon]",
+      "classname": "irctest.server_tests.buffering.BufferingTestCase",
+      "name": "testNoTags[whole-no colon]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/cap.py::CapTestCase::testIrc301CapLs",
+      "classname": "irctest.server_tests.cap.CapTestCase",
+      "name": "testIrc301CapLs",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/away_notify.py::AwayNotifyTestCase::testAwayNotify",
+      "classname": "irctest.server_tests.away_notify.AwayNotifyTestCase",
+      "name": "testAwayNotify",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/chathistory.py::ChathistoryTestCase::testChathistory[BEFORE]",
+      "classname": "irctest.server_tests.chathistory.ChathistoryTestCase",
+      "name": "testChathistory[BEFORE]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/cap.py::CapTestCase::testEmptyCapList",
+      "classname": "irctest.server_tests.cap.CapTestCase",
+      "name": "testEmptyCapList",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/account_registration.py::RegisterTestCase::testRegisterDifferentName",
+      "classname": "irctest.server_tests.account_registration.RegisterTestCase",
+      "name": "testRegisterDifferentName",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/cap.py::CapTestCase::testNoMultiline301Response",
+      "classname": "irctest.server_tests.cap.CapTestCase",
+      "name": "testNoMultiline301Response",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/chmodes/ergo.py::OpModeratedTestCase::testOpModerated",
+      "classname": "irctest.server_tests.chmodes.ergo.OpModeratedTestCase",
+      "name": "testOpModerated",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/account_registration.py::RegisterBeforeConnectTestCase::testBeforeConnect",
+      "classname": "irctest.server_tests.account_registration.RegisterBeforeConnectTestCase",
+      "name": "testBeforeConnect",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/buffering.py::BufferingTestCase::testNoTags[charperchar-no colon]",
+      "classname": "irctest.server_tests.buffering.BufferingTestCase",
+      "name": "testNoTags[charperchar-no colon]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/chmodes/limit.py::LimitTestCase::testLimitAfterPart",
+      "classname": "irctest.server_tests.chmodes.limit.LimitTestCase",
+      "name": "testLimitAfterPart",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/account_registration.py::RegisterBeforeConnectDisallowedTestCase::testBeforeConnect",
+      "classname": "irctest.server_tests.account_registration.RegisterBeforeConnectDisallowedTestCase",
+      "name": "testBeforeConnect",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/chathistory.py::ChathistoryTestCase::testChathistory[AFTER]",
+      "classname": "irctest.server_tests.chathistory.ChathistoryTestCase",
+      "name": "testChathistory[AFTER]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/away_notify.py::AwayNotifyTestCase::testAwayNotifyOnJoin",
+      "classname": "irctest.server_tests.away_notify.AwayNotifyTestCase",
+      "name": "testAwayNotifyOnJoin",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/account_registration.py::RegisterEmailVerifiedBeforeConnectTestCase::testBeforeConnect",
+      "classname": "irctest.server_tests.account_registration.RegisterEmailVerifiedBeforeConnectTestCase",
+      "name": "testBeforeConnect",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/channel.py::ChannelCaseSensitivityTestCase::testChannelsEquivalent[ascii-#Foo-#foo]",
+      "classname": "irctest.server_tests.channel.ChannelCaseSensitivityTestCase",
+      "name": "testChannelsEquivalent[ascii-#Foo-#foo]",
+      "status": "skipped",
+      "detail": "Choice in the implementation makes it impossible to perform a test: Casemapping ascii not implemented"
+    },
+    {
+      "nodeid": "irctest/server_tests/account_registration.py::RegisterEmailVerifiedAfterConnectTestCase::testAfterConnect",
+      "classname": "irctest.server_tests.account_registration.RegisterEmailVerifiedAfterConnectTestCase",
+      "name": "testAfterConnect",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/chathistory.py::ChathistoryTestCase::testChathistoryTagmsg",
+      "classname": "irctest.server_tests.chathistory.ChathistoryTestCase",
+      "name": "testChathistoryTagmsg",
+      "status": "skipped",
+      "detail": "Choice in the implementation makes it impossible to perform a test: CLIENTTAGDENY blocks arbitrary client tags"
+    },
+    {
+      "nodeid": "irctest/server_tests/buffering.py::BufferingTestCase::testNoTags[byteperbyte-no colon]",
+      "classname": "irctest.server_tests.buffering.BufferingTestCase",
+      "name": "testNoTags[byteperbyte-no colon]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/chathistory.py::ChathistoryTestCase::testChathistory[BETWEEN]",
+      "classname": "irctest.server_tests.chathistory.ChathistoryTestCase",
+      "name": "testChathistory[BETWEEN]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/account_registration.py::RegisterNoLandGrabsTestCase::testBeforeConnect",
+      "classname": "irctest.server_tests.account_registration.RegisterNoLandGrabsTestCase",
+      "name": "testBeforeConnect",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/channel.py::ChannelCaseSensitivityTestCase::testChannelsEquivalent[rfc1459-#Foo-#foo]",
+      "classname": "irctest.server_tests.channel.ChannelCaseSensitivityTestCase",
+      "name": "testChannelsEquivalent[rfc1459-#Foo-#foo]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/chmodes/invite_exception.py::InviteExceptionTestCase::testInviteException",
+      "classname": "irctest.server_tests.chmodes.invite_exception.InviteExceptionTestCase",
+      "name": "testInviteException",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/chathistory.py::ChathistoryTestCase::testChathistoryDMClientOnlyTags",
+      "classname": "irctest.server_tests.chathistory.ChathistoryTestCase",
+      "name": "testChathistoryDMClientOnlyTags",
+      "status": "skipped",
+      "detail": "Choice in the implementation makes it impossible to perform a test: CLIENTTAGDENY blocks arbitrary client tags"
+    },
+    {
+      "nodeid": "irctest/server_tests/chmodes/limit.py::LimitTestCase::testLimitInvalidValues[zero]",
+      "classname": "irctest.server_tests.chmodes.limit.LimitTestCase",
+      "name": "testLimitInvalidValues[zero]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/account_tag.py::AccountTagTestCase::testPrivmsg",
+      "classname": "irctest.server_tests.account_tag.AccountTagTestCase",
+      "name": "testPrivmsg",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/bot_mode.py::BotModeTestCase::testBotMode",
+      "classname": "irctest.server_tests.bot_mode.BotModeTestCase",
+      "name": "testBotMode",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/chathistory.py::ChathistoryTestCase::testChathistoryTargets",
+      "classname": "irctest.server_tests.chathistory.ChathistoryTestCase",
+      "name": "testChathistoryTargets",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/buffering.py::BufferingTestCase::testNoTags[whole-colon]",
+      "classname": "irctest.server_tests.buffering.BufferingTestCase",
+      "name": "testNoTags[whole-colon]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/chathistory.py::ChathistoryTestCase::testChathistory[AROUND]",
+      "classname": "irctest.server_tests.chathistory.ChathistoryTestCase",
+      "name": "testChathistory[AROUND]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/channel.py::ChannelCaseSensitivityTestCase::testChannelsEquivalent[rfc1459-#F]|oo{-#f}\\\\oo[]",
+      "classname": "irctest.server_tests.channel.ChannelCaseSensitivityTestCase",
+      "name": "testChannelsEquivalent[rfc1459-#F]|oo{-#f}\\\\oo[]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/chmodes/invite_exception.py::InviteExceptionTestCase::testInviteExceptionList",
+      "classname": "irctest.server_tests.chmodes.invite_exception.InviteExceptionTestCase",
+      "name": "testInviteExceptionList",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/account_tag.py::AccountTagTestCase::testInvite",
+      "classname": "irctest.server_tests.account_tag.AccountTagTestCase",
+      "name": "testInvite",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/bot_mode.py::BotModeTestCase::testBotWhois",
+      "classname": "irctest.server_tests.bot_mode.BotModeTestCase",
+      "name": "testBotWhois",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/chmodes/limit.py::LimitTestCase::testLimitInvalidValues[negative]",
+      "classname": "irctest.server_tests.chmodes.limit.LimitTestCase",
+      "name": "testLimitInvalidValues[negative]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/chmodes/invite_exception.py::InviteExceptionTestCase::testInviteExceptionRemoval",
+      "classname": "irctest.server_tests.chmodes.invite_exception.InviteExceptionTestCase",
+      "name": "testInviteExceptionRemoval",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/away.py::AwayTestCase::testAway",
+      "classname": "irctest.server_tests.away.AwayTestCase",
+      "name": "testAway",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/chathistory.py::ChathistoryTestCase::testChathistoryNoEventPlayback",
+      "classname": "irctest.server_tests.chathistory.ChathistoryTestCase",
+      "name": "testChathistoryNoEventPlayback",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/buffering.py::BufferingTestCase::testNoTags[charperchar-colon]",
+      "classname": "irctest.server_tests.buffering.BufferingTestCase",
+      "name": "testNoTags[charperchar-colon]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/channel.py::ChannelCaseSensitivityTestCase::testChannelsEquivalent[rfc1459-#F}o\\\\o[-#f]o|o{]",
+      "classname": "irctest.server_tests.channel.ChannelCaseSensitivityTestCase",
+      "name": "testChannelsEquivalent[rfc1459-#F}o\\\\o[-#f]o|o{]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/chathistory.py::ChathistoryTestCase::testChathistoryTargetsExcludesUpdatedTargets",
+      "classname": "irctest.server_tests.chathistory.ChathistoryTestCase",
+      "name": "testChathistoryTargetsExcludesUpdatedTargets",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/bot_mode.py::BotModeTestCase::testBotPrivateMessage",
+      "classname": "irctest.server_tests.bot_mode.BotModeTestCase",
+      "name": "testBotPrivateMessage",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/away.py::AwayTestCase::testAwayAck",
+      "classname": "irctest.server_tests.away.AwayTestCase",
+      "name": "testAwayAck",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/chmodes/invite_exception.py::InviteExceptionTestCase::testInviteExceptionWithoutInviteOnly",
+      "classname": "irctest.server_tests.chmodes.invite_exception.InviteExceptionTestCase",
+      "name": "testInviteExceptionWithoutInviteOnly",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/chathistory.py::ChathistoryTestCase::testChathistoryEventPlayback[LATEST]",
+      "classname": "irctest.server_tests.chathistory.ChathistoryTestCase",
+      "name": "testChathistoryEventPlayback[LATEST]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/channel.py::ChannelCaseSensitivityTestCase::testChannelsNotEquivalent[ascii-#Foo-#fooa]",
+      "classname": "irctest.server_tests.channel.ChannelCaseSensitivityTestCase",
+      "name": "testChannelsNotEquivalent[ascii-#Foo-#fooa]",
+      "status": "skipped",
+      "detail": "Choice in the implementation makes it impossible to perform a test: Casemapping ascii not implemented"
+    },
+    {
+      "nodeid": "irctest/server_tests/chmodes/limit.py::LimitTestCase::testLimitInvalidValues[non-numeric]",
+      "classname": "irctest.server_tests.chmodes.limit.LimitTestCase",
+      "name": "testLimitInvalidValues[non-numeric]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/buffering.py::BufferingTestCase::testNoTags[byteperbyte-colon]",
+      "classname": "irctest.server_tests.buffering.BufferingTestCase",
+      "name": "testNoTags[byteperbyte-colon]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/chmodes/account_extban.py::AccountExtbanTestCase::testISupportToken",
+      "classname": "irctest.server_tests.chmodes.account_extban.AccountExtbanTestCase",
+      "name": "testISupportToken",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/away.py::AwayTestCase::testAwayPrivmsg",
+      "classname": "irctest.server_tests.away.AwayTestCase",
+      "name": "testAwayPrivmsg",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/chmodes/invite_exception.py::InviteExceptionTestCase::testInviteExceptionMultipleMasks",
+      "classname": "irctest.server_tests.chmodes.invite_exception.InviteExceptionTestCase",
+      "name": "testInviteExceptionMultipleMasks",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/channel.py::ChannelCaseSensitivityTestCase::testChannelsNotEquivalent[rfc1459-#Foo-#fooa]",
+      "classname": "irctest.server_tests.channel.ChannelCaseSensitivityTestCase",
+      "name": "testChannelsNotEquivalent[rfc1459-#Foo-#fooa]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/chmodes/account_extban.py::AccountExtbanTestCase::testAccountExtbanJoin",
+      "classname": "irctest.server_tests.chmodes.account_extban.AccountExtbanTestCase",
+      "name": "testAccountExtbanJoin",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/chathistory.py::ChathistoryTestCase::testChathistoryEventPlayback[BEFORE]",
+      "classname": "irctest.server_tests.chathistory.ChathistoryTestCase",
+      "name": "testChathistoryEventPlayback[BEFORE]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/bot_mode.py::BotModeTestCase::testBotChannelMessage",
+      "classname": "irctest.server_tests.bot_mode.BotModeTestCase",
+      "name": "testBotChannelMessage",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/cap.py::CapTestCase::testInvalidCapSubcommand",
+      "classname": "irctest.server_tests.cap.CapTestCase",
+      "name": "testInvalidCapSubcommand",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/away.py::AwayTestCase::testAwayWhois",
+      "classname": "irctest.server_tests.away.AwayTestCase",
+      "name": "testAwayWhois",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/chmodes/limit.py::LimitTestCase::testLimitInvalidValues[empty]",
+      "classname": "irctest.server_tests.chmodes.limit.LimitTestCase",
+      "name": "testLimitInvalidValues[empty]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/cap.py::CapTestCase::testNoReq",
+      "classname": "irctest.server_tests.cap.CapTestCase",
+      "name": "testNoReq",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/cap.py::CapTestCase::testReqOne",
+      "classname": "irctest.server_tests.cap.CapTestCase",
+      "name": "testReqOne",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/cap.py::CapTestCase::testReqTwo",
+      "classname": "irctest.server_tests.cap.CapTestCase",
+      "name": "testReqTwo",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/channel_forward.py::ChannelForwardingTestCase::testChannelForwarding",
+      "classname": "irctest.server_tests.channel_forward.ChannelForwardingTestCase",
+      "name": "testChannelForwarding",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/cap.py::CapTestCase::testReqOneThenOne",
+      "classname": "irctest.server_tests.cap.CapTestCase",
+      "name": "testReqOneThenOne",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/chathistory.py::ChathistoryTestCase::testChathistoryEventPlayback[AFTER]",
+      "classname": "irctest.server_tests.chathistory.ChathistoryTestCase",
+      "name": "testChathistoryEventPlayback[AFTER]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/cap.py::CapTestCase::testReqPostRegistration",
+      "classname": "irctest.server_tests.cap.CapTestCase",
+      "name": "testReqPostRegistration",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/chmodes/key.py::KeyTestCase::testKeyNormal",
+      "classname": "irctest.server_tests.chmodes.key.KeyTestCase",
+      "name": "testKeyNormal",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/away.py::AwayTestCase::testAwayUserhost",
+      "classname": "irctest.server_tests.away.AwayTestCase",
+      "name": "testAwayUserhost",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/bot_mode.py::BotModeTestCase::testBotEchoMessage",
+      "classname": "irctest.server_tests.bot_mode.BotModeTestCase",
+      "name": "testBotEchoMessage",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/chmodes/account_extban.py::AccountExtbanTestCase::testAccountExtbanUnauthed",
+      "classname": "irctest.server_tests.chmodes.account_extban.AccountExtbanTestCase",
+      "name": "testAccountExtbanUnauthed",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/cap.py::CapTestCase::testReqUnavailable",
+      "classname": "irctest.server_tests.cap.CapTestCase",
+      "name": "testReqUnavailable",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/cap.py::CapTestCase::testNakExactString",
+      "classname": "irctest.server_tests.cap.CapTestCase",
+      "name": "testNakExactString",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/chmodes/limit.py::LimitTestCase::testLimitMultipleChannels",
+      "classname": "irctest.server_tests.chmodes.limit.LimitTestCase",
+      "name": "testLimitMultipleChannels",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/connection_registration.py::ConnectionRegistrationTestCase::testNonutf8Realname",
+      "classname": "irctest.server_tests.connection_registration.ConnectionRegistrationTestCase",
+      "name": "testNonutf8Realname",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/channel_rename.py::ChannelRenameTestCase::testChannelRename",
+      "classname": "irctest.server_tests.channel_rename.ChannelRenameTestCase",
+      "name": "testChannelRename",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/chathistory.py::ChathistoryTestCase::testChathistoryEventPlayback[BETWEEN]",
+      "classname": "irctest.server_tests.chathistory.ChathistoryTestCase",
+      "name": "testChathistoryEventPlayback[BETWEEN]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/chmodes/key.py::KeyTestCase::testKeyValidation[spaces]",
+      "classname": "irctest.server_tests.chmodes.key.KeyTestCase",
+      "name": "testKeyValidation[spaces]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/chmodes/no_ctcp.py::NoctcpModeTestCase::testNoctcpMode",
+      "classname": "irctest.server_tests.chmodes.no_ctcp.NoctcpModeTestCase",
+      "name": "testNoctcpMode",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/connection_registration.py::ConnectionRegistrationTestCase::testNonutf8Username",
+      "classname": "irctest.server_tests.connection_registration.ConnectionRegistrationTestCase",
+      "name": "testNonutf8Username",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/bot_mode.py::BotModeTestCase::testBotWhox",
+      "classname": "irctest.server_tests.bot_mode.BotModeTestCase",
+      "name": "testBotWhox",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/chmodes/limit.py::LimitTestCase::testLimitWithInvite",
+      "classname": "irctest.server_tests.chmodes.limit.LimitTestCase",
+      "name": "testLimitWithInvite",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/chmodes/key.py::KeyTestCase::testKeyValidation[long]",
+      "classname": "irctest.server_tests.chmodes.key.KeyTestCase",
+      "name": "testKeyValidation[long]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/chmodes/account_extban.py::AccountExtbanTestCase::testAccountExtbanException",
+      "classname": "irctest.server_tests.chmodes.account_extban.AccountExtbanTestCase",
+      "name": "testAccountExtbanException",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/echo_message.py::EchoMessageTestCase::testEchoMessage[PRIVMSG-False-False]",
+      "classname": "irctest.server_tests.echo_message.EchoMessageTestCase",
+      "name": "testEchoMessage[PRIVMSG-False-False]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/chathistory.py::ChathistoryTestCase::testInvalidTargets",
+      "classname": "irctest.server_tests.chathistory.ChathistoryTestCase",
+      "name": "testInvalidTargets",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/chathistory.py::ChathistoryTestCase::testChathistoryEventPlayback[AROUND]",
+      "classname": "irctest.server_tests.chathistory.ChathistoryTestCase",
+      "name": "testChathistoryEventPlayback[AROUND]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/chmodes/no_external.py::NoExternalMessagesTestCase::testNoExternalMessagesMode",
+      "classname": "irctest.server_tests.chmodes.no_external.NoExternalMessagesTestCase",
+      "name": "testNoExternalMessagesMode",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/chmodes/key.py::KeyTestCase::testKeyValidation[empty]",
+      "classname": "irctest.server_tests.chmodes.key.KeyTestCase",
+      "name": "testKeyValidation[empty]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/chmodes/modeis.py::RplChannelModeIsTestCase::testChannelModeIs",
+      "classname": "irctest.server_tests.chmodes.modeis.RplChannelModeIsTestCase",
+      "name": "testChannelModeIs",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/echo_message.py::EchoMessageTestCase::testEchoMessage[PRIVMSG-True-True]",
+      "classname": "irctest.server_tests.echo_message.EchoMessageTestCase",
+      "name": "testEchoMessage[PRIVMSG-True-True]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/chathistory.py::ChathistoryTestCase::testMessagesToSelf",
+      "classname": "irctest.server_tests.chathistory.ChathistoryTestCase",
+      "name": "testMessagesToSelf",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/bouncer.py::BouncerTestCase::testAutomaticResumption",
+      "classname": "irctest.server_tests.bouncer.BouncerTestCase",
+      "name": "testAutomaticResumption",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/chathistory.py::ChathistoryTestCase::testChathistoryDMs[LATEST]",
+      "classname": "irctest.server_tests.chathistory.ChathistoryTestCase",
+      "name": "testChathistoryDMs[LATEST]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/chmodes/operator.py::ChannelOperatorModeTestCase::testChannelOperatorModeSenderPrivsNeeded",
+      "classname": "irctest.server_tests.chmodes.operator.ChannelOperatorModeTestCase",
+      "name": "testChannelOperatorModeSenderPrivsNeeded",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/chmodes/account_extban.py::AccountExtbanTestCase::testAccountExtbanInviteException",
+      "classname": "irctest.server_tests.chmodes.account_extban.AccountExtbanTestCase",
+      "name": "testAccountExtbanInviteException",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/chmodes/moderated.py::ModeratedModeTestCase::testModeratedMode",
+      "classname": "irctest.server_tests.chmodes.moderated.ModeratedModeTestCase",
+      "name": "testModeratedMode",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/echo_message.py::EchoMessageTestCase::testEchoMessage[PRIVMSG-False-True]",
+      "classname": "irctest.server_tests.echo_message.EchoMessageTestCase",
+      "name": "testEchoMessage[PRIVMSG-False-True]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/help.py::HelpTestCase::testHelpNoArg[HELP]",
+      "classname": "irctest.server_tests.help.HelpTestCase",
+      "name": "testHelpNoArg[HELP]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/chmodes/key.py::KeyTestCase::testKeyValidation[only-space]",
+      "classname": "irctest.server_tests.chmodes.key.KeyTestCase",
+      "name": "testKeyValidation[only-space]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/bouncer.py::BouncerTestCase::testChannelMessageFromOther",
+      "classname": "irctest.server_tests.bouncer.BouncerTestCase",
+      "name": "testChannelMessageFromOther",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/help.py::HelpTestCase::testHelpNoArg[HELPOP]",
+      "classname": "irctest.server_tests.help.HelpTestCase",
+      "name": "testHelpNoArg[HELPOP]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/chmodes/limit.py::LimitTestCase::testLimitMode",
+      "classname": "irctest.server_tests.chmodes.limit.LimitTestCase",
+      "name": "testLimitMode",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/echo_message.py::EchoMessageTestCase::testEchoMessage[NOTICE-False-True]",
+      "classname": "irctest.server_tests.echo_message.EchoMessageTestCase",
+      "name": "testEchoMessage[NOTICE-False-True]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/chmodes/mute_extban.py::MuteExtbanTestCase::testISupport",
+      "classname": "irctest.server_tests.chmodes.mute_extban.MuteExtbanTestCase",
+      "name": "testISupport",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/bouncer.py::BouncerTestCase::testChannelMessageFromSelf",
+      "classname": "irctest.server_tests.bouncer.BouncerTestCase",
+      "name": "testChannelMessageFromSelf",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/chmodes/operator.py::ChannelOperatorModeTestCase::testChannelOperatorModeTargetNotInChannel",
+      "classname": "irctest.server_tests.chmodes.operator.ChannelOperatorModeTestCase",
+      "name": "testChannelOperatorModeTargetNotInChannel",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/help.py::HelpTestCase::testHelpPrivmsg[HELP]",
+      "classname": "irctest.server_tests.help.HelpTestCase",
+      "name": "testHelpPrivmsg[HELP]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/chmodes/auditorium.py::AuditoriumTestCase::testAuditorium",
+      "classname": "irctest.server_tests.chmodes.auditorium.AuditoriumTestCase",
+      "name": "testAuditorium",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/chmodes/mute_extban.py::MuteExtbanTestCase::testMuteExtban",
+      "classname": "irctest.server_tests.chmodes.mute_extban.MuteExtbanTestCase",
+      "name": "testMuteExtban",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/help.py::HelpTestCase::testHelpPrivmsg[HELPOP]",
+      "classname": "irctest.server_tests.help.HelpTestCase",
+      "name": "testHelpPrivmsg[HELPOP]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/bouncer.py::BouncerTestCase::testDirectMessageFromOther",
+      "classname": "irctest.server_tests.bouncer.BouncerTestCase",
+      "name": "testDirectMessageFromOther",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/echo_message.py::EchoMessageTestCase::testDirectMessageEcho",
+      "classname": "irctest.server_tests.echo_message.EchoMessageTestCase",
+      "name": "testDirectMessageEcho",
+      "status": "skipped",
+      "detail": "Choice in the implementation makes it impossible to perform a test: CLIENTTAGDENY blocks arbitrary client tags"
+    },
+    {
+      "nodeid": "irctest/server_tests/chmodes/limit.py::LimitTestCase::testLimitRemoval",
+      "classname": "irctest.server_tests.chmodes.limit.LimitTestCase",
+      "name": "testLimitRemoval",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/help.py::HelpTestCase::testHelpUnknownSubject[HELP]",
+      "classname": "irctest.server_tests.help.HelpTestCase",
+      "name": "testHelpUnknownSubject[HELP]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/ergo/alwayson.py::AlwaysOnTestCase::test_always_on_persistence_after_disconnect",
+      "classname": "irctest.server_tests.ergo.alwayson.AlwaysOnTestCase",
+      "name": "test_always_on_persistence_after_disconnect",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/chmodes/operator.py::ChannelOperatorModeTestCase::testChannelOperatorModeTargetDoesNotExist",
+      "classname": "irctest.server_tests.chmodes.operator.ChannelOperatorModeTestCase",
+      "name": "testChannelOperatorModeTargetDoesNotExist",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/chathistory.py::ChathistoryTestCase::testChathistoryDMs[BEFORE]",
+      "classname": "irctest.server_tests.chathistory.ChathistoryTestCase",
+      "name": "testChathistoryDMs[BEFORE]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/bouncer.py::BouncerTestCase::testDirectMessageFromSelf",
+      "classname": "irctest.server_tests.bouncer.BouncerTestCase",
+      "name": "testDirectMessageFromSelf",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/chmodes/mute_extban.py::MuteExtbanTestCase::testMuteExtbanVoiced",
+      "classname": "irctest.server_tests.chmodes.mute_extban.MuteExtbanTestCase",
+      "name": "testMuteExtbanVoiced",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/help.py::HelpTestCase::testHelpUnknownSubject[HELPOP]",
+      "classname": "irctest.server_tests.help.HelpTestCase",
+      "name": "testHelpUnknownSubject[HELPOP]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/chmodes/limit.py::LimitTestCase::testLimitChange",
+      "classname": "irctest.server_tests.chmodes.limit.LimitTestCase",
+      "name": "testLimitChange",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/bouncer.py::BouncerTestCase::testQuit",
+      "classname": "irctest.server_tests.bouncer.BouncerTestCase",
+      "name": "testQuit",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/info.py::InfoTestCase::testInfo",
+      "classname": "irctest.server_tests.info.InfoTestCase",
+      "name": "testInfo",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/isupport.py::IsupportTestCase::testPrefix",
+      "classname": "irctest.server_tests.isupport.IsupportTestCase",
+      "name": "testPrefix",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/chmodes/ban.py::BanModeTestCase::testBan",
+      "classname": "irctest.server_tests.chmodes.ban.BanModeTestCase",
+      "name": "testBan",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/chmodes/mute_extban.py::MuteExtbanTestCase::testMuteExtbanExempt",
+      "classname": "irctest.server_tests.chmodes.mute_extban.MuteExtbanTestCase",
+      "name": "testMuteExtbanExempt",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/chmodes/operator.py::ChannelOperatorModeTestCase::testChannelOperatorModeChannelDoesNotExist",
+      "classname": "irctest.server_tests.chmodes.operator.ChannelOperatorModeTestCase",
+      "name": "testChannelOperatorModeChannelDoesNotExist",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/ergo/alwayson.py::AlwaysOnTestCase::test_always_on_persistence_after_restart",
+      "classname": "irctest.server_tests.ergo.alwayson.AlwaysOnTestCase",
+      "name": "test_always_on_persistence_after_restart",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/invite.py::InviteTestCase::testInvites",
+      "classname": "irctest.server_tests.invite.InviteTestCase",
+      "name": "testInvites",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/isupport.py::IsupportTestCase::testTargmax",
+      "classname": "irctest.server_tests.isupport.IsupportTestCase",
+      "name": "testTargmax",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/kill.py::KillTestCase::testKillOneArgument",
+      "classname": "irctest.server_tests.kill.KillTestCase",
+      "name": "testKillOneArgument",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/join.py::JoinTestCase::testJoinAllMessages",
+      "classname": "irctest.server_tests.join.JoinTestCase",
+      "name": "testJoinAllMessages",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/chmodes/ban.py::BanModeTestCase::testBanList",
+      "classname": "irctest.server_tests.chmodes.ban.BanModeTestCase",
+      "name": "testBanList",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/chmodes/mute_extban.py::MuteExtbanTestCase::testCapitalization",
+      "classname": "irctest.server_tests.chmodes.mute_extban.MuteExtbanTestCase",
+      "name": "testCapitalization",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/invite.py::InviteTestCase::testInvite[True]",
+      "classname": "irctest.server_tests.invite.InviteTestCase",
+      "name": "testInvite[True]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/chathistory.py::ChathistoryTestCase::testChathistoryDMs[AFTER]",
+      "classname": "irctest.server_tests.chathistory.ChathistoryTestCase",
+      "name": "testChathistoryDMs[AFTER]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/chmodes/operator.py::ChannelOperatorModeTestCase::testChannelOperatorModeChannelAndTargetDoNotExist",
+      "classname": "irctest.server_tests.chmodes.operator.ChannelOperatorModeTestCase",
+      "name": "testChannelOperatorModeChannelAndTargetDoNotExist",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/join.py::JoinTestCase::testJoinNamreply",
+      "classname": "irctest.server_tests.join.JoinTestCase",
+      "name": "testJoinNamreply",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/chmodes/ban.py::BanModeTestCase::testBanException",
+      "classname": "irctest.server_tests.chmodes.ban.BanModeTestCase",
+      "name": "testBanException",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/labeled_responses.py::LabeledResponsesTestCase::testLabeledPrivmsgResponsesToMultipleClients",
+      "classname": "irctest.server_tests.labeled_responses.LabeledResponsesTestCase",
+      "name": "testLabeledPrivmsgResponsesToMultipleClients",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/ergo/alwayson.py::AlwaysOnTestCase::test_always_on_with_channel_registration",
+      "classname": "irctest.server_tests.ergo.alwayson.AlwaysOnTestCase",
+      "name": "test_always_on_with_channel_registration",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/invite.py::InviteTestCase::testInvite[False]",
+      "classname": "irctest.server_tests.invite.InviteTestCase",
+      "name": "testInvite[False]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/list.py::ListTestCase::testListEmpty",
+      "classname": "irctest.server_tests.list.ListTestCase",
+      "name": "testListEmpty",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/join.py::JoinTestCase::testJoinTwice",
+      "classname": "irctest.server_tests.join.JoinTestCase",
+      "name": "testJoinTwice",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/chmodes/ban.py::BanModeTestCase::testCaseInsensitive",
+      "classname": "irctest.server_tests.chmodes.ban.BanModeTestCase",
+      "name": "testCaseInsensitive",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/chmodes/operator.py::ChannelOperatorModeTestCase::testChannelOperatorModeSenderNonMember",
+      "classname": "irctest.server_tests.chmodes.operator.ChannelOperatorModeTestCase",
+      "name": "testChannelOperatorModeSenderNonMember",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/ergo/alwayson.py::AlwaysOnTestCase::test_always_on_can_be_disabled",
+      "classname": "irctest.server_tests.ergo.alwayson.AlwaysOnTestCase",
+      "name": "test_always_on_can_be_disabled",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/join.py::JoinTestCase::testJoinPartiallyInvalid",
+      "classname": "irctest.server_tests.join.JoinTestCase",
+      "name": "testJoinPartiallyInvalid",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/invite.py::InviteTestCase::testInviteUnopped",
+      "classname": "irctest.server_tests.invite.InviteTestCase",
+      "name": "testInviteUnopped",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/list.py::ListTestCase::testListOne",
+      "classname": "irctest.server_tests.list.ListTestCase",
+      "name": "testListOne",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/labeled_responses.py::LabeledResponsesTestCase::testLabeledPrivmsgResponsesToClient",
+      "classname": "irctest.server_tests.labeled_responses.LabeledResponsesTestCase",
+      "name": "testLabeledPrivmsgResponsesToClient",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/join.py::JoinTestCase::testJoinPartiallyInvalidLabeledResponse",
+      "classname": "irctest.server_tests.join.JoinTestCase",
+      "name": "testJoinPartiallyInvalidLabeledResponse",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/lusers.py::ErgoInvisibleDefaultTestCase::testLusers",
+      "classname": "irctest.server_tests.lusers.ErgoInvisibleDefaultTestCase",
+      "name": "testLusers",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/chathistory.py::ChathistoryTestCase::testChathistoryDMs[BETWEEN]",
+      "classname": "irctest.server_tests.chathistory.ChathistoryTestCase",
+      "name": "testChathistoryDMs[BETWEEN]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/join.py::JoinTestCase::testJoinKey",
+      "classname": "irctest.server_tests.join.JoinTestCase",
+      "name": "testJoinKey",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/invite.py::InviteTestCase::testInviteNoNotificationForOtherMembers",
+      "classname": "irctest.server_tests.invite.InviteTestCase",
+      "name": "testInviteNoNotificationForOtherMembers",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/chmodes/operator.py::ChannelOperatorModeTestCase::testChannelOperatorModeSenderAndTargetNonMembers",
+      "classname": "irctest.server_tests.chmodes.operator.ChannelOperatorModeTestCase",
+      "name": "testChannelOperatorModeSenderAndTargetNonMembers",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/list.py::ListTestCase::testListNonexistent",
+      "classname": "irctest.server_tests.list.ListTestCase",
+      "name": "testListNonexistent",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/labeled_responses.py::LabeledResponsesTestCase::testLabeledPrivmsgResponsesToChannel",
+      "classname": "irctest.server_tests.labeled_responses.LabeledResponsesTestCase",
+      "name": "testLabeledPrivmsgResponsesToChannel",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/ergo/chanserv.py::ChanservTestCase::test_channel_registration",
+      "classname": "irctest.server_tests.ergo.chanserv.ChanservTestCase",
+      "name": "test_channel_registration",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/message_tags.py::MessageTagsTestCase::testBasic",
+      "classname": "irctest.server_tests.message_tags.MessageTagsTestCase",
+      "name": "testBasic",
+      "status": "skipped",
+      "detail": "Choice in the implementation makes it impossible to perform a test: CLIENTTAGDENY blocks arbitrary client tags"
+    },
+    {
+      "nodeid": "irctest/server_tests/list.py::ListTestCase::testListMask",
+      "classname": "irctest.server_tests.list.ListTestCase",
+      "name": "testListMask",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/join.py::JoinTestCase::testJoinKeys",
+      "classname": "irctest.server_tests.join.JoinTestCase",
+      "name": "testJoinKeys",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/message_tags.py::MessageTagsTestCase::testLengthLimits",
+      "classname": "irctest.server_tests.message_tags.MessageTagsTestCase",
+      "name": "testLengthLimits",
+      "status": "skipped",
+      "detail": "Choice in the implementation makes it impossible to perform a test: CLIENTTAGDENY blocks arbitrary client tags"
+    },
+    {
+      "nodeid": "irctest/server_tests/labeled_responses.py::LabeledResponsesTestCase::testLabeledPrivmsgResponsesToSelf",
+      "classname": "irctest.server_tests.labeled_responses.LabeledResponsesTestCase",
+      "name": "testLabeledPrivmsgResponsesToSelf",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/invite.py::InviteTestCase::testInviteInviteOnly",
+      "classname": "irctest.server_tests.invite.InviteTestCase",
+      "name": "testInviteInviteOnly",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/chmodes/operator.py::ChannelOperatorModeTestCase::testChannelOperatorModeSuccess",
+      "classname": "irctest.server_tests.chmodes.operator.ChannelOperatorModeTestCase",
+      "name": "testChannelOperatorModeSuccess",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/message_tags.py::MessageTagsTestCase::testRecipientCapability",
+      "classname": "irctest.server_tests.message_tags.MessageTagsTestCase",
+      "name": "testRecipientCapability",
+      "status": "skipped",
+      "detail": "Choice in the implementation makes it impossible to perform a test: CLIENTTAGDENY blocks +draft/reply"
+    },
+    {
+      "nodeid": "irctest/server_tests/labeled_responses.py::LabeledResponsesTestCase::testLabeledNoticeResponsesToClient",
+      "classname": "irctest.server_tests.labeled_responses.LabeledResponsesTestCase",
+      "name": "testLabeledNoticeResponsesToClient",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/list.py::ListTestCase::testListNotMask",
+      "classname": "irctest.server_tests.list.ListTestCase",
+      "name": "testListNotMask",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/join.py::JoinTestCase::testJoinManySingleKey",
+      "classname": "irctest.server_tests.join.JoinTestCase",
+      "name": "testJoinManySingleKey",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/messages.py::PrivmsgTestCase::testPrivmsg",
+      "classname": "irctest.server_tests.messages.PrivmsgTestCase",
+      "name": "testPrivmsg",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/ergo/nickserv.py::NickservTestCase::test_saregister",
+      "classname": "irctest.server_tests.ergo.nickserv.NickservTestCase",
+      "name": "test_saregister",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/invite.py::InviteTestCase::testInviteOnlyFromUsersInChannel",
+      "classname": "irctest.server_tests.invite.InviteTestCase",
+      "name": "testInviteOnlyFromUsersInChannel",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/metadata_3.py::MetadataTestCase::testGetOneUnsetValid",
+      "classname": "irctest.server_tests.metadata_3.MetadataTestCase",
+      "name": "testGetOneUnsetValid",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/chmodes/secret.py::SecretChannelTestCase::testSecretChannelListCommand",
+      "classname": "irctest.server_tests.chmodes.secret.SecretChannelTestCase",
+      "name": "testSecretChannelListCommand",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/labeled_responses.py::LabeledResponsesTestCase::testLabeledNoticeResponsesToChannel",
+      "classname": "irctest.server_tests.labeled_responses.LabeledResponsesTestCase",
+      "name": "testLabeledNoticeResponsesToChannel",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/kick.py::KickTestCase::testKickSendsMessages",
+      "classname": "irctest.server_tests.kick.KickTestCase",
+      "name": "testKickSendsMessages",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/list.py::ListTestCase::testListUsers",
+      "classname": "irctest.server_tests.list.ListTestCase",
+      "name": "testListUsers",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/messages.py::PrivmsgTestCase::testPrivmsgNonexistentChannel",
+      "classname": "irctest.server_tests.messages.PrivmsgTestCase",
+      "name": "testPrivmsgNonexistentChannel",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/ergo/proxy.py::ProxyProtocolTestCase::test_proxy_v1",
+      "classname": "irctest.server_tests.ergo.proxy.ProxyProtocolTestCase",
+      "name": "test_proxy_v1",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/metadata_3.py::MetadataTestCase::testGetTwoUnsetValid",
+      "classname": "irctest.server_tests.metadata_3.MetadataTestCase",
+      "name": "testGetTwoUnsetValid",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/ergo/proxy.py::ProxyProtocolTestCase::test_proxy_v1_not_first_line",
+      "classname": "irctest.server_tests.ergo.proxy.ProxyProtocolTestCase",
+      "name": "test_proxy_v1_not_first_line",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/messages.py::PrivmsgTestCase::testPrivmsgToUser",
+      "classname": "irctest.server_tests.messages.PrivmsgTestCase",
+      "name": "testPrivmsgToUser",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/invite.py::InviteTestCase::testInviteAlreadyInChannel",
+      "classname": "irctest.server_tests.invite.InviteTestCase",
+      "name": "testInviteAlreadyInChannel",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/ergo/proxy.py::ProxyProtocolListenerTestCase::test_proxy_v1",
+      "classname": "irctest.server_tests.ergo.proxy.ProxyProtocolListenerTestCase",
+      "name": "test_proxy_v1",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/confusables.py::ConfusablesTestCase::testConfusableNicks",
+      "classname": "irctest.server_tests.confusables.ConfusablesTestCase",
+      "name": "testConfusableNicks",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/labeled_responses.py::LabeledResponsesTestCase::testLabeledNoticeResponsesToSelf",
+      "classname": "irctest.server_tests.labeled_responses.LabeledResponsesTestCase",
+      "name": "testLabeledNoticeResponsesToSelf",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/metadata_3.py::MetadataTestCase::testListNoSet",
+      "classname": "irctest.server_tests.metadata_3.MetadataTestCase",
+      "name": "testListNoSet",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/ergo/proxy.py::ProxyProtocolListenerTestCase::test_proxy_v2",
+      "classname": "irctest.server_tests.ergo.proxy.ProxyProtocolListenerTestCase",
+      "name": "test_proxy_v2",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/ergo/proxy.py::ProxyProtocolListenerTestCase::test_no_proxy_header",
+      "classname": "irctest.server_tests.ergo.proxy.ProxyProtocolListenerTestCase",
+      "name": "test_no_proxy_header",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/kick.py::KickTestCase::testKickDefaultComment",
+      "classname": "irctest.server_tests.kick.KickTestCase",
+      "name": "testKickDefaultComment",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/connection_registration.py::PasswordedConnectionRegistrationTestCase::testPassBeforeNickuser",
+      "classname": "irctest.server_tests.connection_registration.PasswordedConnectionRegistrationTestCase",
+      "name": "testPassBeforeNickuser",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/extended_join.py::MetadataTestCase::testNotLoggedIn",
+      "classname": "irctest.server_tests.extended_join.MetadataTestCase",
+      "name": "testNotLoggedIn",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/labeled_responses.py::LabeledResponsesTestCase::testLabeledTagMsgResponsesToClient",
+      "classname": "irctest.server_tests.labeled_responses.LabeledResponsesTestCase",
+      "name": "testLabeledTagMsgResponsesToClient",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/metadata_3.py::MetadataTestCase::testListInvalidTarget",
+      "classname": "irctest.server_tests.metadata_3.MetadataTestCase",
+      "name": "testListInvalidTarget",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/list.py::FaketimeListTestCase::testListCreationTime",
+      "classname": "irctest.server_tests.list.FaketimeListTestCase",
+      "name": "testListCreationTime",
+      "status": "skipped",
+      "detail": "Not implemented by controller: faketime"
+    },
+    {
+      "nodeid": "irctest/server_tests/list.py::FaketimeListTestCase::testListTopicTime",
+      "classname": "irctest.server_tests.list.FaketimeListTestCase",
+      "name": "testListTopicTime",
+      "status": "skipped",
+      "detail": "Not implemented by controller: faketime"
+    },
+    {
+      "nodeid": "irctest/server_tests/messages.py::PrivmsgTestCase::testPrivmsgNonexistentUser",
+      "classname": "irctest.server_tests.messages.PrivmsgTestCase",
+      "name": "testPrivmsgNonexistentUser",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/connection_registration.py::PasswordedConnectionRegistrationTestCase::testNoPassword",
+      "classname": "irctest.server_tests.connection_registration.PasswordedConnectionRegistrationTestCase",
+      "name": "testNoPassword",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/invite.py::InviteTestCase::testInviteList",
+      "classname": "irctest.server_tests.invite.InviteTestCase",
+      "name": "testInviteList",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/lusers.py::BasicLusersTestCase::testLusers",
+      "classname": "irctest.server_tests.lusers.BasicLusersTestCase",
+      "name": "testLusers",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/connection_registration.py::PasswordedConnectionRegistrationTestCase::testWrongPassword",
+      "classname": "irctest.server_tests.connection_registration.PasswordedConnectionRegistrationTestCase",
+      "name": "testWrongPassword",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/connection_registration.py::PasswordedConnectionRegistrationTestCase::testPassAfterNickuser",
+      "classname": "irctest.server_tests.connection_registration.PasswordedConnectionRegistrationTestCase",
+      "name": "testPassAfterNickuser",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/metadata_3.py::MetadataTestCase::testSetGetUser[*-*]",
+      "classname": "irctest.server_tests.metadata_3.MetadataTestCase",
+      "name": "testSetGetUser[*-*]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/messages.py::PrivmsgTestCase::testEmptyPrivmsg",
+      "classname": "irctest.server_tests.messages.PrivmsgTestCase",
+      "name": "testEmptyPrivmsg",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/connection_registration.py::ConnectionRegistrationTestCase::testConnectionRegistration",
+      "classname": "irctest.server_tests.connection_registration.ConnectionRegistrationTestCase",
+      "name": "testConnectionRegistration",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/extended_join.py::MetadataTestCase::testLoggedIn",
+      "classname": "irctest.server_tests.extended_join.MetadataTestCase",
+      "name": "testLoggedIn",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/connection_registration.py::ConnectionRegistrationTestCase::testQuitDisconnects",
+      "classname": "irctest.server_tests.connection_registration.ConnectionRegistrationTestCase",
+      "name": "testQuitDisconnects",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/labeled_responses.py::LabeledResponsesTestCase::testLabeledTagMsgResponsesToChannel",
+      "classname": "irctest.server_tests.labeled_responses.LabeledResponsesTestCase",
+      "name": "testLabeledTagMsgResponsesToChannel",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/metadata_3.py::MetadataTestCase::testSetGetUser[*-foo]",
+      "classname": "irctest.server_tests.metadata_3.MetadataTestCase",
+      "name": "testSetGetUser[*-foo]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/lusers.py::BasicLusersTestCase::testLusersFull",
+      "classname": "irctest.server_tests.lusers.BasicLusersTestCase",
+      "name": "testLusersFull",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/invite.py::InviteTestCase::testInviteExemptsFromBan",
+      "classname": "irctest.server_tests.invite.InviteTestCase",
+      "name": "testInviteExemptsFromBan",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/kick.py::KickTestCase::testKickNoComment",
+      "classname": "irctest.server_tests.kick.KickTestCase",
+      "name": "testKickNoComment",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/metadata_3.py::MetadataTestCase::testSubUserSetBeforeJoin",
+      "classname": "irctest.server_tests.metadata_3.MetadataTestCase",
+      "name": "testSubUserSetBeforeJoin",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/connection_registration.py::ConnectionRegistrationTestCase::testQuitErrors",
+      "classname": "irctest.server_tests.connection_registration.ConnectionRegistrationTestCase",
+      "name": "testQuitErrors",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/messages.py::NoticeTestCase::testNotice",
+      "classname": "irctest.server_tests.messages.NoticeTestCase",
+      "name": "testNotice",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/metadata_3.py::MetadataTestCase::testSetGetUser[foo-*]",
+      "classname": "irctest.server_tests.metadata_3.MetadataTestCase",
+      "name": "testSetGetUser[foo-*]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/labeled_responses.py::LabeledResponsesTestCase::testLabeledTagMsgResponsesToSelf",
+      "classname": "irctest.server_tests.labeled_responses.LabeledResponsesTestCase",
+      "name": "testLabeledTagMsgResponsesToSelf",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/connection_registration.py::ConnectionRegistrationTestCase::testNickCollision",
+      "classname": "irctest.server_tests.connection_registration.ConnectionRegistrationTestCase",
+      "name": "testNickCollision",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/lusers.py::LusersUnregisteredTestCase::testLusersRfc2812",
+      "classname": "irctest.server_tests.lusers.LusersUnregisteredTestCase",
+      "name": "testLusersRfc2812",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/isupport.py::IsupportTestCase::testParameters",
+      "classname": "irctest.server_tests.isupport.IsupportTestCase",
+      "name": "testParameters",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/metadata_3.py::MetadataTestCase::testSetGetUser[foo-foo]",
+      "classname": "irctest.server_tests.metadata_3.MetadataTestCase",
+      "name": "testSetGetUser[foo-foo]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/metadata_3.py::MetadataTestCase::testSetGetChannel",
+      "classname": "irctest.server_tests.metadata_3.MetadataTestCase",
+      "name": "testSetGetChannel",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/messages.py::NoticeTestCase::testNoticeNonexistentChannel",
+      "classname": "irctest.server_tests.messages.NoticeTestCase",
+      "name": "testNoticeNonexistentChannel",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/labeled_responses.py::LabeledResponsesTestCase::testBatchedJoinMessages",
+      "classname": "irctest.server_tests.labeled_responses.LabeledResponsesTestCase",
+      "name": "testBatchedJoinMessages",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/connection_registration.py::ConnectionRegistrationTestCase::testEarlyNickCollision",
+      "classname": "irctest.server_tests.connection_registration.ConnectionRegistrationTestCase",
+      "name": "testEarlyNickCollision",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/kick.py::KickTestCase::testKickPrivileges",
+      "classname": "irctest.server_tests.kick.KickTestCase",
+      "name": "testKickPrivileges",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/isupport.py::IsupportTestCase::testValues",
+      "classname": "irctest.server_tests.isupport.IsupportTestCase",
+      "name": "testValues",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/connection_registration.py::ConnectionRegistrationTestCase::testEmptyRealname",
+      "classname": "irctest.server_tests.connection_registration.ConnectionRegistrationTestCase",
+      "name": "testEmptyRealname",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/metadata_3.py::MetadataTestCase::testSetGetUserAgain",
+      "classname": "irctest.server_tests.metadata_3.MetadataTestCase",
+      "name": "testSetGetUserAgain",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/lusers.py::LusersUnregisteredTestCase::testLusersFull",
+      "classname": "irctest.server_tests.lusers.LusersUnregisteredTestCase",
+      "name": "testLusersFull",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/monitor.py::MonitorTestCase::testNickChange",
+      "classname": "irctest.server_tests.monitor.MonitorTestCase",
+      "name": "testNickChange",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/messages.py::TagsTestCase::testLineTooLong",
+      "classname": "irctest.server_tests.messages.TagsTestCase",
+      "name": "testLineTooLong",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/labeled_responses.py::LabeledResponsesTestCase::testNoBatchForSingleMessage",
+      "classname": "irctest.server_tests.labeled_responses.LabeledResponsesTestCase",
+      "name": "testNoBatchForSingleMessage",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/metadata_3.py::MetadataTestCase::testSetTooManyBytes",
+      "classname": "irctest.server_tests.metadata_3.MetadataTestCase",
+      "name": "testSetTooManyBytes",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/metadata_3.py::MetadataTestCase::testSetUnsetUser",
+      "classname": "irctest.server_tests.metadata_3.MetadataTestCase",
+      "name": "testSetUnsetUser",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/metadata_3.py::MetadataTestCase::testSetUnsetChannel",
+      "classname": "irctest.server_tests.metadata_3.MetadataTestCase",
+      "name": "testSetUnsetChannel",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/lusers.py::LusersUnregisteredDefaultInvisibleTestCase::testLusersRfc2812",
+      "classname": "irctest.server_tests.lusers.LusersUnregisteredDefaultInvisibleTestCase",
+      "name": "testLusersRfc2812",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/labeled_responses.py::LabeledResponsesTestCase::testEmptyBatchForNoResponse",
+      "classname": "irctest.server_tests.labeled_responses.LabeledResponsesTestCase",
+      "name": "testEmptyBatchForNoResponse",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/kick.py::KickTestCase::testKickNonexistentChannel",
+      "classname": "irctest.server_tests.kick.KickTestCase",
+      "name": "testKickNonexistentChannel",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/metadata_3.py::MetadataTestCase::testGetOtherUser",
+      "classname": "irctest.server_tests.metadata_3.MetadataTestCase",
+      "name": "testGetOtherUser",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/messages.py::LengthLimitTestCase::testLineAtLimit",
+      "classname": "irctest.server_tests.messages.LengthLimitTestCase",
+      "name": "testLineAtLimit",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/monitor.py::ExtendedMonitorTestCase::testExtendedMonitorAway[monitor_before_connect-with-cap]",
+      "classname": "irctest.server_tests.monitor.ExtendedMonitorTestCase",
+      "name": "testExtendedMonitorAway[monitor_before_connect-with-cap]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/lusers.py::LusersUnregisteredDefaultInvisibleTestCase::testLusersFull",
+      "classname": "irctest.server_tests.lusers.LusersUnregisteredDefaultInvisibleTestCase",
+      "name": "testLusersFull",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/monitor.py::MonitorTestCase::testMonitorOneDisconnected",
+      "classname": "irctest.server_tests.monitor.MonitorTestCase",
+      "name": "testMonitorOneDisconnected",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/labeled_responses.py::LabeledResponsesTestCase::testUnknownCommand",
+      "classname": "irctest.server_tests.labeled_responses.LabeledResponsesTestCase",
+      "name": "testUnknownCommand",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/metadata_3.py::MetadataTestCase::testListChannel",
+      "classname": "irctest.server_tests.metadata_3.MetadataTestCase",
+      "name": "testListChannel",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/messages.py::LengthLimitTestCase::testLineBeyondLimit",
+      "classname": "irctest.server_tests.messages.LengthLimitTestCase",
+      "name": "testLineBeyondLimit",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/links.py::LinksTestCase::testLinksSingleServer",
+      "classname": "irctest.server_tests.links.LinksTestCase",
+      "name": "testLinksSingleServer",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/lusers.py::LusersUnregisteredDefaultInvisibleTestCase::testLusers",
+      "classname": "irctest.server_tests.lusers.LusersUnregisteredDefaultInvisibleTestCase",
+      "name": "testLusers",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/kick.py::KickTestCase::testDoubleKickMessages[True]",
+      "classname": "irctest.server_tests.kick.KickTestCase",
+      "name": "testDoubleKickMessages[True]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/metadata_3.py::MetadataTestCase::testWhoisKeyValue",
+      "classname": "irctest.server_tests.metadata_3.MetadataTestCase",
+      "name": "testWhoisKeyValue",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/monitor.py::ExtendedMonitorTestCase::testExtendedMonitorAway[monitor_before_connect-]",
+      "classname": "irctest.server_tests.monitor.ExtendedMonitorTestCase",
+      "name": "testExtendedMonitorAway[monitor_before_connect-]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/messages.py::NoCTCPModeTestCase::testNoCTCPMode",
+      "classname": "irctest.server_tests.messages.NoCTCPModeTestCase",
+      "name": "testNoCTCPMode",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/monitor.py::MonitorTestCase::testMonitorOneConnection",
+      "classname": "irctest.server_tests.monitor.MonitorTestCase",
+      "name": "testMonitorOneConnection",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/links.py::ServicesLinksTestCase::testLinksWithServices",
+      "classname": "irctest.server_tests.links.ServicesLinksTestCase",
+      "name": "testLinksWithServices",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/lusers.py::LuserOpersTestCase::testLuserOpers",
+      "classname": "irctest.server_tests.lusers.LuserOpersTestCase",
+      "name": "testLuserOpers",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/metadata_3.py::MetadataTestCase::testClearChannel",
+      "classname": "irctest.server_tests.metadata_3.MetadataTestCase",
+      "name": "testClearChannel",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/multi_prefix.py::MultiPrefixTestCase::testNoMultiPrefix",
+      "classname": "irctest.server_tests.multi_prefix.MultiPrefixTestCase",
+      "name": "testNoMultiPrefix",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/metadata_3.py::MetadataTestCase::testSetClearOtherUser",
+      "classname": "irctest.server_tests.metadata_3.MetadataTestCase",
+      "name": "testSetClearOtherUser",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/monitor.py::MonitorTestCase::testMonitorOneConnected",
+      "classname": "irctest.server_tests.monitor.MonitorTestCase",
+      "name": "testMonitorOneConnected",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/monitor.py::ExtendedMonitorTestCase::testExtendedMonitorAway[-with-cap]",
+      "classname": "irctest.server_tests.monitor.ExtendedMonitorTestCase",
+      "name": "testExtendedMonitorAway[-with-cap]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/metadata_3.py::MetadataTestCase::testSetGetChannelNotOp",
+      "classname": "irctest.server_tests.metadata_3.MetadataTestCase",
+      "name": "testSetGetChannelNotOp",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/monitor.py::ExtendedMonitorTestCase::testExtendedMonitorSetNameNoCap[True]",
+      "classname": "irctest.server_tests.monitor.ExtendedMonitorTestCase",
+      "name": "testExtendedMonitorSetNameNoCap[True]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/multiline.py::MultilineTestCase::testBasic",
+      "classname": "irctest.server_tests.multiline.MultilineTestCase",
+      "name": "testBasic",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/names.py::NamesTestCase::testNames2812Secret",
+      "classname": "irctest.server_tests.names.NamesTestCase",
+      "name": "testNames2812Secret",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/kick.py::KickTestCase::testDoubleKickMessages[False]",
+      "classname": "irctest.server_tests.kick.KickTestCase",
+      "name": "testDoubleKickMessages[False]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/metadata_3.py::MetadataTestCase::testSubUser",
+      "classname": "irctest.server_tests.metadata_3.MetadataTestCase",
+      "name": "testSubUser",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/monitor.py::MonitorTestCase::testMonitorOneConnectionWithQuit",
+      "classname": "irctest.server_tests.monitor.MonitorTestCase",
+      "name": "testMonitorOneConnectionWithQuit",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/metadata_3.py::MetadataTestCase::testGetListSyncInviteOnlyChannel",
+      "classname": "irctest.server_tests.metadata_3.MetadataTestCase",
+      "name": "testGetListSyncInviteOnlyChannel",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/monitor.py::ExtendedMonitorTestCase::testExtendedMonitorSetNameNoCap[False]",
+      "classname": "irctest.server_tests.monitor.ExtendedMonitorTestCase",
+      "name": "testExtendedMonitorSetNameNoCap[False]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/monitor.py::ExtendedMonitorTestCase::testExtendedMonitorAway[-]",
+      "classname": "irctest.server_tests.monitor.ExtendedMonitorTestCase",
+      "name": "testExtendedMonitorAway[-]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/names.py::NamesTestCase::testNamesMultipleChannels2812",
+      "classname": "irctest.server_tests.names.NamesTestCase",
+      "name": "testNamesMultipleChannels2812",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/multiline.py::MultilineTestCase::testBlankLines[client_tag]",
+      "classname": "irctest.server_tests.multiline.MultilineTestCase",
+      "name": "testBlankLines[client_tag]",
+      "status": "skipped",
+      "detail": "Choice in the implementation makes it impossible to perform a test: CLIENTTAGDENY blocks arbitrary client tags"
+    },
+    {
+      "nodeid": "irctest/server_tests/names.py::NamesTestCase::testNamesInvalidChannel",
+      "classname": "irctest.server_tests.names.NamesTestCase",
+      "name": "testNamesInvalidChannel",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/monitor.py::AuthenticatedExtendedMonitorTestCase::testExtendedMonitorAccountNotify[monitor_before_connect-with-cap]",
+      "classname": "irctest.server_tests.monitor.AuthenticatedExtendedMonitorTestCase",
+      "name": "testExtendedMonitorAccountNotify[monitor_before_connect-with-cap]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/metadata_3.py::MetadataTestCase::testSubChannel",
+      "classname": "irctest.server_tests.metadata_3.MetadataTestCase",
+      "name": "testSubChannel",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/part.py::PartTestCase::testPartNotInNonEmptyChannel",
+      "classname": "irctest.server_tests.part.PartTestCase",
+      "name": "testPartNotInNonEmptyChannel",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/monitor.py::ExtendedMonitorTestCase::testExtendedMonitorAwayNoCap[monitor_before_connect-with-cap]",
+      "classname": "irctest.server_tests.monitor.ExtendedMonitorTestCase",
+      "name": "testExtendedMonitorAwayNoCap[monitor_before_connect-with-cap]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/kill.py::KillTestCase::testKill",
+      "classname": "irctest.server_tests.kill.KillTestCase",
+      "name": "testKill",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/monitor.py::MonitorTestCase::testMonitorConnectedAndDisconnected",
+      "classname": "irctest.server_tests.monitor.MonitorTestCase",
+      "name": "testMonitorConnectedAndDisconnected",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/names.py::NamesTestCase::testNamesNonexistingChannel",
+      "classname": "irctest.server_tests.names.NamesTestCase",
+      "name": "testNamesNonexistingChannel",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/part.py::PartTestCase::testBasicPart",
+      "classname": "irctest.server_tests.part.PartTestCase",
+      "name": "testBasicPart",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/monitor.py::AuthenticatedExtendedMonitorTestCase::testExtendedMonitorAccountNotify[monitor_before_connect-]",
+      "classname": "irctest.server_tests.monitor.AuthenticatedExtendedMonitorTestCase",
+      "name": "testExtendedMonitorAccountNotify[monitor_before_connect-]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/metadata_3.py::MetadataTestCase::testSubChannelSetBeforeJoin",
+      "classname": "irctest.server_tests.metadata_3.MetadataTestCase",
+      "name": "testSubChannelSetBeforeJoin",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/oper.py::OperTestCase::testOperSuccess",
+      "classname": "irctest.server_tests.oper.OperTestCase",
+      "name": "testOperSuccess",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/monitor.py::MonitorTestCase::testUnmonitor",
+      "classname": "irctest.server_tests.monitor.MonitorTestCase",
+      "name": "testUnmonitor",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/monitor.py::ExtendedMonitorTestCase::testExtendedMonitorAwayNoCap[monitor_before_connect-]",
+      "classname": "irctest.server_tests.monitor.ExtendedMonitorTestCase",
+      "name": "testExtendedMonitorAwayNoCap[monitor_before_connect-]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/multiline.py::MultilineTestCase::testBlankLines[no_client_tag]",
+      "classname": "irctest.server_tests.multiline.MultilineTestCase",
+      "name": "testBlankLines[no_client_tag]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/read_marker.py::ReadMarkerTestCase::testSetAndGet",
+      "classname": "irctest.server_tests.read_marker.ReadMarkerTestCase",
+      "name": "testSetAndGet",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/oper.py::OperTestCase::testOperFailure",
+      "classname": "irctest.server_tests.oper.OperTestCase",
+      "name": "testOperFailure",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/monitor.py::AuthenticatedExtendedMonitorTestCase::testExtendedMonitorAccountNotify[-with-cap]",
+      "classname": "irctest.server_tests.monitor.AuthenticatedExtendedMonitorTestCase",
+      "name": "testExtendedMonitorAccountNotify[-with-cap]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/part.py::PartTestCase::testBasicPartRfc2812",
+      "classname": "irctest.server_tests.part.PartTestCase",
+      "name": "testBasicPartRfc2812",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/metadata_3.py::MetadataTestCase::testSetGetValidBeforeConnect",
+      "classname": "irctest.server_tests.metadata_3.MetadataTestCase",
+      "name": "testSetGetValidBeforeConnect",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/monitor.py::MonitorTestCase::testMonitorForbidsMasks",
+      "classname": "irctest.server_tests.monitor.MonitorTestCase",
+      "name": "testMonitorForbidsMasks",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/monitor.py::ExtendedMonitorTestCase::testExtendedMonitorAwayNoCap[-with-cap]",
+      "classname": "irctest.server_tests.monitor.ExtendedMonitorTestCase",
+      "name": "testExtendedMonitorAwayNoCap[-with-cap]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/read_marker.py::ReadMarkerTestCase::testReadMarkerDoesNotDecrease",
+      "classname": "irctest.server_tests.read_marker.ReadMarkerTestCase",
+      "name": "testReadMarkerDoesNotDecrease",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/oper.py::OperTestCase::testOperNoPassword",
+      "classname": "irctest.server_tests.oper.OperTestCase",
+      "name": "testOperNoPassword",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/metadata_3.py::MetadataTestCase::testSetGetHeartInValue",
+      "classname": "irctest.server_tests.metadata_3.MetadataTestCase",
+      "name": "testSetGetHeartInValue",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/multiline.py::MultilineTestCase::testInvalidBatchTag",
+      "classname": "irctest.server_tests.multiline.MultilineTestCase",
+      "name": "testInvalidBatchTag",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/oper.py::OperTestCase::testOperNonexistentUser",
+      "classname": "irctest.server_tests.oper.OperTestCase",
+      "name": "testOperNonexistentUser",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/read_marker.py::ReadMarkerTestCase::testReadMarkerOnJoin",
+      "classname": "irctest.server_tests.read_marker.ReadMarkerTestCase",
+      "name": "testReadMarkerOnJoin",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/metadata_3.py::MetadataTestCase::testSetInvalidUtf8",
+      "classname": "irctest.server_tests.metadata_3.MetadataTestCase",
+      "name": "testSetInvalidUtf8",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/monitor.py::AuthenticatedExtendedMonitorTestCase::testExtendedMonitorAccountNotify[-]",
+      "classname": "irctest.server_tests.monitor.AuthenticatedExtendedMonitorTestCase",
+      "name": "testExtendedMonitorAccountNotify[-]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/monitor.py::MonitorTestCase::testTwoMonitoringOneRemove",
+      "classname": "irctest.server_tests.monitor.MonitorTestCase",
+      "name": "testTwoMonitoringOneRemove",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/multiline.py::MultilineTestCase::testInvalidBlankConcatTag",
+      "classname": "irctest.server_tests.multiline.MultilineTestCase",
+      "name": "testInvalidBlankConcatTag",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/monitor.py::ExtendedMonitorTestCase::testExtendedMonitorAwayNoCap[-]",
+      "classname": "irctest.server_tests.monitor.ExtendedMonitorTestCase",
+      "name": "testExtendedMonitorAwayNoCap[-]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/part.py::PartTestCase::testPartNotInEmptyChannel",
+      "classname": "irctest.server_tests.part.PartTestCase",
+      "name": "testPartNotInEmptyChannel",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/part.py::PartTestCase::testPartMessage",
+      "classname": "irctest.server_tests.part.PartTestCase",
+      "name": "testPartMessage",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/read_marker.py::ReadMarkerTestCase::testReadMarkerOnJoinWithStoredTimestamp",
+      "classname": "irctest.server_tests.read_marker.ReadMarkerTestCase",
+      "name": "testReadMarkerOnJoinWithStoredTimestamp",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/multiline.py::MultilineTestCase::testLineLimit",
+      "classname": "irctest.server_tests.multiline.MultilineTestCase",
+      "name": "testLineLimit",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/read_marker.py::ReadMarkerServiceTestCase::testReadMarkerPersistsAcrossReconnect",
+      "classname": "irctest.server_tests.read_marker.ReadMarkerServiceTestCase",
+      "name": "testReadMarkerPersistsAcrossReconnect",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/metadata_3.py::MetadataTestCase::testSetTooManyChars",
+      "classname": "irctest.server_tests.metadata_3.MetadataTestCase",
+      "name": "testSetTooManyChars",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/monitor.py::AuthenticatedExtendedMonitorTestCase::testExtendedMonitorAccountNotifyNoCap[monitor_before_connect-with-cap]",
+      "classname": "irctest.server_tests.monitor.AuthenticatedExtendedMonitorTestCase",
+      "name": "testExtendedMonitorAccountNotifyNoCap[monitor_before_connect-with-cap]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/read_marker.py::ReadMarkerTestCase::testReadMarkerUserTarget",
+      "classname": "irctest.server_tests.read_marker.ReadMarkerTestCase",
+      "name": "testReadMarkerUserTarget",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/monitor.py::ExtendedMonitorTestCase::testExtendedMonitorSetName[True]",
+      "classname": "irctest.server_tests.monitor.ExtendedMonitorTestCase",
+      "name": "testExtendedMonitorSetName[True]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/multiline.py::MultilineTestCase::testByteLimit",
+      "classname": "irctest.server_tests.multiline.MultilineTestCase",
+      "name": "testByteLimit",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/monitor.py::MonitorTestCase::testMonitorClear",
+      "classname": "irctest.server_tests.monitor.MonitorTestCase",
+      "name": "testMonitorClear",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/pingpong.py::PingPongTestCase::testPing",
+      "classname": "irctest.server_tests.pingpong.PingPongTestCase",
+      "name": "testPing",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/names.py::NamesTestCase::testNames2812",
+      "classname": "irctest.server_tests.names.NamesTestCase",
+      "name": "testNames2812",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/redact.py::RedactTestCase::testRedactWithReason",
+      "classname": "irctest.server_tests.redact.RedactTestCase",
+      "name": "testRedactWithReason",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/monitor.py::MonitorTestCase::testMonitorList",
+      "classname": "irctest.server_tests.monitor.MonitorTestCase",
+      "name": "testMonitorList",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/read_marker.py::ReadMarkerServiceTestCase::testReadMarkerPropagatedToOtherSessions",
+      "classname": "irctest.server_tests.read_marker.ReadMarkerServiceTestCase",
+      "name": "testReadMarkerPropagatedToOtherSessions",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/read_marker.py::ReadMarkerTestCase::testMissingParams",
+      "classname": "irctest.server_tests.read_marker.ReadMarkerTestCase",
+      "name": "testMissingParams",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/monitor.py::AuthenticatedExtendedMonitorTestCase::testExtendedMonitorAccountNotifyNoCap[monitor_before_connect-]",
+      "classname": "irctest.server_tests.monitor.AuthenticatedExtendedMonitorTestCase",
+      "name": "testExtendedMonitorAccountNotifyNoCap[monitor_before_connect-]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/monitor.py::ExtendedMonitorTestCase::testExtendedMonitorSetName[False]",
+      "classname": "irctest.server_tests.monitor.ExtendedMonitorTestCase",
+      "name": "testExtendedMonitorSetName[False]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/pingpong.py::PingPongTestCase::testPingNoToken",
+      "classname": "irctest.server_tests.pingpong.PingPongTestCase",
+      "name": "testPingNoToken",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/redact.py::RedactTestCase::testRedactTagmsg",
+      "classname": "irctest.server_tests.redact.RedactTestCase",
+      "name": "testRedactTagmsg",
+      "status": "skipped",
+      "detail": "Choice in the implementation makes it impossible to perform a test: CLIENTTAGDENY blocks +draft/reply"
+    },
+    {
+      "nodeid": "irctest/server_tests/read_marker.py::ReadMarkerTestCase::testInvalidTimestamp",
+      "classname": "irctest.server_tests.read_marker.ReadMarkerTestCase",
+      "name": "testInvalidTimestamp",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/monitor.py::MonitorTestCase::testMonitorStatus",
+      "classname": "irctest.server_tests.monitor.MonitorTestCase",
+      "name": "testMonitorStatus",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/pingpong.py::PingPongTestCase::testPingEmptyToken",
+      "classname": "irctest.server_tests.pingpong.PingPongTestCase",
+      "name": "testPingEmptyToken",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/names.py::NamesTestCase::testNamesModern",
+      "classname": "irctest.server_tests.names.NamesTestCase",
+      "name": "testNamesModern",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/monitor.py::AuthenticatedExtendedMonitorTestCase::testExtendedMonitorAccountNotifyNoCap[-with-cap]",
+      "classname": "irctest.server_tests.monitor.AuthenticatedExtendedMonitorTestCase",
+      "name": "testExtendedMonitorAccountNotifyNoCap[-with-cap]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/readq.py::ReadqTestCase::testReadqTags",
+      "classname": "irctest.server_tests.readq.ReadqTestCase",
+      "name": "testReadqTags",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/read_marker.py::ReadMarkerTestCase::testWildcardTimestampRejected",
+      "classname": "irctest.server_tests.read_marker.ReadMarkerTestCase",
+      "name": "testWildcardTimestampRejected",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/redact.py::RedactWithServicesTestCase::testOpInOtherChannelCanRedactOwnButNotOthers",
+      "classname": "irctest.server_tests.redact.RedactWithServicesTestCase",
+      "name": "testOpInOtherChannelCanRedactOwnButNotOthers",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/quit.py::ChannelQuitTestCase::testQuit",
+      "classname": "irctest.server_tests.quit.ChannelQuitTestCase",
+      "name": "testQuit",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/redact.py::RedactTestCase::testRedactNotRelayedToNonSupportingClients",
+      "classname": "irctest.server_tests.redact.RedactTestCase",
+      "name": "testRedactNotRelayedToNonSupportingClients",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/regressions.py::RegressionsTestCase::testNickReleaseUnregistered",
+      "classname": "irctest.server_tests.regressions.RegressionsTestCase",
+      "name": "testNickReleaseUnregistered",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/readq.py::ReadqTestCase::testReadqNoTags",
+      "classname": "irctest.server_tests.readq.ReadqTestCase",
+      "name": "testReadqNoTags",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/sasl.py::SaslTestCase::testSaslTooLong",
+      "classname": "irctest.server_tests.sasl.SaslTestCase",
+      "name": "testSaslTooLong",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/regressions.py::RegressionsTestCase::testLabeledNick",
+      "classname": "irctest.server_tests.regressions.RegressionsTestCase",
+      "name": "testLabeledNick",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/sasl.py::SaslTestCase::testPlainFailure",
+      "classname": "irctest.server_tests.sasl.SaslTestCase",
+      "name": "testPlainFailure",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/sasl.py::SaslTestCase::testPlainInfiniteMessages",
+      "classname": "irctest.server_tests.sasl.SaslTestCase",
+      "name": "testPlainInfiniteMessages",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/monitor.py::AuthenticatedExtendedMonitorTestCase::testExtendedMonitorAccountNotifyNoCap[-]",
+      "classname": "irctest.server_tests.monitor.AuthenticatedExtendedMonitorTestCase",
+      "name": "testExtendedMonitorAccountNotifyNoCap[-]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/sasl.py::SaslTestCase::testPlainNonAscii",
+      "classname": "irctest.server_tests.sasl.SaslTestCase",
+      "name": "testPlainNonAscii",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/sasl.py::SaslTestCase::testPlainLargeEquals400",
+      "classname": "irctest.server_tests.sasl.SaslTestCase",
+      "name": "testPlainLargeEquals400",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/sasl.py::SaslTestCase::testPlainNoAuthzid",
+      "classname": "irctest.server_tests.sasl.SaslTestCase",
+      "name": "testPlainNoAuthzid",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/redact.py::RedactTestCase::testOpRedactSelfPrivmsg",
+      "classname": "irctest.server_tests.redact.RedactTestCase",
+      "name": "testOpRedactSelfPrivmsg",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/relaymsg.py::RelaymsgTestCase::testRelaymsg",
+      "classname": "irctest.server_tests.relaymsg.RelaymsgTestCase",
+      "name": "testRelaymsg",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/sasl.py::SaslTestCase::testScramSha256Success",
+      "classname": "irctest.server_tests.sasl.SaslTestCase",
+      "name": "testScramSha256Success",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/regressions.py::RegressionsTestCase::testFailedNickChange",
+      "classname": "irctest.server_tests.regressions.RegressionsTestCase",
+      "name": "testFailedNickChange",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/sasl.py::SaslTestCase::testMechanismNotAvailable",
+      "classname": "irctest.server_tests.sasl.SaslTestCase",
+      "name": "testMechanismNotAvailable",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/redact.py::RedactTestCase::testRedactUnknownMsgid",
+      "classname": "irctest.server_tests.redact.RedactTestCase",
+      "name": "testRedactUnknownMsgid",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/read_marker.py::ReadMarkerTestCase::testGetNoReadMarker",
+      "classname": "irctest.server_tests.read_marker.ReadMarkerTestCase",
+      "name": "testGetNoReadMarker",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/sasl.py::SaslTestCase::testScramSha256Failure",
+      "classname": "irctest.server_tests.sasl.SaslTestCase",
+      "name": "testScramSha256Failure",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/sasl.py::SaslTestCase::testPlainLarge",
+      "classname": "irctest.server_tests.sasl.SaslTestCase",
+      "name": "testPlainLarge",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/sasl.py::SaslTestCase::testPlainLarge800",
+      "classname": "irctest.server_tests.sasl.SaslTestCase",
+      "name": "testPlainLarge800",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/multi_prefix.py::MultiPrefixTestCase::testMultiPrefix",
+      "classname": "irctest.server_tests.multi_prefix.MultiPrefixTestCase",
+      "name": "testMultiPrefix",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/sasl.py::SaslTestCase::testAbort",
+      "classname": "irctest.server_tests.sasl.SaslTestCase",
+      "name": "testAbort",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/sasl.py::SaslTestCase::testSaslMechsContent[non-strict]",
+      "classname": "irctest.server_tests.sasl.SaslTestCase",
+      "name": "testSaslMechsContent[non-strict]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/redact.py::RedactTestCase::testRedactInvalidTarget",
+      "classname": "irctest.server_tests.redact.RedactTestCase",
+      "name": "testRedactInvalidTarget",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/sasl.py::SaslTestCase::testInvalidBase64",
+      "classname": "irctest.server_tests.sasl.SaslTestCase",
+      "name": "testInvalidBase64",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/sasl.py::SaslTestCase::testPlainPostRegistrationAndReAuthenticate",
+      "classname": "irctest.server_tests.sasl.SaslTestCase",
+      "name": "testPlainPostRegistrationAndReAuthenticate",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/redact.py::RedactTestCase::testOpRedactOthersPrivmsg",
+      "classname": "irctest.server_tests.redact.RedactTestCase",
+      "name": "testOpRedactOthersPrivmsg",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/sasl.py::SaslTestCase::testSaslMechsContent[strict]",
+      "classname": "irctest.server_tests.sasl.SaslTestCase",
+      "name": "testSaslMechsContent[strict]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/sasl.py::SaslTestCase::testEmptyAuthcid",
+      "classname": "irctest.server_tests.sasl.SaslTestCase",
+      "name": "testEmptyAuthcid",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/regressions.py::RegressionsTestCase::testCaseChanges",
+      "classname": "irctest.server_tests.regressions.RegressionsTestCase",
+      "name": "testCaseChanges",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/roleplay.py::RoleplayTestCase::testRoleplay",
+      "classname": "irctest.server_tests.roleplay.RoleplayTestCase",
+      "name": "testRoleplay",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/sasl.py::SaslTestCase::testNulInPassword[sesa\\x00me]",
+      "classname": "irctest.server_tests.sasl.SaslTestCase",
+      "name": "testNulInPassword[sesa\\x00me]",
+      "status": "xpass"
+    },
+    {
+      "nodeid": "irctest/server_tests/sasl.py::SaslTestCase::testEmptyPassword",
+      "classname": "irctest.server_tests.sasl.SaslTestCase",
+      "name": "testEmptyPassword",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/sasl.py::SaslTestCase::testNickUserDuringSasl",
+      "classname": "irctest.server_tests.sasl.SaslTestCase",
+      "name": "testNickUserDuringSasl",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/sasl.py::SaslTestCase::testNulInPassword[sesame\\x00]",
+      "classname": "irctest.server_tests.sasl.SaslTestCase",
+      "name": "testNulInPassword[sesame\\x00]",
+      "status": "xpass"
+    },
+    {
+      "nodeid": "irctest/server_tests/redact.py::RedactTestCase::testRedactedMessageDisappearsFromChathistory",
+      "classname": "irctest.server_tests.redact.RedactTestCase",
+      "name": "testRedactedMessageDisappearsFromChathistory",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/sasl.py::SaslTestCase::testDifferentAuthzid",
+      "classname": "irctest.server_tests.sasl.SaslTestCase",
+      "name": "testDifferentAuthzid",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/sasl.py::SaslTestCase::testRegistrationDuringSasl",
+      "classname": "irctest.server_tests.sasl.SaslTestCase",
+      "name": "testRegistrationDuringSasl",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/sasl.py::SaslTestCase::testNulInPassword[sesame\\x00extra]",
+      "classname": "irctest.server_tests.sasl.SaslTestCase",
+      "name": "testNulInPassword[sesame\\x00extra]",
+      "status": "xpass"
+    },
+    {
+      "nodeid": "irctest/server_tests/sasl.py::SaslTestCase::testAuthenticateWithoutCapReq",
+      "classname": "irctest.server_tests.sasl.SaslTestCase",
+      "name": "testAuthenticateWithoutCapReq",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/sasl.py::SaslTestCase::testRetryAfterInvalidBase64",
+      "classname": "irctest.server_tests.sasl.SaslTestCase",
+      "name": "testRetryAfterInvalidBase64",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/statusmsg.py::StatusmsgTestCase::testStatusmsgFromOp",
+      "classname": "irctest.server_tests.statusmsg.StatusmsgTestCase",
+      "name": "testStatusmsgFromOp",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/sasl.py::SaslTestCase::testRetryAfterFail",
+      "classname": "irctest.server_tests.sasl.SaslTestCase",
+      "name": "testRetryAfterFail",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/topic.py::TopicTestCase::testTopicModern",
+      "classname": "irctest.server_tests.topic.TopicTestCase",
+      "name": "testTopicModern",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/redact.py::RedactTestCase::testOperCanRedactInUnjoinedChannel",
+      "classname": "irctest.server_tests.redact.RedactTestCase",
+      "name": "testOperCanRedactInUnjoinedChannel",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/sasl.py::SaslTestCase::testPlainPostRegistration",
+      "classname": "irctest.server_tests.sasl.SaslTestCase",
+      "name": "testPlainPostRegistration",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/regressions.py::RegressionsTestCase::testStarNick",
+      "classname": "irctest.server_tests.regressions.RegressionsTestCase",
+      "name": "testStarNick",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/sasl.py::RegistrationTestCase::testRegistration",
+      "classname": "irctest.server_tests.sasl.RegistrationTestCase",
+      "name": "testRegistration",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/regressions.py::RegressionsTestCase::testEmptyNick",
+      "classname": "irctest.server_tests.regressions.RegressionsTestCase",
+      "name": "testEmptyNick",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/sasl.py::SaslTestCase::testPlain",
+      "classname": "irctest.server_tests.sasl.SaslTestCase",
+      "name": "testPlain",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/redact.py::RedactWithServicesTestCase::testRedactDirectMessage",
+      "classname": "irctest.server_tests.redact.RedactWithServicesTestCase",
+      "name": "testRedactDirectMessage",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/regressions.py::RegressionsTestCase::testNickRelease",
+      "classname": "irctest.server_tests.regressions.RegressionsTestCase",
+      "name": "testNickRelease",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/utf8.py::Utf8TestCase::testNonUtf8Filtering",
+      "classname": "irctest.server_tests.utf8.Utf8TestCase",
+      "name": "testNonUtf8Filtering",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/sasl.py::SaslTestCase::testPlainReAuthenticate",
+      "classname": "irctest.server_tests.sasl.SaslTestCase",
+      "name": "testPlainReAuthenticate",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/topic.py::TopicTestCase::testTopicMode",
+      "classname": "irctest.server_tests.topic.TopicTestCase",
+      "name": "testTopicMode",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/regressions.py::RegressionsTestCase::testNickReleaseQuit",
+      "classname": "irctest.server_tests.regressions.RegressionsTestCase",
+      "name": "testNickReleaseQuit",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/statusmsg.py::StatusmsgTestCase::testStatusmsgFromRegular",
+      "classname": "irctest.server_tests.statusmsg.StatusmsgTestCase",
+      "name": "testStatusmsgFromRegular",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/utf8.py::Utf8TestCase::testUtf8Validation",
+      "classname": "irctest.server_tests.utf8.Utf8TestCase",
+      "name": "testUtf8Validation",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/topic.py::TopicPrivilegesTestCase::testTopicPrivileges",
+      "classname": "irctest.server_tests.topic.TopicPrivilegesTestCase",
+      "name": "testTopicPrivileges",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/redact.py::RedactTestCase::testCantRedactOthersPrivmsg",
+      "classname": "irctest.server_tests.redact.RedactTestCase",
+      "name": "testCantRedactOthersPrivmsg",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/utf8.py::Utf8TestCase::testNonutf8Username",
+      "classname": "irctest.server_tests.utf8.Utf8TestCase",
+      "name": "testNonutf8Username",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/wallops.py::WallopsTestCase::testWallops",
+      "classname": "irctest.server_tests.wallops.WallopsTestCase",
+      "name": "testWallops",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/topic.py::TopicTestCase::testTopicNonexistentChannel",
+      "classname": "irctest.server_tests.topic.TopicTestCase",
+      "name": "testTopicNonexistentChannel",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/setname.py::SetnameMessageTestCase::testSetnameMessage",
+      "classname": "irctest.server_tests.setname.SetnameMessageTestCase",
+      "name": "testSetnameMessage",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/utf8.py::Utf8TestCase::testNonutf8Realname",
+      "classname": "irctest.server_tests.utf8.Utf8TestCase",
+      "name": "testNonutf8Realname",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/utf8.py::ErgoUtf8NickEnabledTestCase::testUtf8NonAsciiNick",
+      "classname": "irctest.server_tests.utf8.ErgoUtf8NickEnabledTestCase",
+      "name": "testUtf8NonAsciiNick",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/websocket.py::WebsocketTestCase::testSubprotocolNegotiation[text-only]",
+      "classname": "irctest.server_tests.websocket.WebsocketTestCase",
+      "name": "testSubprotocolNegotiation[text-only]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/topic.py::TopicTestCase::testUnsetTopicResponses",
+      "classname": "irctest.server_tests.topic.TopicTestCase",
+      "name": "testUnsetTopicResponses",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/time.py::TimeTestCase::testTime",
+      "classname": "irctest.server_tests.time.TimeTestCase",
+      "name": "testTime",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/setname.py::SetnameMessageTestCase::testSetnameChannel",
+      "classname": "irctest.server_tests.setname.SetnameMessageTestCase",
+      "name": "testSetnameChannel",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/umodes/registeredonly.py::RegisteredOnlyUmodeTestCase::testRegisteredOnlyUserMode",
+      "classname": "irctest.server_tests.umodes.registeredonly.RegisteredOnlyUmodeTestCase",
+      "name": "testRegisteredOnlyUserMode",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/websocket.py::WebsocketTestCase::testSendNonUtf8Text",
+      "classname": "irctest.server_tests.websocket.WebsocketTestCase",
+      "name": "testSendNonUtf8Text",
+      "status": "skipped",
+      "detail": "Optional behavior not supported: OptionalBehaviors.NON_UTF8_MESSAGE"
+    },
+    {
+      "nodeid": "irctest/server_tests/wallops.py::WallopsTestCase::testWallopsPrivileges",
+      "classname": "irctest.server_tests.wallops.WallopsTestCase",
+      "name": "testWallopsPrivileges",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/topic.py::TopicTestCase::testTopicRfc",
+      "classname": "irctest.server_tests.topic.TopicTestCase",
+      "name": "testTopicRfc",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/utf8.py::ErgoUtf8NickDisabledTestCase::testUtf8NonAsciiNick",
+      "classname": "irctest.server_tests.utf8.ErgoUtf8NickDisabledTestCase",
+      "name": "testUtf8NonAsciiNick",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/who.py::WhoTestCase::testWhoUsernameRealName[realname-mask]",
+      "classname": "irctest.server_tests.who.WhoTestCase",
+      "name": "testWhoUsernameRealName[realname-mask]",
+      "status": "skipped",
+      "detail": "Not consistently implemented"
+    },
+    {
+      "nodeid": "irctest/server_tests/who.py::WhoTestCase::testWhoUsernameRealName[hostname]",
+      "classname": "irctest.server_tests.who.WhoTestCase",
+      "name": "testWhoUsernameRealName[hostname]",
+      "status": "skipped",
+      "detail": "Not consistently implemented"
+    },
+    {
+      "nodeid": "irctest/server_tests/who.py::WhoTestCase::testWhoRealNameSpaces",
+      "classname": "irctest.server_tests.who.WhoTestCase",
+      "name": "testWhoRealNameSpaces",
+      "status": "skipped",
+      "detail": "Not consistently implemented"
+    },
+    {
+      "nodeid": "irctest/server_tests/who.py::WhoTestCase::testWhoNickAway[exact]",
+      "classname": "irctest.server_tests.who.WhoTestCase",
+      "name": "testWhoNickAway[exact]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/websocket.py::WebsocketTestCase::testSubprotocolNegotiation[binary-only]",
+      "classname": "irctest.server_tests.websocket.WebsocketTestCase",
+      "name": "testSubprotocolNegotiation[binary-only]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/websocket.py::WebsocketTestCase::testSubprotocolNegotiation[binary-first]",
+      "classname": "irctest.server_tests.websocket.WebsocketTestCase",
+      "name": "testSubprotocolNegotiation[binary-first]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/websocket.py::WebsocketTestCase::testReceiveTruncation",
+      "classname": "irctest.server_tests.websocket.WebsocketTestCase",
+      "name": "testReceiveTruncation",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/who.py::WhoTestCase::testWhoNick[exact]",
+      "classname": "irctest.server_tests.who.WhoTestCase",
+      "name": "testWhoNick[exact]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/umodes/registeredonly.py::RegisteredOnlyUmodeTestCase::testRegisteredOnlyUserModeAcceptCommand",
+      "classname": "irctest.server_tests.umodes.registeredonly.RegisteredOnlyUmodeTestCase",
+      "name": "testRegisteredOnlyUserModeAcceptCommand",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/who.py::WhoTestCase::testWhoNick[mask]",
+      "classname": "irctest.server_tests.who.WhoTestCase",
+      "name": "testWhoNick[mask]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/who.py::WhoTestCase::testWhoNickAway[casefolded]",
+      "classname": "irctest.server_tests.who.WhoTestCase",
+      "name": "testWhoNickAway[casefolded]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/websocket.py::WebsocketTestCase::testReceiveNonUtf8Text",
+      "classname": "irctest.server_tests.websocket.WebsocketTestCase",
+      "name": "testReceiveNonUtf8Text",
+      "status": "skipped",
+      "detail": "Optional behavior not supported: OptionalBehaviors.NON_UTF8_MESSAGE"
+    },
+    {
+      "nodeid": "irctest/server_tests/who.py::WhoTestCase::testWhoUsernameRealName[username]",
+      "classname": "irctest.server_tests.who.WhoTestCase",
+      "name": "testWhoUsernameRealName[username]",
+      "status": "skipped",
+      "detail": "Not consistently implemented"
+    },
+    {
+      "nodeid": "irctest/server_tests/who.py::WhoTestCase::testWhoNick[casefolded]",
+      "classname": "irctest.server_tests.who.WhoTestCase",
+      "name": "testWhoNick[casefolded]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/who.py::WhoTestCase::testWhoNickAwayAndOper[exact]",
+      "classname": "irctest.server_tests.who.WhoTestCase",
+      "name": "testWhoNickAwayAndOper[exact]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/who.py::WhoTestCase::testWhoNickAway[mask]",
+      "classname": "irctest.server_tests.who.WhoTestCase",
+      "name": "testWhoNickAway[mask]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/who.py::WhoTestCase::testWhoNickOper[exact]",
+      "classname": "irctest.server_tests.who.WhoTestCase",
+      "name": "testWhoNickOper[exact]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/websocket.py::WebsocketTestCase::testSubprotocolNegotiation[text-first]",
+      "classname": "irctest.server_tests.websocket.WebsocketTestCase",
+      "name": "testSubprotocolNegotiation[text-first]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/umodes/registeredonly.py::RegisteredOnlyUmodeTestCase::testRegisteredOnlyUserModeAutoAcceptOnDM",
+      "classname": "irctest.server_tests.umodes.registeredonly.RegisteredOnlyUmodeTestCase",
+      "name": "testRegisteredOnlyUserModeAutoAcceptOnDM",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/who.py::WhoTestCase::testWhoStar",
+      "classname": "irctest.server_tests.who.WhoTestCase",
+      "name": "testWhoStar",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/who.py::WhoTestCase::testWhoNickOper[mask]",
+      "classname": "irctest.server_tests.who.WhoTestCase",
+      "name": "testWhoNickOper[mask]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/who.py::WhoTestCase::testWhoNickAwayAndOper[casefolded]",
+      "classname": "irctest.server_tests.who.WhoTestCase",
+      "name": "testWhoNickAwayAndOper[casefolded]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/websocket.py::WebsocketTestCase::testSendTruncation",
+      "classname": "irctest.server_tests.websocket.WebsocketTestCase",
+      "name": "testSendTruncation",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/who.py::WhoTestCase::testWhoNickAwayAndOper[mask]",
+      "classname": "irctest.server_tests.who.WhoTestCase",
+      "name": "testWhoNickAwayAndOper[mask]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/who.py::WhoTestCase::testWhoNickOper[casefolded]",
+      "classname": "irctest.server_tests.who.WhoTestCase",
+      "name": "testWhoNickOper[casefolded]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/who.py::WhoTestCase::testWhoMultiChan",
+      "classname": "irctest.server_tests.who.WhoTestCase",
+      "name": "testWhoMultiChan",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/who.py::WhoTestCase::testWhoNickNotExists",
+      "classname": "irctest.server_tests.who.WhoTestCase",
+      "name": "testWhoNickNotExists",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/who.py::WhoTestCase::testWhoxFull",
+      "classname": "irctest.server_tests.who.WhoTestCase",
+      "name": "testWhoxFull",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/who.py::WhoTestCase::testWhoChan[casefolded]",
+      "classname": "irctest.server_tests.who.WhoTestCase",
+      "name": "testWhoChan[casefolded]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/who.py::WhoTestCase::testWhoxOneChar[c]",
+      "classname": "irctest.server_tests.who.WhoTestCase",
+      "name": "testWhoxOneChar[c]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/who.py::WhoTestCase::testWhoxOneChar[u]",
+      "classname": "irctest.server_tests.who.WhoTestCase",
+      "name": "testWhoxOneChar[u]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/who.py::WhoTestCase::testWhoChan[exact]",
+      "classname": "irctest.server_tests.who.WhoTestCase",
+      "name": "testWhoChan[exact]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/who.py::WhoTestCase::testWhoxOneChar[i]",
+      "classname": "irctest.server_tests.who.WhoTestCase",
+      "name": "testWhoxOneChar[i]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/who.py::WhoTestCase::testWhoxOneChar[h]",
+      "classname": "irctest.server_tests.who.WhoTestCase",
+      "name": "testWhoxOneChar[h]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/who.py::WhoTestCase::testWhoxOneChar[s]",
+      "classname": "irctest.server_tests.who.WhoTestCase",
+      "name": "testWhoxOneChar[s]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/who.py::WhoTestCase::testWhoxFullReversed",
+      "classname": "irctest.server_tests.who.WhoTestCase",
+      "name": "testWhoxFullReversed",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/who.py::WhoTestCase::testWhoxOneChar[n]",
+      "classname": "irctest.server_tests.who.WhoTestCase",
+      "name": "testWhoxOneChar[n]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/who.py::WhoTestCase::testWhoxOneChar[f]",
+      "classname": "irctest.server_tests.who.WhoTestCase",
+      "name": "testWhoxOneChar[f]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/who.py::WhoTestCase::testWhoxOneChar[d]",
+      "classname": "irctest.server_tests.who.WhoTestCase",
+      "name": "testWhoxOneChar[d]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/who.py::WhoTestCase::testWhoxOneChar[l]",
+      "classname": "irctest.server_tests.who.WhoTestCase",
+      "name": "testWhoxOneChar[l]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/who.py::WhoTestCase::testWhoxOneChar[a]",
+      "classname": "irctest.server_tests.who.WhoTestCase",
+      "name": "testWhoxOneChar[a]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/who.py::WhoTestCase::testWhoxOneChar[o]",
+      "classname": "irctest.server_tests.who.WhoTestCase",
+      "name": "testWhoxOneChar[o]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/who.py::WhoTestCase::testWhoxOneChar[r]",
+      "classname": "irctest.server_tests.who.WhoTestCase",
+      "name": "testWhoxOneChar[r]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/who.py::WhoTestCase::testWhoxToken",
+      "classname": "irctest.server_tests.who.WhoTestCase",
+      "name": "testWhoxToken",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/who.py::WhoServicesTestCase::testWhoxAccount",
+      "classname": "irctest.server_tests.who.WhoServicesTestCase",
+      "name": "testWhoxAccount",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/who.py::WhoServicesTestCase::testWhoxNoAccount",
+      "classname": "irctest.server_tests.who.WhoServicesTestCase",
+      "name": "testWhoxNoAccount",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/who.py::WhoInvisibleTestCase::testWhoInvisible",
+      "classname": "irctest.server_tests.who.WhoInvisibleTestCase",
+      "name": "testWhoInvisible",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/whois.py::WhoisTestCase::testWhoisUser[no-target]",
+      "classname": "irctest.server_tests.whois.WhoisTestCase",
+      "name": "testWhoisUser[no-target]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/whois.py::WhoisTestCase::testWhoisUser[target_server]",
+      "classname": "irctest.server_tests.whois.WhoisTestCase",
+      "name": "testWhoisUser[target_server]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/whois.py::WhoisTestCase::testWhoisUser[target-nick]",
+      "classname": "irctest.server_tests.whois.WhoisTestCase",
+      "name": "testWhoisUser[target-nick]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/whois.py::WhoisTestCase::testWhoisMissingUser",
+      "classname": "irctest.server_tests.whois.WhoisTestCase",
+      "name": "testWhoisMissingUser",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/whois.py::WhoisTestCase::testWhoisNumerics[normal]",
+      "classname": "irctest.server_tests.whois.WhoisTestCase",
+      "name": "testWhoisNumerics[normal]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/whois.py::WhoisTestCase::testWhoisNumerics[away]",
+      "classname": "irctest.server_tests.whois.WhoisTestCase",
+      "name": "testWhoisNumerics[away]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/whois.py::ServicesWhoisTestCase::testWhoisNumerics[normal]",
+      "classname": "irctest.server_tests.whois.ServicesWhoisTestCase",
+      "name": "testWhoisNumerics[normal]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/whois.py::ServicesWhoisTestCase::testWhoisNumerics[oper]",
+      "classname": "irctest.server_tests.whois.ServicesWhoisTestCase",
+      "name": "testWhoisNumerics[oper]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/whois.py::ServicesWhoisTestCase::testInvisibleWhois",
+      "classname": "irctest.server_tests.whois.ServicesWhoisTestCase",
+      "name": "testInvisibleWhois",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/whois.py::ServicesWhoisTestCase::testWhoisAccount",
+      "classname": "irctest.server_tests.whois.ServicesWhoisTestCase",
+      "name": "testWhoisAccount",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/whois.py::WhoisTestCase::testWhoisNumerics[oper]",
+      "classname": "irctest.server_tests.whois.WhoisTestCase",
+      "name": "testWhoisNumerics[oper]",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/whowas.py::WhowasTestCase::testWhowasNumerics",
+      "classname": "irctest.server_tests.whowas.WhowasTestCase",
+      "name": "testWhowasNumerics",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/whowas.py::WhowasTestCase::testWhowasEnd",
+      "classname": "irctest.server_tests.whowas.WhowasTestCase",
+      "name": "testWhowasEnd",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/whowas.py::WhowasTestCase::testWhowasMultiple",
+      "classname": "irctest.server_tests.whowas.WhowasTestCase",
+      "name": "testWhowasMultiple",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/whowas.py::WhowasTestCase::testWhowasCount1",
+      "classname": "irctest.server_tests.whowas.WhowasTestCase",
+      "name": "testWhowasCount1",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/whowas.py::WhowasTestCase::testWhowasCount2",
+      "classname": "irctest.server_tests.whowas.WhowasTestCase",
+      "name": "testWhowasCount2",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/whowas.py::WhowasTestCase::testWhowasCountZero",
+      "classname": "irctest.server_tests.whowas.WhowasTestCase",
+      "name": "testWhowasCountZero",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/whowas.py::WhowasTestCase::testWhowasCountNegative",
+      "classname": "irctest.server_tests.whowas.WhowasTestCase",
+      "name": "testWhowasCountNegative",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/whowas.py::WhowasTestCase::testWhowasNoSuchNick",
+      "classname": "irctest.server_tests.whowas.WhowasTestCase",
+      "name": "testWhowasNoSuchNick",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/whowas.py::WhowasTestCase::testWhowasNoParamModern",
+      "classname": "irctest.server_tests.whowas.WhowasTestCase",
+      "name": "testWhowasNoParamModern",
+      "status": "passed"
+    },
+    {
+      "nodeid": "irctest/server_tests/znc_playback.py::ZncPlaybackTestCase::testZncPlayback",
+      "classname": "irctest.server_tests.znc_playback.ZncPlaybackTestCase",
+      "name": "testZncPlayback",
+      "status": "passed"
+    }
+  ],
+  "deselectedNodeIds": [
+    "irctest/server_tests/chathistory.py::SableExpiringHistoryTestCase::testChathistoryExpired",
+    "irctest/server_tests/chathistory.py::SablePostgresqlHistoryTestCase::testChathistoryDMClientOnlyTags",
+    "irctest/server_tests/chathistory.py::SablePostgresqlHistoryTestCase::testChathistoryDMs[AFTER]",
+    "irctest/server_tests/chathistory.py::SablePostgresqlHistoryTestCase::testChathistoryDMs[AROUND]",
+    "irctest/server_tests/chathistory.py::SablePostgresqlHistoryTestCase::testChathistoryDMs[BEFORE]",
+    "irctest/server_tests/chathistory.py::SablePostgresqlHistoryTestCase::testChathistoryDMs[BETWEEN]",
+    "irctest/server_tests/chathistory.py::SablePostgresqlHistoryTestCase::testChathistoryDMs[LATEST]",
+    "irctest/server_tests/chathistory.py::SablePostgresqlHistoryTestCase::testChathistoryEventPlayback[AFTER]",
+    "irctest/server_tests/chathistory.py::SablePostgresqlHistoryTestCase::testChathistoryEventPlayback[AROUND]",
+    "irctest/server_tests/chathistory.py::SablePostgresqlHistoryTestCase::testChathistoryEventPlayback[BEFORE]",
+    "irctest/server_tests/chathistory.py::SablePostgresqlHistoryTestCase::testChathistoryEventPlayback[BETWEEN]",
+    "irctest/server_tests/chathistory.py::SablePostgresqlHistoryTestCase::testChathistoryEventPlayback[LATEST]",
+    "irctest/server_tests/chathistory.py::SablePostgresqlHistoryTestCase::testChathistoryNoEventPlayback",
+    "irctest/server_tests/chathistory.py::SablePostgresqlHistoryTestCase::testChathistoryTagmsg",
+    "irctest/server_tests/chathistory.py::SablePostgresqlHistoryTestCase::testChathistoryTargets",
+    "irctest/server_tests/chathistory.py::SablePostgresqlHistoryTestCase::testChathistoryTargetsExcludesUpdatedTargets",
+    "irctest/server_tests/chathistory.py::SablePostgresqlHistoryTestCase::testChathistory[AFTER]",
+    "irctest/server_tests/chathistory.py::SablePostgresqlHistoryTestCase::testChathistory[AROUND]",
+    "irctest/server_tests/chathistory.py::SablePostgresqlHistoryTestCase::testChathistory[BEFORE]",
+    "irctest/server_tests/chathistory.py::SablePostgresqlHistoryTestCase::testChathistory[BETWEEN]",
+    "irctest/server_tests/chathistory.py::SablePostgresqlHistoryTestCase::testChathistory[LATEST]",
+    "irctest/server_tests/chathistory.py::SablePostgresqlHistoryTestCase::testInvalidTargets",
+    "irctest/server_tests/chathistory.py::SablePostgresqlHistoryTestCase::testMessagesToSelf",
+    "irctest/server_tests/info.py::InfoTestCase::testInfoNosuchserver[invalid.server.example]",
+    "irctest/server_tests/info.py::InfoTestCase::testInfoNosuchserver[invalidserver]",
+    "irctest/server_tests/info.py::InfoTestCase::testInfoTarget[target-nick]",
+    "irctest/server_tests/info.py::InfoTestCase::testInfoTarget[target-server]",
+    "irctest/server_tests/info.py::InfoTestCase::testInfoTarget[target-wildcard]",
+    "irctest/server_tests/invite.py::InviteTestCase::testInviteNonExistingChannelEchoed",
+    "irctest/server_tests/invite.py::InviteTestCase::testInviteNonExistingChannelTransmitted",
+    "irctest/server_tests/metadata.py::MetadataDeprecatedTestCase::testGetOneUnsetValid",
+    "irctest/server_tests/metadata.py::MetadataDeprecatedTestCase::testGetTwoUnsetValid",
+    "irctest/server_tests/metadata.py::MetadataDeprecatedTestCase::testInIsupport",
+    "irctest/server_tests/metadata.py::MetadataDeprecatedTestCase::testListInvalidTarget",
+    "irctest/server_tests/metadata.py::MetadataDeprecatedTestCase::testListNoSet",
+    "irctest/server_tests/metadata.py::MetadataDeprecatedTestCase::testSetGetHeartInValue",
+    "irctest/server_tests/metadata.py::MetadataDeprecatedTestCase::testSetGetValid",
+    "irctest/server_tests/metadata.py::MetadataDeprecatedTestCase::testSetGetZeroCharInValue",
+    "irctest/server_tests/metadata.py::MetadataDeprecatedTestCase::testSetInvalidUtf8",
+    "irctest/server_tests/names.py::NamesTestCase::testNames1459",
+    "irctest/server_tests/names.py::NamesTestCase::testNamesMultipleChannels1459",
+    "irctest/server_tests/names.py::NamesTestCase::testNamesNoArgumentPrivate1459",
+    "irctest/server_tests/names.py::NamesTestCase::testNamesNoArgumentPrivate2812",
+    "irctest/server_tests/names.py::NamesTestCase::testNamesNoArgumentPublic1459",
+    "irctest/server_tests/names.py::NamesTestCase::testNamesNoArgumentPublic2812",
+    "irctest/server_tests/whowas.py::WhowasTestCase::testWhowasNoParamRfc",
+    "irctest/server_tests/whowas.py::WhowasTestCase::testWhowasWildcard"
+  ],
+  "rawArtifacts": {
+    "source12-irctest.log": {
+      "path": "/tmp/flarc-matrix-run_01d0e4aeb274/source12-irctest.log",
+      "sha256": "87aa60ba57ae11c6765c19262b6b995fe12febd41a7e022f700ccf3c0aca843a"
+    },
+    "source12-irctest.xml": {
+      "path": "/tmp/flarc-matrix-run_01d0e4aeb274/source12-irctest.xml",
+      "sha256": "c9ff251233750968bda09b055a6f6a77ebaef8bf14c8800898aeed54c5ac6f96"
+    },
+    "source12-irctest-exit.txt": {
+      "path": "/tmp/flarc-matrix-run_01d0e4aeb274/source12-irctest-exit.txt",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "source12-irctest-collect-all.log": {
+      "path": "/tmp/flarc-matrix-run_01d0e4aeb274/source12-irctest-collect-all.log",
+      "sha256": "ffea75d89a2aca3810ff51bf969c1c6b3a9150720a71db078786b7cc52f842c1"
+    },
+    "source12-irctest-collect-selected.log": {
+      "path": "/tmp/flarc-matrix-run_01d0e4aeb274/source12-irctest-collect-selected.log",
+      "sha256": "555608a2927186bd422db21475be86dceaba143afb6404223a9364334619f82b"
+    },
+    "source12-collect-all-exit.txt": {
+      "path": "/tmp/flarc-matrix-run_01d0e4aeb274/source12-collect-all-exit.txt",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "source12-collect-selected-exit.txt": {
+      "path": "/tmp/flarc-matrix-run_01d0e4aeb274/source12-collect-selected-exit.txt",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "conformance12-before-inputs.json": {
+      "path": "/tmp/flarc-matrix-run_01d0e4aeb274/conformance12-before-inputs.json",
+      "sha256": "2d29aca834e601b449c1ee66516e1f38b40bb6bfd7d068108bfa3decc041a4fa"
+    },
+    "conformance12-after-inputs.json": {
+      "path": "/tmp/flarc-matrix-run_01d0e4aeb274/conformance12-after-inputs.json",
+      "sha256": "2d29aca834e601b449c1ee66516e1f38b40bb6bfd7d068108bfa3decc041a4fa"
+    },
+    "conformance12-before-modules.json": {
+      "path": "/tmp/flarc-matrix-run_01d0e4aeb274/conformance12-before-modules.json",
+      "sha256": "1575540f1b0b84e3c69c1da28479b5bc69fd1555c00ac29159c3dde854bdb793"
+    },
+    "conformance12-after-modules.json": {
+      "path": "/tmp/flarc-matrix-run_01d0e4aeb274/conformance12-after-modules.json",
+      "sha256": "1575540f1b0b84e3c69c1da28479b5bc69fd1555c00ac29159c3dde854bdb793"
+    },
+    "bundle-12.json": {
+      "path": "/tmp/flarc-matrix-run_01d0e4aeb274/bundle-12.json",
+      "sha256": "f3bbd56fc538fd8d333997c3cde558303cff975db45d8e4c6ba5800c5da3cc04"
+    }
+  },
+  "scope": "One independent execution with the unchanged upstream selection and open-network fixture; collection-only invocations identify deselected cases. This does not establish account-required security coverage or deployed behavior."
+}

@@ -1,5 +1,7 @@
 # FlaRC threat model
 
+Current implementation and verification scope: [authorization matrix results](matrix-results.md), [event/recovery policy](event-stream-topology.md), [request-source policy](request-source-policy.md), and [deployment limits](../../deploy/README.md).
+
 Audit started 2026-11-11 against `a9db5e6760603453bed682509b90eff457ed8f23`. This is an engineering audit, not a certification.
 
 ## Assets and adversaries

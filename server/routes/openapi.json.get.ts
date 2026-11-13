@@ -5,11 +5,33 @@ import * as admin from "~/schemas/admin";
 import { LoginRequestSchema, RegisterRequestSchema } from "~/schemas/auth";
 import {
   AssignUserRoleSchema,
+  ChannelCreateSchema,
   ChannelInfoSchema,
   CreateRoleGroupSchema,
   UpdateChannelInfoSchema,
 } from "~/schemas/channels";
-import { RealtimeEventSchema } from "~/schemas/events";
+import {
+  ConversationCreateSchema,
+  ConversationEditSchema,
+  ConversationReadSchema,
+  ConversationRedactSchema,
+  ConversationSendSchema,
+  EventCommandSchema,
+  EventSubscriptionsSchema,
+  MetadataMutationSchema,
+  ProfileFeatureMutationSchema,
+} from "~/schemas/conversations";
+import {
+  EventStreamHelloSchema,
+  ReaderAckSchema,
+  ReaderChallengeSchema,
+} from "~/schemas/event-stream";
+import {
+  ChannelDeletedControlDataSchema,
+  ConversationMessageEventDataSchema,
+  RealtimeEventSchema,
+  RealtimePayloadSchemas,
+} from "~/schemas/events";
 import { EditMessageSchema, SendMessageSchema } from "~/schemas/messages";
 import { WebPushSubscribeSchema } from "~/schemas/notifications";
 import { UserProfileInputSchema, UserProfileSchema } from "~/schemas/profiles";
@@ -23,6 +45,7 @@ export function generateOpenAPISpec() {
   const boolean = { type: "boolean" };
   const nullableString = { type: ["string", "null"] };
   const nullableNumber = { type: ["number", "null"] };
+  const epochMilliseconds = { type: "integer", description: "Unix epoch milliseconds" };
   const ref = (name: string) => ({ $ref: `#/components/schemas/${name}` });
   const array = (items: any) => ({ type: "array", items });
   const object = (properties: Record<string, any>, required = Object.keys(properties)) => ({
@@ -58,6 +81,7 @@ export function generateOpenAPISpec() {
     response: any,
     options: {
       body?: any;
+      bodyRequired?: boolean;
       status?: number;
       parameters?: any[];
       description?: string;
@@ -76,12 +100,22 @@ export function generateOpenAPISpec() {
       tags: [options.tag ?? "Client"],
       ...(options.description ? { description: options.description } : {}),
       ...(parameters.length ? { parameters } : {}),
-      ...(options.body ? { requestBody: { required: true, content: json(options.body) } } : {}),
+      ...(options.body
+        ? { requestBody: { required: options.bodyRequired ?? true, content: json(options.body) } }
+        : {}),
       ...(options.public
         ? { security: [] }
         : options.security
           ? { security: options.security }
-          : {}),
+          : {
+              security: [
+                { SessionToken: [] },
+                {
+                  CookieSession: [],
+                  ...(!["get", "head", "options"].includes(method) ? { CsrfToken: [] } : {}),
+                },
+              ],
+            }),
       responses: {
         [String(options.status ?? 200)]: { description: "Success", content: json(response) },
         "400": { description: "Invalid input or policy denied", content: json(ref("Error")) },
@@ -98,13 +132,25 @@ export function generateOpenAPISpec() {
           description: "Resource not found or private media not authorized",
           content: json(ref("Error")),
         },
-        "413": { description: "Body exceeds 64 KiB JSON / 10 MiB media limit" },
+        "409": {
+          description: "Resource generation, revision or operation identity conflict",
+          content: json(ref("Error")),
+        },
+        "413": {
+          description:
+            "Body exceeds the configured limit: JSON defaults to 64 KiB; media defaults to 10 MiB and uses FILEHOST_MAX_UPLOAD_BYTES",
+        },
         "429": { description: "Request budget exceeded" },
       },
     };
   };
   schemas.Error = object(
-    { statusCode: integer, statusMessage: string, message: string, data: {} },
+    {
+      statusCode: integer,
+      statusMessage: string,
+      message: string,
+      data: object({ code: string, message: string, resync: boolean }, []),
+    },
     [],
   );
   schemas.Ok = ok();
@@ -125,6 +171,19 @@ export function generateOpenAPISpec() {
     has_more: boolean,
     oldest_id: nullableString,
     newest_id: nullableString,
+  });
+  schemas.CredentialScope = {
+    ...object({ operation: string, resource: string }),
+    additionalProperties: false,
+  };
+  schemas.AccountSession = object({
+    id: { type: "string", format: "uuid" },
+    createdAt: epochMilliseconds,
+    expiresAt: epochMilliseconds,
+    current: boolean,
+    kind: { type: "string", enum: ["session", "integration"] },
+    label: nullableString,
+    scopes: array(ref("CredentialScope")),
   });
   schemas.Message = object(
     {
@@ -188,6 +247,7 @@ export function generateOpenAPISpec() {
   schemas.Role = object({
     id: string,
     name: string,
+    parentId: { type: ["string", "null"], format: "uuid" },
     color: nullableString,
     ircMode: nullableString,
     ircPrefix: nullableString,
@@ -223,6 +283,46 @@ export function generateOpenAPISpec() {
   runtimeSchema("Profile", UserProfileSchema, false);
   runtimeSchema("Channel", ChannelInfoSchema, false);
   runtimeSchema("RealtimeEvent", RealtimeEventSchema, false);
+  // Zod superRefine validates runtime payloads but does not express a JSON
+  // Schema discriminator. Publish the same named payload registry explicitly.
+  const eventEnvelope = schemas.RealtimeEvent;
+  schemas.RealtimeEvent = {
+    oneOf: (eventEnvelope.properties.type.enum as string[]).map((type) => {
+      const payload =
+        RealtimePayloadSchemas[type] ??
+        (type === "channel.deleted" ? ChannelDeletedControlDataSchema : undefined);
+      const payloadName = `EventData_${type.replaceAll(".", "_")}`;
+      return {
+        ...eventEnvelope,
+        properties: {
+          ...eventEnvelope.properties,
+          type: { type: "string", const: type },
+          data: payload
+            ? runtimeSchema(payloadName, payload, false)
+            : {
+                type: "object",
+                additionalProperties: true,
+                description:
+                  "Legacy event kind without a current typed producer contract; do not infer fields.",
+              },
+        },
+      };
+    }),
+  };
+  runtimeSchema("EventCommand", EventCommandSchema);
+  runtimeSchema("EventStreamHello", EventStreamHelloSchema, false);
+  runtimeSchema("ReaderChallenge", ReaderChallengeSchema, false);
+  runtimeSchema("ReaderAck", ReaderAckSchema);
+  runtimeSchema("EventSubscriptions", EventSubscriptionsSchema);
+  runtimeSchema("ConversationMessage", ConversationMessageEventDataSchema, false);
+  schemas.Conversation = object({
+    id: { type: "string", format: "uuid" },
+    kind: { type: "string", const: "direct" },
+    participantIds: array({ type: "string", format: "uuid" }),
+    revision: integer,
+    createdAt: epochMilliseconds,
+    unread: integer,
+  });
   const historyParameters = [
     parameter("limit", "query", { type: "integer", minimum: 1, maximum: 100, default: 50 }),
     parameter("before", "query", string, "Message ID or timestamp, within this conversation"),
@@ -294,16 +394,73 @@ export function generateOpenAPISpec() {
     "/api/v1/auth/login",
     "post",
     "Authenticate and create an expiring API session",
-    ok({ account: ref("Account"), token: string, expiresAt: number }),
+    {
+      oneOf: [
+        ok({ account: ref("Account"), token: string, expiresAt: epochMilliseconds }),
+        ok({ account: ref("Account"), csrfToken: string, expiresAt: epochMilliseconds }),
+      ],
+    },
     {
       public: true,
       tag: "Auth",
       body: runtimeSchema("LoginRequest", LoginRequestSchema),
+      parameters: [
+        parameter(
+          "X-FlaRC-Session",
+          "header",
+          { type: "string", enum: ["cookie"] },
+          "Opt in to the secure HttpOnly cookie; omit for a bearer token",
+        ),
+        parameter(
+          "Origin",
+          "header",
+          string,
+          "Required and checked against configured origins for cookie login",
+        ),
+      ],
       description:
-        "Returns a random 256-bit bearer token, expiring after 24 hours. Up to 20 sessions per account. Tokens are stored as hashes; password reset, disable/delete, and logout revoke access. Invalid credentials return 401.",
+        "Returns a random 256-bit bearer token, expiring after 24 hours. Up to 20 sessions per account. Tokens are stored as hashes; password reset, disable/delete, and logout revoke access. Invalid credentials return 401. With X-FlaRC-Session: cookie and an allowed Origin, sets __Host-flarc_session (Secure, HttpOnly, SameSite=Strict, Path=/) and returns csrfToken instead of token. Subsequent cookie mutations require an allowed Origin and the session-bound X-CSRF-Token. Bearer requests do not use CSRF tokens.",
     },
   );
   paths["/api/v1/auth/login"].post.responses["401"] = { description: "Invalid credentials" };
+  paths["/api/v1/auth/login"].post.responses["403"] = { description: "Cookie login Origin denied" };
+  operation(
+    "/api/v1/auth/sessions",
+    "get",
+    "List your active sessions and integration credentials",
+    ok({ sessions: array(ref("AccountSession")) }),
+    { tag: "Auth" },
+  );
+  operation(
+    "/api/v1/auth/sessions/{id}",
+    "delete",
+    "Revoke one of your sessions or integration credentials",
+    ref("Ok"),
+    {
+      tag: "Auth",
+      description:
+        "Uses the opaque id from the session directory. Other accounts' sessions are forbidden. Revocation preserves unrelated sessions and independently password-authenticated IRC devices.",
+    },
+  );
+  operation(
+    "/api/v1/auth/credentials",
+    "post",
+    "Issue an expiring integration credential with explicit scopes",
+    ok({ credential: object({ id: string, token: string, expiresAt: epochMilliseconds }) }),
+    {
+      tag: "Auth",
+      body: {
+        ...object({
+          label: { type: "string", minLength: 1, maxLength: 64 },
+          expiresAt: { ...epochMilliseconds, minimum: 1 },
+          scopes: { ...array(ref("CredentialScope")), minItems: 1, maxItems: 32 },
+        }),
+        additionalProperties: false,
+      },
+      description:
+        "The secret token is returned once. Effective permission is the intersection of current account authority, credential scopes, REST operation/path scope and owning-object scope. A scoped credential cannot delegate broader authority. Revoke using DELETE /api/v1/auth/sessions/{id}.",
+    },
+  );
   operation("/api/v1/auth/logout", "post", "Revoke the current API session", ref("Ok"), {
     tag: "Auth",
   });
@@ -323,6 +480,12 @@ export function generateOpenAPISpec() {
     security: [{ SessionToken: [] }, { EventTicket: [] }],
     parameters: [
       parameter(
+        "Sec-WebSocket-Protocol",
+        "header",
+        { type: "string", enum: ["flarc.events.v2"] },
+        "Negotiate version 2 for sustained streaming with reader.challenge/reader.ack flow control",
+      ),
+      parameter(
         "ticket",
         "query",
         string,
@@ -330,10 +493,13 @@ export function generateOpenAPISpec() {
       ),
     ],
     description:
-      "Upgrade: websocket required (426 otherwise). Non-browser clients may send Authorization: Bearer. Browser clients use a short-lived ticket. Each event rechecks session validity and channel permissions, including bans and archived channels. Events are transient; reconnect through persisted history rather than an event-replay cursor. Per-account subscription limit: 5. Cross-origin browsers require ALLOWED_ORIGINS.",
+      "Upgrade: websocket required (426 otherwise). Non-browser clients may send Authorization: Bearer; browser clients use a short-lived ticket. Send EventCommand subscribe/replay/bootstrap/mutate frames. Durable replay uses account-bound cursors with original-audience and current-authority checks; CURSOR_EXPIRED requires bootstrap/resync. Legacy automatic public observation grants no historical replay rights. Results use type=result/requestId/result; errors use type=error/requestId/status/code/message/resync. Negotiate flarc.events.v2, accept EventStreamHello, and answer each ReaderChallenge exactly once with ReaderAck after reading its preceding frames. Outstanding output is bounded to 262144 encoded bytes, 1024 frames and 30 seconds; invalid or expired ACKs close with code 1008. Version 1 receives explicit resync.required/READER_ACK_REQUIRED and closes when acknowledgment is required. The five-connections/account and 2000-connections/network limits are enforced across all server-selected shards. Caller account/shard selectors are forbidden. Cross-origin browsers require ALLOWED_ORIGINS.",
   });
   paths["/api/v1/events"].get.responses = {
-    "101": { description: "WebSocket upgraded; frames conform to RealtimeEvent" },
+    "101": {
+      description:
+        "WebSocket upgraded; server frames contain RealtimeEvent payloads or command result/error control envelopes",
+    },
     "401": { description: "Invalid session/ticket" },
     "403": { description: "Origin denied" },
     "426": { description: "WebSocket upgrade required" },
@@ -342,10 +508,261 @@ export function generateOpenAPISpec() {
   const profilePath = "/api/v1/profiles/{username}";
   operation(profilePath, "get", "Read a registered profile", ok({ profile: ref("Profile") }));
   operation(profilePath, "patch", "Update your own profile", ok({ profile: ref("Profile") }), {
-    body: runtimeSchema("UpdateProfile", UserProfileInputSchema),
+    body: runtimeSchema("UpdateProfile", ProfileFeatureMutationSchema),
     description:
-      "The authenticated account must own this profile; the client API does not grant an administrator override.",
+      "The authenticated account must own this profile; the client API does not grant an administrator override. Optional expectedRevision rejects stale updates with 409, and clientOperationId makes retries idempotent. Null clears a field. Persisted changes publish to authorized IRC and event observers.",
   });
+  const conversationPath = "/api/v1/conversations/{conversation}";
+  const conversationPolicy =
+    "Requires current immutable account participation; administrator role alone grants no access. URL IDs select resources, never the authenticated sender. Optional senderId and recipientId selectors must be participants. clientOperationId uses epoch milliseconds followed by a dot and UUID, with a 24-hour retry window and five-minute future skew allowance. Identical retries return the original result; conflicting payloads return 409.";
+  const conversationQuery = [
+    parameter("senderId", "query", { type: "string", format: "uuid" }),
+    parameter("recipientId", "query", { type: "string", format: "uuid" }),
+  ];
+  operation(
+    "/api/v1/conversations",
+    "get",
+    "List your direct conversations",
+    ok({ conversations: array(ref("Conversation")), nextConversationId: nullableString }),
+    {
+      parameters: [
+        parameter("limit", "query", { type: "integer", minimum: 1, maximum: 100, default: 50 }),
+        parameter("after", "query", { type: "string", format: "uuid" }),
+      ],
+      description:
+        "Sorted by creation time and immutable ID. The after cursor must identify your own conversation. Continue with nextConversationId until null. Joined channels are returned separately by event bootstrap.",
+    },
+  );
+  operation(
+    "/api/v1/conversations",
+    "post",
+    "Resolve or create a direct conversation with an account",
+    ok({ conversation: ref("Conversation") }),
+    {
+      body: runtimeSchema("CreateConversation", ConversationCreateSchema),
+      description: conversationPolicy,
+    },
+  );
+  operation(
+    conversationPath,
+    "get",
+    "Read an authorized conversation",
+    ok({ conversation: ref("Conversation"), unread: integer }),
+    { parameters: conversationQuery, description: conversationPolicy },
+  );
+  operation(
+    `${conversationPath}/messages`,
+    "get",
+    "Read participant-only canonical message history",
+    ok({ messages: array(ref("ConversationMessage")), hasMore: boolean }),
+    {
+      parameters: [
+        ...conversationQuery,
+        parameter("limit", "query", { type: "integer", minimum: 1, maximum: 100, default: 50 }),
+        parameter("before"),
+        parameter("after"),
+      ],
+      description:
+        conversationPolicy +
+        " before/after are message IDs in this conversation. Expired or absent references return a safe error. Messages are returned chronologically within the selected window. Redacted bodies are null; hasMore means another row matches the selected boundaries, not separate older/newer flags.",
+    },
+  );
+  operation(
+    `${conversationPath}/messages`,
+    "post",
+    "Send a durable direct message",
+    ok({ message: ref("ConversationMessage") }),
+    {
+      body: runtimeSchema(
+        "SendConversationMessage",
+        ConversationSendSchema.omit({ conversationId: true }),
+      ),
+      description: conversationPolicy,
+    },
+  );
+  operation(
+    `${conversationPath}/messages/{message}`,
+    "get",
+    "Read a participant-only message by ID",
+    ok({ message: ref("ConversationMessage") }),
+    { parameters: conversationQuery, description: conversationPolicy },
+  );
+  operation(
+    `${conversationPath}/messages/{message}`,
+    "patch",
+    "Edit your own direct message at its current revision",
+    ok({ message: ref("ConversationMessage") }),
+    {
+      body: runtimeSchema(
+        "EditConversationMessage",
+        ConversationEditSchema.omit({ conversationId: true, messageId: true }),
+      ),
+      description: conversationPolicy,
+    },
+  );
+  operation(
+    `${conversationPath}/messages/{message}`,
+    "delete",
+    "Redact your own direct message at its current revision",
+    ok({ message: ref("ConversationMessage") }),
+    {
+      body: runtimeSchema(
+        "RedactConversationMessage",
+        ConversationRedactSchema.omit({ conversationId: true, messageId: true }),
+      ),
+      description: conversationPolicy,
+    },
+  );
+  operation(
+    `${conversationPath}/read`,
+    "post",
+    "Advance your durable read marker and notify your other clients",
+    ok({ conversationId: string, messageId: string, unread: integer }),
+    {
+      body: runtimeSchema(
+        "ReadConversation",
+        ConversationReadSchema.omit({ conversationId: true }),
+      ),
+      description: conversationPolicy,
+    },
+  );
+  operation(
+    `${conversationPath}/unread`,
+    "get",
+    "Read your conversation unread count",
+    ok({ conversationId: string, unread: integer }),
+    { parameters: conversationQuery, description: conversationPolicy },
+  );
+  operation(
+    `${conversationPath}/attachments`,
+    "get",
+    "List attachment metadata visible to a conversation participant",
+    ok({
+      attachments: array(
+        object({
+          id: string,
+          filename: string,
+          mimeType: string,
+          size: integer,
+          createdAt: epochMilliseconds,
+        }),
+      ),
+    }),
+    { parameters: conversationQuery, description: conversationPolicy },
+  );
+  operation(
+    "/api/v1/dms/messages/{message}",
+    "get",
+    "Look up a direct message using authenticated participation",
+    ok({ message: ref("ConversationMessage") }),
+    { description: conversationPolicy },
+  );
+  const metadataPath = "/api/v1/metadata/{target}";
+  operation(
+    metadataPath,
+    "get",
+    "Read visible account metadata",
+    ok({ metadata: { type: "object", additionalProperties: nullableString }, revision: integer }),
+    {
+      description:
+        "Public custom metadata is visible to authenticated accounts. Keys prefixed private: are owner-only and require the credential's private-metadata scope. Administrator status does not grant private metadata publication.",
+    },
+  );
+  operation(
+    metadataPath,
+    "patch",
+    "Update or clear your own metadata with optional revision protection",
+    ok({
+      result: object({ key: string, value: nullableString, username: string }),
+      revision: integer,
+      replayed: boolean,
+    }),
+    {
+      body: runtimeSchema("UpdateMetadata", MetadataMutationSchema.omit({ target: true })),
+      description:
+        "value=null clears the key. expectedRevision conflicts return 409. Public and owner-only private: updates are delivered through separate authorized event audiences.",
+    },
+  );
+  operation(
+    "/api/v1/events/replay",
+    "get",
+    "Replay currently authorized durable changes after your cursor",
+    ok({
+      events: array({ allOf: [ref("RealtimeEvent"), object({ cursor: string })] }),
+      cursor: string,
+      caughtUp: boolean,
+      readOnly: { type: "boolean", const: true },
+    }),
+    {
+      tag: "Events",
+      parameters: [
+        { ...parameter("cursor"), required: true },
+        parameter("limit", "query", { type: "integer", minimum: 1, maximum: 100, default: 100 }),
+      ],
+      description:
+        "Cursors belong to an immutable account and grant no permissions. Replay checks original audience and current credentials, channel generation, participation and message redaction/expiry. A 410 CURSOR_EXPIRED requires bootstrap/resync. Replay never repeats mutations; de-duplicate eventId. An empty page may still advance cursor while filtering inaccessible events.",
+    },
+  );
+  paths["/api/v1/events/replay"].get.responses["410"] = {
+    description: "CURSOR_EXPIRED: obtain a new bootstrap snapshot and reconcile state",
+    content: json(ref("Error")),
+  };
+  operation(
+    "/api/v1/events/bootstrap",
+    "get",
+    "Read an initial account snapshot and recovery cursor",
+    ok({
+      cursor: string,
+      conversations: array(ref("Conversation")),
+      nextConversationId: nullableString,
+      channelsComplete: boolean,
+      nextPageToken: { type: ["string", "null"], pattern: "^[0-9a-f]{64}$" },
+      channels: array(
+        object({
+          channel: string,
+          generation: { type: "string", format: "uuid" },
+          canRead: boolean,
+          canWrite: boolean,
+          isMember: boolean,
+          memberModes: string,
+          revision: integer,
+          info: ref("Channel"),
+          history: { anyOf: [array(ref("Message")), { type: "null" }] },
+          readMarker: nullableString,
+          eventBoundary: object({
+            kind: { type: "string", const: "membership" },
+            generation: string,
+            revision: integer,
+          }),
+        }),
+      ),
+      profile: { anyOf: [ref("Profile"), { type: "null" }] },
+      recovery: object({
+        mode: { type: "string", const: "cursor-before-snapshot" },
+        interestBoundary: string,
+        replayFrom: string,
+        deduplicateBy: array(string),
+        crossObjectAtomic: { type: "boolean", const: false },
+      }),
+    }),
+    {
+      tag: "Events",
+      parameters: [
+        parameter(
+          "pageToken",
+          "query",
+          { type: "string", pattern: "^[0-9a-f]{64}$" },
+          "Opaque account-bound continuation token from nextPageToken; never a channel name",
+        ),
+      ],
+      description:
+        "The initial recovery cursor precedes resource snapshot reads and is preserved across pages. Replay from it and de-duplicate event IDs, message IDs and resource revisions. Only currently authorized joined/persistent-membership channels are returned; bootstrap consumes no public-observer slots. Follow nextPageToken until channelsComplete; a page may contain no visible channels while scanning a bounded portion of the directory. Tokens are opaque, account-bound, capped at 64 per account and expire within 15 minutes or with the original recovery cursor, whichever is earlier. Foreign tokens return 403; expired tokens return 410 and require bootstrap/resync. Channel snapshots include metadata, recent history and read markers. This is not an atomic transaction across Durable Objects. Continue the conversation directory separately with nextConversationId.",
+    },
+  );
+  paths["/api/v1/events/bootstrap"].get.responses["410"] = {
+    description: "Bootstrap page or original recovery cursor expired; restart bootstrap/resync",
+    content: json(ref("Error")),
+  };
   operation(
     "/api/v1/channels",
     "get",
@@ -358,7 +775,111 @@ export function generateOpenAPISpec() {
   );
   const channel = "/api/v1/channels/{channel}";
   const channelPolicy =
-    "Pass the IRC channel name URL-encoded, e.g. %23general. Public history requires authentication. Secret/private/invite-only/keyed channels require authorized membership or a persistent founder grant; bans deny ordinary reads. Members can read retained history predating their join. Archived channel names remain reserved to protect retained data.";
+    "Pass the IRC channel name URL-encoded, e.g. %23general. Public history requires authentication. Secret/private/invite-only/keyed channels require authorized membership or a persistent founder grant; bans deny ordinary reads. Members can read retained history predating their join. Re-created channels receive a fresh generation; retained archives and old permissions remain inaccessible to the new generation. Legacy archives with residual active state cannot be reused. Restricted STATUSMSG/+U message bodies are excluded from general CHATHISTORY and REST history; eligible recipients can recover them through the authorized event journal within its retention window.";
+  const channelGeneration = { type: "string", format: "uuid" };
+  const lifecycleResult = ok({ channel: string, generation: channelGeneration });
+  operation(
+    "/api/v1/channels",
+    "post",
+    "Create a channel with atomic privacy settings and founder",
+    lifecycleResult,
+    {
+      body: runtimeSchema("CreateChannel", ChannelCreateSchema),
+      status: 201,
+      description:
+        "Requires an authenticated account. Defaults to secret. Founder, settings and persistent account membership commit together. An existing name, pending retirement or unsafe legacy archive returns 409; no temporary public channel is created.",
+    },
+  );
+  operation(
+    `${channel}/join`,
+    "post",
+    "Join with the same key, invite and ban policy as IRC",
+    lifecycleResult,
+    {
+      body: {
+        ...object({ key: { type: "string", maxLength: 128 } }, []),
+        additionalProperties: false,
+      },
+      bodyRequired: false,
+      description:
+        "Creates account membership without requiring an IRC socket and reconciles active devices. Channel keys are not included in the response.",
+    },
+  );
+  operation(
+    `${channel}/leave`,
+    "post",
+    "Leave the channel across the account's memberships",
+    lifecycleResult,
+  );
+  operation(
+    `${channel}/members`,
+    "get",
+    "List members of an authorized channel",
+    ok({
+      channel: string,
+      generation: channelGeneration,
+      members: array(
+        object({ userId: string, username: string, origins: array(string), modes: string }),
+      ),
+    }),
+  );
+  const invitationResult = ok({ channel: string, generation: channelGeneration, username: string });
+  operation(
+    `${channel}/invites`,
+    "post",
+    "Invite an account using current channel permissions",
+    invitationResult,
+    {
+      body: {
+        ...object({ username: { type: "string", minLength: 1, maxLength: 128 } }),
+        additionalProperties: false,
+      },
+    },
+  );
+  operation(
+    `${channel}/invites/{username}`,
+    "delete",
+    "Revoke a channel invitation",
+    invitationResult,
+  );
+  operation(channel, "delete", "Retire a channel as its founder", lifecycleResult, {
+    body: { ...object({ purge: boolean }, []), additionalProperties: false },
+    bodyRequired: false,
+    description:
+      "Retains the old generation's history in an inaccessible archive unless purge is explicitly true. Revokes current memberships, roles, invitations, webhooks and event observers. The returned generation identifies the retirement tombstone; a later creation receives another fresh generation.",
+  });
+  operation(
+    `${channel}/messages/bulk-redact`,
+    "post",
+    "Atomically redact authorized messages in one channel",
+    ok({
+      ids: array({ type: "string", format: "uuid" }),
+      operationId: string,
+      generation: channelGeneration,
+      replayed: boolean,
+    }),
+    {
+      body: {
+        ...object({
+          ids: {
+            type: "array",
+            items: { type: "string", format: "uuid" },
+            minItems: 1,
+            maxItems: 50,
+            uniqueItems: true,
+          },
+          operationId: {
+            type: "string",
+            pattern:
+              "^\\d{13}\\.[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+          },
+        }),
+        additionalProperties: false,
+      },
+      description:
+        "Checks permission for every target before modifying any message. operationId is Unix epoch milliseconds followed by a dot and UUID, valid for 24 hours with at most five minutes of future clock skew. Identical retries return the stored result; a conflicting payload returns 409. A denied target leaves the whole batch unchanged.",
+    },
+  );
   operation(
     `${channel}/info`,
     "get",
@@ -626,7 +1147,7 @@ export function generateOpenAPISpec() {
         parameter("X-Filename", "header"),
       ],
       description:
-        "No scope means uploader-only. Requires a logged-in API session; nickname/Basic headers do not authenticate. Maximum 10 MiB request and 100 MiB stored per account. R2 is private and accessed only after persisted scope checks. Unowned legacy files are quarantined.",
+        "No scope means uploader-only. Requires a logged-in API session; nickname/Basic headers do not authenticate. The file limit defaults to 10 MiB and is configurable with FILEHOST_MAX_UPLOAD_BYTES; multipart framing has a separate 64 KiB allowance. Stored quota is 100 MiB per account. R2 is private and accessed only after persisted scope checks. Unowned legacy files are quarantined.",
     },
   );
   paths["/api/v1/media/upload"].post.requestBody = {
@@ -750,6 +1271,41 @@ export function generateOpenAPISpec() {
     ref("Ok"),
   );
 
+  operation(
+    "/api/v1/media",
+    "get",
+    "List authorized private media or your pending uploads",
+    ok({
+      items: array({
+        oneOf: [
+          object({
+            id: string,
+            filename: string,
+            mimeType: string,
+            size: integer,
+            createdAt: epochMilliseconds,
+          }),
+          object({
+            id: string,
+            filename: string,
+            size: integer,
+            createdAt: epochMilliseconds,
+            leaseUntil: epochMilliseconds,
+          }),
+        ],
+      }),
+    }),
+    {
+      tag: "Media",
+      parameters: [
+        parameter("channel"),
+        parameter("dm"),
+        parameter("pending", "query", { type: "string", enum: ["1"] }),
+      ],
+      description:
+        "Choose at most one of channel, dm or pending=1. With no selector, lists your private uploads. Channel authority and immutable DM participation are checked before returning metadata. Pending uploads are owner-only; DELETE /api/v1/media/{id} also cancels a pending upload. At most 100 items are returned.",
+    },
+  );
   const adminResult = object(
     {
       ok: boolean,
@@ -1021,6 +1577,89 @@ export function generateOpenAPISpec() {
       ],
     );
   }
+  const adminScopes = ok({ restricted: boolean, scopes: array(ref("CredentialScope")) });
+  adminOperations.push(
+    [
+      "/accounts/{username}/scopes",
+      "get",
+      "Read configured administrator scope restrictions",
+      undefined,
+      adminScopes,
+    ],
+    [
+      "/accounts/{username}/scopes",
+      "put",
+      "Replace administrator scope grants within your authority",
+      admin.adminBodySchema("/accounts/{username}/scopes", "PUT"),
+      ref("Ok"),
+    ],
+    [
+      "/accounts/{username}/sessions",
+      "get",
+      "List a permitted account's active sessions",
+      undefined,
+      ok({ sessions: array(ref("AccountSession")) }),
+    ],
+    [
+      "/accounts/{username}/sessions/{id}",
+      "delete",
+      "Revoke a permitted account's session or bot credential",
+      undefined,
+      ref("Ok"),
+    ],
+    [
+      "/bans",
+      "get",
+      "List network account and trusted-hostmask bans",
+      undefined,
+      ok({
+        bans: array(
+          object({
+            id: string,
+            kind: { type: "string", enum: ["account", "hostmask"] },
+            value: string,
+            created_by: string,
+            created_at: epochMilliseconds,
+            expires_at: { ...epochMilliseconds, type: ["integer", "null"] },
+          }),
+        ),
+      }),
+    ],
+    [
+      "/bans",
+      "post",
+      "Create a network ban within your configured scope",
+      admin.adminBodySchema("/bans", "POST"),
+      ok({
+        ban: object({
+          id: string,
+          kind: { type: "string", enum: ["account", "hostmask"] },
+          value: string,
+          expiresAt: { ...epochMilliseconds, type: ["integer", "null"] },
+        }),
+      }),
+    ],
+    ["/bans/{id}", "delete", "Remove a permitted network ban", undefined, ref("Ok")],
+    [
+      "/audit",
+      "get",
+      "Read sanitized administrator and service audit records",
+      undefined,
+      ok({
+        records: array(
+          object({
+            id: string,
+            actor_id: nullableString,
+            action: string,
+            target: string,
+            outcome: { type: "string", enum: ["allowed", "denied", "error"] },
+            transport: string,
+            created_at: epochMilliseconds,
+          }),
+        ),
+      }),
+    ],
+  );
   for (const [suffix, method, summary, body, response] of adminOperations) {
     const bodySchema = body
       ? runtimeSchema(`Admin_${method}_${suffix.replace(/[^a-zA-Z]/g, "_")}`, body)
@@ -1029,7 +1668,19 @@ export function generateOpenAPISpec() {
       body: bodySchema,
       tag: "Administration",
       description:
-        "Requires the current administrator role in addition to a logged-in account session. Static admin secrets, Basic authentication and user headers do not authorize this API. Request bodies are validated before optional-body defaults are applied.",
+        "Requires the current administrator role and configured account/credential scope for this operation and target. Static admin secrets, Basic authentication and user headers do not authorize this API. Request bodies are validated before optional-body defaults are applied. Audit collection is off by default; AUDIT_LOG_ENABLED=true enables sanitized actor/action/target/outcome records. Network administrator status does not grant private conversation participation.",
+      ...(suffix === "/audit"
+        ? {
+            parameters: [
+              parameter("limit", "query", {
+                type: "integer",
+                minimum: 1,
+                maximum: 500,
+                default: 100,
+              }),
+            ],
+          }
+        : {}),
       status: suffix === "/accounts" && method === "post" ? 201 : 200,
     });
     paths[`/admin${suffix}`] = paths[`/api/v1/admin${suffix}`];
@@ -1037,6 +1688,7 @@ export function generateOpenAPISpec() {
   paths["/api/v1/admin/accounts/register"] = { post: paths["/api/v1/admin/accounts"].post };
   paths["/admin/accounts/register"] = { post: paths["/admin/accounts"].post };
   const aliases: Record<string, string> = {
+    "/api/events": "/api/v1/events",
     "/api/accounts/register": "/api/v1/auth/register",
     "/api/profile/{username}": profilePath,
     "/api/channels/{channel}/info": `${channel}/info`,
@@ -1051,6 +1703,13 @@ export function generateOpenAPISpec() {
     "/api/v1/webhooks/{id}/{token}": "/api/v1/webhooks/{token}",
     "/api/webhooks/{id}/{token}": "/api/v1/webhooks/{token}",
   };
+  for (const path of Object.keys(paths))
+    if (
+      /^\/api\/v1\/(conversations(?:\/|$)|dms\/messages\/|metadata\/|events\/(replay|bootstrap)$)/.test(
+        path,
+      )
+    )
+      aliases[path.replace("/api/v1/", "/api/")] = path;
   for (const [alias, target] of Object.entries(aliases)) {
     paths[alias] = structuredClone(paths[target]);
     for (const value of Object.values(paths[alias]) as any[]) {
@@ -1069,6 +1728,23 @@ export function generateOpenAPISpec() {
       },
     },
   };
+  // Path-derived IDs are stable across unrelated route additions. Clone aliases
+  // before assigning IDs: several legacy paths deliberately share a handler.
+  const operationIds = new Set<string>();
+  for (const [path, item] of Object.entries(paths)) {
+    paths[path] = structuredClone(item);
+    for (const [method, value] of Object.entries(paths[path]) as [string, any][]) {
+      if (!["get", "post", "put", "patch", "delete", "head", "options"].includes(method)) continue;
+      const operationId = `${method}_${path
+        .replace(/\{([^}]+)\}/g, "by_$1")
+        .replace(/[^a-zA-Z0-9]+/g, "_")
+        .replace(/^_|_$/g, "")}`;
+      if (operationIds.has(operationId))
+        throw new Error(`Duplicate API operationId: ${operationId}`);
+      operationIds.add(operationId);
+      value.operationId = operationId;
+    }
+  }
   return {
     openapi: "3.1.0",
     info: {
@@ -1086,6 +1762,20 @@ export function generateOpenAPISpec() {
           type: "http",
           scheme: "bearer",
           bearerFormat: "opaque 256-bit API session",
+        },
+        CookieSession: {
+          type: "apiKey",
+          in: "cookie",
+          name: "__Host-flarc_session",
+          description:
+            "Opt-in secure HttpOnly session. Mutations require an allowed Origin and session-bound CSRF header.",
+        },
+        CsrfToken: {
+          type: "apiKey",
+          in: "header",
+          name: "X-CSRF-Token",
+          description:
+            "Session-bound token returned by cookie login; required only for cookie-authenticated mutations, together with an allowed Origin.",
         },
         EventTicket: {
           type: "apiKey",

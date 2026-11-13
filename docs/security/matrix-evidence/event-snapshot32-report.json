@@ -1,0 +1,452 @@
+{
+  "createdAt": "2026-11-13T11:34:27.436749+00:00",
+  "outcome": "narrow production correction verified in six requested focused cases on root-built frozen32; no full suite/build/irctest run by this worker",
+  "sourceCheckpoint": {
+    "server/durable-objects/channel.ts": "e02396c38f08d643b642289614d82e0d0da0557295098e9ed508a6ad7fcf63a2",
+    "server/features/session/bridge.ts": "11097426c89764129f2d9773db4fd9df940272f91592b56956edeb848843f385",
+    "server/features/operations.ts": "7246b279e2bead7153c1ded61d09683ea6560c7dfc67867bd04798a2ed8de391",
+    "tests/features/event-snapshot-race.test.ts": "1a2313ccb49a14c5ee5be756aa7b3e338f56f58806114ea6720d23f4d1fff276"
+  },
+  "productionParityWithRootFrozen32": {
+    "server/durable-objects/channel.ts": {
+      "current": "e02396c38f08d643b642289614d82e0d0da0557295098e9ed508a6ad7fcf63a2",
+      "frozen32": "e02396c38f08d643b642289614d82e0d0da0557295098e9ed508a6ad7fcf63a2"
+    },
+    "server/features/session/bridge.ts": {
+      "current": "11097426c89764129f2d9773db4fd9df940272f91592b56956edeb848843f385",
+      "frozen32": "11097426c89764129f2d9773db4fd9df940272f91592b56956edeb848843f385"
+    },
+    "server/features/operations.ts": {
+      "current": "7246b279e2bead7153c1ded61d09683ea6560c7dfc67867bd04798a2ed8de391",
+      "frozen32": "7246b279e2bead7153c1ded61d09683ea6560c7dfc67867bd04798a2ed8de391"
+    }
+  },
+  "sourcePatch": "/tmp/flarc-feature-expansion/event-snapshot32-source.patch",
+  "scope": {
+    "production": [
+      "server/durable-objects/channel.ts",
+      "server/features/session/bridge.ts",
+      "server/features/operations.ts"
+    ],
+    "test": "tests/features/event-snapshot-race.test.ts",
+    "productionOutsideScope": [],
+    "note": "Post-build changes only correct test formatting and compare account-bound cursor journal positions from real SQLite; production source exactly matches frozen32."
+  },
+  "bundle": {
+    "manifest": "/tmp/flarc-feature-expansion/bundle-32.json",
+    "path": "/tmp/flarc-matrix-run_01d0e4aeb274/server-32/index.mjs",
+    "sha256": "85e3f2460200b0d7c2f8848fe5e9f7d210a9a4c73a9b7d3f2a0880b118d86006",
+    "beforeAndAfterMatchingFiles": 139,
+    "mismatches": []
+  },
+  "before": {
+    "bundle": "/tmp/flarc-matrix-run_01d0e4aeb274/server-29/index.mjs",
+    "sha256": "1e0e19edb73801688ef0a167940a7c14d435f00edf85591cd639c1642e851a30",
+    "runs": [
+      {
+        "report": "/tmp/flarc-feature-expansion/event-snapshot-before29b.json",
+        "log": "/tmp/flarc-feature-expansion/event-snapshot-before29b.log",
+        "selected": 2,
+        "passed": 1,
+        "failed": 1,
+        "filteredByTitle": 0,
+        "success": false,
+        "tests": [
+          {
+            "title": "a message committed while channel snapshot liveness is pending preserves both ordered private events",
+            "status": "failed",
+            "failures": [
+              "AssertionError: expected [ Array(1) ] to deeply equal [ \u2026(2) ]\n    at /Users/karbowiak/Projects/CFCord/tests/features/event-snapshot-race.test.ts:190:17\n    at async file:///Users/karbowiak/Projects/CFCord/node_modules/vitest/dist/chunks/run.CjdgFZiW.js:2801:20"
+            ]
+          },
+          {
+            "title": "a real channel ban while snapshot liveness is pending denies private events until the ban is removed",
+            "status": "passed",
+            "failures": []
+          }
+        ]
+      },
+      {
+        "report": "/tmp/flarc-feature-expansion/event-snapshot-operational-before29.json",
+        "log": "/tmp/flarc-feature-expansion/event-snapshot-operational-before29.log",
+        "selected": 2,
+        "passed": 0,
+        "failed": 2,
+        "filteredByTitle": 2,
+        "success": false,
+        "tests": [
+          {
+            "title": "an operational resource authorization RPC failure retains the cursor and permits explicit replay recovery",
+            "status": "failed",
+            "failures": [
+              "AssertionError: expected undefined to be 1008 // Object.is equality\n    at /Users/karbowiak/Projects/CFCord/tests/features/event-snapshot-race.test.ts:256:34\n    at async file:///Users/karbowiak/Projects/CFCord/node_modules/vitest/dist/chunks/run.CjdgFZiW.js:2801:20"
+            ]
+          },
+          {
+            "title": "an operational payload authorization RPC failure retains the cursor and permits explicit replay recovery",
+            "status": "failed",
+            "failures": [
+              "AssertionError: expected undefined to be 1008 // Object.is equality\n    at /Users/karbowiak/Projects/CFCord/tests/features/event-snapshot-race.test.ts:256:34\n    at async file:///Users/karbowiak/Projects/CFCord/node_modules/vitest/dist/chunks/run.CjdgFZiW.js:2801:20"
+            ]
+          }
+        ]
+      }
+    ],
+    "observation": "Revision19->20 while actual Bob liveness RPC held; both rows retained in journal, first ID lost and second delivered; actual ban control passes. Injected real SQLite error in each resource/payload auth path is swallowed, socket stays open and first event is skipped."
+  },
+  "after": {
+    "runs": [
+      {
+        "report": "/tmp/flarc-feature-expansion/event-snapshot32.json",
+        "log": "/tmp/flarc-feature-expansion/event-snapshot32.log",
+        "selected": 6,
+        "passed": 4,
+        "failed": 2,
+        "filteredByTitle": 14,
+        "success": false,
+        "tests": [
+          {
+            "title": "a message committed while channel snapshot liveness is pending preserves both ordered private events",
+            "status": "passed",
+            "failures": []
+          },
+          {
+            "title": "a real channel ban while snapshot liveness is pending denies private events until the ban is removed",
+            "status": "passed",
+            "failures": []
+          },
+          {
+            "title": "an operational resource authorization RPC failure retains the cursor and permits explicit replay recovery",
+            "status": "failed",
+            "failures": [
+              "Error: Observable shard/transport condition not reached\n    at eventually (/private/tmp/flarc-feature-expansion/source32-build/tests/features/helpers/shards-backpressure.ts:47:9)\n    at /private/tmp/flarc-feature-expansion/source32-build/tests/features/event-snapshot-race.test.ts:233:7\n    at async file:///Users/karbowiak/Projects/CFCord/node_modules/vitest/dist/chunks/run.CjdgFZiW.js:2801:20"
+            ]
+          },
+          {
+            "title": "an operational payload authorization RPC failure retains the cursor and permits explicit replay recovery",
+            "status": "failed",
+            "failures": [
+              "Error: Observable shard/transport condition not reached\n    at eventually (/private/tmp/flarc-feature-expansion/source32-build/tests/features/helpers/shards-backpressure.ts:47:9)\n    at /private/tmp/flarc-feature-expansion/source32-build/tests/features/event-snapshot-race.test.ts:233:7\n    at async file:///Users/karbowiak/Projects/CFCord/node_modules/vitest/dist/chunks/run.CjdgFZiW.js:2801:20"
+            ]
+          },
+          {
+            "title": "current authorization suppresses a real in-flight shard candidate after channel removal and credential revocation",
+            "status": "passed",
+            "failures": []
+          },
+          {
+            "title": "WS-021 ABUSE-012: a real paused event TCP reader resumes private frames within negotiated credit while independent recipients progress without proving a provider buffer ceiling",
+            "status": "passed",
+            "failures": []
+          }
+        ]
+      },
+      {
+        "report": "/tmp/flarc-feature-expansion/event-snapshot32-operational.json",
+        "log": "/tmp/flarc-feature-expansion/event-snapshot32-operational.log",
+        "selected": 2,
+        "passed": 2,
+        "failed": 0,
+        "filteredByTitle": 2,
+        "success": true,
+        "tests": [
+          {
+            "title": "an operational resource authorization RPC failure retains the cursor and permits explicit replay recovery",
+            "status": "passed",
+            "failures": []
+          },
+          {
+            "title": "an operational payload authorization RPC failure retains the cursor and permits explicit replay recovery",
+            "status": "passed",
+            "failures": []
+          }
+        ]
+      }
+    ],
+    "distinctCasesPassed": 6,
+    "recordedUnhandledErrors": 0,
+    "note": "Initial frozen-source32 run: four product/regression/control passes and two test-precondition failures before injection. Corrected only opaque-token-versus-position comparison in current test; targeted operational rerun passes2. No full selection rerun."
+  },
+  "rootCause": "getAccessSnapshot fenced featureRevision across two awaited liveness lookups; normal next_sequence metadata mutation increments that revision. Its benign exception, and provider/storage exceptions generally, were swallowed as stable denial by authorizeEvent and validateJournalMessage. Replay consequently committed a cursor beyond the authorized skipped row.",
+  "correction": {
+    "coherentSnapshot": "Capture identity generation/canonical name, await one real liveness read, then authoritative account/version/network-ban/scope checks; enforce identity generation fence; evaluate all local members, aggregated effective role modes, bans/mutes/quiets/read-only/channel modes/custom permissions synchronously using shared helpers. Ordinary metadata revisions can change during awaits without dropping events.",
+    "denialContract": "Existing F3 standard Error-message contract explicitly recognizes SESSION_EXPIRED401, SCOPE_FORBIDDEN403 and NETWORK_BANNED403, including DO RPC. Only these are false authorization results; current generation mismatch409 and unexpected SQL/provider failures propagate. Conversation payload suppresses only actual MESSAGE_NOT_FOUND404; stable deletion/redaction still returnsfalse.",
+    "recoveryContract": "Operational errors propagate through polling to existing close1008/recovery-required behavior; stored account-bound position remains6, both journal records persist, explicit replay from last acknowledged position returns both private IDs exactly once and in order; public outsider control and fresh authorized delivery remain live."
+  },
+  "privacyAndRevocation": "Secret outsider receives neither private ID in race/error/recovery cases; actual IRC ban applied during held liveness suppresses both private events, real ban removal restores positive delivery, and the existing in-flight removal plus credential-revocation test passes. No role policy or authorization mock changes.",
+  "pausedReader": {
+    "pausedNativeReader": {
+      "acceptedMessages": 12,
+      "requestContentBytes": 98292,
+      "resumedEventFrames": 14,
+      "resumedPrivateMessageFrames": 12,
+      "resumedEventBytes": 106176,
+      "chargedFrameBytes": 106304,
+      "negotiatedMaxBytes": 262144,
+      "acknowledgementChallenges": 1,
+      "pauseElapsedMs": 263,
+      "closedOrThrottled": false,
+      "scope": "finite credit-bounded Node TCP pause/resume with real v2 challenge ACK; server/provider allocation is not observable or proved, nonacknowledging hard-close is covered separately"
+    }
+  },
+  "operationalEvidence": {
+    "operational-resource": {
+      "phase": "recovered",
+      "edgeBefore": {
+        "closed": [],
+        "sockets": [
+          {
+            "cursor": "86a08c6579594347934a52dee9d91228cdb445eb45de4e288876d677731cbd59",
+            "readyState": 1
+          }
+        ]
+      },
+      "edgeAfter": {
+        "closed": [
+          {
+            "cursor": "86a08c6579594347934a52dee9d91228cdb445eb45de4e288876d677731cbd59",
+            "code": 1008,
+            "reason": "Event authorization or recovery required"
+          }
+        ],
+        "sockets": []
+      },
+      "beforeSequence": 6,
+      "replayedIds": [
+        "394c33fa-7356-46b4-8797-78cc78a21e4a",
+        "912136c5-a7b8-4d21-804e-2c553ec7d6d1"
+      ],
+      "journal": [
+        {
+          "journal_sequence": 7,
+          "event_id": "3a90faa1-3d0a-4203-bb12-08068e2a42fb",
+          "resource_kind": "channel",
+          "resource_id": "#snapshot-race",
+          "generation": "dbe02375-f17a-460c-8613-7ffc8559d065",
+          "owner_id": null,
+          "audience_required": 1,
+          "payload_json": "{\"type\":\"message.created\",\"eventId\":\"3a90faa1-3d0a-4203-bb12-08068e2a42fb\",\"channelId\":\"#snapshot-race\",\"channelGeneration\":\"dbe02375-f17a-460c-8613-7ffc8559d065\",\"messageId\":\"394c33fa-7356-46b4-8797-78cc78a21e4a\",\"timestamp\":\"2026-11-13T11:32:49.524Z\",\"data\":{\"id\":\"394c33fa-7356-46b4-8797-78cc78a21e4a\",\"senderId\":\"fff43cbe-2e79-49b2-9d69-8aed56512810\",\"senderAccount\":\"alice\",\"senderNick\":\"alice\",\"content\":\"snapshot-resource-failure-first\",\"tags\":{\"+role\":\"member\",\"+badge\":\"member\"},\"createdAt\":1794569569524}}",
+          "created_at": 1794569569526,
+          "live_public": 1
+        },
+        {
+          "journal_sequence": 8,
+          "event_id": "e86c6f03-350d-41ef-b8dd-3f9dc97804df",
+          "resource_kind": "channel",
+          "resource_id": "#snapshot-race",
+          "generation": "dbe02375-f17a-460c-8613-7ffc8559d065",
+          "owner_id": null,
+          "audience_required": 1,
+          "payload_json": "{\"type\":\"message.created\",\"eventId\":\"e86c6f03-350d-41ef-b8dd-3f9dc97804df\",\"channelId\":\"#snapshot-race\",\"channelGeneration\":\"dbe02375-f17a-460c-8613-7ffc8559d065\",\"messageId\":\"912136c5-a7b8-4d21-804e-2c553ec7d6d1\",\"timestamp\":\"2026-11-13T11:32:49.536Z\",\"data\":{\"id\":\"912136c5-a7b8-4d21-804e-2c553ec7d6d1\",\"senderId\":\"fff43cbe-2e79-49b2-9d69-8aed56512810\",\"senderAccount\":\"alice\",\"senderNick\":\"alice\",\"content\":\"snapshot-resource-failure-second\",\"tags\":{\"+role\":\"member\",\"+badge\":\"member\"},\"createdAt\":1794569569536}}",
+          "created_at": 1794569569537,
+          "live_public": 1
+        }
+      ],
+      "observations": [
+        {
+          "revisionBefore": 19,
+          "accountId": "80e46aac-ea82-476f-8175-bd62ef38b87f",
+          "error": "no such table: snapshot_deliberately_missing_table: SQLITE_ERROR",
+          "revisionAfter": 20
+        },
+        {
+          "revisionBefore": 20,
+          "accountId": "80e46aac-ea82-476f-8175-bd62ef38b87f",
+          "canRead": true,
+          "revisionAfter": 20
+        },
+        {
+          "revisionBefore": 20,
+          "accountId": "80e46aac-ea82-476f-8175-bd62ef38b87f",
+          "canRead": true,
+          "revisionAfter": 20
+        },
+        {
+          "revisionBefore": 20,
+          "accountId": "80e46aac-ea82-476f-8175-bd62ef38b87f",
+          "canRead": true,
+          "revisionAfter": 20
+        },
+        {
+          "revisionBefore": 20,
+          "accountId": "80e46aac-ea82-476f-8175-bd62ef38b87f",
+          "canRead": true,
+          "revisionAfter": 20
+        },
+        {
+          "revisionBefore": 21,
+          "accountId": "80e46aac-ea82-476f-8175-bd62ef38b87f",
+          "canRead": true,
+          "revisionAfter": 21
+        },
+        {
+          "revisionBefore": 21,
+          "accountId": "80e46aac-ea82-476f-8175-bd62ef38b87f",
+          "canRead": true,
+          "revisionAfter": 21
+        },
+        {
+          "revisionBefore": 21,
+          "accountId": "80e46aac-ea82-476f-8175-bd62ef38b87f",
+          "canRead": true,
+          "revisionAfter": 21
+        },
+        {
+          "revisionBefore": 21,
+          "accountId": "80e46aac-ea82-476f-8175-bd62ef38b87f",
+          "canRead": true,
+          "revisionAfter": 21
+        }
+      ]
+    },
+    "operational-payload": {
+      "phase": "recovered",
+      "edgeBefore": {
+        "closed": [],
+        "sockets": [
+          {
+            "cursor": "445afd8658b94763a2aee66a940a0ad7e9709c3418734da6bae059e75394e4fc",
+            "readyState": 1
+          }
+        ]
+      },
+      "edgeAfter": {
+        "closed": [
+          {
+            "cursor": "445afd8658b94763a2aee66a940a0ad7e9709c3418734da6bae059e75394e4fc",
+            "code": 1008,
+            "reason": "Event authorization or recovery required"
+          }
+        ],
+        "sockets": []
+      },
+      "beforeSequence": 6,
+      "replayedIds": [
+        "3d3876c6-f834-4ba9-837e-2b5b451b648a",
+        "976c5cb3-f970-4a48-a681-4b2d0fc5b860"
+      ],
+      "journal": [
+        {
+          "journal_sequence": 7,
+          "event_id": "7140b61e-2588-4b3f-8300-d2e38d26fb21",
+          "resource_kind": "channel",
+          "resource_id": "#snapshot-race",
+          "generation": "55e55c0b-de29-474f-ab23-6183bca245c2",
+          "owner_id": null,
+          "audience_required": 1,
+          "payload_json": "{\"type\":\"message.created\",\"eventId\":\"7140b61e-2588-4b3f-8300-d2e38d26fb21\",\"channelId\":\"#snapshot-race\",\"channelGeneration\":\"55e55c0b-de29-474f-ab23-6183bca245c2\",\"messageId\":\"3d3876c6-f834-4ba9-837e-2b5b451b648a\",\"timestamp\":\"2026-11-13T11:32:50.168Z\",\"data\":{\"id\":\"3d3876c6-f834-4ba9-837e-2b5b451b648a\",\"senderId\":\"66259de9-fd08-466e-aee2-d98e883e5717\",\"senderAccount\":\"alice\",\"senderNick\":\"alice\",\"content\":\"snapshot-payload-failure-first\",\"tags\":{\"+role\":\"member\",\"+badge\":\"member\"},\"createdAt\":1794569570167}}",
+          "created_at": 1794569570169,
+          "live_public": 1
+        },
+        {
+          "journal_sequence": 8,
+          "event_id": "af640a09-17e1-4363-9951-09592b9010d6",
+          "resource_kind": "channel",
+          "resource_id": "#snapshot-race",
+          "generation": "55e55c0b-de29-474f-ab23-6183bca245c2",
+          "owner_id": null,
+          "audience_required": 1,
+          "payload_json": "{\"type\":\"message.created\",\"eventId\":\"af640a09-17e1-4363-9951-09592b9010d6\",\"channelId\":\"#snapshot-race\",\"channelGeneration\":\"55e55c0b-de29-474f-ab23-6183bca245c2\",\"messageId\":\"976c5cb3-f970-4a48-a681-4b2d0fc5b860\",\"timestamp\":\"2026-11-13T11:32:50.178Z\",\"data\":{\"id\":\"976c5cb3-f970-4a48-a681-4b2d0fc5b860\",\"senderId\":\"66259de9-fd08-466e-aee2-d98e883e5717\",\"senderAccount\":\"alice\",\"senderNick\":\"alice\",\"content\":\"snapshot-payload-failure-second\",\"tags\":{\"+role\":\"member\",\"+badge\":\"member\"},\"createdAt\":1794569570177}}",
+          "created_at": 1794569570178,
+          "live_public": 1
+        }
+      ],
+      "observations": [
+        {
+          "revisionBefore": 19,
+          "accountId": "8279345f-ad1a-4d16-a7ce-58370b13954b",
+          "canRead": true,
+          "revisionAfter": 19
+        },
+        {
+          "revisionBefore": 19,
+          "accountId": "8279345f-ad1a-4d16-a7ce-58370b13954b",
+          "error": "no such table: snapshot_deliberately_missing_table: SQLITE_ERROR",
+          "revisionAfter": 20
+        },
+        {
+          "revisionBefore": 20,
+          "accountId": "8279345f-ad1a-4d16-a7ce-58370b13954b",
+          "canRead": true,
+          "revisionAfter": 20
+        },
+        {
+          "revisionBefore": 20,
+          "accountId": "8279345f-ad1a-4d16-a7ce-58370b13954b",
+          "canRead": true,
+          "revisionAfter": 20
+        },
+        {
+          "revisionBefore": 20,
+          "accountId": "8279345f-ad1a-4d16-a7ce-58370b13954b",
+          "canRead": true,
+          "revisionAfter": 20
+        },
+        {
+          "revisionBefore": 20,
+          "accountId": "8279345f-ad1a-4d16-a7ce-58370b13954b",
+          "canRead": true,
+          "revisionAfter": 20
+        },
+        {
+          "revisionBefore": 21,
+          "accountId": "8279345f-ad1a-4d16-a7ce-58370b13954b",
+          "canRead": true,
+          "revisionAfter": 21
+        },
+        {
+          "revisionBefore": 21,
+          "accountId": "8279345f-ad1a-4d16-a7ce-58370b13954b",
+          "canRead": true,
+          "revisionAfter": 21
+        },
+        {
+          "revisionBefore": 21,
+          "accountId": "8279345f-ad1a-4d16-a7ce-58370b13954b",
+          "canRead": true,
+          "revisionAfter": 21
+        },
+        {
+          "revisionBefore": 21,
+          "accountId": "8279345f-ad1a-4d16-a7ce-58370b13954b",
+          "canRead": true,
+          "revisionAfter": 21
+        }
+      ]
+    }
+  },
+  "staticChecks": [
+    {
+      "command": "bunx biome check server/durable-objects/channel.ts server/features/session/bridge.ts server/features/operations.ts tests/features/event-snapshot-race.test.ts",
+      "exitCode": 0,
+      "log": "/tmp/flarc-feature-expansion/event-snapshot32-final-lint.log"
+    },
+    {
+      "command": "bun run typecheck",
+      "exitCode": 0,
+      "log": "/tmp/flarc-feature-expansion/event-snapshot32-final-typecheck.log"
+    }
+  ],
+  "checkpointCorrection": "The first source checkpoint incorrectly recorded its last lint run as0 although it was1 for test formatting only; the lint log and before checkpoint remain preserved, formatting was corrected, and final lint/typecheck pass. The first fixture setup also made a synchronous Session helper globally async; corrected before the valid frozen29 reproduction and retained initial diagnostic separately.",
+  "artifactHashes": {
+    "/tmp/flarc-feature-expansion/event-snapshot-before29b.json": "6c536b6227a2ad803a42d290945dce23282e13ef46cb8a49ca8abf794b572200",
+    "/tmp/flarc-feature-expansion/event-snapshot-before29b.log": "1f35bd9af399f472da4ff0039bf27f70f7de0eea7d71a059e55ed62d2a57577e",
+    "/tmp/flarc-feature-expansion/event-snapshot-before29b-trace.json": "2b9696553499c837d768c9f1bf84c4140463efb2d48b2c55fb55f978cd10e7b3",
+    "/tmp/flarc-feature-expansion/event-snapshot-operational-before29.json": "d60a2b55b5cc9d2743995745209f27a93a5c63bc52eedd21ba0e1bf427e3725e",
+    "/tmp/flarc-feature-expansion/event-snapshot-operational-before29.log": "487cc26daf4b62251393cfa6c38f8204b6b2df2a2f806968fea2986d91d39962",
+    "/tmp/flarc-feature-expansion/event-snapshot-operational-before29-trace.json": "05a120919fb4e133bacff4a5bd33e4cd2c0a54d3c58502dac0d1d0bfe53fb9b1",
+    "/tmp/flarc-feature-expansion/event-snapshot32.json": "3cde66a324e6453424eabf8f764d55ea49ad1afdc3af7578ed98397a10fc578e",
+    "/tmp/flarc-feature-expansion/event-snapshot32.log": "fe4c7f2aabba25ce7b1a4048f8b256b65b02dffa0a9305008f8450170ca423cc",
+    "/tmp/flarc-feature-expansion/event-snapshot32-trace.json": "ae75c933baae8cc1cdf018ec8e49c66c241085deff283cadaa570484dc0dc1e5",
+    "/tmp/flarc-feature-expansion/event-snapshot32-paused-trace.json": "1f922f5bfc65ff41af10af42260444949610e4c7e7c0d8a2d151435d0ab13e5b",
+    "/tmp/flarc-feature-expansion/event-snapshot32-operational.json": "49b2422478ce61aba8bd17e76ad8fc083055d8a9eca6cd4279920eda92a15d31",
+    "/tmp/flarc-feature-expansion/event-snapshot32-operational.log": "f2272e2a9084ca7d76723a49899eea0b9e28130a83c2975022f7a17215108972",
+    "/tmp/flarc-feature-expansion/event-snapshot32-operational-trace.json": "7c2d81d00ce4aad3c2f6c598f648fa5f0804a48dad073d16de124a1ff07c14dc",
+    "/tmp/flarc-feature-expansion/event-snapshot32-hashes-before.json": "576bc32def9eac12aa1c906ccafd8e33a1ac351cba3b1136a61fe5f5d5b517db",
+    "/tmp/flarc-feature-expansion/event-snapshot32-hashes-after.json": "576bc32def9eac12aa1c906ccafd8e33a1ac351cba3b1136a61fe5f5d5b517db",
+    "/tmp/flarc-feature-expansion/event-snapshot32-final-lint.log": "4a1c10551f175d90a2fa4914cd7297b17fe46c0667ad8596bdd4bc8a73610520",
+    "/tmp/flarc-feature-expansion/event-snapshot32-final-typecheck.log": "8366207267355d3e3d5bf3bf6e8c94c5f93f6078c34f08973fa2b38cdda6cc92",
+    "/tmp/flarc-feature-expansion/event-snapshot32-source.patch": "de5ed02e8fc68cb27081f6dbae57c77c5248c8ed6310ad1b75576d4e91a7c1d1"
+  },
+  "remaining": "Root policy-parity review and any coordinator-owned combined application verification; no local blocker and no additional production delta after frozen32."
+}

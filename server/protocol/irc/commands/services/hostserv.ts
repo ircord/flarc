@@ -3,6 +3,7 @@ import { Numerics } from "~/protocol/irc/numerics";
 import { canonicalizeIRCName } from "~/protocol/irc/parser";
 import { handleChghost } from "../oper";
 import type { ISessionDO } from "../types";
+import { serviceAudit, serviceAuditActor, serviceAudited } from "./audit";
 import { sendServiceResponse } from "./helpers";
 
 export async function handleHostServ(
@@ -15,6 +16,7 @@ export async function handleHostServ(
   const parts = rawText.trim().split(/\s+/).filter(Boolean);
   const sub = (parts[0] ?? "HELP").toUpperCase();
   const accountsStub = session.getAccountsStub();
+  const actor = await serviceAuditActor(session, attachment);
 
   if (sub === "STATUS") {
     const targetAcct = parts[1] ?? attachment.accountName ?? "";
@@ -58,7 +60,15 @@ export async function handleHostServ(
       return;
     }
     const enable = sub === "ON";
-    const res = await accountsStub.setVhostEnabled(attachment.accountName, enable);
+    const res = await serviceAudited(
+      session,
+      actor,
+      enable ? "service.hostserv.on" : "service.hostserv.off",
+      "account",
+      attachment.accountName,
+      () => accountsStub.setVhostEnabled(attachment.accountName!, enable),
+      (result) => result.ok && Boolean(result.vhost),
+    );
     if (!res.ok || !res.vhost) {
       sendServiceResponse(
         session,
@@ -104,6 +114,14 @@ export async function handleHostServ(
 
   if (sub === "SET" || sub === "DEL") {
     if (!attachment.isOper) {
+      await serviceAudit(
+        session,
+        actor,
+        sub === "SET" ? "service.hostserv.set" : "service.hostserv.del",
+        "account",
+        parts[1] ?? "",
+        "denied",
+      );
       sendServiceResponse(
         session,
         ws,
@@ -127,7 +145,15 @@ export async function handleHostServ(
       );
       return;
     }
-    const ok = await accountsStub.setVhost(targetAcct, vhost);
+    const ok = await serviceAudited(
+      session,
+      actor,
+      sub === "SET" ? "service.hostserv.set" : "service.hostserv.del",
+      "account",
+      targetAcct,
+      () => accountsStub.setVhost(targetAcct, vhost),
+      (result) => result,
+    );
     if (!ok) {
       sendServiceResponse(
         session,

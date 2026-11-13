@@ -1,0 +1,179 @@
+{
+  "createdAt": "2026-11-13T09:48:48.680629+00:00",
+  "task": "task_5991e5f0150c",
+  "dispatch": "ctx_67902fa3a701",
+  "outcome": "succeeded",
+  "bundle": "/tmp/flarc-matrix-run_01d0e4aeb274/server-28/index.mjs",
+  "sha256": "a2ba651363ebd817e8b2371d7b793cea2643346d3c02a3eea144dadd905260a9",
+  "command": {
+    "command": [
+      "/opt/homebrew/bin/bunx",
+      "vitest",
+      "run",
+      "--config",
+      "/tmp/flarc-feature-expansion/source28/vitest.frozen.config.mts",
+      "tests/features/channel-identity-lifecycle.test.ts",
+      "tests/security/boundaries.test.ts",
+      "-t",
+      "authorized role creation before JOIN|denied channel role requests|channel names cannot rebind|uninitialized admin channel reads|scoped administrators read only the current retained|keeps archived private history and attachments private|moves private history, roles, edit lineage and media during rename",
+      "--reporter=json",
+      "--outputFile=/tmp/flarc-feature-expansion/channel-identity28.json"
+    ],
+    "cwd": "/tmp/flarc-feature-expansion/source28",
+    "environment": {
+      "FLARC_TEST_BUNDLE": "/tmp/flarc-matrix-run_01d0e4aeb274/server-28/index.mjs"
+    },
+    "startedAt": "2026-11-13T09:46:53.845341+00:00",
+    "exitCode": 0,
+    "elapsedSeconds": 3.8236802499741316,
+    "endedAt": "2026-11-13T09:46:57.669431+00:00"
+  },
+  "counts": {
+    "selected": 7,
+    "passed": 7,
+    "failed": 0,
+    "filtered": 34
+  },
+  "records": [
+    {
+      "file": "/private/tmp/flarc-feature-expansion/source28/tests/features/channel-identity-lifecycle.test.ts",
+      "name": "authorized role creation before JOIN binds the actual channel namespace and publishes the committed event",
+      "status": "passed",
+      "durationMs": 371.00137500000005,
+      "failureMessages": []
+    },
+    {
+      "file": "/private/tmp/flarc-feature-expansion/source28/tests/features/channel-identity-lifecycle.test.ts",
+      "name": "denied channel role requests leave identity, roles and metadata unchanged across token and hash facades",
+      "status": "passed",
+      "durationMs": 413.52470800000003,
+      "failureMessages": []
+    },
+    {
+      "file": "/private/tmp/flarc-feature-expansion/source28/tests/features/channel-identity-lifecycle.test.ts",
+      "name": "channel names cannot rebind initialized or uninitialized objects and stale generations do not mutate roles",
+      "status": "passed",
+      "durationMs": 399.0009160000001,
+      "failureMessages": []
+    },
+    {
+      "file": "/private/tmp/flarc-feature-expansion/source28/tests/features/channel-identity-lifecycle.test.ts",
+      "name": "uninitialized admin channel reads preserve the requested namespace and denied routes establish no identity",
+      "status": "passed",
+      "durationMs": 265.1412500000001,
+      "failureMessages": []
+    },
+    {
+      "file": "/private/tmp/flarc-feature-expansion/source28/tests/features/channel-identity-lifecycle.test.ts",
+      "name": "scoped administrators read only the current retained channel archive with bounded pagination, redaction and expiry",
+      "status": "passed",
+      "durationMs": 603.2499580000001,
+      "failureMessages": []
+    },
+    {
+      "file": "/private/tmp/flarc-feature-expansion/source28/tests/security/boundaries.test.ts",
+      "name": "Security boundaries with independent authenticated accounts keeps archived private history and attachments private and revokes old webhook capabilities",
+      "status": "passed",
+      "durationMs": 467.634375,
+      "failureMessages": []
+    },
+    {
+      "file": "/private/tmp/flarc-feature-expansion/source28/tests/security/boundaries.test.ts",
+      "name": "Security boundaries with independent authenticated accounts moves private history, roles, edit lineage and media during rename without exposing the old name",
+      "status": "passed",
+      "durationMs": 434.72075000000007,
+      "failureMessages": []
+    }
+  ],
+  "sourceFilesFrozen28": {
+    "server/durable-objects/channel.ts": "c1b97dab52bcd6c43a62206e61bdf9c5e4b8cb27b4aa75a948f9273344d9a4db",
+    "server/routes/api/v1/channels/[channel]/roles/index.post.ts": "2eb801eb2ee98c973a179e41bf7ced77d11213e7995a42ae0330eedfaf498687",
+    "server/routes/api/v1/channels/[channel]/roles/index.get.ts": "b58d58f9734d4763399062502a0d399be0ccc315df2a08777c5b93cded97d6f0",
+    "server/routes/api/v1/channels/[channel]/roles/[id].patch.ts": "4ad027aa0debafeb987363494d87d5a0b75caec214374c618474bdb20a60b158",
+    "server/routes/api/v1/channels/[channel]/roles/[id].delete.ts": "85efc3fce6b487b649e830520f711cadd1711478f85b88bcde1d215e37cad3b4",
+    "server/routes/api/v1/channels/[channel]/roles/assign.post.ts": "d3e36472f55b1cb2d2cfb4bb29940ecfeb3d0c890675163af8264eefb74e5827",
+    "tests/features/channel-identity-lifecycle.test.ts": "41463239a3c67c6cc88390f4339fd386565593764b885a39858f5ca064da4c58"
+  },
+  "sourceFilesCurrent": {
+    "server/durable-objects/channel.ts": "c1b97dab52bcd6c43a62206e61bdf9c5e4b8cb27b4aa75a948f9273344d9a4db",
+    "server/routes/api/v1/channels/[channel]/roles/index.post.ts": "2eb801eb2ee98c973a179e41bf7ced77d11213e7995a42ae0330eedfaf498687",
+    "server/routes/api/v1/channels/[channel]/roles/index.get.ts": "b58d58f9734d4763399062502a0d399be0ccc315df2a08777c5b93cded97d6f0",
+    "server/routes/api/v1/channels/[channel]/roles/[id].patch.ts": "4ad027aa0debafeb987363494d87d5a0b75caec214374c618474bdb20a60b158",
+    "server/routes/api/v1/channels/[channel]/roles/[id].delete.ts": "85efc3fce6b487b649e830520f711cadd1711478f85b88bcde1d215e37cad3b4",
+    "server/routes/api/v1/channels/[channel]/roles/assign.post.ts": "d3e36472f55b1cb2d2cfb4bb29940ecfeb3d0c890675163af8264eefb74e5827",
+    "tests/features/channel-identity-lifecycle.test.ts": "41463239a3c67c6cc88390f4339fd386565593764b885a39858f5ca064da4c58"
+  },
+  "sourceDrift": [],
+  "integrity": {
+    "bundleBefore": "a2ba651363ebd817e8b2371d7b793cea2643346d3c02a3eea144dadd905260a9",
+    "bundleAfter": "a2ba651363ebd817e8b2371d7b793cea2643346d3c02a3eea144dadd905260a9",
+    "moduleCount": 139,
+    "moduleDrift": [],
+    "passed": true
+  },
+  "corrections": [
+    "Role route family supplies normalized route name; Channel pure identity validates actual ctx.id against namespace idFromName(network:canonical) and refuses caller-selected peer names",
+    "Client token/hash facades perform credential scope and domain ACL checks before writing identity metadata/resource generation; compare observed generation after awaited authorization before initialization",
+    "No #unknown fallback; legitimate legacy placeholders repair only for exact physical namespace name without changing existing generation/state; wrong valid identity never rebound",
+    "Admin history reads current retired generation only while archived, bounded1..100 rows, stable message-ID sequence cursors or timestamp cursors, bounded around; excludes expired roots/children and scrubs redacted content/tags/multiline; recreated rooms read live history only"
+  ],
+  "beforeEvidence": {
+    "providedRoleDiagnostic": "event-role27-sql-diagnostic.json:201 role retained in #unknown DO and no event",
+    "positiveIdentityAndArchive": "channel-identity-before27-final.json: identity state failure and authorized archive [] failure are genuine; two RPC-negative entries in that initial run are transport/harness failures, explicitly superseded",
+    "negativeIdentityAndAuthorization": "channel-identity-denial-before27.json:2 selected FAIL27,2 filtered; final real-probe denied request added7 identity metadata rows instead of baseline, and malicious name accepted role write; no assertion transport errors",
+    "earlierFixturesPreserved": [
+      "channel-identity-before27.json",
+      "channel-identity-before27-final.json"
+    ],
+    "archiveOriginal26": "application26-failures.json security/boundaries.test.ts archived private history assertion762 failed; original test unmodified"
+  },
+  "beforeAfter": {
+    "roleNameAndEvent": "Actual27 diagnostic role201 stored#unknown and noevents; new28 HTTP authenticated role beforeJOIN yields actual#gaming metadata and role_created event without any membership",
+    "denial": "Frozen27 final genuine negative probe created identity metadata despite management denial;28 complete identity/roles/KV/member state unchanged across ordinary valid tokens/hash/invalidsession/scopedadmin",
+    "rebind": "Frozen27 accepted mismatched channelName and rolewrite;28 rejects initialized and empty object mismatch plus missingidentity and stalegeneration with unchangedSQLite",
+    "archive": "Original26 boundary retainedadminread failed and new27 authorized scoped read returned[];28 restores correctretiredgen read while proving redaction,atrest expiry,denialforordinaryandoutofscope,recreationisolation",
+    "preservation": "Original archive privacy/file/webhook capability and rename privatehistory/roles/edit/media checks pass28 unchanged"
+  },
+  "static": {
+    "typecheck": "PASS channel-identity-typecheck-final.log",
+    "ownedLint": "PASS channel-identity-owned-lint-final.log",
+    "wholeChannelFormatting": "Root formatted only after stable checkpoint before frozen28",
+    "diffCheck": "PASS"
+  },
+  "artifacts": {
+    "channel-identity-source-checkpoint.json": {
+      "path": "/tmp/flarc-feature-expansion/channel-identity-source-checkpoint.json",
+      "sha256": "375037a863c0da4e5f6f37c58c9a06281eb3cfcedf1788d392905fffbd2fd4bb"
+    },
+    "channel-identity28-before.json": {
+      "path": "/tmp/flarc-feature-expansion/channel-identity28-before.json",
+      "sha256": "c054007da23bf71837c450a94d2c616691e9491ce2b1707d40914f557ca64b33"
+    },
+    "channel-identity28-command.json": {
+      "path": "/tmp/flarc-feature-expansion/channel-identity28-command.json",
+      "sha256": "ce4730f89301ec99603f9cb57cef94db0d9ad628f96eb91a92c0d92077b47259"
+    },
+    "channel-identity28.json": {
+      "path": "/tmp/flarc-feature-expansion/channel-identity28.json",
+      "sha256": "e8947166adb3fb3f5449f95a98f2463630b67736d8ab0414800564fd8b1979c9"
+    },
+    "channel-identity28.log": {
+      "path": "/tmp/flarc-feature-expansion/channel-identity28.log",
+      "sha256": "c77295707831f264a45e5f44b549d242687ad71182e8d0c214e0b4b61226909b"
+    },
+    "channel-identity-before27-final.json": {
+      "path": "/tmp/flarc-feature-expansion/channel-identity-before27-final.json",
+      "sha256": "cdf56bd2c2b0d173c34cce64b3751aaf5e9505542d23e79684accd80f5f12088"
+    },
+    "channel-identity-denial-before27.json": {
+      "path": "/tmp/flarc-feature-expansion/channel-identity-denial-before27.json",
+      "sha256": "f4ace2eb115d12bd1755111a3da9c3297cfebb933c5e191a9b308f1559df8160"
+    }
+  },
+  "limits": [
+    "Only Channel identity/client facade and retired admin read plus normalized role route family changed by thisworker; root orderedmessage regions preserved",
+    "Admin retained history exists only while archived for current retiredgeneration; recreation never implicitly selects olderarchives",
+    "No shared Session/Accounts changes, no DM authorization expansion, no independent build/fullsuite/conformance rerun"
+  ],
+  "left": "Root final integrated verification; no remaining work in assigned identity/archive repair"
+}

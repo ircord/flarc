@@ -1,0 +1,74 @@
+{
+  "version": 1,
+  "slice": "independent-irctest-conformance",
+  "outcome": "PASS_WITH_REPORTED_SKIPS_AND_XPASSES",
+  "scope": "Unchanged upstream irctest server conformance suite against the frozen FlaRC bundle 05. This is an interim conformance result, not a final-release claim.",
+  "bundle": {
+    "path": "/tmp/flarc-matrix-run_01d0e4aeb274/server-05/index.mjs",
+    "sha256": "ca132c6c8f3c6123dc84abd9d199e2146db7f91c19972ba082552542ac749d50",
+    "moduleManifest": "/tmp/flarc-matrix-run_01d0e4aeb274/bundle-05.json",
+    "moduleManifestSha256": "d5b988ea1babc5ea3afae4310ff0f5fe218823b2f5d8c4fb772f67b763939b30"
+  },
+  "irctest": {
+    "revisionBefore": "7d5d761b7b67f9031daf7784e743d630def22a96",
+    "revisionAfter": "7d5d761b7b67f9031daf7784e743d630def22a96",
+    "gitStatusBefore": "## master...origin/master",
+    "gitStatusAfter": "## master...origin/master",
+    "porcelainCleanBefore": true,
+    "porcelainCleanAfter": true,
+    "suiteChanged": false
+  },
+  "execution": {
+    "command": "CFCORD_BUNDLE=/tmp/flarc-matrix-run_01d0e4aeb274/server-05/index.mjs CFCORD_SKIP_BUNDLE=1 PYTHONPATH=/Users/karbowiak/Projects/CFCord/compliance /Users/karbowiak/Projects/CFCord/.compliance/venv/bin/python -m pytest --controller cfcord_controller -m '(Ergo or not implementation-specific) and not deprecated' -p no:cacheprovider --timeout=30 irctest/server_tests -n 8 -rA --junitxml=/tmp/flarc-matrix-run_01d0e4aeb274/conformance-05.xml",
+    "exitCode": 0,
+    "durationSeconds": 160.21,
+    "log": "/tmp/flarc-matrix-run_01d0e4aeb274/conformance-05.log",
+    "junitXml": "/tmp/flarc-matrix-run_01d0e4aeb274/conformance-05.xml",
+    "exitCodeFile": "/tmp/flarc-matrix-run_01d0e4aeb274/conformance-05.exit-code"
+  },
+  "collection": {
+    "command": "CFCORD_BUNDLE=/tmp/flarc-matrix-run_01d0e4aeb274/server-05/index.mjs CFCORD_SKIP_BUNDLE=1 PYTHONPATH=/Users/karbowiak/Projects/CFCord/compliance /Users/karbowiak/Projects/CFCord/.compliance/venv/bin/python -m pytest --controller cfcord_controller -m '(Ergo or not implementation-specific) and not deprecated' -p no:cacheprovider --timeout=30 --collect-only irctest/server_tests",
+    "exitCode": 0,
+    "collected": 538,
+    "selected": 491,
+    "deselected": 47,
+    "log": "/tmp/flarc-matrix-run_01d0e4aeb274/conformance-05-collect.log",
+    "exitCodeFile": "/tmp/flarc-matrix-run_01d0e4aeb274/conformance-05-collect.exit-code"
+  },
+  "counts": {
+    "passed": 470,
+    "failed": 0,
+    "skipped": 18,
+    "xfail": 0,
+    "xpass": 3,
+    "deselected": 47,
+    "errors": 0,
+    "warnings": 16,
+    "selected": 491,
+    "collected": 538
+  },
+  "skipComparison": {
+    "reference": "docs/security/security-test-results.md",
+    "matchesDocumentedSkipCountAndCategories": true,
+    "categories": {
+      "ASCII casemapping/controller choice": 2,
+      "arbitrary client-tag policy": 6,
+      "draft/reply client-tag policy": 2,
+      "faketime unsupported by controller": 2,
+      "optional WHO variants (inconsistent support)": 4,
+      "optional non-UTF8 messages": 2
+    },
+    "introducedSkips": 0
+  },
+  "xpassComparison": {
+    "matchesDocumentedNulInPasswordCases": true,
+    "tests": [
+      "SaslTestCase::testNulInPassword[sesa\\x00me]",
+      "SaslTestCase::testNulInPassword[sesame\\x00]",
+      "SaslTestCase::testNulInPassword[sesame\\x00extra]"
+    ]
+  },
+  "failures": [],
+  "warningsNote": "16 upstream pytest warnings were reported; details are preserved in the full run log.",
+  "limitation": "The coordinator reports a further notification fix is about to be applied. This result describes only the frozen bundle hash above and is interim evidence."
+}

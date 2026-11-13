@@ -104,6 +104,14 @@ export const AdminPurgeSchema = z
   );
 
 export function adminBodySchema(path: string, method: string): z.ZodType {
+  if (path === "/bans" && method === "POST")
+    return z
+      .object({
+        kind: z.enum(["account", "hostmask"]),
+        value: z.string().min(1).max(256),
+        expiresAt: z.number().int().positive().nullable().optional(),
+      })
+      .strict();
   if (path === "/config") return AdminConfigSchema;
   if (path === "/broadcast")
     return AdminBroadcastSchema.extend({
@@ -118,6 +126,21 @@ export function adminBodySchema(path: string, method: string): z.ZodType {
   if (path === "/accounts" || path === "/accounts/register") return AdminAccountCreateSchema;
   if (path === "/accounts/disable") return z.object({ username: name }).strict();
   if (/^\/profile\/[^/]+$/.test(path)) return UserProfileInputSchema.strict();
+  if (/^\/accounts\/[^/]+\/scopes$/.test(path) && method === "PUT")
+    return z
+      .object({
+        scopes: z
+          .array(
+            z
+              .object({
+                operation: z.string().min(1).max(64),
+                resource: z.string().min(1).max(128),
+              })
+              .strict(),
+          )
+          .max(128),
+      })
+      .strict();
   if (/^\/accounts\/[^/]+\/password$/.test(path)) return AdminPasswordSchema;
   if (/^\/accounts\/[^/]+\/roles$/.test(path)) return AdminRoleSchema;
   if (/^\/accounts\/[^/]+$/.test(path) && method === "PATCH") return AdminAccountUpdateSchema;

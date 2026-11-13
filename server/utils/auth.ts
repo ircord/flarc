@@ -1,7 +1,8 @@
 import type { H3Event } from "nitro/h3";
-import { createError, getHeader, setResponseHeader } from "nitro/h3";
+import { createError, getCookie, getHeader, getRequestURL, setResponseHeader } from "nitro/h3";
 import { applyEnvConfig, SERVER_CONFIG } from "../core/config";
 import { isValidChannelName } from "../core/permissions/validation";
+import { accountSourceMask, requestSource } from "../core/request-source";
 import type { Env } from "../core/types";
 import { canonicalizeIRCName } from "../protocol/irc/parser";
 
@@ -33,9 +34,28 @@ export function parseChannelParam(raw: string): { name: string; canon: string } 
 
 export function getSessionToken(event: H3Event): string | undefined {
   const auth = getHeader(event, "authorization");
-  if (auth?.startsWith("Bearer ")) return auth.slice(7).trim();
+  if (auth) return auth.startsWith("Bearer ") ? auth.slice(7).trim() : undefined;
   const sessionId = getHeader(event, "x-session-id");
   if (sessionId) return sessionId.trim();
+  return getCookie(event, "__Host-flarc_session");
+}
+
+export function isCookieAuthentication(event: H3Event): boolean {
+  return (
+    !getHeader(event, "authorization") &&
+    !getHeader(event, "x-session-id") &&
+    Boolean(getCookie(event, "__Host-flarc_session"))
+  );
+}
+
+export function isAllowedCookieOrigin(event: H3Event): boolean {
+  const origin = getHeader(event, "origin");
+  if (!origin || origin === "null") return false;
+  const allowed = (getEnv(event).ALLOWED_ORIGINS ?? "")
+    .split(",")
+    .map((value) => value.trim())
+    .filter(Boolean);
+  return origin === getRequestURL(event).origin || allowed.includes(origin);
 }
 
 export async function getAuthenticatedUser(event: H3Event): Promise<AuthUser | null> {
@@ -46,6 +66,12 @@ export async function getAuthenticatedUser(event: H3Event): Promise<AuthUser | n
   const accounts = env.ACCOUNTS.get(env.ACCOUNTS.idFromName(SERVER_CONFIG.networkId));
   const account = await accounts.verifyApiSession(token);
   if (!account) return null;
+  const source = requestSource(event.req, env);
+  if (
+    !source ||
+    (await accounts.isNetworkBanned(account.id, accountSourceMask(account.username, source)))
+  )
+    throw createError({ statusCode: 403, statusMessage: "Network access denied" });
   const user = { ...account, isAdmin: account.roles.includes("admin") };
   event.context.authUser = user;
   return user;

@@ -9,10 +9,10 @@ export default defineEventHandler(async (event) => {
   }
 
   await requireChannelRead(event, rawChan);
-  const { canon } = parseChannelParam(rawChan);
+  const { name, canon } = parseChannelParam(rawChan);
   const env = getEnv(event);
   const stub = env.CHANNELS.get(env.CHANNELS.idFromName(`${SERVER_CONFIG.networkId}:${canon}`));
 
-  const roles = await clientRequest(event, stub, "roles");
+  const roles = await clientRequest(event, stub, "roles", { channelName: name });
   return { ok: true, roles };
 });

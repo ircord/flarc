@@ -30,7 +30,23 @@ export function truncateUtf8(str: string, maxBytes: number): string {
 }
 
 export interface ISessionDO {
+  featureRequest(
+    credential: import("../../../features/session/contracts").SessionCredential,
+    operation: string,
+    input: any,
+  ): Promise<any>;
+  storeOfflineDirectMessage(
+    sender: SessionAttachment,
+    targetName: string,
+    command: "PRIVMSG" | "NOTICE" | "TAGMSG",
+    content: string,
+    tags?: Record<string, string | true>,
+  ): Promise<import("~/core/types").StoredChannelMessage | null>;
+
   storeDirectMessage: SessionDO["storeDirectMessage"];
+  sendDirectMessageLine: SessionDO["sendDirectMessageLine"];
+  sendChannelLine: SessionDO["sendChannelLine"];
+  getSourceHostmask: SessionDO["getSourceHostmask"];
   redactDirectMessage: SessionDO["redactDirectMessage"];
   env: Env;
   sql: SqlStorage;
@@ -49,7 +65,9 @@ export interface ISessionDO {
   saveAttachment(ws: WebSocket, attachment: SessionAttachment): void;
   getChannelStub(channelName: string): DurableObjectStub<ChannelDO>;
   getAccountsStub(): DurableObjectStub<AccountsDO>;
-  getSessionChannels(sessionId: string): Array<{ canonicalChannel: string; channelName: string }>;
+  getSessionChannels(
+    sessionId: string,
+  ): Array<{ canonicalChannel: string; channelName: string; generation?: string }>;
   getAllSessionsForNick(nickname: string): Array<{
     ws: WebSocket;
     attachment: SessionAttachment;
@@ -61,6 +79,15 @@ export interface ISessionDO {
     numeric: string,
     params: string[],
     tags?: Record<string, string | true>,
+    metadata?: {
+      key: string;
+      sourceSessionId?: string;
+      sourceUserId?: string;
+      sourceNick?: string;
+      channel?: string;
+      channelGeneration?: string;
+      requested?: boolean;
+    },
   ): void;
   sendAck(
     ws: WebSocket,

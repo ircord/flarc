@@ -257,8 +257,15 @@ export async function handlePrivmsgOrNotice(
 
     if (target.startsWith("#") || target.startsWith("&")) {
       const stub = session.getChannelStub(target);
+      const generation =
+        session
+          .getSessionChannels(attachment.sessionId)
+          .find((c) => c.canonicalChannel === canonicalizeIRCName(target))?.generation ??
+        (await stub.getExistingChannelGeneration()) ??
+        undefined;
       const res = await stub.appendMessage({
         channelName: target,
+        expectedGeneration: generation,
         sessionId: attachment.sessionId,
         userId: attachment.userId,
         accountName: attachment.accountName,
@@ -315,7 +322,7 @@ export async function handlePrivmsgOrNotice(
           }
         }
 
-        session.sendLine(
+        session.sendChannelLine(
           targetSess.ws,
           targetSess.attachment,
           encodeIRCMessage({
@@ -324,11 +331,45 @@ export async function handlePrivmsgOrNotice(
             command,
             params: [rawTarget, content],
           }),
+          target,
+          generation,
         );
       }
     } else {
       const targetSessions = session.getAllSessionsForNick(target);
       if (targetSessions.length === 0) {
+        const stored = attachment.authenticated
+          ? await session.storeOfflineDirectMessage(
+              attachment,
+              target,
+              command,
+              content,
+              clientTags,
+            )
+          : null;
+        if (stored) {
+          if (session.hasCap(attachment, "echo-message")) {
+            await session.sendDirectMessageLine(
+              ws,
+              attachment,
+              encodeIRCMessage({
+                prefix: senderPrefix,
+                command,
+                params: [target, content],
+                tags: session.filterOutgoingTags(attachment, {
+                  ...clientTags,
+                  msgid: stored.id,
+                  time: new Date(stored.createdAt).toISOString(),
+                  account: attachment.accountName!,
+                  ...labelTags,
+                }),
+              }),
+              stored?.id,
+            );
+            echoedToSender = true;
+          }
+          continue;
+        }
         if (command === "PRIVMSG") {
           session.sendNumeric(
             ws,
@@ -359,7 +400,7 @@ export async function handlePrivmsgOrNotice(
       }
 
       const msgId = crypto.randomUUID();
-      const stored = session.storeDirectMessage({
+      const stored = await session.storeDirectMessage({
         sender: attachment,
         target: primaryTarget.attachment,
         messageId: msgId,
@@ -394,7 +435,7 @@ export async function handlePrivmsgOrNotice(
           }
         }
 
-        session.sendLine(
+        await session.sendDirectMessageLine(
           targetSess.ws,
           targetSess.attachment,
           encodeIRCMessage({
@@ -403,6 +444,7 @@ export async function handlePrivmsgOrNotice(
             command,
             params: [targetSess.attachment.nickname!, outContent],
           }),
+          stored?.id,
         );
       }
 
@@ -410,7 +452,7 @@ export async function handlePrivmsgOrNotice(
         .getAllSessionsForNick(attachment.nickname!)
         .filter((s) => s.attachment.sessionId !== attachment.sessionId);
       for (const otherSess of otherSenderSessions) {
-        session.sendLine(
+        await session.sendDirectMessageLine(
           otherSess.ws,
           otherSess.attachment,
           encodeIRCMessage({
@@ -419,6 +461,7 @@ export async function handlePrivmsgOrNotice(
             command,
             params: [primaryTarget.attachment.nickname!, content],
           }),
+          stored?.id,
         );
       }
 
@@ -430,7 +473,7 @@ export async function handlePrivmsgOrNotice(
         } else if (labelTags?.label) {
           echoTags.label = labelTags.label;
         }
-        session.sendLine(
+        await session.sendDirectMessageLine(
           ws,
           attachment,
           encodeIRCMessage({
@@ -439,6 +482,7 @@ export async function handlePrivmsgOrNotice(
             command,
             params: [primaryTarget.attachment.nickname!, content],
           }),
+          stored?.id,
         );
       }
 
@@ -556,8 +600,15 @@ export async function handleTagmsg(
 
   if (target.startsWith("#") || target.startsWith("&")) {
     const stub = session.getChannelStub(target);
+    const generation =
+      session
+        .getSessionChannels(attachment.sessionId)
+        .find((c) => c.canonicalChannel === canonicalizeIRCName(target))?.generation ??
+      (await stub.getExistingChannelGeneration()) ??
+      undefined;
     const res = await stub.appendMessage({
       channelName: target,
+      expectedGeneration: generation,
       sessionId: attachment.sessionId,
       userId: attachment.userId,
       accountName: attachment.accountName,
@@ -608,7 +659,7 @@ export async function handleTagmsg(
         }
       }
 
-      session.sendLine(
+      session.sendChannelLine(
         targetSess.ws,
         targetSess.attachment,
         encodeIRCMessage({
@@ -617,6 +668,8 @@ export async function handleTagmsg(
           command: "TAGMSG",
           params: [target],
         }),
+        target,
+        generation,
       );
     }
 
@@ -653,7 +706,7 @@ export async function handleTagmsg(
     )
       return;
     const stored = shouldPersist
-      ? session.storeDirectMessage({
+      ? await session.storeDirectMessage({
           sender: attachment,
           target: primaryTarget.attachment,
           messageId: msgId,
@@ -672,7 +725,7 @@ export async function handleTagmsg(
 
     for (const targetSess of targetSessions) {
       if (session.hasCap(targetSess.attachment, "message-tags")) {
-        session.sendLine(
+        await session.sendDirectMessageLine(
           targetSess.ws,
           targetSess.attachment,
           encodeIRCMessage({
@@ -681,6 +734,7 @@ export async function handleTagmsg(
             command: "TAGMSG",
             params: [targetSess.attachment.nickname!],
           }),
+          stored?.id,
         );
       }
     }
@@ -690,7 +744,7 @@ export async function handleTagmsg(
       if (labelTags?.label) {
         echoTags.label = labelTags.label;
       }
-      session.sendLine(
+      await session.sendDirectMessageLine(
         ws,
         attachment,
         encodeIRCMessage({
@@ -699,6 +753,7 @@ export async function handleTagmsg(
           command: "TAGMSG",
           params: [primaryTarget.attachment.nickname!],
         }),
+        stored?.id,
       );
     } else if (labelTags?.label) {
       session.sendAck(ws, attachment, labelTags);
@@ -836,8 +891,15 @@ export async function handleClientBatch(
 
   if (target.startsWith("#") || target.startsWith("&")) {
     const stub = session.getChannelStub(target);
+    const generation =
+      session
+        .getSessionChannels(attachment.sessionId)
+        .find((c) => c.canonicalChannel === canonicalizeIRCName(target))?.generation ??
+      (await stub.getExistingChannelGeneration()) ??
+      undefined;
     const res = await stub.appendMessage({
       channelName: target,
+      expectedGeneration: generation,
       sessionId: attachment.sessionId,
       userId: attachment.userId,
       accountName: attachment.accountName,
@@ -871,7 +933,7 @@ export async function handleClientBatch(
       if (!targetSess) continue;
 
       const isEcho = sid === attachment.sessionId;
-      deliverMultilineOrFallback(
+      await deliverMultilineOrFallback(
         session,
         targetSess.ws,
         targetSess.attachment,
@@ -880,6 +942,8 @@ export async function handleClientBatch(
         stored,
         pending.lines,
         isEcho ? effectiveLabel : undefined,
+        undefined,
+        generation,
       );
     }
   } else {
@@ -910,7 +974,7 @@ export async function handleClientBatch(
       )
     )
       return;
-    const stored = session.storeDirectMessage({
+    const stored = await session.storeDirectMessage({
       sender: attachment,
       target: primaryTarget.attachment,
       messageId: msgId,
@@ -921,7 +985,7 @@ export async function handleClientBatch(
     });
 
     for (const targetSess of targetSessions) {
-      deliverMultilineOrFallback(
+      await deliverMultilineOrFallback(
         session,
         targetSess.ws,
         targetSess.attachment,
@@ -936,7 +1000,7 @@ export async function handleClientBatch(
       session.hasCap(attachment, "echo-message") &&
       primaryTarget.attachment.sessionId !== attachment.sessionId
     ) {
-      deliverMultilineOrFallback(
+      await deliverMultilineOrFallback(
         session,
         ws,
         attachment,
@@ -950,7 +1014,7 @@ export async function handleClientBatch(
   }
 }
 
-export function deliverMultilineOrFallback(
+export async function deliverMultilineOrFallback(
   session: ISessionDO,
   ws: WebSocket,
   attachment: SessionAttachment,
@@ -960,7 +1024,12 @@ export function deliverMultilineOrFallback(
   lines: Array<{ content: string; concat: boolean }>,
   label?: string,
   outerBatchId?: string,
-): void {
+  generation?: string,
+): Promise<void> {
+  const emit = (line: string) =>
+    /^[#&]/.test(target)
+      ? Promise.resolve(session.sendChannelLine(ws, attachment, line, target, generation))
+      : session.sendDirectMessageLine(ws, attachment, line, stored.id);
   const isoTime = new Date(stored.createdAt).toISOString();
   const supportsMultiline =
     session.hasCap(attachment, "draft/multiline") && session.hasCap(attachment, "batch");
@@ -976,9 +1045,7 @@ export function deliverMultilineOrFallback(
       ...(outerBatchId ? { batch: outerBatchId } : {}),
     };
 
-    session.sendLine(
-      ws,
-      attachment,
+    await emit(
       encodeIRCMessage({
         tags: session.filterOutgoingTags(attachment, batchOpenTags),
         prefix: senderPrefix,
@@ -992,9 +1059,7 @@ export function deliverMultilineOrFallback(
         batch: batchId,
         ...(line.concat ? { "draft/multiline-concat": true } : {}),
       };
-      session.sendLine(
-        ws,
-        attachment,
+      await emit(
         encodeIRCMessage({
           tags: session.filterOutgoingTags(attachment, lineTags),
           prefix: senderPrefix,
@@ -1004,9 +1069,7 @@ export function deliverMultilineOrFallback(
       );
     }
 
-    session.sendLine(
-      ws,
-      attachment,
+    await emit(
       encodeIRCMessage({
         prefix: senderPrefix,
         command: "BATCH",
@@ -1025,9 +1088,7 @@ export function deliverMultilineOrFallback(
         ...(i === 0 && label ? { label } : {}),
         ...(outerBatchId ? { batch: outerBatchId } : {}),
       };
-      session.sendLine(
-        ws,
-        attachment,
+      await emit(
         encodeIRCMessage({
           tags: session.filterOutgoingTags(attachment, tags),
           prefix: senderPrefix,
@@ -1070,6 +1131,9 @@ export async function handleRedact(
     const stub = session.getChannelStub(target);
     const res = await stub.redactMessage({
       channelName: target,
+      expectedGeneration: session
+        .getSessionChannels(attachment.sessionId)
+        .find((c) => c.canonicalChannel === canonicalizeIRCName(target))?.generation,
       actorSessionId: attachment.sessionId,
       actorUserId: attachment.userId,
       actorAccount: attachment.accountName,
@@ -1188,7 +1252,7 @@ export async function handleRedact(
       return;
     }
 
-    session.redactDirectMessage(targetMsgId, attachment.userId);
+    await session.redactDirectMessage(targetMsgId, attachment.userId, attachment.sessionId);
 
     const redactParams = reason ? [target, targetMsgId, reason] : [target, targetMsgId];
     for (const targetSess of session.getAllSessionsForNick(target)) {
@@ -1303,8 +1367,15 @@ export async function handleRelaymsg(
   }
 
   const stub = session.getChannelStub(target);
+  const generation =
+    session
+      .getSessionChannels(attachment.sessionId)
+      .find((c) => c.canonicalChannel === canonicalizeIRCName(target))?.generation ??
+    (await stub.getExistingChannelGeneration()) ??
+    undefined;
   const res = await stub.appendMessage({
     channelName: target,
+    expectedGeneration: generation,
     sessionId: attachment.sessionId,
     userId: attachment.userId,
     accountName: attachment.accountName,
@@ -1337,7 +1408,7 @@ export async function handleRelaymsg(
   for (const sid of res.recipientSessionIds ?? []) {
     const sess = session.sessionsById.get(sid);
     if (!sess) continue;
-    session.sendLine(
+    session.sendChannelLine(
       sess.ws,
       sess.attachment,
       encodeIRCMessage({
@@ -1351,6 +1422,8 @@ export async function handleRelaymsg(
         command: "PRIVMSG",
         params: [target, text],
       }),
+      target,
+      generation,
     );
   }
 }

@@ -400,6 +400,7 @@ export async function handleAuthenticate(
 
   await session.prepareAccountChange(attachment, authenticatedAccount.id);
   attachment.authenticated = true;
+  delete attachment.credentialSessionHash;
   attachment.userId = authenticatedAccount.id;
   attachment.credentialVersion = (authenticatedAccount as any).credentialVersion ?? 0;
   attachment.accountName = authenticatedAccount.username;
@@ -741,7 +742,7 @@ export async function handleNick(
     const channels = session.getSessionChannels(attachment.sessionId);
     for (const ch of channels) {
       const stub = session.getChannelStub(ch.channelName);
-      const members = await stub.updateMemberNick(attachment.sessionId, newNick);
+      const members = await stub.updateMemberNick(attachment.sessionId, newNick, ch.generation);
       for (const sid of members) {
         recipientSessions.add(sid);
       }

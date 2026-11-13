@@ -1,0 +1,14 @@
+{
+  "version": 2,
+  "evidence": [
+    {
+      "id": "DM-023",
+      "kind": "disposition",
+      "outcome": "NOT APPLICABLE",
+      "scenarioScope": "Group-DM membership changes and history policy.",
+      "rationale": "The requirement is conditional on group DMs being supported, and this source does not implement group DMs.",
+      "basis": "docs/security/threat-model.md states that no group DM feature exists.",
+      "capability": "group DMs"
+    }
+  ]
+}

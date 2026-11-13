@@ -1,0 +1,1231 @@
+{
+  "version": 1,
+  "status": "PASS within declared local scope; conditional unsupported scenarios and platform limits explicit",
+  "run": "run_01d0e4aeb274",
+  "execution": "current-execution-34.json",
+  "bundleSha256": "85e3f2460200b0d7c2f8848fe5e9f7d210a9a4c73a9b7d3f2a0880b118d86006",
+  "sourceSnapshot": 34,
+  "formerIncompleteReview": [
+    {
+      "id": "ADMIN-005",
+      "previous": "NOT IMPLEMENTED",
+      "current": "PASS",
+      "requirement": "Administrator can revoke a session.",
+      "evidence": [
+        {
+          "testFile": "tests/features/api-expansion-boundaries.test.ts",
+          "testTitle": "new admin audit, bans, scopes and account-session aliases enforce authority and preserve independent accounts",
+          "executionId": "source34-unfiltered"
+        },
+        {
+          "testFile": "tests/features/api-expansion-boundaries.test.ts",
+          "testTitle": "new admin audit, bans, scopes and account-session aliases enforce authority and preserve independent accounts",
+          "executionId": "source34-unfiltered"
+        }
+      ]
+    },
+    {
+      "id": "ADMIN-012",
+      "previous": "NOT IMPLEMENTED",
+      "current": "PASS",
+      "requirement": "Administrator can apply global bans.",
+      "evidence": [
+        {
+          "testFile": "tests/features/accounts-admin.test.ts",
+          "testTitle": "scoped administrator grants do not cross account resources or aliases, and network bans revoke only the target",
+          "executionId": "source34-unfiltered"
+        },
+        {
+          "testFile": "tests/features/request-source.test.ts",
+          "testTitle": "hostmask bans protect REST login and existing sessions despite forged source headers without changing stored account state",
+          "executionId": "source34-unfiltered"
+        }
+      ]
+    },
+    {
+      "id": "ADMIN-013",
+      "previous": "NOT IMPLEMENTED",
+      "current": "PASS",
+      "requirement": "Administrator can remove global bans.",
+      "evidence": [
+        {
+          "testFile": "tests/features/accounts-admin.test.ts",
+          "testTitle": "scoped administrator grants do not cross account resources or aliases, and network bans revoke only the target",
+          "executionId": "source34-unfiltered"
+        },
+        {
+          "testFile": "tests/features/request-source.test.ts",
+          "testTitle": "hostmask bans protect REST login and existing sessions despite forged source headers without changing stored account state",
+          "executionId": "source34-unfiltered"
+        }
+      ]
+    },
+    {
+      "id": "ADMIN-016",
+      "previous": "NOT IMPLEMENTED",
+      "current": "PASS",
+      "requirement": "Administrator can inspect appropriate administrative audit logs.",
+      "evidence": [
+        {
+          "testFile": "tests/features/accounts-admin.test.ts",
+          "testTitle": "audit enabled stores only sanitized admin outcomes",
+          "executionId": "source34-unfiltered"
+        },
+        {
+          "testFile": "tests/features/accounts-admin.test.ts",
+          "testTitle": "audit enabled stores only sanitized admin outcomes",
+          "executionId": "source34-unfiltered"
+        },
+        {
+          "testFile": "tests/features/accounts-admin.test.ts",
+          "testTitle": "audit enabled stores only sanitized admin outcomes",
+          "executionId": "source34-unfiltered"
+        }
+      ]
+    },
+    {
+      "id": "ADMIN-018",
+      "previous": "NOT IMPLEMENTED",
+      "current": "PASS",
+      "requirement": "Administrator can revoke compromised bot credentials.",
+      "evidence": [
+        {
+          "testFile": "tests/features/service-audit-credentials.test.ts",
+          "testTitle": "administrator revokes another account integration credential and audit records exact actor IDs",
+          "executionId": "source34-unfiltered"
+        }
+      ]
+    },
+    {
+      "id": "ADMIN-023",
+      "previous": "NOT IMPLEMENTED",
+      "current": "PASS",
+      "requirement": "Ordinary users cannot revoke other users' sessions.",
+      "evidence": [
+        {
+          "testFile": "tests/features/accounts-admin.test.ts",
+          "testTitle": "targeted durable API sessions and scoped credentials revoke independently of other accounts",
+          "executionId": "source34-unfiltered"
+        },
+        {
+          "testFile": "tests/features/accounts-admin.test.ts",
+          "testTitle": "targeted durable API sessions and scoped credentials revoke independently of other accounts",
+          "executionId": "source34-unfiltered"
+        }
+      ]
+    },
+    {
+      "id": "ADMIN-027",
+      "previous": "NOT IMPLEMENTED",
+      "current": "PASS",
+      "requirement": "Administrators cannot exceed their configured privilege scope.",
+      "evidence": [
+        {
+          "testFile": "tests/features/accounts-admin.test.ts",
+          "testTitle": "scoped administrator grants do not cross account resources or aliases, and network bans revoke only the target",
+          "executionId": "source34-unfiltered"
+        },
+        {
+          "testFile": "tests/features/accounts-admin.test.ts",
+          "testTitle": "scoped administrator grants do not cross account resources or aliases, and network bans revoke only the target",
+          "executionId": "source34-unfiltered"
+        }
+      ]
+    },
+    {
+      "id": "ADMIN-029",
+      "previous": "NOT IMPLEMENTED",
+      "current": "PASS",
+      "requirement": "Administrative requests are audited with actor, action, target and outcome.",
+      "evidence": [
+        {
+          "testFile": "tests/features/accounts-admin.test.ts",
+          "testTitle": "audit enabled stores only sanitized admin outcomes",
+          "executionId": "source34-unfiltered"
+        },
+        {
+          "testFile": "tests/features/service-audit-credentials.test.ts",
+          "testTitle": "administrator revokes another account integration credential and audit records exact actor IDs",
+          "executionId": "source34-unfiltered"
+        },
+        {
+          "testFile": "tests/features/service-audit-credentials.test.ts",
+          "testTitle": "administrator revokes another account integration credential and audit records exact actor IDs",
+          "executionId": "source34-unfiltered"
+        }
+      ]
+    },
+    {
+      "id": "USER-017",
+      "previous": "NOT IMPLEMENTED",
+      "current": "PASS",
+      "requirement": "Profile updates propagate correctly to authorized REST/event clients.",
+      "evidence": [
+        {
+          "testFile": "tests/features/conversations-events.test.ts",
+          "testTitle": "profile and explicit private metadata share persisted revisions across REST IRC events replay and recreation",
+          "executionId": "source34-unfiltered"
+        },
+        {
+          "testFile": "tests/features/conversations-events.test.ts",
+          "testTitle": "profile and explicit private metadata share persisted revisions across REST IRC events replay and recreation",
+          "executionId": "source34-unfiltered"
+        },
+        {
+          "testFile": "tests/security/matrix-identity.test.ts",
+          "testTitle": "matrix identity USER-001 USER-002 USER-003 USER-004 USER-005 USER-006 USER-012 USER-013 USER-014: profile path and body identity are bound to session",
+          "executionId": "source34-unfiltered"
+        }
+      ]
+    },
+    {
+      "id": "USER-018",
+      "previous": "NOT IMPLEMENTED",
+      "current": "PASS",
+      "requirement": "Private profile metadata is excluded from public metadata synchronization.",
+      "evidence": [
+        {
+          "testFile": "tests/features/conversations-events.test.ts",
+          "testTitle": "profile and explicit private metadata share persisted revisions across REST IRC events replay and recreation",
+          "executionId": "source34-unfiltered"
+        },
+        {
+          "testFile": "tests/features/conversations-events.test.ts",
+          "testTitle": "profile and explicit private metadata share persisted revisions across REST IRC events replay and recreation",
+          "executionId": "source34-unfiltered"
+        }
+      ]
+    },
+    {
+      "id": "CHAN-022",
+      "previous": "NOT IMPLEMENTED",
+      "current": "PASS",
+      "requirement": "REST and IRC enforce identical JOIN policies.",
+      "evidence": [
+        {
+          "testFile": "tests/features/channels-roles.test.ts",
+          "testTitle": "REST account membership enforces IRC key and invitation policy without a socket",
+          "executionId": "source34-unfiltered"
+        }
+      ]
+    },
+    {
+      "id": "CHAN-023",
+      "previous": "NOT IMPLEMENTED",
+      "current": "PASS",
+      "requirement": "API-created membership cannot bypass invite/key restrictions.",
+      "evidence": [
+        {
+          "testFile": "tests/features/channels-roles.test.ts",
+          "testTitle": "REST account membership enforces IRC key and invitation policy without a socket",
+          "executionId": "source34-unfiltered"
+        }
+      ]
+    },
+    {
+      "id": "CHAN-033",
+      "previous": "NOT IMPLEMENTED",
+      "current": "PASS",
+      "requirement": "Channel removal and re-registration do not accidentally retain stale permissions.",
+      "evidence": [
+        {
+          "testFile": "tests/features/channels-roles.test.ts",
+          "testTitle": "retired channel history and authority stay isolated after recreation",
+          "executionId": "source34-unfiltered"
+        },
+        {
+          "testFile": "tests/security/matrix-channels.test.ts",
+          "testTitle": "matrix channel membership and access CHAN-033: destructive removal reserves the archived name and clears old authority",
+          "executionId": "source34-unfiltered"
+        }
+      ]
+    },
+    {
+      "id": "ROLE-034",
+      "previous": "NOT IMPLEMENTED",
+      "current": "PASS",
+      "requirement": "Role inheritance cannot create privilege-escalation cycles.",
+      "evidence": [
+        {
+          "testFile": "tests/features/channels-roles.test.ts",
+          "testTitle": "role inheritance is channel scoped, bounded, persistent, and revokes inherited modes",
+          "executionId": "source34-unfiltered"
+        },
+        {
+          "testFile": "tests/features/channels-roles.test.ts",
+          "testTitle": "role inheritance is channel scoped, bounded, persistent, and revokes inherited modes",
+          "executionId": "source34-unfiltered"
+        }
+      ]
+    },
+    {
+      "id": "DM-005",
+      "previous": "NOT IMPLEMENTED",
+      "current": "PASS",
+      "requirement": "Charlie cannot retrieve an Alice/Bob message by ID.",
+      "evidence": [
+        {
+          "testFile": "tests/features/conversations-events.test.ts",
+          "testTitle": "immutable participant conversations provide REST/IRC selectors, canonical edits/read markers and durable idempotency",
+          "executionId": "source34-unfiltered"
+        },
+        {
+          "testFile": "tests/features/conversations-events.test.ts",
+          "testTitle": "immutable participant conversations provide REST/IRC selectors, canonical edits/read markers and durable idempotency",
+          "executionId": "source34-unfiltered"
+        },
+        {
+          "testFile": "tests/security/matrix-dm-gaps.test.ts",
+          "testTitle": "direct-message privacy gaps DM selectors, public event streams, search and revoked sessions remain confined to real participants",
+          "executionId": "source34-unfiltered"
+        }
+      ]
+    },
+    {
+      "id": "DM-008",
+      "previous": "NOT IMPLEMENTED",
+      "current": "PASS",
+      "requirement": "Charlie cannot subscribe to Alice/Bob events.",
+      "evidence": [
+        {
+          "testFile": "tests/features/conversations-events.test.ts",
+          "testTitle": "account-bound replay subscriptions bootstrap and WS retries recheck live authority without duplicate mutations",
+          "executionId": "source34-unfiltered"
+        },
+        {
+          "testFile": "tests/features/conversations-events.test.ts",
+          "testTitle": "foreign conversation subscriptions preserve independent durable interests across recreation",
+          "executionId": "source34-unfiltered"
+        }
+      ]
+    },
+    {
+      "id": "DM-009",
+      "previous": "NOT IMPLEMENTED",
+      "current": "PASS",
+      "requirement": "Charlie cannot retrieve Alice/Bob unread counts.",
+      "evidence": [
+        {
+          "testFile": "tests/features/api-expansion-boundaries.test.ts",
+          "testTitle": "conversation, event and metadata REST aliases enforce the same authenticated resource boundaries",
+          "executionId": "source34-unfiltered"
+        },
+        {
+          "testFile": "tests/features/api-expansion-boundaries.test.ts",
+          "testTitle": "conversation, event and metadata REST aliases enforce the same authenticated resource boundaries",
+          "executionId": "source34-unfiltered"
+        },
+        {
+          "testFile": "tests/features/conversations-events.test.ts",
+          "testTitle": "immutable participant conversations provide REST/IRC selectors, canonical edits/read markers and durable idempotency",
+          "executionId": "source34-unfiltered"
+        },
+        {
+          "testFile": "tests/features/conversations-events.test.ts",
+          "testTitle": "immutable participant conversations provide REST/IRC selectors, canonical edits/read markers and durable idempotency",
+          "executionId": "source34-unfiltered"
+        }
+      ]
+    },
+    {
+      "id": "DM-010",
+      "previous": "NOT IMPLEMENTED",
+      "current": "PASS",
+      "requirement": "Charlie cannot enumerate Alice/Bob private attachments.",
+      "evidence": [
+        {
+          "testFile": "tests/features/conversations-events.test.ts",
+          "testTitle": "immutable participant conversations provide REST/IRC selectors, canonical edits/read markers and durable idempotency",
+          "executionId": "source34-unfiltered"
+        },
+        {
+          "testFile": "tests/features/conversations-events.test.ts",
+          "testTitle": "immutable participant conversations provide REST/IRC selectors, canonical edits/read markers and durable idempotency",
+          "executionId": "source34-unfiltered"
+        },
+        {
+          "testFile": "tests/features/conversations-events.test.ts",
+          "testTitle": "immutable participant conversations provide REST/IRC selectors, canonical edits/read markers and durable idempotency",
+          "executionId": "source34-unfiltered"
+        }
+      ]
+    },
+    {
+      "id": "DM-012",
+      "previous": "NOT IMPLEMENTED",
+      "current": "PASS",
+      "requirement": "Alice cannot substitute Bob's account ID to access Bob/Charlie history.",
+      "evidence": [
+        {
+          "testFile": "tests/features/api-expansion-boundaries.test.ts",
+          "testTitle": "conversation, event and metadata REST aliases enforce the same authenticated resource boundaries",
+          "executionId": "source34-unfiltered"
+        },
+        {
+          "testFile": "tests/features/api-expansion-boundaries.test.ts",
+          "testTitle": "conversation, event and metadata REST aliases enforce the same authenticated resource boundaries",
+          "executionId": "source34-unfiltered"
+        },
+        {
+          "testFile": "tests/security/matrix-dm-gaps.test.ts",
+          "testTitle": "direct-message privacy gaps DM selectors, public event streams, search and revoked sessions remain confined to real participants",
+          "executionId": "source34-unfiltered"
+        },
+        {
+          "testFile": "tests/security/matrix-dm-gaps.test.ts",
+          "testTitle": "direct-message privacy gaps DM selectors, public event streams, search and revoked sessions remain confined to real participants",
+          "executionId": "source34-unfiltered"
+        },
+        {
+          "testFile": "tests/security/matrix-dm-gaps.test.ts",
+          "testTitle": "direct-message privacy gaps DM selectors, public event streams, search and revoked sessions remain confined to real participants",
+          "executionId": "source34-unfiltered"
+        }
+      ]
+    },
+    {
+      "id": "DM-013",
+      "previous": "NOT IMPLEMENTED",
+      "current": "PASS",
+      "requirement": "Conversation IDs cannot be manipulated to gain unauthorized access.",
+      "evidence": [
+        {
+          "testFile": "tests/features/conversations-events.test.ts",
+          "testTitle": "immutable participant conversations provide REST/IRC selectors, canonical edits/read markers and durable idempotency",
+          "executionId": "source34-unfiltered"
+        },
+        {
+          "testFile": "tests/features/conversations-events.test.ts",
+          "testTitle": "immutable participant conversations provide REST/IRC selectors, canonical edits/read markers and durable idempotency",
+          "executionId": "source34-unfiltered"
+        }
+      ]
+    },
+    {
+      "id": "DM-016",
+      "previous": "NOT IMPLEMENTED",
+      "current": "PASS",
+      "requirement": "Offline DM persistence preserves the correct recipient identity.",
+      "evidence": [
+        {
+          "testFile": "tests/features/conversations-events.test.ts",
+          "testTitle": "offline registered-nickname DMs persist to immutable ownership and retained history never follows nickname reuse",
+          "executionId": "source34-unfiltered"
+        },
+        {
+          "testFile": "tests/features/conversations-events.test.ts",
+          "testTitle": "offline registered-nickname DMs persist to immutable ownership and retained history never follows nickname reuse",
+          "executionId": "source34-unfiltered"
+        }
+      ]
+    },
+    {
+      "id": "DM-019",
+      "previous": "NOT IMPLEMENTED",
+      "current": "PASS",
+      "requirement": "DM API and IRC PRIVMSG paths apply consistent access policies.",
+      "evidence": [
+        {
+          "testFile": "tests/features/conversations-events.test.ts",
+          "testTitle": "immutable participant conversations provide REST/IRC selectors, canonical edits/read markers and durable idempotency",
+          "executionId": "source34-unfiltered"
+        },
+        {
+          "testFile": "tests/features/conversations-events.test.ts",
+          "testTitle": "immutable participant conversations provide REST/IRC selectors, canonical edits/read markers and durable idempotency",
+          "executionId": "source34-unfiltered"
+        }
+      ]
+    },
+    {
+      "id": "DM-022",
+      "previous": "NOT IMPLEMENTED",
+      "current": "PASS",
+      "requirement": "No legacy API endpoint bypasses DM participant checks.",
+      "evidence": [
+        {
+          "testFile": "tests/features/api-expansion-boundaries.test.ts",
+          "testTitle": "conversation, event and metadata REST aliases enforce the same authenticated resource boundaries",
+          "executionId": "source34-unfiltered"
+        },
+        {
+          "testFile": "tests/security/matrix-dm-gaps.test.ts",
+          "testTitle": "direct-message privacy gaps DM selectors, public event streams, search and revoked sessions remain confined to real participants",
+          "executionId": "source34-unfiltered"
+        }
+      ]
+    },
+    {
+      "id": "API-016",
+      "previous": "NOT IMPLEMENTED",
+      "current": "PASS",
+      "requirement": "Bulk operations enforce authorization for every target resource.",
+      "evidence": [
+        {
+          "testFile": "tests/features/channels-roles.test.ts",
+          "testTitle": "same-channel bulk redaction is atomic, scoped, and idempotent across restart",
+          "executionId": "source34-unfiltered"
+        }
+      ]
+    },
+    {
+      "id": "API-019",
+      "previous": "NOT IMPLEMENTED",
+      "current": "PASS",
+      "requirement": "Cookie-based mutations enforce CSRF protection.",
+      "evidence": [
+        {
+          "testFile": "tests/features/accounts-admin.test.ts",
+          "testTitle": "opt-in cookie sessions require exact origin and session-bound CSRF while bearer remains compatible",
+          "executionId": "source34-unfiltered"
+        }
+      ]
+    },
+    {
+      "id": "WS-010",
+      "previous": "NOT IMPLEMENTED",
+      "current": "PASS",
+      "requirement": "Alice cannot subscribe to `#staff` without permission.",
+      "evidence": [
+        {
+          "testFile": "tests/features/conversations-events.test.ts",
+          "testTitle": "durable observer handshakes preserve public live observation and suppress private revoked redacted replay across recreation",
+          "executionId": "source34-unfiltered"
+        },
+        {
+          "testFile": "tests/security/matrix-api-event-residuals.test.ts",
+          "testTitle": "WS-010: query and incoming frames cannot grant access to automatic staff events",
+          "executionId": "source34-unfiltered"
+        }
+      ]
+    },
+    {
+      "id": "WS-011",
+      "previous": "NOT IMPLEMENTED",
+      "current": "PASS",
+      "requirement": "Charlie cannot subscribe to Alice/Bob DM events.",
+      "evidence": [
+        {
+          "testFile": "tests/features/conversations-events.test.ts",
+          "testTitle": "account-bound replay subscriptions bootstrap and WS retries recheck live authority without duplicate mutations",
+          "executionId": "source34-unfiltered"
+        },
+        {
+          "testFile": "tests/features/conversations-events.test.ts",
+          "testTitle": "foreign conversation subscriptions preserve independent durable interests across recreation",
+          "executionId": "source34-unfiltered"
+        }
+      ]
+    },
+    {
+      "id": "WS-017",
+      "previous": "NOT IMPLEMENTED",
+      "current": "PASS",
+      "requirement": "Event replay does not expose data outside the current access policy.",
+      "evidence": [
+        {
+          "testFile": "tests/features/conversations-events.test.ts",
+          "testTitle": "durable observer handshakes preserve public live observation and suppress private revoked redacted replay across recreation",
+          "executionId": "source34-unfiltered"
+        },
+        {
+          "testFile": "tests/features/conversations-events.test.ts",
+          "testTitle": "durable observer handshakes preserve public live observation and suppress private revoked redacted replay across recreation",
+          "executionId": "source34-unfiltered"
+        },
+        {
+          "testFile": "tests/features/conversations-events.test.ts",
+          "testTitle": "durable observer handshakes preserve public live observation and suppress private revoked redacted replay across recreation",
+          "executionId": "source34-unfiltered"
+        },
+        {
+          "testFile": "tests/features/event-snapshot-race.test.ts",
+          "testTitle": "a message committed while channel snapshot liveness is pending preserves both ordered private events",
+          "executionId": "source34-unfiltered"
+        },
+        {
+          "testFile": "tests/features/event-snapshot-race.test.ts",
+          "testTitle": "an operational payload authorization RPC failure retains the cursor and permits explicit replay recovery",
+          "executionId": "source34-unfiltered"
+        },
+        {
+          "testFile": "tests/features/event-snapshot-race.test.ts",
+          "testTitle": "an operational resource authorization RPC failure retains the cursor and permits explicit replay recovery",
+          "executionId": "source34-unfiltered"
+        }
+      ]
+    },
+    {
+      "id": "WS-018",
+      "previous": "NOT IMPLEMENTED",
+      "current": "PASS",
+      "requirement": "Event cursors cannot be used to retrieve another user's private events.",
+      "evidence": [
+        {
+          "testFile": "tests/features/conversations-events.test.ts",
+          "testTitle": "account-bound replay subscriptions bootstrap and WS retries recheck live authority without duplicate mutations",
+          "executionId": "source34-unfiltered"
+        },
+        {
+          "testFile": "tests/features/conversations-events.test.ts",
+          "testTitle": "account-bound replay subscriptions bootstrap and WS retries recheck live authority without duplicate mutations",
+          "executionId": "source34-unfiltered"
+        }
+      ]
+    },
+    {
+      "id": "WS-019",
+      "previous": "NOT IMPLEMENTED",
+      "current": "PASS",
+      "requirement": "Cross-shard delivery respects channel subscription authorization.",
+      "evidence": [
+        {
+          "testFile": "tests/features/event-snapshot-race.test.ts",
+          "testTitle": "a message committed while channel snapshot liveness is pending preserves both ordered private events",
+          "executionId": "source34-unfiltered"
+        },
+        {
+          "testFile": "tests/features/shards-backpressure.test.ts",
+          "testTitle": "current authorization suppresses a real in-flight shard candidate after channel removal and credential revocation",
+          "executionId": "source34-unfiltered"
+        },
+        {
+          "testFile": "tests/features/shards-backpressure.test.ts",
+          "testTitle": "distinct event SessionDO stores relay immutable private conversations and channel events with current revocation, replay and hibernation guards",
+          "executionId": "source34-unfiltered"
+        },
+        {
+          "testFile": "tests/security/matrix-websocket-lifecycle-gaps.test.ts",
+          "testTitle": "idle ban takes effect on reconstructed recipients with scoped delivery and persistent state",
+          "executionId": "source34-unfiltered"
+        },
+        {
+          "testFile": "tests/security/matrix-websocket-lifecycle-gaps.test.ts",
+          "testTitle": "idle kick takes effect on reconstructed recipients with scoped delivery and persistent state",
+          "executionId": "source34-unfiltered"
+        }
+      ]
+    },
+    {
+      "id": "WS-021",
+      "previous": "NOT IMPLEMENTED",
+      "current": "PASS",
+      "requirement": "Slow clients cannot exhaust unbounded buffers.",
+      "evidence": [
+        {
+          "testFile": "tests/features/shards-backpressure.test.ts",
+          "testTitle": "native paused event reader reaches a bounded charged-output close while acknowledged independent devices preserve ordered messages",
+          "executionId": "source34-unfiltered"
+        },
+        {
+          "testFile": "tests/security/matrix-abuse-gaps.test.ts",
+          "testTitle": "WS-021 ABUSE-012: a real paused event TCP reader resumes private frames within negotiated credit while independent recipients progress without proving a provider buffer ceiling",
+          "executionId": "source34-unfiltered"
+        },
+        {
+          "testFile": "tests/security/matrix-abuse-gaps.test.ts",
+          "testTitle": "WS-021 ABUSE-012: actual IRC output bytes are bounded while one real authorization RPC is pending and healthy recipients progress",
+          "executionId": "source34-unfiltered"
+        },
+        {
+          "testFile": "tests/security/matrix-resource-residuals.test.ts",
+          "testTitle": "WS-021 ABUSE-012: independent 16MiB aggregate-byte queue bound holds real authorization RPCs while unrelated clients progress",
+          "executionId": "source34-unfiltered"
+        },
+        {
+          "testFile": "tests/security/matrix-resource-residuals.test.ts",
+          "testTitle": "WS-021 ABUSE-012: independent 4096 waiting-frame queue bound holds real authorization RPCs while unrelated clients progress",
+          "executionId": "source34-unfiltered"
+        }
+      ]
+    },
+    {
+      "id": "WS-022",
+      "previous": "NOT IMPLEMENTED",
+      "current": "PASS",
+      "requirement": "Duplicate event delivery does not result in unauthorized duplicate mutations.",
+      "evidence": [
+        {
+          "testFile": "tests/features/conversations-events.test.ts",
+          "testTitle": "account-bound replay subscriptions bootstrap and WS retries recheck live authority without duplicate mutations",
+          "executionId": "source34-unfiltered"
+        },
+        {
+          "testFile": "tests/features/conversations-events.test.ts",
+          "testTitle": "account-bound replay subscriptions bootstrap and WS retries recheck live authority without duplicate mutations",
+          "executionId": "source34-unfiltered"
+        }
+      ]
+    },
+    {
+      "id": "SVC-016",
+      "previous": "NOT IMPLEMENTED",
+      "current": "PASS",
+      "requirement": "Service actions produce the correct audit events.",
+      "evidence": [
+        {
+          "testFile": "tests/features/service-audit-credentials.test.ts",
+          "testTitle": "HostServ and HistServ audit real authorized mutations and rejected foreign actions",
+          "executionId": "source34-unfiltered"
+        },
+        {
+          "testFile": "tests/features/service-audit-credentials.test.ts",
+          "testTitle": "service mutation audit is accurate and default off (enabled=false)",
+          "executionId": "source34-unfiltered"
+        },
+        {
+          "testFile": "tests/features/service-audit-credentials.test.ts",
+          "testTitle": "service mutation audit is accurate and default off (enabled=true)",
+          "executionId": "source34-unfiltered"
+        }
+      ]
+    },
+    {
+      "id": "MEDIA-015",
+      "previous": "NOT IMPLEMENTED",
+      "current": "PASS",
+      "requirement": "Unauthorized users cannot enumerate private upload metadata.",
+      "evidence": [
+        {
+          "testFile": "tests/features/media-list.test.ts",
+          "testTitle": "lists only published media in each authenticated scope and preserves isolation after recreation",
+          "executionId": "source34-unfiltered"
+        }
+      ]
+    },
+    {
+      "id": "PUSH-006",
+      "previous": "NOT IMPLEMENTED",
+      "current": "PASS",
+      "requirement": "Revoked subscriptions stop receiving notifications.",
+      "evidence": [
+        {
+          "testFile": "tests/features/webpush-policy.test.ts",
+          "testTitle": "rechecks a removed pending subscription while another recipient remains live",
+          "executionId": "source34-unfiltered"
+        },
+        {
+          "testFile": "tests/features/webpush-policy.test.ts",
+          "testTitle": "rechecks a removed pending subscription while another recipient remains live",
+          "executionId": "source34-unfiltered"
+        }
+      ]
+    },
+    {
+      "id": "PUSH-007",
+      "previous": "NOT IMPLEMENTED",
+      "current": "PASS",
+      "requirement": "Private notifications are delivered only to intended accounts.",
+      "evidence": [
+        {
+          "testFile": "tests/features/webpush-policy.test.ts",
+          "testTitle": "does not give a late channel member earlier private events and delivers later events",
+          "executionId": "source34-unfiltered"
+        },
+        {
+          "testFile": "tests/features/webpush-policy.test.ts",
+          "testTitle": "does not give a late channel member earlier private events and delivers later events",
+          "executionId": "source34-unfiltered"
+        }
+      ]
+    },
+    {
+      "id": "PUSH-008",
+      "previous": "NOT IMPLEMENTED",
+      "current": "PASS",
+      "requirement": "No private message bodies leak into unrelated notifications.",
+      "evidence": [
+        {
+          "testFile": "tests/features/webpush-delivery.test.ts",
+          "testTitle": "delivers an encrypted private event only to the intended active subscription after channel membership",
+          "executionId": "source34-unfiltered"
+        },
+        {
+          "testFile": "tests/features/webpush-delivery.test.ts",
+          "testTitle": "delivers an encrypted private event only to the intended active subscription after channel membership",
+          "executionId": "source34-unfiltered"
+        },
+        {
+          "testFile": "tests/features/webpush-delivery.test.ts",
+          "testTitle": "delivers an encrypted private event only to the intended active subscription without channel membership",
+          "executionId": "source34-unfiltered"
+        },
+        {
+          "testFile": "tests/features/webpush-delivery.test.ts",
+          "testTitle": "delivers an encrypted private event only to the intended active subscription without channel membership",
+          "executionId": "source34-unfiltered"
+        }
+      ]
+    },
+    {
+      "id": "PUSH-009",
+      "previous": "NOT IMPLEMENTED",
+      "current": "PASS",
+      "requirement": "Notification preferences are enforced.",
+      "evidence": [
+        {
+          "testFile": "tests/features/webpush-policy.test.ts",
+          "testTitle": "enforces channel all, mentions and nothing preferences and rejects other-account or malformed updates",
+          "executionId": "source34-unfiltered"
+        },
+        {
+          "testFile": "tests/features/webpush-policy.test.ts",
+          "testTitle": "enforces channel all, mentions and nothing preferences and rejects other-account or malformed updates",
+          "executionId": "source34-unfiltered"
+        }
+      ]
+    },
+    {
+      "id": "PUSH-010",
+      "previous": "NOT IMPLEMENTED",
+      "current": "PASS",
+      "requirement": "Invalid or expired push subscriptions are handled safely.",
+      "evidence": [
+        {
+          "testFile": "tests/features/webpush-policy.test.ts",
+          "testTitle": "removes only a provider 404 subscription and still delivers encrypted content to an independent endpoint",
+          "executionId": "source34-unfiltered"
+        },
+        {
+          "testFile": "tests/features/webpush-policy.test.ts",
+          "testTitle": "removes only a provider 410 subscription and still delivers encrypted content to an independent endpoint",
+          "executionId": "source34-unfiltered"
+        },
+        {
+          "testFile": "tests/security/matrix-input-resource-completion.test.ts",
+          "testTitle": "PUSH-005 PUSH-010 PUSH-012 ABUSE-018: subscription management input/revocation and genuine runtime logs protect private material across recreation",
+          "executionId": "source34-unfiltered"
+        },
+        {
+          "testFile": "tests/security/matrix-push-abuse.test.ts",
+          "testTitle": "matrix push and abuse PUSH-010 API-013 API-014 ABUSE-014 rejects malformed subscription payloads without modifying stored subscriptions",
+          "executionId": "source34-unfiltered"
+        }
+      ]
+    },
+    {
+      "id": "PUSH-011",
+      "previous": "NOT IMPLEMENTED",
+      "current": "PASS",
+      "requirement": "Repeated delivery failures do not cause unbounded retries.",
+      "evidence": [
+        {
+          "testFile": "tests/features/webpush-policy.test.ts",
+          "testTitle": "persists 429 retry attempts over recreation and stops after the bounded eighth attempt",
+          "executionId": "source34-unfiltered"
+        },
+        {
+          "testFile": "tests/features/webpush-policy.test.ts",
+          "testTitle": "persists 429 retry attempts over recreation and stops after the bounded eighth attempt",
+          "executionId": "source34-unfiltered"
+        },
+        {
+          "testFile": "tests/features/webpush-policy.test.ts",
+          "testTitle": "persists 503 retry attempts over recreation and stops after the bounded eighth attempt",
+          "executionId": "source34-unfiltered"
+        },
+        {
+          "testFile": "tests/features/webpush-policy.test.ts",
+          "testTitle": "persists 503 retry attempts over recreation and stops after the bounded eighth attempt",
+          "executionId": "source34-unfiltered"
+        }
+      ]
+    },
+    {
+      "id": "DB-016",
+      "previous": "NOT IMPLEMENTED",
+      "current": "PASS",
+      "requirement": "Cross-Durable-Object failures do not produce unauthorized permanent state.",
+      "evidence": [
+        {
+          "testFile": "tests/features/event-snapshot-race.test.ts",
+          "testTitle": "an operational payload authorization RPC failure retains the cursor and permits explicit replay recovery",
+          "executionId": "source34-unfiltered"
+        },
+        {
+          "testFile": "tests/features/event-snapshot-race.test.ts",
+          "testTitle": "an operational resource authorization RPC failure retains the cursor and permits explicit replay recovery",
+          "executionId": "source34-unfiltered"
+        },
+        {
+          "testFile": "tests/features/media-reconciliation.test.ts",
+          "testTitle": "retries provider deletion failure without exposing expired bytes or harming another upload",
+          "executionId": "source34-unfiltered"
+        },
+        {
+          "testFile": "tests/security/matrix-media-recovery.test.ts",
+          "testTitle": "[MEDIA-009 MEDIA-012 DB-025] failed provider cleanup leaves inaccessible orphan bytes until automatic reconciliation",
+          "executionId": "source34-unfiltered"
+        },
+        {
+          "testFile": "tests/security/matrix-media-recovery.test.ts",
+          "testTitle": "[MEDIA-009 MEDIA-012 DB-025] failed provider cleanup leaves inaccessible orphan bytes until automatic reconciliation",
+          "executionId": "source34-unfiltered"
+        },
+        {
+          "testFile": "tests/security/matrix-media-recovery.test.ts",
+          "testTitle": "[MEDIA-009 MEDIA-012 DB-025] stopping workerd during a completed R2 put preserves inaccessible pending reservation until known-id deletion",
+          "executionId": "source34-unfiltered"
+        },
+        {
+          "testFile": "tests/security/matrix-media-role-gaps.test.ts",
+          "testTitle": "r2 attachment authorization ROLE-026 MEDIA-001 MEDIA-004 MEDIA-012: additive scoped grants, removal and restart preserve read/write separation",
+          "executionId": "source34-unfiltered"
+        },
+        {
+          "testFile": "tests/security/matrix-media-role-gaps.test.ts",
+          "testTitle": "r2 attachment authorization ROLE-026 MEDIA-001: attach_files cannot bypass membership, bans, quiet, mute or read-only",
+          "executionId": "source34-unfiltered"
+        },
+        {
+          "testFile": "tests/security/matrix-persistence.test.ts",
+          "testTitle": "[DB-016 DB-025] destination commit followed by a real Accounts SQL fault keeps both rename generations fail-closed after restart",
+          "executionId": "source34-unfiltered"
+        }
+      ]
+    },
+    {
+      "id": "DB-022",
+      "previous": "NOT IMPLEMENTED",
+      "current": "PASS",
+      "requirement": "Drizzle models match the actual deployed SQLite schema.",
+      "evidence": [
+        {
+          "testFile": "tests/features/schema-domain-migration.test.ts",
+          "testTitle": "preserves Channel identities, role authorization and FTS across dropped-table rollback, retry and restart",
+          "executionId": "source34-unfiltered"
+        },
+        {
+          "testFile": "tests/features/schema-startup.test.ts",
+          "testTitle": "actual startup schemas match all Drizzle constraints and FTS layouts after genuine REST and IRC activity",
+          "executionId": "source34-unfiltered"
+        },
+        {
+          "testFile": "tests/features/schema-startup.test.ts",
+          "testTitle": "actual startup schemas match all Drizzle constraints and FTS layouts after genuine REST and IRC activity",
+          "executionId": "source34-unfiltered"
+        },
+        {
+          "testFile": "tests/features/schema-startup.test.ts",
+          "testTitle": "production constructor repairs legacy nullable keys without losing authenticated ownership, messages or dependent rows",
+          "executionId": "source34-unfiltered"
+        },
+        {
+          "testFile": "tests/security/matrix-database-identity-completion.test.ts",
+          "testTitle": "[DB-022] initialized local Accounts SQLite matches declared Drizzle models",
+          "executionId": "source34-unfiltered"
+        },
+        {
+          "testFile": "tests/security/matrix-database-identity-completion.test.ts",
+          "testTitle": "[DB-022] initialized local Accounts SQLite matches declared Drizzle models",
+          "executionId": "source34-unfiltered"
+        },
+        {
+          "testFile": "tests/security/matrix-database-identity-completion.test.ts",
+          "testTitle": "[DB-022] initialized local Channel SQLite matches declared Drizzle models",
+          "executionId": "source34-unfiltered"
+        },
+        {
+          "testFile": "tests/security/matrix-database-identity-completion.test.ts",
+          "testTitle": "[DB-022] initialized local Channel SQLite matches declared Drizzle models",
+          "executionId": "source34-unfiltered"
+        },
+        {
+          "testFile": "tests/security/matrix-database-identity-completion.test.ts",
+          "testTitle": "[DB-022] initialized local Session SQLite matches declared Drizzle models",
+          "executionId": "source34-unfiltered"
+        },
+        {
+          "testFile": "tests/security/matrix-database-identity-completion.test.ts",
+          "testTitle": "[DB-022] initialized local Session SQLite matches declared Drizzle models",
+          "executionId": "source34-unfiltered"
+        }
+      ]
+    },
+    {
+      "id": "ABUSE-012",
+      "previous": "NOT IMPLEMENTED",
+      "current": "PASS",
+      "requirement": "Slow consumers are disconnected or throttled safely.",
+      "evidence": [
+        {
+          "testFile": "tests/features/shards-backpressure.test.ts",
+          "testTitle": "IRC unpredictable PING boundaries prove reader drain without changing ordinary PONG and isolate a native paused reader",
+          "executionId": "source34-unfiltered"
+        },
+        {
+          "testFile": "tests/features/shards-backpressure.test.ts",
+          "testTitle": "native paused event reader reaches a bounded charged-output close while acknowledged independent devices preserve ordered messages",
+          "executionId": "source34-unfiltered"
+        },
+        {
+          "testFile": "tests/security/matrix-abuse-gaps.test.ts",
+          "testTitle": "WS-021 ABUSE-012: a real paused event TCP reader resumes private frames within negotiated credit while independent recipients progress without proving a provider buffer ceiling",
+          "executionId": "source34-unfiltered"
+        },
+        {
+          "testFile": "tests/security/matrix-abuse-gaps.test.ts",
+          "testTitle": "WS-021 ABUSE-012: actual IRC output bytes are bounded while one real authorization RPC is pending and healthy recipients progress",
+          "executionId": "source34-unfiltered"
+        },
+        {
+          "testFile": "tests/security/matrix-resource-residuals.test.ts",
+          "testTitle": "WS-021 ABUSE-012: independent 16MiB aggregate-byte queue bound holds real authorization RPCs while unrelated clients progress",
+          "executionId": "source34-unfiltered"
+        },
+        {
+          "testFile": "tests/security/matrix-resource-residuals.test.ts",
+          "testTitle": "WS-021 ABUSE-012: independent 4096 waiting-frame queue bound holds real authorization RPCs while unrelated clients progress",
+          "executionId": "source34-unfiltered"
+        }
+      ]
+    },
+    {
+      "id": "ABUSE-017",
+      "previous": "NOT IMPLEMENTED",
+      "current": "PASS",
+      "requirement": "Untrusted embed URLs cannot trigger SSRF to private network or cloud metadata endpoints.",
+      "evidence": [
+        {
+          "testFile": "tests/features/outbound-network.test.ts",
+          "testTitle": "real authenticated preview endpoint uses the pinned outbound adapter without reaching a denied destination",
+          "executionId": "source34-unfiltered"
+        },
+        {
+          "testFile": "tests/security/matrix-embed-egress.test.ts",
+          "testTitle": "ABUSE-017: authenticated previews constrain every network hop and preserve state across recreation",
+          "executionId": "source34-unfiltered"
+        },
+        {
+          "testFile": "tests/security/matrix-outbound-boundaries.test.ts",
+          "testTitle": "[ABUSE-017] outbound timeout, streamed limits and response cleanup preserve isolated live state across recreation",
+          "executionId": "source34-unfiltered"
+        },
+        {
+          "testFile": "tests/security/matrix-outbound-boundaries.test.ts",
+          "testTitle": "[ABUSE-017] workerd-native response streams receive cancellation on redirect, rejection and byte limits, and timeout aborts fetch",
+          "executionId": "source34-unfiltered"
+        }
+      ]
+    }
+  ],
+  "staticChecks": {
+    "typecheck": {
+      "exitCode": 0
+    },
+    "lint": {
+      "exitCode": 0,
+      "checkedFiles": 372
+    },
+    "gitDiffCheck": {
+      "exitCode": 0
+    }
+  },
+  "containerEvidence": "container32.json",
+  "historicalRuns": [
+    {
+      "execution": "current-execution-29.json",
+      "status": "FAIL",
+      "note": "619/626 with seven failing cases and one unhandled error; preserved before corrections."
+    },
+    {
+      "execution": "current-execution-30.json",
+      "status": "FAIL",
+      "note": "626/627; pressure fixture close timer included workload generation; corrected observation deadline without weakening workload."
+    },
+    {
+      "execution": "current-execution-31.json",
+      "status": "FAIL",
+      "note": "626/627; missing middle event exposed actual permission-snapshot/cursor defect, fixed in32."
+    },
+    {
+      "execution": "conformance34-overlap-diagnostic.json",
+      "status": "INVALID FINAL EVIDENCE",
+      "note": "Two conformance runs overlapped/shared output filenames. Earlier run469pass1failure; later470pass0failure. Both retain18skips3XPASS. Connection-refused startup failure cause unestablished; no application protocol assertion was reached in that failing node."
+    }
+  ],
+  "rootReviews": [
+    "root-review-final.json",
+    "final-dimension-amendments34.json",
+    "baseline-claim-review30.json",
+    "feature44-current-evidence-candidates30.json"
+  ],
+  "newRegressionEvidence": [
+    "event-snapshot32-report.json",
+    "channel-identity28-report.json"
+  ],
+  "limitations": [
+    "Tests run in local workerd/SQLite and local container; no Cloudflare production guarantees inferred.",
+    "Focused and historical outcomes are not added to final unfiltered totals.",
+    "Conditional unsupported features are separately NOT APPLICABLE.",
+    "Current private/default-off audit, retry, retention and deployment policies are stated in matrix-results.md and linked design documents."
+  ],
+  "conformanceEvidence": "conformance-35.json",
+  "operationEvidence": "operation-evidence-34.json",
+  "counts": {
+    "application": {
+      "total": 632,
+      "pass": 632,
+      "fail": 0,
+      "skip": 0,
+      "todo": 0,
+      "xfail": 0,
+      "xpass": 0,
+      "deselected": 0,
+      "errors": 0,
+      "testFiles": 89
+    },
+    "conformance": {
+      "totalCollected": 538,
+      "selected": 491,
+      "deselected": 47,
+      "executed": 491,
+      "passed": 470,
+      "failed": 0,
+      "skipped": 18,
+      "xfail": 0,
+      "xpass": 3,
+      "errors": 0,
+      "warnings": 16
+    },
+    "matrix": {
+      "PASS": 336,
+      "FAIL": 0,
+      "NOT IMPLEMENTED": 0,
+      "NOT APPLICABLE": 3,
+      "BLOCKED": 0
+    }
+  },
+  "routeCoverage": {
+    "operationInventoryRows": 207,
+    "delegatedCatchalls": 2,
+    "concreteMethodOrProtocolEntryShapes": 205,
+    "positive": 205,
+    "denialOrProtectedFiltering": 198,
+    "publicReadDenialNotApplicable": 7,
+    "pendingOperations": 0,
+    "ircRoots": 79,
+    "applicationIrcRootsExercised": 78,
+    "applicationPositiveIrcRoots": 30,
+    "applicationNegativeIrcRoots": 74,
+    "applicationBothIrcRoots": 26,
+    "includingSeparateConformanceIrcRoots": 79
+  },
+  "regeneration": {
+    "baseCommand": "bun scripts/security-matrix-report.ts --bundle <frozen32-index> --execution docs/security/matrix-evidence/current-execution-34.json --worker-evidence docs/security/matrix-evidence/current-evidence-34.json --outDir <output-directory>",
+    "countOverlay": "Use verified counts from current-execution-34.json, including explicit expected-failure/de-selection accounting.",
+    "routeOverlay": "operation-evidence-34.json contains reviewed operation/test/hash mappings matched to the same execution; it distinguishes concrete operations from catchalls and public read policies.",
+    "assemblerSource": "import argparse, copy, json\nfrom pathlib import Path\n\np=argparse.ArgumentParser()\np.add_argument('--execution',required=True)\np.add_argument('--source',required=True)\np.add_argument('--output',required=True)\np.add_argument('--amendments',required=True)\np.add_argument('--root-review',required=True)\na=p.parse_args()\nbase=Path('/tmp/flarc-feature-expansion')\nexecution=json.loads(Path(a.execution).read_text())\nsource=json.loads((Path(a.source)/'source-manifest.json').read_text())['filesSha256']\nold=json.loads(Path('docs/security/matrix-evidence/current-evidence-17.json').read_text())\nreview=json.loads((base/'baseline-claim-review30.json').read_text())\ncandidates=json.loads((base/'feature44-current-evidence-candidates30.json').read_text())\nreviews={r['baselineIndex']:r for r in review['claims']}\namendments=json.loads(Path(a.amendments).read_text())\nroot_review=json.loads(Path(a.root_review).read_text())\nreviewed_hashes={r['testFile']:r['testFileSha256'] for r in amendments['evidence']}\nreviewed_hashes.update({r['file']:r['sha256'] for r in root_review['sourceAmendments']})\nfor f,h in reviewed_hashes.items(): assert source[f]==h, ('Review source drift',f)\nfor r in amendments['scenarios']: assert not r['remainingActualGaps'], ('Unresolved scoped proof',r['id'],r['remainingActualGaps'])\naxis_dispositions={r['id']:r['notApplicable'] for r in amendments['scenarios']}\ntests={(f['name'],t['fullName']):t for f in execution['testResults'] for t in f['assertionResults']}\nnew_ids={r['id'] for r in candidates['candidates']}\nclaims=[]\nunmatched=[]\ndef current_claim(row, provenance):\n    row=copy.deepcopy(row)\n    key=(row['testFile'],row['testTitle'])\n    hit=tests.get(key)\n    if not hit:\n        unmatched.append({'id':row['id'],'testFile':key[0],'testTitle':key[1], 'provenance':provenance})\n        return\n    assert hit['status'] in ['passed','failed'], key\n    row.update(kind='test',executionId=execution['id'],bundleSha256=execution['bundleSha256'],\n               outcome='PASS' if hit['status']=='passed' else 'FAIL',\n               currentTestSha256=source[key[0]],reviewProvenance=provenance)\n    row.pop('source17TestSha256',None)\n    for axis,disposition in axis_dispositions.get(row['id'],{}).items():\n        row['dimensionDisposition'][axis]=copy.deepcopy(disposition)\n    row['testFileSha256']=source[key[0]]\n    for route in row.get('routeBehavior',[]):\n        if 'outcome' not in route:\n            assert route['status'] in [101,400,401], route\n            positive=route['status']==101\n            assert route['route']=='/api/v1/events'\n            route.update(outcome='positive' if positive else 'negative',responseKind='feature-response' if positive else 'secure-denial',alias='/api/v1/events',observationBasis=route.get('condition','Reviewed explicit HTTP status'))\n    row['rationale']='Reviewed source assertions matched to this exact file/title in the recorded execution; scope and omissions remain explicit.'\n    claims.append(row)\nfor i,r in enumerate(old['evidence']):\n    if r.get('kind')=='disposition':\n        if r['id'] not in new_ids: claims.append(copy.deepcopy(r))\n        continue\n    if r.get('executionId')!='source17-unfiltered': continue\n    row=copy.deepcopy(r)\n    if i in reviews:\n        reviewed=reviews[i]\n        assert reviewed['reviewStatus']=='reviewed', i\n        if reviewed['action']=='reject':\n            unmatched.append({'id':r['id'],'baselineIndex':i,'reason':reviewed['reason']})\n            continue\n        row['testTitle']=reviewed['actualCurrentTestTitle']\n        for key in ['scenarioScope','assertionDetails','transports','assertions','routeBehavior','commandBehavior','dimensionDisposition']:\n            if key in reviewed: row[key]=reviewed[key]\n        provenance={'baselineIndex':i,'review':'baseline-claim-review30.json','action':reviewed['action'],'reason':reviewed['reason'],'reviewedFileSha256':reviewed['fileSha256']}\n        if source[row['testFile']]!=reviewed['fileSha256']:\n            assert reviewed_hashes.get(row['testFile'])==source[row['testFile']], row['testFile']\n            provenance['finalSourceAmendment']='Explicit final source review in supplied amendments/root review; current source hash verified.'\n    else:\n        assert source[row['testFile']]==row.get('source17TestSha256') or reviewed_hashes.get(row['testFile'])==source[row['testFile']], (i,row['testFile'])\n        provenance={'baselineIndex':i,'review':'identical SHA256 test source to reviewed snapshot17'}\n    current_claim(row,provenance)\nfor group,name in [(candidates['candidates'],'feature44-current-evidence-candidates30.json'),(review.get('companionCandidates',[]),'baseline-claim-review30.json companion')]:\n    for r in group:\n        expected=r.get('testFileSha256') or r.get('currentTestSha256')\n        assert not expected or expected==source[r['testFile']] or reviewed_hashes.get(r['testFile'])==source[r['testFile']], ('Candidate source drift',r['testFile'])\n        current_claim(r,{'review':name,'scope':'current source assertion candidate; execution assigned only after exact match'})\nfor r in amendments['evidence']+root_review.get('additionalEvidence',[]):\n    current_claim(r,{'review':'Final explicit source assertions in amendments/root review'})\nresult={'version':2,'scope':'Reviewed baseline and feature expansion assertions; exact current execution match required, no focused totals added.',\n        'baselineBundleSha256':execution['bundleSha256'],'executionManifest':a.execution,\n        'sourceEvidenceInputs':['docs/security/matrix-evidence/current-evidence-17.json','baseline-claim-review30.json','feature44-current-evidence-candidates30.json',a.amendments,a.root_review],\n        'evidence':claims,'unmatchedClaims':unmatched}\nPath(a.output).write_text(json.dumps(result,indent=2)+'\\n')\nprint(json.dumps({'claims':len(claims),'unmatched':unmatched},indent=2))\n",
+    "rootReviewSource": "import json,sys\nfrom pathlib import Path\nbase=Path('/tmp/flarc-feature-expansion')\nsource=json.loads((Path(sys.argv[1])/'source-manifest.json').read_text())['filesSha256']\nreasons={\n 'tests/security/matrix-abuse-gaps.test.ts':'Reviewed held-output-pressure amendment: observe early close without unowned rejection; enforce close deadline only after production of actual 8 MiB pressure; sequential producer membership retains owner and healthy witness, persistent cap and restart checks. No reduction of workload/cap or privacy assertions.',\n 'tests/security/matrix-admin-positive.test.ts':'Reviewed incremental route-proof-admin-status.patch: all 12 existing profile/metadata/bot GET parsers now assert HTTP200 through assertedAdminRead before existing exact resource/state assertions; swapped aliases unchanged.',\n 'tests/integration/ircord-edit-fts-webhooks.test.ts':'Root added explicit HTTP200 to existing outgoing-webhook list proof, preserving created hook identity and ok response assertions.',\n 'tests/features/service-audit-credentials.test.ts':'Root added explicit200 to original enabled audit read; after restart both administrative aliases must return original exact actor/action/target/outcome/id/time records. All credential revocation and independent account controls retained.',\n 'tests/features/accounts-admin.test.ts':'Root reviewed real-session denial persistence after restart and restricted administrator scope unchanged state/event windows, current IRC/event ban revocation and unrelated positive controls.',\n 'tests/features/api-expansion-boundaries.test.ts':'Root administrator-targeted session deletion has pre/post real independent event markers and post-restart revoked credential denial. Both replay aliases assert exact conversation redaction event and exclude original/edited text. Additional DM assertion amendments reviewed separately.',\n 'tests/features/channels-roles.test.ts':'Reviewed source extension preserving actual inheritance/cycle denials with bounded role-event silence and independent foreign role persistence.',\n 'tests/features/conversations-events.test.ts':'Reviewed immutable account/conversation state, independent persistent subscription preferences, exact private metadata ownership, cursor/idempotency and restart extensions. Final scope assertions additionally described in final-dimension amendments.',\n 'tests/features/webpush-policy.test.ts':'Reviewed final Luna source: persisted removed pending endpoint cannot deliver across restart; late-member prejoin isolation; nondefault mentions persistence and independent recipient; exact eight retries plus independent encrypted delivery controls. No production/helper modifications.',\n 'tests/features/webpush-delivery.test.ts':'Reviewed actual receiver keys/encrypted payload, intended and unrelated endpoints/event streams after real recreation; Charlie receives only his own positive control and not Alice/Bob private content.',\n 'tests/features/event-snapshot-race.test.ts':'Reviewed genuine liveness RPC gate and actual SQLite failure wrappers around production authorization, retained exact journal/cursor positions, real ban/unban and recovery; no fake privilege flags.'\n}\nfile='tests/features/event-snapshot-race.test.ts'\naxes=['authorization','state','events','transport','restart','unrelatedResources']\ndef claim(id,title,scope,details,assertions):\n return dict(id=id,kind='test',testFile=file,testFileSha256=source[file],testTitle=title,scenarioScope=scope,rationale='Additional regression source proof; exact current execution matched by final assembler.',assertionDetails=details,transports=['REST','IRC modes','v2 event WebSocket','real SQLite'],assertions=assertions,dimensionDisposition={a:'required' for a in axes})\nevidence=[]\nfor id in ['WS-017','WS-019']:\n evidence.append(claim(id,'a message committed while channel snapshot liveness is pending preserves both ordered private events','Current account access survives an unrelated message revision while authorized events cross physical event shards.', ['Real liveness RPC held while a second real REST message commits; both canonical IDs occur once in order for Bob and in SQLite journal; outsider receives neither and independent public markers progress.'],['authorization','state','events','transport','unrelatedResources']))\nevidence.append(claim('WS-024','a real channel ban while snapshot liveness is pending denies private events until the ban is removed','A real IRC ban takes effect while an event authorization RPC is pending.', ['Two private candidates remain excluded from Bob and outsider after the actual ban; Bob history is403; unban restores actual new event delivery, outsider remains excluded.'],['authorization','events','transport','unrelatedResources']))\nfor stage in ['resource','payload']:\n for id in ['WS-017','DB-016']:\n  evidence.append(claim(id,f'an operational {stage} authorization RPC failure retains the cursor and permits explicit replay recovery','Authorization dependency failure closes the affected edge without falsely consuming authorized durable events.', ['Actual missing-table SQL error during production snapshot lookup; two committed journal messages remain; affected edge closes1008/recovery required; authoritative cursor sequence stays at prior position.', 'Unrelated public delivery progresses; real Bob reconnection replay returns both IDs exactly in order, foreign cursor403, subsequent authorized event delivered without outsider leak.'],['authorization','state','events','transport','unrelatedResources']))\nrecord=dict(status='Explicit coordinator source amendments; no outcome assigned',sourceAmendments=[dict(file=f,sha256=source[f],review=reason) for f,reason in reasons.items()],additionalEvidence=evidence)\n(base/'root-review-final.json').write_text(json.dumps(record,indent=2)+'\\n')\nprint('Recorded explicit final source amendments and 7 regression claims')\n",
+    "routeOverlaySource": "import copy,json,hashlib\nfrom pathlib import Path\np=Path('/tmp/flarc-feature-expansion');out=Path('docs/security');e=json.loads((p/'current-execution-34.json').read_text());r=json.loads((p/'final-route-proof32.json').read_text());conf=json.loads((p/'conformance35-manifest.json').read_text());src=e['sourceAndTestFilesSha256'];tests={(f['name'],t['fullName']):t for f in e['testResults'] for t in f['assertionResults']}\nassert r['runtimeBundleReference']['sha256']==e['bundleSha256']==conf['sha256']\nfor f,h in r['inputHashes'].items(): assert src[f]==h,(f,'input hash')\nmatched=set()\ndef resolve(x):\n assert src[x['file']]==x['sourceSha256'],('test hash',x['file'])\n for helper in x.get('helperSources',[]):\n  assert src[helper['file']]==helper['sha256'],('helper hash',helper)\n key=x['file'],x['fullTestTitle']; assert key in tests,('unmatched',key)\n t=tests[key];assert t['status']=='passed',key;matched.add(key)\n return {**x,'executionStatus':'passed','executionId':e['id'],'bundleSha256':e['bundleSha256']}\nfor op in r['operations']:\n assert not op['pendingSource'],op['operationId']\n for side in ['positive','denial']: op[side]=[resolve(x) for x in op[side]]\n delegated=op.get('disposition',{}).get('status')=='DELEGATED_INFRASTRUCTURE'\n assert delegated or op['positive'],op['operationId']\n assert delegated or op['denial'] or op.get('authDenialDisposition'),op['operationId']\n op['executionStatus']='DELEGATED_INFRASTRUCTURE' if delegated else 'PASS'\n if op['method']=='ANY' and not delegated:\n  op['testedMethod']='GET';op['protocolScope']='HTTP discovery/native WebSocket GET upgrade with protected IRC command denial; no claim for all HTTP methods'\nfor cmd in r['commandInventory']['newRootMappings']:\n for side in ['positive','denial']:cmd[side]=[resolve(x) for x in cmd[side]]\nr['execution']={'manifest':'current-execution-34.json','id':e['id'],'bundleSha256':e['bundleSha256'],'exactMatchedTestIdentities':len(matched),'historicalOutcomesNotUsed':True}\nr['summary']['runtimeVerifiedByThisReport']=sum(x['executionStatus']=='PASS' for x in r['operations']);r['pendingExecution']='None: coordinator matched every proof to passing final execution and frozen test/helper hashes.'\nr['finalProofStatus']='PASS within explicit operation and public/upgrade dispositions'\nfull=out/'matrix-evidence/operation-evidence-34.json';full.write_text(json.dumps(r,indent=2)+'\\n')\ninv=json.loads((p/'final-matrix34/matrix-route-command-coverage.json').read_text());inv['operationEvidenceFile']='docs/security/matrix-evidence/operation-evidence-34.json';inv['executionId']=e['id'];inv['bundleSha256']=e['bundleSha256'];inv['operationCoverage']=[]\nfor row in r['operations']:\n inv['operationCoverage'].append({k:row[k] for k in ['operationId','method','route','source','policy','executionStatus','positive','denial','pendingSource'] if k in row}|{k:row[k] for k in ['testedMethod','protocolScope','disposition','authDenialDisposition','inputRejectionDisposition'] if k in row})\nfor f in inv['routes']['fileRoutes']:\n hit=[x for x in r['operations'] if x['source']==f['source'] and x['method'].lower()==f['method'] and x['route']==f['route']];assert len(hit)==1,(f,hit)\n row=hit[0];f.update(exercised=bool(row['positive'] or row['denial']),behaviorStatus=row['executionStatus'],operationId=row['operationId'])\nfor f in inv['routes']['adminRoutes']:\n # AST inventory records logical suffixes; actual prefixes are independently matched.\n aliases=[x for x in r['operations'] if x['source']=='server/handlers/admin.ts' and x['method'].lower()==f['method'] and x['route'] in ['/admin'+f['route'],'/api/v1/admin'+f['route']]]\n assert len(aliases)==2,(f,aliases)\n f.update(exercised=True,behaviorStatus='PASS',aliasOperationIds=[x['operationId'] for x in aliases])\nfor cmd in r['commandInventory']['newRootMappings']:\n for side,outcome in [('positive','positive'),('denial','negative')]:\n  for proof in cmd[side]:inv['coverage']['commandBehaviorExercised'].append({'command':cmd['command'],'outcome':outcome,'testFile':proof['file'],'testTitle':proof['fullTestTitle'],'executionId':e['id'],'bundleSha256':e['bundleSha256'],'observationBasis':proof['assertionSummary']})\ncommands=inv['coverage']['commandBehaviorExercised'];pos={x['command'] for x in commands if x['outcome']=='positive'};neg={x['command'] for x in commands if x['outcome']=='negative'}\npong='irctest/server_tests/labeled_responses.py::LabeledResponsesTestCase::testEmptyBatchForNoResponse';assert pong in conf['nodeIdsByClassification']['passed']\ninv['coverage']['separateProtocolCommandEvidence']=[{'command':'PONG','outcome':'positive','nodeid':pong,'manifest':'docs/security/matrix-evidence/conformance-35.json','qualification':'Actual inbound labeled PONG and one matching ACK; protocol control, not multi-user authorization proof.'}]\ninv['coverage']['summary']={'operationInventoryRows':207,'delegatedCatchalls':2,'concreteMethodOrProtocolEntryShapes':205,'positive':205,'denialOrProtectedFiltering':198,'publicReadDenialNotApplicable':7,'pendingOperations':0,'ircRoots':79,'applicationIrcRootsExercised':len(pos|neg),'applicationPositiveIrcRoots':len(pos),'applicationNegativeIrcRoots':len(neg),'applicationBothIrcRoots':len(pos&neg),'includingSeparateConformanceIrcRoots':len(pos|neg|{'PONG'})}\ninv['limitations']+=r['limitations'];(out/'matrix-route-command-coverage.json').write_text(json.dumps(inv,indent=2)+'\\n');print(json.dumps(inv['coverage']['summary'],indent=2))\n",
+    "executionCaptureSource": "import argparse, hashlib, json, re\nfrom collections import Counter\nfrom pathlib import Path\n\nparser = argparse.ArgumentParser()\nfor flag in ('snapshot', 'bundle-manifest', 'vitest', 'log', 'id', 'output', 'command'):\n    parser.add_argument('--' + flag, required=True)\nparser.add_argument('--exit-code', required=True, type=int)\nargs = parser.parse_args()\nsha = lambda p: hashlib.sha256(Path(p).read_bytes()).hexdigest()\nsnapshot = Path(args.snapshot).resolve()\nsource = json.loads((snapshot / 'source-manifest.json').read_text())\nbundle = json.loads(Path(args.bundle_manifest).read_text())\ngraph = Path(bundle['bundle']).parent\nassert all(sha(graph / p) == h for p, h in bundle['files'].items()), 'Frozen module drift'\nassert all(sha(snapshot / p) == h for p, h in source['filesSha256'].items()), 'Frozen source drift'\nbuild_source = json.loads((Path(bundle['sourceRoot']) / 'source-manifest.json').read_text())['filesSha256']\nruntime = lambda p: p.startswith(('server/', 'shared/')) or p in ('nitro.config.ts', 'package.json', 'bun.lock')\nassert {p: h for p, h in source['filesSha256'].items() if runtime(p)} == {p: h for p, h in build_source.items() if runtime(p)}, 'Runtime source differs from build'\nraw = json.loads(Path(args.vitest).read_text())\nunhandled = re.search(r'Vitest caught (\\d+) unhandled error', Path(args.log).read_text())\nunhandled_count = int(unhandled.group(1)) if unhandled else 0\ntests, statuses, identities = [], Counter(), set()\nfor suite in raw['testResults']:\n    file = str(Path(suite['name']).resolve().relative_to(snapshot))\n    assert file.startswith('tests/') and file.endswith('.test.ts'), file\n    normalized = {'name': file, 'status': suite['status'], 'message': suite.get('message', ''), 'assertionResults': []}\n    for test in suite['assertionResults']:\n        identity = (file, test['fullName'])\n        assert identity not in identities, ('Duplicate identity', identity)\n        identities.add(identity)\n        statuses[test['status']] += 1\n        normalized['assertionResults'].append({k: test[k] for k in ('fullName', 'title', 'status', 'failureMessages', 'duration') if k in test})\n    tests.append(normalized)\nassert len(identities) == raw['numTotalTests'], 'Reporter total differs from assertion identities'\nassert statuses['passed'] == raw['numPassedTests'] and statuses['failed'] == raw['numFailedTests']\nexpected_failure_declarations = [p for p in source['filesSha256'] if p.startswith('tests/') and p.endswith('.ts') and re.search(r'\\b(?:it|test)\\.fails\\s*\\(', (snapshot / p).read_text())]\nassert not expected_failure_declarations, 'Expected-failure declaration needs explicit accounting'\nresult = {\n    'version': 1, 'id': args.id, 'bundleSha256': bundle['sha256'],\n    'vitestJson': './' + Path(args.output).name,\n    'scope': 'One unfiltered application execution on an immutable build and source snapshot; focused and historical counts are not added.',\n    'counts': {'total': len(identities), 'pass': statuses['passed'], 'fail': statuses['failed'], 'skip': statuses['skipped'], 'todo': statuses['todo'], 'xfail': 0, 'xpass': 0, 'deselected': 0, 'errors': unhandled_count, 'testFiles': len(tests)},\n    'testResults': tests, 'rawVitestJsonSha256': sha(args.vitest),\n    'sourceAndTestFilesSha256': source['filesSha256'],\n    'verification': {\n        'command': args.command, 'processExitCode': args.exit_code, 'rawReporterSuccess': raw['success'],\n        'testRunConfig': {'file': 'vitest.full.config.mts', 'sha256': sha(snapshot/'vitest.full.config.mts'), 'source': (snapshot/'vitest.full.config.mts').read_text()} if (snapshot/'vitest.full.config.mts').exists() else None,\n        'rawLogSha256': sha(args.log), 'sourceTestConfigFilesStable': len(source['filesSha256']),\n        'completeBuildSourceFilesMatched': sum(runtime(p) for p in source['filesSha256']),\n        'frozenModuleFilesStable': len(bundle['files']), 'frozenModuleFilesSha256': bundle['files'],\n        'expectedFailureDeclarations': expected_failure_declarations,\n        'deselectionBasis': 'Unfiltered run command without test-name, file, tag or shard selectors; see captured command.',\n        'rawSuiteCounts': {k: v for k, v in raw.items() if k.startswith('num')},\n        'collectionErrors': [r for r in tests if r['status'] == 'failed' and not r['assertionResults']],\n    },\n}\nPath(args.output).write_text(json.dumps(result, indent=2) + '\\n')\nprint(json.dumps(result['counts']))\n"
+  },
+  "fixedDefects": [
+    {
+      "id": "EXP-01",
+      "title": "Authorized event loss during channel revision race or authorization dependency failure",
+      "rootCause": "Ordinary revision changes and operational exceptions were treated as permanent denial, so replay could advance over an authorized retained event.",
+      "source": [
+        "server/durable-objects/channel.ts",
+        "server/features/session/bridge.ts",
+        "server/features/operations.ts"
+      ],
+      "testFile": "tests/features/event-snapshot-race.test.ts",
+      "beforeEvidence": "matrix-evidence/event-snapshot32-report.json",
+      "status": "FIXED",
+      "executionId": "source34-unfiltered",
+      "tests": [
+        "a message committed while channel snapshot liveness is pending preserves both ordered private events",
+        "a real channel ban while snapshot liveness is pending denies private events until the ban is removed",
+        "an operational resource authorization RPC failure retains the cursor and permits explicit replay recovery",
+        "an operational payload authorization RPC failure retains the cursor and permits explicit replay recovery"
+      ]
+    },
+    {
+      "id": "EXP-02",
+      "title": "Concurrent delivery ordering, duplicate enqueue after lost ACK, and RPC lifetime preventing hibernation",
+      "rootCause": "Post-commit delivery lacked a shared ordered durable intent and received RPC results were not disposed after failure.",
+      "source": [
+        "server/durable-objects/channel.ts",
+        "server/durable-objects/session.ts",
+        "server/features/session/bridge.ts"
+      ],
+      "testFile": "tests/features/ordered-api-delivery.test.ts",
+      "beforeEvidence": "Historical full26 and ordered-ACK focused diagnostics retained in the local evidence archive; final source explicitly tests actual lost ACK and object recreation.",
+      "status": "FIXED",
+      "executionId": "source34-unfiltered",
+      "tests": [
+        "committed REST delivery retries a lost RPC acknowledgement in order without duplicating IRC or granting outsider access"
+      ]
+    },
+    {
+      "id": "EXP-03",
+      "title": "Channel identity initialization and denied-write side effects",
+      "rootCause": "Uninitialized channel identity could use #unknown or an unrelated supplied namespace; authorization ordering allowed identity metadata changes before a denial.",
+      "source": [
+        "server/durable-objects/channel.ts"
+      ],
+      "testFile": "tests/features/channel-identity-lifecycle.test.ts",
+      "beforeEvidence": "matrix-evidence/channel-identity28-report.json",
+      "status": "FIXED",
+      "executionId": "source34-unfiltered",
+      "tests": [
+        "authorized role creation before JOIN binds the actual channel namespace and publishes the committed event",
+        "denied channel role requests leave identity, roles and metadata unchanged across token and hash facades",
+        "channel names cannot rebind initialized or uninitialized objects and stale generations do not mutate roles",
+        "uninitialized admin channel reads preserve the requested namespace and denied routes establish no identity",
+        "scoped administrators read only the current retained channel archive with bounded pagination, redaction and expiry"
+      ]
+    },
+    {
+      "id": "EXP-04",
+      "title": "Retired archive generation access and fresh-name isolation",
+      "rootCause": "Archive reads selected the live/current generation rather than the explicitly retained retired generation.",
+      "source": [
+        "server/durable-objects/channel.ts"
+      ],
+      "testFile": "tests/features/channel-identity-lifecycle.test.ts",
+      "beforeEvidence": "matrix-evidence/channel-identity28-report.json",
+      "status": "FIXED",
+      "executionId": "source34-unfiltered",
+      "tests": [
+        "scoped administrators read only the current retained channel archive with bounded pagination, redaction and expiry"
+      ]
+    },
+    {
+      "id": "EXP-05",
+      "title": "Open-network administrator guest metadata compatibility",
+      "classification": "Authorization/compatibility regression",
+      "rootCause": "Registered account resolution was incorrectly required for the supported current guest path; expected domain errors also surfaced as internal errors.",
+      "source": [
+        "server/durable-objects/session.ts",
+        "server/handlers/admin.ts"
+      ],
+      "testFile": "tests/features/admin-guest-metadata.test.ts",
+      "beforeEvidence": "Historical full26 administration failures; original behavior and final boundary scope retained in matched source review.",
+      "status": "FIXED",
+      "executionId": "source34-unfiltered",
+      "tests": [
+        "open-network guest metadata preserves administrator compatibility without bypassing account scopes or private metadata"
+      ]
+    }
+  ],
+  "finalArtifactHashes": {
+    "matrix-coverage.json": "d6a366792ed7a4139de08f1caf76646ef703bc7f0ba63a952d6b6e434b126cff",
+    "matrix-route-command-coverage.json": "d1dbeaa24879d35f0af801774ca17cdcc7d48f03fa87fc45e05ca2fc99074c8e",
+    "matrix-results.md": "7c2e1e7d5ff6da15fb444b0de44ba63b5b9174a9bb38f33d0108e925e15a5ab9",
+    "matrix-evidence/current-evidence-34.json": "7cde6bc0fdfc7f5ba7ed1190b4ff214d07a9b2944845240076937bd57fd4db94",
+    "matrix-evidence/current-execution-34.json": "4f7c2f515855e5088993b5e48d8a6c7bf1e664d09715f2b524ab9a5607613d6f",
+    "matrix-evidence/operation-evidence-34.json": "de6c90caca92a1459bfdc7782fae80af1d96a6fc60b97a93d6fc86b330c25ddb",
+    "matrix-evidence/conformance-35.json": "2a3fc635bf302b01b2daf9ce8bd4da170c05efcc8604efb1e83a899b49b59f60",
+    "matrix-evidence/container32.json": "a1c2f44d4ad20a25383ae3c7cdcbd489fa1eec458459622973f786308011d01d"
+  },
+  "uncommittedAtVerification": true,
+  "remoteActionsDuringVerification": {
+    "commit": false,
+    "push": false,
+    "publish": false,
+    "clusterApply": false
+  },
+  "repositoryCheckpoint": "The user subsequently authorized committing and pushing this verified checkpoint without a version tag or deployment."
+}

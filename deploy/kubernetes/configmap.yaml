@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: flarc-config
+data:
+  NODE_ENV: production
+  HOST: 0.0.0.0
+  TCP_HOST: 0.0.0.0
+  PORT: "8788"
+  TCP_PORT: "6667"
+  STATE_DIR: /data
+  ALLOWLIST_FILE: /etc/flarc/allowlist.yaml
+  AUDIT_LOG_ENABLED: "false"
+  EVENT_SHARD_COUNT: "4"
+  REQUIRE_ACCOUNTS: "1"
+  ADMIN_USERS: flarcadmin
+  SIGNUP_POLICY: closed

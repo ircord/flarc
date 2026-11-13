@@ -1,0 +1,296 @@
+{
+  "status": "Explicit coordinator source amendments; no outcome assigned",
+  "sourceAmendments": [
+    {
+      "file": "tests/security/matrix-abuse-gaps.test.ts",
+      "sha256": "fdb967a1972f6f9b1660355bc634aba9ab6bcfdf307bc8c72f3ab3e9b35e1f58",
+      "review": "Reviewed held-output-pressure amendment: observe early close without unowned rejection; enforce close deadline only after production of actual 8 MiB pressure; sequential producer membership retains owner and healthy witness, persistent cap and restart checks. No reduction of workload/cap or privacy assertions."
+    },
+    {
+      "file": "tests/security/matrix-admin-positive.test.ts",
+      "sha256": "596236a4344e4ec925d61e94c3d5604b534650059e4f9a0065de0f14d80251d8",
+      "review": "Reviewed incremental route-proof-admin-status.patch: all 12 existing profile/metadata/bot GET parsers now assert HTTP200 through assertedAdminRead before existing exact resource/state assertions; swapped aliases unchanged."
+    },
+    {
+      "file": "tests/integration/ircord-edit-fts-webhooks.test.ts",
+      "sha256": "01180fdb33c8418f1ef6b04a5667b10911b27818c63706bfc125599e0684096b",
+      "review": "Root added explicit HTTP200 to existing outgoing-webhook list proof, preserving created hook identity and ok response assertions."
+    },
+    {
+      "file": "tests/features/service-audit-credentials.test.ts",
+      "sha256": "f5f319ee7f6172361f548006b457e2e1a713cc149527b9a90a6a52b85a80b942",
+      "review": "Root added explicit200 to original enabled audit read; after restart both administrative aliases must return original exact actor/action/target/outcome/id/time records. All credential revocation and independent account controls retained."
+    },
+    {
+      "file": "tests/features/accounts-admin.test.ts",
+      "sha256": "7146aaa9d63a80290ffc6bdacc420ea20ee289c4c61f372a3cb4a3493d3d67c3",
+      "review": "Root reviewed real-session denial persistence after restart and restricted administrator scope unchanged state/event windows, current IRC/event ban revocation and unrelated positive controls."
+    },
+    {
+      "file": "tests/features/api-expansion-boundaries.test.ts",
+      "sha256": "dc92aa320119582ede70cc5d653495b55042307c4af55dea5683f12218fab076",
+      "review": "Root administrator-targeted session deletion has pre/post real independent event markers and post-restart revoked credential denial. Both replay aliases assert exact conversation redaction event and exclude original/edited text. Additional DM assertion amendments reviewed separately."
+    },
+    {
+      "file": "tests/features/channels-roles.test.ts",
+      "sha256": "649671104b36cf4c2c980f4c76fe475cffd73f09f42b2c1067553d37e30b8ea8",
+      "review": "Reviewed source extension preserving actual inheritance/cycle denials with bounded role-event silence and independent foreign role persistence."
+    },
+    {
+      "file": "tests/features/conversations-events.test.ts",
+      "sha256": "43db70640f9c62a0093d3a93509943a5e629fc10d487be9b547571b25246ef04",
+      "review": "Reviewed immutable account/conversation state, independent persistent subscription preferences, exact private metadata ownership, cursor/idempotency and restart extensions. Final scope assertions additionally described in final-dimension amendments."
+    },
+    {
+      "file": "tests/features/webpush-policy.test.ts",
+      "sha256": "807eeb8562f0a63b8b9a81f60b62abb2c0d5c23942b8faf3e68ac8d13dc9c1b0",
+      "review": "Reviewed final Luna source: persisted removed pending endpoint cannot deliver across restart; late-member prejoin isolation; nondefault mentions persistence and independent recipient; exact eight retries plus independent encrypted delivery controls. No production/helper modifications."
+    },
+    {
+      "file": "tests/features/webpush-delivery.test.ts",
+      "sha256": "7e3a3a00e17f2e883c1fcbdae05355d77bcee0504407ee886c971229cc2c6963",
+      "review": "Reviewed actual receiver keys/encrypted payload, intended and unrelated endpoints/event streams after real recreation; Charlie receives only his own positive control and not Alice/Bob private content."
+    },
+    {
+      "file": "tests/features/event-snapshot-race.test.ts",
+      "sha256": "1a2313ccb49a14c5ee5be756aa7b3e338f56f58806114ea6720d23f4d1fff276",
+      "review": "Reviewed genuine liveness RPC gate and actual SQLite failure wrappers around production authorization, retained exact journal/cursor positions, real ban/unban and recovery; no fake privilege flags."
+    }
+  ],
+  "additionalEvidence": [
+    {
+      "id": "WS-017",
+      "kind": "test",
+      "testFile": "tests/features/event-snapshot-race.test.ts",
+      "testFileSha256": "1a2313ccb49a14c5ee5be756aa7b3e338f56f58806114ea6720d23f4d1fff276",
+      "testTitle": "a message committed while channel snapshot liveness is pending preserves both ordered private events",
+      "scenarioScope": "Current account access survives an unrelated message revision while authorized events cross physical event shards.",
+      "rationale": "Additional regression source proof; exact current execution matched by final assembler.",
+      "assertionDetails": [
+        "Real liveness RPC held while a second real REST message commits; both canonical IDs occur once in order for Bob and in SQLite journal; outsider receives neither and independent public markers progress."
+      ],
+      "transports": [
+        "REST",
+        "IRC modes",
+        "v2 event WebSocket",
+        "real SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "WS-019",
+      "kind": "test",
+      "testFile": "tests/features/event-snapshot-race.test.ts",
+      "testFileSha256": "1a2313ccb49a14c5ee5be756aa7b3e338f56f58806114ea6720d23f4d1fff276",
+      "testTitle": "a message committed while channel snapshot liveness is pending preserves both ordered private events",
+      "scenarioScope": "Current account access survives an unrelated message revision while authorized events cross physical event shards.",
+      "rationale": "Additional regression source proof; exact current execution matched by final assembler.",
+      "assertionDetails": [
+        "Real liveness RPC held while a second real REST message commits; both canonical IDs occur once in order for Bob and in SQLite journal; outsider receives neither and independent public markers progress."
+      ],
+      "transports": [
+        "REST",
+        "IRC modes",
+        "v2 event WebSocket",
+        "real SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "WS-024",
+      "kind": "test",
+      "testFile": "tests/features/event-snapshot-race.test.ts",
+      "testFileSha256": "1a2313ccb49a14c5ee5be756aa7b3e338f56f58806114ea6720d23f4d1fff276",
+      "testTitle": "a real channel ban while snapshot liveness is pending denies private events until the ban is removed",
+      "scenarioScope": "A real IRC ban takes effect while an event authorization RPC is pending.",
+      "rationale": "Additional regression source proof; exact current execution matched by final assembler.",
+      "assertionDetails": [
+        "Two private candidates remain excluded from Bob and outsider after the actual ban; Bob history is403; unban restores actual new event delivery, outsider remains excluded."
+      ],
+      "transports": [
+        "REST",
+        "IRC modes",
+        "v2 event WebSocket",
+        "real SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "WS-017",
+      "kind": "test",
+      "testFile": "tests/features/event-snapshot-race.test.ts",
+      "testFileSha256": "1a2313ccb49a14c5ee5be756aa7b3e338f56f58806114ea6720d23f4d1fff276",
+      "testTitle": "an operational resource authorization RPC failure retains the cursor and permits explicit replay recovery",
+      "scenarioScope": "Authorization dependency failure closes the affected edge without falsely consuming authorized durable events.",
+      "rationale": "Additional regression source proof; exact current execution matched by final assembler.",
+      "assertionDetails": [
+        "Actual missing-table SQL error during production snapshot lookup; two committed journal messages remain; affected edge closes1008/recovery required; authoritative cursor sequence stays at prior position.",
+        "Unrelated public delivery progresses; real Bob reconnection replay returns both IDs exactly in order, foreign cursor403, subsequent authorized event delivered without outsider leak."
+      ],
+      "transports": [
+        "REST",
+        "IRC modes",
+        "v2 event WebSocket",
+        "real SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "DB-016",
+      "kind": "test",
+      "testFile": "tests/features/event-snapshot-race.test.ts",
+      "testFileSha256": "1a2313ccb49a14c5ee5be756aa7b3e338f56f58806114ea6720d23f4d1fff276",
+      "testTitle": "an operational resource authorization RPC failure retains the cursor and permits explicit replay recovery",
+      "scenarioScope": "Authorization dependency failure closes the affected edge without falsely consuming authorized durable events.",
+      "rationale": "Additional regression source proof; exact current execution matched by final assembler.",
+      "assertionDetails": [
+        "Actual missing-table SQL error during production snapshot lookup; two committed journal messages remain; affected edge closes1008/recovery required; authoritative cursor sequence stays at prior position.",
+        "Unrelated public delivery progresses; real Bob reconnection replay returns both IDs exactly in order, foreign cursor403, subsequent authorized event delivered without outsider leak."
+      ],
+      "transports": [
+        "REST",
+        "IRC modes",
+        "v2 event WebSocket",
+        "real SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "WS-017",
+      "kind": "test",
+      "testFile": "tests/features/event-snapshot-race.test.ts",
+      "testFileSha256": "1a2313ccb49a14c5ee5be756aa7b3e338f56f58806114ea6720d23f4d1fff276",
+      "testTitle": "an operational payload authorization RPC failure retains the cursor and permits explicit replay recovery",
+      "scenarioScope": "Authorization dependency failure closes the affected edge without falsely consuming authorized durable events.",
+      "rationale": "Additional regression source proof; exact current execution matched by final assembler.",
+      "assertionDetails": [
+        "Actual missing-table SQL error during production snapshot lookup; two committed journal messages remain; affected edge closes1008/recovery required; authoritative cursor sequence stays at prior position.",
+        "Unrelated public delivery progresses; real Bob reconnection replay returns both IDs exactly in order, foreign cursor403, subsequent authorized event delivered without outsider leak."
+      ],
+      "transports": [
+        "REST",
+        "IRC modes",
+        "v2 event WebSocket",
+        "real SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "DB-016",
+      "kind": "test",
+      "testFile": "tests/features/event-snapshot-race.test.ts",
+      "testFileSha256": "1a2313ccb49a14c5ee5be756aa7b3e338f56f58806114ea6720d23f4d1fff276",
+      "testTitle": "an operational payload authorization RPC failure retains the cursor and permits explicit replay recovery",
+      "scenarioScope": "Authorization dependency failure closes the affected edge without falsely consuming authorized durable events.",
+      "rationale": "Additional regression source proof; exact current execution matched by final assembler.",
+      "assertionDetails": [
+        "Actual missing-table SQL error during production snapshot lookup; two committed journal messages remain; affected edge closes1008/recovery required; authoritative cursor sequence stays at prior position.",
+        "Unrelated public delivery progresses; real Bob reconnection replay returns both IDs exactly in order, foreign cursor403, subsequent authorized event delivered without outsider leak."
+      ],
+      "transports": [
+        "REST",
+        "IRC modes",
+        "v2 event WebSocket",
+        "real SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    }
+  ]
+}

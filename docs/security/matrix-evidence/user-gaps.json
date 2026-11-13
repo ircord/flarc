@@ -1,0 +1,663 @@
+{
+  "version": 2,
+  "evidence": [
+    {
+      "id": "USER-019",
+      "kind": "test",
+      "executionId": "user-gaps-frozen09",
+      "bundleSha256": "5894497f55587e0e691458a6db9dad9472d93b36756e0bec50cdded299bf6446",
+      "testFile": "tests/security/matrix-user-gaps.test.ts",
+      "testTitle": "matrix user gaps rejects profile writes from disabled existing sessions and preserves other accounts across restart",
+      "outcome": "PASS",
+      "scenarioScope": "Two pre-disable REST sessions attempt profile updates",
+      "rationale": "Assertions are limited to the concrete behavior described; unasserted required dimensions remain open.",
+      "assertionDetails": [
+        "Both sessions receive 401 for writes to displayName, avatar and customStatus; an IRC subscriber receives no attack values by its PING barrier.",
+        "Target and unrelated profile readbacks and stopped SQLite retain original values; fresh root and Bob sessions after runtime recreation read the same state."
+      ],
+      "transports": [
+        "REST",
+        "IRC",
+        "SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "sourceAssertions": [
+        {
+          "file": "tests/security/matrix-user-gaps.test.ts",
+          "testTitle": "matrix user gaps rejects profile writes from disabled existing sessions and preserves other accounts across restart",
+          "assertion": "Both sessions receive 401 for writes to displayName, avatar and customStatus; an IRC subscriber receives no attack values by its PING barrier."
+        },
+        {
+          "file": "tests/security/matrix-user-gaps.test.ts",
+          "testTitle": "matrix user gaps rejects profile writes from disabled existing sessions and preserves other accounts across restart",
+          "assertion": "Target and unrelated profile readbacks and stopped SQLite retain original values; fresh root and Bob sessions after runtime recreation read the same state."
+        }
+      ]
+    },
+    {
+      "id": "USER-015",
+      "kind": "test",
+      "executionId": "user-gaps-frozen09",
+      "bundleSha256": "5894497f55587e0e691458a6db9dad9472d93b36756e0bec50cdded299bf6446",
+      "testFile": "tests/security/matrix-user-gaps.test.ts",
+      "testTitle": "matrix user gaps filters non-profile account metadata and credentials from cross-user profile readback after restart",
+      "outcome": "PASS",
+      "scenarioScope": "Authenticated cross-user profile GET allowlist",
+      "rationale": "Assertions are limited to the concrete behavior described; unasserted required dimensions remain open.",
+      "assertionDetails": [
+        "A real administrator seeds a non-profile metadata marker; Alice reads Bob’s permitted display name but not the marker, Bob’s password or credential-like property names.",
+        "Stopped SQLite confirms the marker exists; Alice freshly logs in after runtime restart and repeats the read, and Bob independently logs in."
+      ],
+      "transports": [
+        "REST",
+        "SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": {
+          "status": "not-applicable",
+          "rationale": "This scenario tests the read-only authenticated-public REST profile JSON projection (authorization-matrix Profile read row). GET returns permitted fields only to the requester, changes no profile and has no unsolicited recipient-notification contract. The administrator metadata write is fixture setup, not a mutation denial exempted from event checks."
+        },
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "sourceAssertions": [
+        {
+          "file": "tests/security/matrix-user-gaps.test.ts",
+          "testTitle": "matrix user gaps filters non-profile account metadata and credentials from cross-user profile readback after restart",
+          "assertion": "A real administrator seeds a non-profile metadata marker; Alice reads Bob’s permitted display name but not the marker, Bob’s password or credential-like property names."
+        },
+        {
+          "file": "tests/security/matrix-user-gaps.test.ts",
+          "testTitle": "matrix user gaps filters non-profile account metadata and credentials from cross-user profile readback after restart",
+          "assertion": "Stopped SQLite confirms the marker exists; Alice freshly logs in after runtime restart and repeats the read, and Bob independently logs in."
+        }
+      ]
+    },
+    {
+      "id": "USER-016",
+      "kind": "test",
+      "executionId": "user-gaps-frozen09",
+      "bundleSha256": "5894497f55587e0e691458a6db9dad9472d93b36756e0bec50cdded299bf6446",
+      "testFile": "tests/security/matrix-user-gaps.test.ts",
+      "testTitle": "matrix user gaps delivers REST profile updates to subscribed shared-channel IRC peers",
+      "outcome": "PASS",
+      "scenarioScope": "REST profile update and IRC notifications",
+      "rationale": "Assertions are limited to the concrete behavior described; unasserted required dimensions remain open.",
+      "assertionDetails": [
+        "A subscribed shared-channel peer receives display name, avatar and status; a second account device receives display name; nonshared and unsubscribed clients receive no display-name marker before barriers.",
+        "A cross-user avatar write is denied without a notification or target change; owner clear produces 766; stopped SQLite and fresh Bob login after restart confirm persisted fields.",
+        "This test does NOT snapshot/re-read an unrelated account profile before and after mutation. Outsider notification silence counts as events only; unrelated persistent-resource proof is supplied, if accepted, by the separately named current09 identity case."
+      ],
+      "transports": [
+        "REST",
+        "IRC",
+        "SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "sourceAssertions": [
+        {
+          "file": "tests/security/matrix-user-gaps.test.ts",
+          "testTitle": "matrix user gaps delivers REST profile updates to subscribed shared-channel IRC peers",
+          "assertion": "A subscribed shared-channel peer receives display name, avatar and status; a second account device receives display name; nonshared and unsubscribed clients receive no display-name marker before barriers."
+        },
+        {
+          "file": "tests/security/matrix-user-gaps.test.ts",
+          "testTitle": "matrix user gaps delivers REST profile updates to subscribed shared-channel IRC peers",
+          "assertion": "A cross-user avatar write is denied without a notification or target change; owner clear produces 766; stopped SQLite and fresh Bob login after restart confirm persisted fields."
+        },
+        {
+          "file": "tests/security/matrix-user-gaps.test.ts",
+          "testTitle": "matrix user gaps delivers REST profile updates to subscribed shared-channel IRC peers",
+          "assertion": "This test does NOT snapshot/re-read an unrelated account profile before and after mutation. Outsider notification silence counts as events only; unrelated persistent-resource proof is supplied, if accepted, by the separately named current09 identity case."
+        }
+      ]
+    },
+    {
+      "id": "USER-016",
+      "kind": "test",
+      "executionId": "user-gaps-frozen09",
+      "bundleSha256": "5894497f55587e0e691458a6db9dad9472d93b36756e0bec50cdded299bf6446",
+      "testFile": "tests/security/matrix-user-gaps.test.ts",
+      "testTitle": "REST metadata delivery rechecks PART while outbound authorization is pending",
+      "outcome": "PASS",
+      "scenarioScope": "REST notification with PART before credential-check RPC completes",
+      "rationale": "Assertions are limited to the concrete behavior described; unasserted required dimensions remain open.",
+      "assertionDetails": [
+        "A test-only wrapper delays one real recipient credential lookup; Bob completes PART before release and receives no marker by PING barrier, while subscribed Charlie receives it.",
+        "The wrapper does not fabricate successful authentication or account state."
+      ],
+      "transports": [
+        "REST",
+        "IRC",
+        "SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "events",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "sourceAssertions": [
+        {
+          "file": "tests/security/matrix-user-gaps.test.ts",
+          "testTitle": "REST metadata delivery rechecks PART while outbound authorization is pending",
+          "assertion": "A test-only wrapper delays one real recipient credential lookup; Bob completes PART before release and receives no marker by PING barrier, while subscribed Charlie receives it."
+        },
+        {
+          "file": "tests/security/matrix-user-gaps.test.ts",
+          "testTitle": "REST metadata delivery rechecks PART while outbound authorization is pending",
+          "assertion": "The wrapper does not fabricate successful authentication or account state."
+        }
+      ]
+    },
+    {
+      "id": "USER-016",
+      "kind": "test",
+      "executionId": "user-gaps-frozen09",
+      "bundleSha256": "5894497f55587e0e691458a6db9dad9472d93b36756e0bec50cdded299bf6446",
+      "testFile": "tests/security/matrix-user-gaps.test.ts",
+      "testTitle": "REST metadata delivery rechecks UNSUB while outbound authorization is pending",
+      "outcome": "PASS",
+      "scenarioScope": "REST notification with UNSUB before credential-check RPC completes",
+      "rationale": "Assertions are limited to the concrete behavior described; unasserted required dimensions remain open.",
+      "assertionDetails": [
+        "A test-only wrapper delays one real recipient credential lookup; Bob completes UNSUB before release and receives no marker by PING barrier, while subscribed Charlie receives it.",
+        "The wrapper does not fabricate successful authentication or account state."
+      ],
+      "transports": [
+        "REST",
+        "IRC",
+        "SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "events",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "sourceAssertions": [
+        {
+          "file": "tests/security/matrix-user-gaps.test.ts",
+          "testTitle": "REST metadata delivery rechecks UNSUB while outbound authorization is pending",
+          "assertion": "A test-only wrapper delays one real recipient credential lookup; Bob completes UNSUB before release and receives no marker by PING barrier, while subscribed Charlie receives it."
+        },
+        {
+          "file": "tests/security/matrix-user-gaps.test.ts",
+          "testTitle": "REST metadata delivery rechecks UNSUB while outbound authorization is pending",
+          "assertion": "The wrapper does not fabricate successful authentication or account state."
+        }
+      ]
+    },
+    {
+      "id": "USER-016",
+      "kind": "test",
+      "executionId": "user-gaps-frozen09",
+      "bundleSha256": "5894497f55587e0e691458a6db9dad9472d93b36756e0bec50cdded299bf6446",
+      "testFile": "tests/security/matrix-user-gaps.test.ts",
+      "testTitle": "IRC metadata delivery rechecks PART while outbound authorization is pending",
+      "outcome": "PASS",
+      "scenarioScope": "IRC notification with PART before credential-check RPC completes",
+      "rationale": "Assertions are limited to the concrete behavior described; unasserted required dimensions remain open.",
+      "assertionDetails": [
+        "A test-only wrapper delays one real recipient credential lookup; Bob completes PART before release and receives no marker by PING barrier, while subscribed Charlie receives it.",
+        "The wrapper does not fabricate successful authentication or account state."
+      ],
+      "transports": [
+        "REST",
+        "IRC",
+        "SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "events",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "sourceAssertions": [
+        {
+          "file": "tests/security/matrix-user-gaps.test.ts",
+          "testTitle": "IRC metadata delivery rechecks PART while outbound authorization is pending",
+          "assertion": "A test-only wrapper delays one real recipient credential lookup; Bob completes PART before release and receives no marker by PING barrier, while subscribed Charlie receives it."
+        },
+        {
+          "file": "tests/security/matrix-user-gaps.test.ts",
+          "testTitle": "IRC metadata delivery rechecks PART while outbound authorization is pending",
+          "assertion": "The wrapper does not fabricate successful authentication or account state."
+        }
+      ]
+    },
+    {
+      "id": "USER-016",
+      "kind": "test",
+      "executionId": "user-gaps-frozen09",
+      "bundleSha256": "5894497f55587e0e691458a6db9dad9472d93b36756e0bec50cdded299bf6446",
+      "testFile": "tests/security/matrix-user-gaps.test.ts",
+      "testTitle": "IRC metadata delivery rechecks UNSUB while outbound authorization is pending",
+      "outcome": "PASS",
+      "scenarioScope": "IRC notification with UNSUB before credential-check RPC completes",
+      "rationale": "Assertions are limited to the concrete behavior described; unasserted required dimensions remain open.",
+      "assertionDetails": [
+        "A test-only wrapper delays one real recipient credential lookup; Bob completes UNSUB before release and receives no marker by PING barrier, while subscribed Charlie receives it.",
+        "The wrapper does not fabricate successful authentication or account state."
+      ],
+      "transports": [
+        "REST",
+        "IRC",
+        "SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "events",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "sourceAssertions": [
+        {
+          "file": "tests/security/matrix-user-gaps.test.ts",
+          "testTitle": "IRC metadata delivery rechecks UNSUB while outbound authorization is pending",
+          "assertion": "A test-only wrapper delays one real recipient credential lookup; Bob completes UNSUB before release and receives no marker by PING barrier, while subscribed Charlie receives it."
+        },
+        {
+          "file": "tests/security/matrix-user-gaps.test.ts",
+          "testTitle": "IRC metadata delivery rechecks UNSUB while outbound authorization is pending",
+          "assertion": "The wrapper does not fabricate successful authentication or account state."
+        }
+      ]
+    },
+    {
+      "id": "USER-016",
+      "kind": "test",
+      "executionId": "user-gaps-frozen09",
+      "bundleSha256": "5894497f55587e0e691458a6db9dad9472d93b36756e0bec50cdded299bf6446",
+      "testFile": "tests/security/matrix-user-gaps.test.ts",
+      "testTitle": "JOIN metadata delivery rechecks PART while outbound authorization is pending",
+      "outcome": "PASS",
+      "scenarioScope": "JOIN notification with PART before credential-check RPC completes",
+      "rationale": "Assertions are limited to the concrete behavior described; unasserted required dimensions remain open.",
+      "assertionDetails": [
+        "A test-only wrapper delays one real recipient credential lookup; Bob completes PART before release and receives no marker by PING barrier, while subscribed Charlie receives it.",
+        "The wrapper does not fabricate successful authentication or account state."
+      ],
+      "transports": [
+        "REST",
+        "IRC",
+        "SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "events",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "sourceAssertions": [
+        {
+          "file": "tests/security/matrix-user-gaps.test.ts",
+          "testTitle": "JOIN metadata delivery rechecks PART while outbound authorization is pending",
+          "assertion": "A test-only wrapper delays one real recipient credential lookup; Bob completes PART before release and receives no marker by PING barrier, while subscribed Charlie receives it."
+        },
+        {
+          "file": "tests/security/matrix-user-gaps.test.ts",
+          "testTitle": "JOIN metadata delivery rechecks PART while outbound authorization is pending",
+          "assertion": "The wrapper does not fabricate successful authentication or account state."
+        }
+      ]
+    },
+    {
+      "id": "USER-016",
+      "kind": "test",
+      "executionId": "user-gaps-frozen09",
+      "bundleSha256": "5894497f55587e0e691458a6db9dad9472d93b36756e0bec50cdded299bf6446",
+      "testFile": "tests/security/matrix-user-gaps.test.ts",
+      "testTitle": "JOIN metadata delivery rechecks UNSUB while outbound authorization is pending",
+      "outcome": "PASS",
+      "scenarioScope": "JOIN notification with UNSUB before credential-check RPC completes",
+      "rationale": "Assertions are limited to the concrete behavior described; unasserted required dimensions remain open.",
+      "assertionDetails": [
+        "A test-only wrapper delays one real recipient credential lookup; Bob completes UNSUB before release and receives no marker by PING barrier, while subscribed Charlie receives it.",
+        "The wrapper does not fabricate successful authentication or account state."
+      ],
+      "transports": [
+        "REST",
+        "IRC",
+        "SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "events",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "sourceAssertions": [
+        {
+          "file": "tests/security/matrix-user-gaps.test.ts",
+          "testTitle": "JOIN metadata delivery rechecks UNSUB while outbound authorization is pending",
+          "assertion": "A test-only wrapper delays one real recipient credential lookup; Bob completes UNSUB before release and receives no marker by PING barrier, while subscribed Charlie receives it."
+        },
+        {
+          "file": "tests/security/matrix-user-gaps.test.ts",
+          "testTitle": "JOIN metadata delivery rechecks UNSUB while outbound authorization is pending",
+          "assertion": "The wrapper does not fabricate successful authentication or account state."
+        }
+      ]
+    },
+    {
+      "id": "USER-016",
+      "kind": "test",
+      "executionId": "user-gaps-frozen09",
+      "bundleSha256": "5894497f55587e0e691458a6db9dad9472d93b36756e0bec50cdded299bf6446",
+      "testFile": "tests/security/matrix-user-gaps.test.ts",
+      "testTitle": "ADMIN metadata delivery rechecks PART while outbound authorization is pending",
+      "outcome": "PASS",
+      "scenarioScope": "ADMIN notification with PART before credential-check RPC completes",
+      "rationale": "Assertions are limited to the concrete behavior described; unasserted required dimensions remain open.",
+      "assertionDetails": [
+        "A test-only wrapper delays one real recipient credential lookup; Bob completes PART before release and receives no marker by PING barrier, while subscribed Charlie receives it.",
+        "The wrapper does not fabricate successful authentication or account state."
+      ],
+      "transports": [
+        "REST",
+        "IRC",
+        "SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "events",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "sourceAssertions": [
+        {
+          "file": "tests/security/matrix-user-gaps.test.ts",
+          "testTitle": "ADMIN metadata delivery rechecks PART while outbound authorization is pending",
+          "assertion": "A test-only wrapper delays one real recipient credential lookup; Bob completes PART before release and receives no marker by PING barrier, while subscribed Charlie receives it."
+        },
+        {
+          "file": "tests/security/matrix-user-gaps.test.ts",
+          "testTitle": "ADMIN metadata delivery rechecks PART while outbound authorization is pending",
+          "assertion": "The wrapper does not fabricate successful authentication or account state."
+        }
+      ]
+    },
+    {
+      "id": "USER-016",
+      "kind": "test",
+      "executionId": "user-gaps-frozen09",
+      "bundleSha256": "5894497f55587e0e691458a6db9dad9472d93b36756e0bec50cdded299bf6446",
+      "testFile": "tests/security/matrix-user-gaps.test.ts",
+      "testTitle": "ADMIN metadata delivery rechecks UNSUB while outbound authorization is pending",
+      "outcome": "PASS",
+      "scenarioScope": "ADMIN notification with UNSUB before credential-check RPC completes",
+      "rationale": "Assertions are limited to the concrete behavior described; unasserted required dimensions remain open.",
+      "assertionDetails": [
+        "A test-only wrapper delays one real recipient credential lookup; Bob completes UNSUB before release and receives no marker by PING barrier, while subscribed Charlie receives it.",
+        "The wrapper does not fabricate successful authentication or account state."
+      ],
+      "transports": [
+        "REST",
+        "IRC",
+        "SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "events",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "sourceAssertions": [
+        {
+          "file": "tests/security/matrix-user-gaps.test.ts",
+          "testTitle": "ADMIN metadata delivery rechecks UNSUB while outbound authorization is pending",
+          "assertion": "A test-only wrapper delays one real recipient credential lookup; Bob completes UNSUB before release and receives no marker by PING barrier, while subscribed Charlie receives it."
+        },
+        {
+          "file": "tests/security/matrix-user-gaps.test.ts",
+          "testTitle": "ADMIN metadata delivery rechecks UNSUB while outbound authorization is pending",
+          "assertion": "The wrapper does not fabricate successful authentication or account state."
+        }
+      ]
+    },
+    {
+      "id": "USER-018",
+      "kind": "disposition",
+      "outcome": "NOT IMPLEMENTED",
+      "scenarioScope": "Private profile metadata in public synchronization",
+      "rationale": "Private/public visibility for arbitrary user_metadata and the permitted IRC metadata-sync audience are unspecified. Admin user metadata publication currently iterates metadata-capable clients including nonshared or empty subscriptions, so a REST profile field allowlist does not prove private metadata exclusion from GET/SUB/SYNC or administrator publication; this requires an explicit policy and corresponding tests, not a runtime blocker.",
+      "basis": "server/durable-objects/session.ts adminSetMetadata user branch; docs/security/authorization-matrix.md METADATA operation; tests/security/matrix-user-gaps.test.ts profile allowlist case exercises REST only. Coordinator msg_14f0879698f7 confirms policy decision remains open.",
+      "capability": "Unspecified private-metadata classification/sync policy and unimplemented corresponding coverage."
+    },
+    {
+      "id": "USER-017",
+      "kind": "disposition",
+      "outcome": "NOT IMPLEMENTED",
+      "scenarioScope": "Profile update propagation to REST event clients",
+      "rationale": "No supported user.profile_updated event publication/recipient contract is established for the channel-scoped /events API. REST readback and IRC METADATA delivery are executed, but cannot stand in for a profile event-client notification producer; this is absent/unverified capability, not a runtime or environment blocker.",
+      "basis": "docs/security/authorization-matrix.md transport limits: event stream sends authorized channel events only; server/routes/api/v1/profiles/[username].patch.ts dispatches IRC metadata updates; no executed structured profile-event delivery assertion in the83-test09 run.",
+      "capability": "Structured profile-update event publication/recipient contract absent or unimplemented."
+    },
+    {
+      "id": "USER-020",
+      "kind": "disposition",
+      "outcome": "NOT IMPLEMENTED",
+      "scenarioScope": "Account deletion and retention of unrelated account/channel history",
+      "rationale": "Documented account deletion/retention expectations exist, including retained peer DM history and reserved names, but the executed USER slice does not independently delete an account with unrelated channel history/resources and verify the complete retention result across recreation. This is unimplemented acceptance testing, not a runtime/environment blocker or proof of a missing deletion feature.",
+      "basis": "docs/security/findings.md retention/policy sections; docs/security/authorization-matrix.md NickServ account actions; tests/security/boundaries.test.ts preserves peer DM history only. No new full unrelated-channel retention assertion in the83-test09 result.",
+      "capability": "Supported deletion; missing complete policy/retention/unrelated-resource test."
+    },
+    {
+      "id": "USER-016",
+      "kind": "test",
+      "executionId": "user-gaps-frozen09",
+      "bundleSha256": "5894497f55587e0e691458a6db9dad9472d93b36756e0bec50cdded299bf6446",
+      "testFile": "tests/security/matrix-identity.test.ts",
+      "testTitle": "matrix identity USER-001 USER-002 USER-003 USER-004 USER-005 USER-006 USER-012 USER-013 USER-014: profile path and body identity are bound to session",
+      "outcome": "PASS",
+      "scenarioScope": "Independent resource isolation for real REST own-profile displayName mutation and denied foreign-profile field substitution; recipient behavior remains in the separately executed USER notification tests.",
+      "rationale": "The SAME83-test current09 execution includes this exact identity case, so its actual Bob before/after profile equality and stopped metadata proof may supply unrelatedResources across files; source guard/helper/title alone is not used.",
+      "assertionDetails": [
+        "Bob profile is initialized with displayName, avatar and customStatus and saved as a full JSON projection. Alice cross-target PATCH is403 and Bob projection stays equal.",
+        "Alice legitimate own PATCH with forged username Bob and privileged properties succeeds only for Alice Own displayName; Bob full profile is read again and remains exactly equal. Alice remains denied admin enumeration.",
+        "Stopped actual SQLite metadata retains Alice Own and Bob Original and contains no stolen value. This supplies independent account/profile isolation for the displayName mutation, not an unobserved unrelated snapshot in the main notification test."
+      ],
+      "transports": [
+        "REST",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "sourceAssertions": [
+        {
+          "file": "tests/security/matrix-identity.test.ts",
+          "lines": [
+            41,
+            87
+          ],
+          "assertion": "Exact Bob projection equality before/after Alice own-profile PATCH plus actual stopped user_metadata checks."
+        }
+      ]
+    }
+  ],
+  "independentApplicabilityReview": {
+    "sourceReportBeforeSha256": "bf518a91966fa3a0f98fd6ad3504d961a4f3665819d06f0d3f84362434d41f61",
+    "reviewDate": "2026-11-12",
+    "executionManifest": "/tmp/flarc-matrix-run_01d0e4aeb274/user-gaps-09-execution.json",
+    "rawResultSha256": "16204858c95646009c73e292cc6ed011eae654214997a7dbb8603ce39a483483",
+    "counts": {
+      "pass": 83,
+      "fail": 0,
+      "skip": 0,
+      "xfail": 0,
+      "xpass": 0,
+      "deselected": 0
+    },
+    "changes": [
+      {
+        "row": 1,
+        "change": "Replace test-scope excuse with read-only profile-projection operation/policy rationale for events."
+      },
+      {
+        "row": 2,
+        "change": "Withdraw unrelatedResources from primary notification test; absence of outside notifications is not persistent-resource equality."
+      },
+      {
+        "row": 3,
+        "change": "restart: omitted checks stay required; another matched test may supply them."
+      },
+      {
+        "row": 4,
+        "change": "restart: omitted checks stay required; another matched test may supply them."
+      },
+      {
+        "row": 5,
+        "change": "restart: omitted checks stay required; another matched test may supply them."
+      },
+      {
+        "row": 6,
+        "change": "restart: omitted checks stay required; another matched test may supply them."
+      },
+      {
+        "row": 7,
+        "change": "restart: omitted checks stay required; another matched test may supply them."
+      },
+      {
+        "row": 8,
+        "change": "restart: omitted checks stay required; another matched test may supply them."
+      },
+      {
+        "row": 9,
+        "change": "restart: omitted checks stay required; another matched test may supply them."
+      },
+      {
+        "row": 10,
+        "change": "restart: omitted checks stay required; another matched test may supply them."
+      },
+      {
+        "row": 11,
+        "change": "Replace misleading BLOCKED with explicit NOT IMPLEMENTED and distinguish missing capability, unspecified policy and missing tests."
+      },
+      {
+        "row": 12,
+        "change": "Replace misleading BLOCKED with explicit NOT IMPLEMENTED and distinguish missing capability, unspecified policy and missing tests."
+      },
+      {
+        "row": 13,
+        "change": "Replace misleading BLOCKED with explicit NOT IMPLEMENTED and distinguish missing capability, unspecified policy and missing tests."
+      },
+      {
+        "row": 14,
+        "change": "Add exact independently executed current09 identity case to supply profile-mutation resource isolation; primary USER016 declaration stays corrected."
+      }
+    ],
+    "remainingCoverage": [
+      "USER015 still lacks an unrelated persistent-resource control; read-only events applicability does not supply that dimension.",
+      "USER017 absent/unverified structured event capability; USER018 unspecified metadata visibility/sync policy; USER020 missing full retention tests.",
+      "USER016 unrelated-resource support is a separately executed displayName/body-substitution case, not the main avatar/status/clear fixture; broader per-field unrelated controls remain a useful strengthening.",
+      "No full339 closure or deployment acceptance follows from83 passing source-verification tests."
+    ]
+  }
+}

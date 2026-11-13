@@ -1,6 +1,7 @@
 import type { SessionAttachment } from "~/core/types";
 import { encodeIRCMessage } from "~/protocol/irc/encoder";
 import { Numerics } from "~/protocol/irc/numerics";
+import { canonicalizeIRCName } from "~/protocol/irc/parser";
 import type { IRCMessage } from "~/protocol/irc/types";
 import { canSendDirectMessage } from "../messaging";
 import type { ISessionDO } from "../types";
@@ -36,8 +37,15 @@ export async function handleRoleplayCommand(
 
   if (target.startsWith("#") || target.startsWith("&")) {
     const stub = session.getChannelStub(target);
+    const generation =
+      session
+        .getSessionChannels(attachment.sessionId)
+        .find((c) => c.canonicalChannel === canonicalizeIRCName(target))?.generation ??
+      (await stub.getExistingChannelGeneration()) ??
+      undefined;
     const res = await stub.appendMessage({
       channelName: target,
+      expectedGeneration: generation,
       sessionId: attachment.sessionId,
       userId: attachment.userId,
       accountName: attachment.accountName,
@@ -66,7 +74,7 @@ export async function handleRoleplayCommand(
     for (const sid of res.recipientSessionIds ?? []) {
       const sess = session.sessionsById.get(sid);
       if (!sess) continue;
-      session.sendLine(
+      session.sendChannelLine(
         sess.ws,
         sess.attachment,
         encodeIRCMessage({
@@ -79,6 +87,8 @@ export async function handleRoleplayCommand(
           command: "PRIVMSG",
           params: [target, content],
         }),
+        target,
+        generation,
       );
     }
   } else {
@@ -116,7 +126,7 @@ export async function handleRoleplayCommand(
       )
     )
       return;
-    const message = session.storeDirectMessage({
+    const message = await session.storeDirectMessage({
       sender: attachment,
       target: primary.attachment,
       messageId: crypto.randomUUID(),
@@ -126,7 +136,7 @@ export async function handleRoleplayCommand(
     });
     const prefix = `${npcNick}!${attachment.username}@${attachment.hostname}`;
     for (const ts of targetSessions) {
-      session.sendLine(
+      await session.sendDirectMessageLine(
         ts.ws,
         ts.attachment,
         encodeIRCMessage({
@@ -139,6 +149,7 @@ export async function handleRoleplayCommand(
           command: "PRIVMSG",
           params: [ts.attachment.nickname!, content],
         }),
+        message?.id,
       );
     }
     session.sendAck(ws, attachment, labelTags);

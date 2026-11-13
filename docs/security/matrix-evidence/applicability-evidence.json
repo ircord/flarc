@@ -1,0 +1,3652 @@
+{
+  "version": 2,
+  "scope": "Independent source-backed applicability and cross-slice mapping review; immutable snapshot06 is unchanged; all acceptance counts provisional pending coordinator.",
+  "baselineBundleSha256": "2f7699fc944db7d62a6297952220503010e7da298e8a3fcb5a5780838d613794",
+  "executionManifest": "docs/security/matrix-evidence/final-execution.json",
+  "additionalExecutionManifests": [
+    "/tmp/flarc-matrix-run_01d0e4aeb274/media-persistence-execution.json",
+    "/tmp/flarc-matrix-run_01d0e4aeb274/user-gaps-execution.json"
+  ],
+  "evidence": [
+    {
+      "id": "WS-014",
+      "kind": "test",
+      "executionId": "final06-integrated-full",
+      "bundleSha256": "2f7699fc944db7d62a6297952220503010e7da298e8a3fcb5a5780838d613794",
+      "testFile": "tests/security/matrix-revocation.test.ts",
+      "testTitle": "[WS-014] local workerd hibernating eviction rechecks logout without a receiving-client reconnect",
+      "outcome": "PASS",
+      "scenarioScope": "Session revocation continues to work after Durable Object hibernation.",
+      "rationale": "The requirement is object hibernation/attachment restoration, so this actual local object reactivation satisfies restart for this scenario; it does not establish deployed Cloudflare behavior.",
+      "assertionDetails": [
+        "Before logout, Bob receives the private control; the privilege is changed through public REST, then unsafeEvictDurableObject evicts SessionDO with webSockets=hibernate without asking receiving clients to reconnect.",
+        "After reconstruction, independent Alice stream receives the new private event; stale Bob stream receives none. Logout closes Bob; role downgrade instead still delivers the public barrier and Bob admin/history requests each return403.",
+        "Stopped SQLite contains the newly committed private message with Alice sender ID. The unaffected Alice session/allowed message is an independent resource control; role downgrade also preserves Bob public delivery."
+      ],
+      "transports": [
+        "REST",
+        "IRC over real WebSocket",
+        "stopped-runtime SQLite",
+        "local Miniflare/workerd"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "sourceAssertions": [
+        {
+          "file": "tests/security/matrix-revocation.test.ts",
+          "lines": [
+            255,
+            322
+          ],
+          "assertion": "Actual eviction at lines299-303; good.until(secret), stale exclusion, downgrade public marker and403 checks, persisted message sender assertion."
+        }
+      ],
+      "reviewOnlySupplement": true
+    },
+    {
+      "id": "WS-015",
+      "kind": "test",
+      "executionId": "final06-integrated-full",
+      "bundleSha256": "2f7699fc944db7d62a6297952220503010e7da298e8a3fcb5a5780838d613794",
+      "testFile": "tests/security/matrix-revocation.test.ts",
+      "testTitle": "[WS-015] local workerd hibernating eviction rechecks admin-role without a receiving-client reconnect",
+      "outcome": "PASS",
+      "scenarioScope": "Reconstructed attachments do not restore stale administrator privileges.",
+      "rationale": "The requirement is object hibernation/attachment restoration, so this actual local object reactivation satisfies restart for this scenario; it does not establish deployed Cloudflare behavior.",
+      "assertionDetails": [
+        "Before admin-role, Bob receives the private control; the privilege is changed through public REST, then unsafeEvictDurableObject evicts SessionDO with webSockets=hibernate without asking receiving clients to reconnect.",
+        "After reconstruction, independent Alice stream receives the new private event; stale Bob stream receives none. Logout closes Bob; role downgrade instead still delivers the public barrier and Bob admin/history requests each return403.",
+        "Stopped SQLite contains the newly committed private message with Alice sender ID. The unaffected Alice session/allowed message is an independent resource control; role downgrade also preserves Bob public delivery."
+      ],
+      "transports": [
+        "REST",
+        "IRC over real WebSocket",
+        "stopped-runtime SQLite",
+        "local Miniflare/workerd"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "sourceAssertions": [
+        {
+          "file": "tests/security/matrix-revocation.test.ts",
+          "lines": [
+            255,
+            322
+          ],
+          "assertion": "Actual eviction at lines299-303; good.until(secret), stale exclusion, downgrade public marker and403 checks, persisted message sender assertion."
+        }
+      ],
+      "reviewOnlySupplement": true
+    },
+    {
+      "id": "WS-003",
+      "kind": "test",
+      "executionId": "final06-integrated-full",
+      "bundleSha256": "2f7699fc944db7d62a6297952220503010e7da298e8a3fcb5a5780838d613794",
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[WS-003] persisted expired ticket cannot authorize an event stream after full runtime restart",
+      "outcome": "PASS",
+      "scenarioScope": "Expired tickets are rejected.",
+      "rationale": "The unrelated account control was executed but omitted from the normalized dimensions.",
+      "assertionDetails": [
+        "After stopping, expiring the persisted ticket and recreating workerd, the ticket handshake returns401, Alice parent profile remains200, and independent Bob profile also remains200.",
+        "Fresh Alice credentials/ticket still deliver the marker and exact stored sender ID."
+      ],
+      "transports": [
+        "REST",
+        "IRC over real WebSocket",
+        "stopped-runtime SQLite",
+        "local Miniflare/workerd"
+      ],
+      "assertions": [
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "sourceAssertions": [
+        {
+          "file": "tests/security/matrix-persistence.test.ts",
+          "lines": [
+            1061,
+            1138
+          ],
+          "assertion": "The expired-ticket branch asserts Bob profile200 separately from Alice ticket and parent credential checks."
+        }
+      ],
+      "reviewOnlySupplement": true
+    },
+    {
+      "id": "AUTH-016",
+      "kind": "test",
+      "executionId": "final06-integrated-full",
+      "bundleSha256": "2f7699fc944db7d62a6297952220503010e7da298e8a3fcb5a5780838d613794",
+      "testFile": "tests/security/matrix-services.test.ts",
+      "testTitle": "matrix F command authority SVC-012 SVC-013: persistent ChanServ access survives reconnect and removal revokes multiple devices",
+      "outcome": "PASS",
+      "scenarioScope": "Authentication restores legitimate account-based ChanServ permissions.",
+      "rationale": "The same executed grant/re-authentication flow establishes restored account-bound ChanServ authority and persistent access, independent of test-file tags.",
+      "assertionDetails": [
+        "Founder publicly grants Bob persistent ChanServ +o; complete f.restart disposes and recreates workerd, then both Bob IRC devices authenticate using his own credentials.",
+        "After reconnect, F VOICE by Bob succeeds and Charlie observes MODE +v. Removing Bob access then denies F OP on both Bob devices and denies his REST metadata write403; Charlie receives no forbidden +o.",
+        "Stopped channel_permissions no longer contains Bob but still contains Alice founder grant, independently protecting another account grant."
+      ],
+      "transports": [
+        "REST",
+        "IRC over real WebSocket",
+        "stopped-runtime SQLite",
+        "local Miniflare/workerd"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "sourceAssertions": [
+        {
+          "file": "tests/security/matrix-services.test.ts",
+          "lines": [
+            279,
+            319
+          ],
+          "assertion": "CS AMODE grant; full restart; authenticated reconnect; F VOICE observed; both-device denials; Alice retained SQL grant."
+        }
+      ],
+      "reviewOnlySupplement": true
+    },
+    {
+      "id": "SVC-012",
+      "kind": "test",
+      "executionId": "final06-integrated-full",
+      "bundleSha256": "2f7699fc944db7d62a6297952220503010e7da298e8a3fcb5a5780838d613794",
+      "testFile": "tests/security/matrix-services.test.ts",
+      "testTitle": "matrix F command authority SVC-012 SVC-013: persistent ChanServ access survives reconnect and removal revokes multiple devices",
+      "outcome": "PASS",
+      "scenarioScope": "ChanServ access assignments persist across reconnects.",
+      "rationale": "The same executed grant/re-authentication flow establishes restored account-bound ChanServ authority and persistent access, independent of test-file tags.",
+      "assertionDetails": [
+        "Founder publicly grants Bob persistent ChanServ +o; complete f.restart disposes and recreates workerd, then both Bob IRC devices authenticate using his own credentials.",
+        "After reconnect, F VOICE by Bob succeeds and Charlie observes MODE +v. Removing Bob access then denies F OP on both Bob devices and denies his REST metadata write403; Charlie receives no forbidden +o.",
+        "Stopped channel_permissions no longer contains Bob but still contains Alice founder grant, independently protecting another account grant."
+      ],
+      "transports": [
+        "REST",
+        "IRC over real WebSocket",
+        "stopped-runtime SQLite",
+        "local Miniflare/workerd"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "sourceAssertions": [
+        {
+          "file": "tests/security/matrix-services.test.ts",
+          "lines": [
+            279,
+            319
+          ],
+          "assertion": "CS AMODE grant; full restart; authenticated reconnect; F VOICE observed; both-device denials; Alice retained SQL grant."
+        }
+      ],
+      "reviewOnlySupplement": true
+    },
+    {
+      "id": "AUTH-017",
+      "kind": "test",
+      "executionId": "final06-integrated-full",
+      "bundleSha256": "2f7699fc944db7d62a6297952220503010e7da298e8a3fcb5a5780838d613794",
+      "testFile": "tests/security/matrix-roles.test.ts",
+      "testTitle": "matrix role hierarchy expanded ROLE-017: Alice privileged in roles remains ordinary in staff through REST IRC and services",
+      "outcome": "PASS",
+      "scenarioScope": "Authentication does not automatically confer channel privileges the account doesn't possess.",
+      "rationale": "Reauthentication of an existing account does not grant cross-channel authority; the actual denied staff operations and persisted independent channel state prove the requirement.",
+      "assertionDetails": [
+        "Alice legitimately changes modes in public/roles and permitted local description. After disk() and resume(), Alice MODE/KICK/ChanServ AMODE and REST staff settings/role creation are denied.",
+        "deniedRest checks no new member IRC/event output; flush checks outsider isolation and exact staff sentinel; assertSameProtected compares eight protected tables after an independent runtime recreation.",
+        "A further reconstructed runtime still rejects Alice staff MODE482."
+      ],
+      "transports": [
+        "REST",
+        "IRC over real WebSocket",
+        "stopped-runtime SQLite",
+        "local Miniflare/workerd"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "sourceAssertions": [
+        {
+          "file": "tests/security/matrix-roles.test.ts",
+          "lines": [
+            907,
+            940
+          ],
+          "assertion": "Local authorized controls and concrete staff MODE/KICK/ChanServ/REST denials with complete protected snapshot comparison."
+        },
+        {
+          "file": "tests/security/matrix-roles.test.ts",
+          "lines": [
+            286,
+            412
+          ],
+          "assertion": "disk recreates workerd and checks authoritative info/role IDs plus all protected tables; resume authenticates every account; flush tests live unrelated observer and staff sentinel."
+        },
+        {
+          "file": "tests/security/matrix-roles.test.ts",
+          "lines": [
+            462,
+            494
+          ],
+          "assertion": "deniedRest isolates recipient offsets and explicitly requires no matching IRC or structured events."
+        }
+      ],
+      "reviewOnlySupplement": true
+    },
+    {
+      "id": "SVC-017",
+      "kind": "test",
+      "executionId": "final06-integrated-full",
+      "bundleSha256": "2f7699fc944db7d62a6297952220503010e7da298e8a3fcb5a5780838d613794",
+      "testFile": "tests/security/matrix-roles.test.ts",
+      "testTitle": "matrix role hierarchy expanded ROLE-017: Alice privileged in roles remains ordinary in staff through REST IRC and services",
+      "outcome": "PASS",
+      "scenarioScope": "A user with privileges in one channel cannot use them in another.",
+      "rationale": "Reauthentication of an existing account does not grant cross-channel authority; the actual denied staff operations and persisted independent channel state prove the requirement.",
+      "assertionDetails": [
+        "Alice legitimately changes modes in public/roles and permitted local description. After disk() and resume(), Alice MODE/KICK/ChanServ AMODE and REST staff settings/role creation are denied.",
+        "deniedRest checks no new member IRC/event output; flush checks outsider isolation and exact staff sentinel; assertSameProtected compares eight protected tables after an independent runtime recreation.",
+        "A further reconstructed runtime still rejects Alice staff MODE482."
+      ],
+      "transports": [
+        "REST",
+        "IRC over real WebSocket",
+        "stopped-runtime SQLite",
+        "local Miniflare/workerd"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "sourceAssertions": [
+        {
+          "file": "tests/security/matrix-roles.test.ts",
+          "lines": [
+            907,
+            940
+          ],
+          "assertion": "Local authorized controls and concrete staff MODE/KICK/ChanServ/REST denials with complete protected snapshot comparison."
+        },
+        {
+          "file": "tests/security/matrix-roles.test.ts",
+          "lines": [
+            286,
+            412
+          ],
+          "assertion": "disk recreates workerd and checks authoritative info/role IDs plus all protected tables; resume authenticates every account; flush tests live unrelated observer and staff sentinel."
+        },
+        {
+          "file": "tests/security/matrix-roles.test.ts",
+          "lines": [
+            462,
+            494
+          ],
+          "assertion": "deniedRest isolates recipient offsets and explicitly requires no matching IRC or structured events."
+        }
+      ],
+      "reviewOnlySupplement": true
+    },
+    {
+      "id": "SVC-006",
+      "kind": "test",
+      "executionId": "final06-integrated-full",
+      "bundleSha256": "2f7699fc944db7d62a6297952220503010e7da298e8a3fcb5a5780838d613794",
+      "testFile": "tests/security/matrix-roles.test.ts",
+      "testTitle": "matrix role hierarchy expanded ROLE-009 ROLE-014 ROLE-015 ROLE-016: F role commands obey actor and target rank ceilings",
+      "outcome": "PASS",
+      "scenarioScope": "F OP respects channel access lists.",
+      "rationale": "The role slice executes the same F OP/DEOP operations against real actors and persisted grants, supplying the omitted cross-slice state/reactivation/isolation evidence.",
+      "assertionDetails": [
+        "After actual disk()/resume() recreation, operator F DEOP founder, halfop F DEOP operator and chanadmin F DEVOICE founder each return the expected higher-privilege notice.",
+        "flush() and disk()/assertSameProtected compare all eight protected tables after recreation and preserve staff sentinel/outsider isolation.",
+        "Operator F OP Bob produces a MODE+o observed by member; Bob may MODE+m. Founder F DEOP Bob succeeds and Bob next MODE-m returns482. Actual transient VOICE/DEVOICE/-o delivery is attributed separately to the service test."
+      ],
+      "transports": [
+        "REST",
+        "IRC over real WebSocket",
+        "stopped-runtime SQLite",
+        "local Miniflare/workerd"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "sourceAssertions": [
+        {
+          "file": "tests/security/matrix-roles.test.ts",
+          "lines": [
+            1402,
+            1434
+          ],
+          "assertion": "Exact F rank commands, snapshot equality, authorized F OP delivery and F DEOP removal consequence."
+        },
+        {
+          "file": "tests/security/matrix-roles.test.ts",
+          "lines": [
+            286,
+            412
+          ],
+          "assertion": "Repeated actual runtime recreation, direct stable table comparison and unrelated live/staff checks."
+        },
+        {
+          "file": "tests/security/matrix-services.test.ts",
+          "lines": [
+            170,
+            202
+          ],
+          "assertion": "Positive F OP/VOICE/DEVOICE/DEOP with actual MODE lines and outsider exclusions."
+        },
+        {
+          "file": "tests/security/matrix-services.test.ts",
+          "lines": [
+            259,
+            276
+          ],
+          "assertion": "Exact forbidden founder F DEOP notice plus no stripping MODE to protected founder."
+        }
+      ],
+      "reviewOnlySupplement": true
+    },
+    {
+      "id": "SVC-007",
+      "kind": "test",
+      "executionId": "final06-integrated-full",
+      "bundleSha256": "2f7699fc944db7d62a6297952220503010e7da298e8a3fcb5a5780838d613794",
+      "testFile": "tests/security/matrix-roles.test.ts",
+      "testTitle": "matrix role hierarchy expanded ROLE-009 ROLE-014 ROLE-015 ROLE-016: F role commands obey actor and target rank ceilings",
+      "outcome": "PASS",
+      "scenarioScope": "F DEOP respects hierarchy restrictions.",
+      "rationale": "The role slice executes the same F OP/DEOP operations against real actors and persisted grants, supplying the omitted cross-slice state/reactivation/isolation evidence.",
+      "assertionDetails": [
+        "After actual disk()/resume() recreation, operator F DEOP founder, halfop F DEOP operator and chanadmin F DEVOICE founder each return the expected higher-privilege notice.",
+        "flush() and disk()/assertSameProtected compare all eight protected tables after recreation and preserve staff sentinel/outsider isolation.",
+        "Operator F OP Bob produces a MODE+o observed by member; Bob may MODE+m. Founder F DEOP Bob succeeds and Bob next MODE-m returns482. Actual transient VOICE/DEVOICE/-o delivery is attributed separately to the service test."
+      ],
+      "transports": [
+        "REST",
+        "IRC over real WebSocket",
+        "stopped-runtime SQLite",
+        "local Miniflare/workerd"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "sourceAssertions": [
+        {
+          "file": "tests/security/matrix-roles.test.ts",
+          "lines": [
+            1402,
+            1434
+          ],
+          "assertion": "Exact F rank commands, snapshot equality, authorized F OP delivery and F DEOP removal consequence."
+        },
+        {
+          "file": "tests/security/matrix-roles.test.ts",
+          "lines": [
+            286,
+            412
+          ],
+          "assertion": "Repeated actual runtime recreation, direct stable table comparison and unrelated live/staff checks."
+        },
+        {
+          "file": "tests/security/matrix-services.test.ts",
+          "lines": [
+            170,
+            202
+          ],
+          "assertion": "Positive F OP/VOICE/DEVOICE/DEOP with actual MODE lines and outsider exclusions."
+        },
+        {
+          "file": "tests/security/matrix-services.test.ts",
+          "lines": [
+            259,
+            276
+          ],
+          "assertion": "Exact forbidden founder F DEOP notice plus no stripping MODE to protected founder."
+        }
+      ],
+      "reviewOnlySupplement": true
+    },
+    {
+      "id": "SVC-008",
+      "kind": "test",
+      "executionId": "final06-integrated-full",
+      "bundleSha256": "2f7699fc944db7d62a6297952220503010e7da298e8a3fcb5a5780838d613794",
+      "testFile": "tests/security/matrix-roles.test.ts",
+      "testTitle": "matrix role hierarchy expanded ROLE-009 ROLE-014 ROLE-015 ROLE-016: F role commands obey actor and target rank ceilings",
+      "outcome": "PASS",
+      "scenarioScope": "F VOICE and DEVOICE respect assigned privileges.",
+      "rationale": "The role slice executes the same F OP/DEOP operations against real actors and persisted grants, supplying the omitted cross-slice state/reactivation/isolation evidence.",
+      "assertionDetails": [
+        "After actual disk()/resume() recreation, operator F DEOP founder, halfop F DEOP operator and chanadmin F DEVOICE founder each return the expected higher-privilege notice.",
+        "flush() and disk()/assertSameProtected compare all eight protected tables after recreation and preserve staff sentinel/outsider isolation.",
+        "Operator F OP Bob produces a MODE+o observed by member; Bob may MODE+m. Founder F DEOP Bob succeeds and Bob next MODE-m returns482. Actual transient VOICE/DEVOICE/-o delivery is attributed separately to the service test."
+      ],
+      "transports": [
+        "REST",
+        "IRC over real WebSocket",
+        "stopped-runtime SQLite",
+        "local Miniflare/workerd"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "sourceAssertions": [
+        {
+          "file": "tests/security/matrix-roles.test.ts",
+          "lines": [
+            1402,
+            1434
+          ],
+          "assertion": "Exact F rank commands, snapshot equality, authorized F OP delivery and F DEOP removal consequence."
+        },
+        {
+          "file": "tests/security/matrix-roles.test.ts",
+          "lines": [
+            286,
+            412
+          ],
+          "assertion": "Repeated actual runtime recreation, direct stable table comparison and unrelated live/staff checks."
+        },
+        {
+          "file": "tests/security/matrix-services.test.ts",
+          "lines": [
+            170,
+            202
+          ],
+          "assertion": "Positive F OP/VOICE/DEVOICE/DEOP with actual MODE lines and outsider exclusions."
+        },
+        {
+          "file": "tests/security/matrix-services.test.ts",
+          "lines": [
+            259,
+            276
+          ],
+          "assertion": "Exact forbidden founder F DEOP notice plus no stripping MODE to protected founder."
+        }
+      ],
+      "reviewOnlySupplement": true
+    },
+    {
+      "id": "SVC-008",
+      "kind": "test",
+      "executionId": "final06-integrated-full",
+      "bundleSha256": "2f7699fc944db7d62a6297952220503010e7da298e8a3fcb5a5780838d613794",
+      "testFile": "tests/security/matrix-roles.test.ts",
+      "testTitle": "matrix role hierarchy expanded ROLE-031 ROLE-032 ROLE-033: F preserves role-derived v without false removal or sticky duplicate grants",
+      "outcome": "PASS",
+      "scenarioScope": "F VOICE and DEVOICE respect assigned privileges.",
+      "rationale": "These are the same supported F voice/devoice commands with a persistent overlapping grant; the service test provides transient allowed voice/devoice and ordinary-member denial controls.",
+      "assertionDetails": [
+        "F VOICE/DEVOICE on derived voice returns the role-assignment notice without advertising false MODE deltas; two post-command disk snapshots equal the original protected state after recreation.",
+        "The legitimate derived speech grant remains effective; actual role removal clears the assignment and rejects IRC/REST speech, with no forbidden outputs and staff sentinel preserved."
+      ],
+      "transports": [
+        "REST",
+        "IRC over real WebSocket",
+        "stopped-runtime SQLite",
+        "local Miniflare/workerd"
+      ],
+      "assertions": [
+        "state",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "sourceAssertions": [
+        {
+          "file": "tests/security/matrix-roles.test.ts",
+          "lines": [
+            1341,
+            1400
+          ],
+          "assertion": "Actual F VOICE/DEVOICE; no false MODE±v; disk/resume snapshot equality; final empty assignment plus access checks."
+        },
+        {
+          "file": "tests/security/matrix-roles.test.ts",
+          "lines": [
+            286,
+            412
+          ],
+          "assertion": "disk() independently recreates workerd; flush protects staff and unauthorized recipients."
+        }
+      ],
+      "reviewOnlySupplement": true
+    },
+    {
+      "id": "DB-007",
+      "kind": "test",
+      "executionId": "final06-integrated-full",
+      "bundleSha256": "2f7699fc944db7d62a6297952220503010e7da298e8a3fcb5a5780838d613794",
+      "testFile": "tests/security/matrix-roles.test.ts",
+      "testTitle": "matrix role hierarchy expanded ROLE-031 ROLE-033: passive live prefix assign notifies two devices with derived-only grants",
+      "outcome": "PASS",
+      "scenarioScope": "Role assignments persist.",
+      "rationale": "Persistent role assignment/removal is precisely the DB requirement; these executed role tests supply the recipient assertions missing from the persistence slice.",
+      "assertionDetails": [
+        "The assign operation is performed through the actual REST role API. Three passive IRC devices get exactly the expected MODE deltas, and two independent event streams each get exactly one matching typed event for this role.",
+        "disk() stops workerd, inspects the actual assignment row and recreates a runtime on the same SQLite; role IDs and stable tables are compared. Recreated clients retain or lose speech exactly according to the remaining assignment.",
+        "Unrelated staff sentinel and outsider delivery stay intact. Repeated assignment/removal creates no duplicate MODE or event."
+      ],
+      "transports": [
+        "REST",
+        "IRC over real WebSocket",
+        "stopped-runtime SQLite",
+        "local Miniflare/workerd"
+      ],
+      "assertions": [
+        "state",
+        "events",
+        "restart",
+        "unrelatedResources",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "sourceAssertions": [
+        {
+          "file": "tests/security/matrix-roles.test.ts",
+          "lines": [
+            1553,
+            1706
+          ],
+          "assertion": "Concrete generated assign/remove/delete branch; exact IRC delta/event multiplicity; SQL assignment existence; post-recreation send status."
+        },
+        {
+          "file": "tests/security/matrix-roles.test.ts",
+          "lines": [
+            286,
+            412
+          ],
+          "assertion": "Independent runtime reactivation and complete stable table verification; unrelated staff/observer checks."
+        }
+      ],
+      "reviewOnlySupplement": true
+    },
+    {
+      "id": "DB-008",
+      "kind": "test",
+      "executionId": "final06-integrated-full",
+      "bundleSha256": "2f7699fc944db7d62a6297952220503010e7da298e8a3fcb5a5780838d613794",
+      "testFile": "tests/security/matrix-roles.test.ts",
+      "testTitle": "matrix role hierarchy expanded ROLE-031 ROLE-033: passive live prefix remove notifies two devices with derived-only grants",
+      "outcome": "PASS",
+      "scenarioScope": "Removing roles updates related records correctly.",
+      "rationale": "Persistent role assignment/removal is precisely the DB requirement; these executed role tests supply the recipient assertions missing from the persistence slice.",
+      "assertionDetails": [
+        "The remove operation is performed through the actual REST role API. Three passive IRC devices get exactly the expected MODE deltas, and two independent event streams each get exactly one matching typed event for this role.",
+        "disk() stops workerd, inspects the actual assignment row and recreates a runtime on the same SQLite; role IDs and stable tables are compared. Recreated clients retain or lose speech exactly according to the remaining assignment.",
+        "Unrelated staff sentinel and outsider delivery stay intact. Repeated assignment/removal creates no duplicate MODE or event."
+      ],
+      "transports": [
+        "REST",
+        "IRC over real WebSocket",
+        "stopped-runtime SQLite",
+        "local Miniflare/workerd"
+      ],
+      "assertions": [
+        "state",
+        "events",
+        "restart",
+        "unrelatedResources",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "sourceAssertions": [
+        {
+          "file": "tests/security/matrix-roles.test.ts",
+          "lines": [
+            1553,
+            1706
+          ],
+          "assertion": "Concrete generated assign/remove/delete branch; exact IRC delta/event multiplicity; SQL assignment existence; post-recreation send status."
+        },
+        {
+          "file": "tests/security/matrix-roles.test.ts",
+          "lines": [
+            286,
+            412
+          ],
+          "assertion": "Independent runtime reactivation and complete stable table verification; unrelated staff/observer checks."
+        }
+      ],
+      "reviewOnlySupplement": true
+    },
+    {
+      "id": "DB-008",
+      "kind": "test",
+      "executionId": "final06-integrated-full",
+      "bundleSha256": "2f7699fc944db7d62a6297952220503010e7da298e8a3fcb5a5780838d613794",
+      "testFile": "tests/security/matrix-roles.test.ts",
+      "testTitle": "matrix role hierarchy expanded ROLE-031 ROLE-033: passive live prefix delete notifies two devices with derived-only grants",
+      "outcome": "PASS",
+      "scenarioScope": "Removing roles updates related records correctly.",
+      "rationale": "Persistent role assignment/removal is precisely the DB requirement; these executed role tests supply the recipient assertions missing from the persistence slice.",
+      "assertionDetails": [
+        "The delete operation is performed through the actual REST role API. Three passive IRC devices get exactly the expected MODE deltas, and two independent event streams each get exactly one matching typed event for this role.",
+        "disk() stops workerd, inspects the actual assignment row and recreates a runtime on the same SQLite; role IDs and stable tables are compared. Recreated clients retain or lose speech exactly according to the remaining assignment.",
+        "Unrelated staff sentinel and outsider delivery stay intact. Repeated assignment/removal creates no duplicate MODE or event."
+      ],
+      "transports": [
+        "REST",
+        "IRC over real WebSocket",
+        "stopped-runtime SQLite",
+        "local Miniflare/workerd"
+      ],
+      "assertions": [
+        "state",
+        "events",
+        "restart",
+        "unrelatedResources",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "sourceAssertions": [
+        {
+          "file": "tests/security/matrix-roles.test.ts",
+          "lines": [
+            1553,
+            1706
+          ],
+          "assertion": "Concrete generated assign/remove/delete branch; exact IRC delta/event multiplicity; SQL assignment existence; post-recreation send status."
+        },
+        {
+          "file": "tests/security/matrix-roles.test.ts",
+          "lines": [
+            286,
+            412
+          ],
+          "assertion": "Independent runtime reactivation and complete stable table verification; unrelated staff/observer checks."
+        }
+      ],
+      "reviewOnlySupplement": true
+    },
+    {
+      "id": "WS-009",
+      "kind": "test",
+      "executionId": "final06-integrated-full",
+      "bundleSha256": "2f7699fc944db7d62a6297952220503010e7da298e8a3fcb5a5780838d613794",
+      "testFile": "tests/security/matrix-channels.test.ts",
+      "testTitle": "matrix channel membership and access CHAN-011 CHAN-014 CHAN-015: #secret event visibility and retained history revoke on PART",
+      "outcome": "PASS",
+      "scenarioScope": "Alice receives public events she is authorized to observe.",
+      "rationale": "The positive public event requirement is an actual observable in the channel slice, paired with independent private and unrelated-resource controls.",
+      "assertionDetails": [
+        "Authenticated independent Charlie event stream receives outsider-stream-positive from the public #event-control channel, proving authorized public delivery.",
+        "Private member/founder streams receive private control; Charlie receives no private channel events; after PART Bob receives no more private IRC/events, has REST403 and IRC CHATHISTORY failure.",
+        "The unrelated #public history remains byte-for-byte equal to its baseline; stopped SQL confirms content/membership and recreated runtime retains founder history while denying departed Bob."
+      ],
+      "transports": [
+        "REST",
+        "IRC over real WebSocket",
+        "stopped-runtime SQLite",
+        "local Miniflare/workerd"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "sourceAssertions": [
+        {
+          "file": "tests/security/matrix-channels.test.ts",
+          "lines": [
+            341,
+            407
+          ],
+          "assertion": "Explicit outsider public /events positive control, private recipient checks, untouched public history, stored membership/content and restarted authorization."
+        }
+      ],
+      "reviewOnlySupplement": true
+    },
+    {
+      "id": "DM-018",
+      "kind": "test",
+      "executionId": "final06-integrated-full",
+      "bundleSha256": "2f7699fc944db7d62a6297952220503010e7da298e8a3fcb5a5780838d613794",
+      "testFile": "tests/security/matrix-dm.test.ts",
+      "testTitle": "matrix direct messages DM-001 DM-002 DM-003 DM-004 DM-011 DM-012 DM-014 DM-017 DM-021: three independent conversations and event recipients",
+      "outcome": "PASS",
+      "scenarioScope": "DM notifications go only to intended recipients.",
+      "rationale": "IRC notification recipients are a tested supported DM delivery interface; this mapping does not claim WebPush delivery or a DM event-subscription/replay feature.",
+      "assertionDetails": [
+        "Three distinct Alice/Bob, Bob/Charlie and Alice/Charlie PRIVMSG bodies reach the actual intended IRC recipient.",
+        "After explicit PONG barriers, each unrelated participant lacks the other pair body and root receives none; real REST reads and stopped SQL confirm three independent immutable conversations.",
+        "After complete runtime recreation the three histories remain readable by their participants and forged user=Bob requests remain403 without foreign body."
+      ],
+      "transports": [
+        "REST",
+        "IRC over real WebSocket",
+        "stopped-runtime SQLite",
+        "local Miniflare/workerd"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "sourceAssertions": [
+        {
+          "file": "tests/security/matrix-dm.test.ts",
+          "lines": [
+            9,
+            74
+          ],
+          "assertion": "Three actual recipient waiters, all cross-pair/root exclusions, SQL three-message confirmation, full restart and participant/forged caller checks."
+        }
+      ],
+      "reviewOnlySupplement": true
+    },
+    {
+      "id": "ADMIN-001",
+      "kind": "test",
+      "executionId": "final06-integrated-full",
+      "bundleSha256": "2f7699fc944db7d62a6297952220503010e7da298e8a3fcb5a5780838d613794",
+      "testFile": "tests/security/matrix-admin-positive.test.ts",
+      "testTitle": "matrix administrative positive controls and complete branch inventory ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations",
+      "outcome": "PASS",
+      "scenarioScope": "Administrator can list accounts.",
+      "rationale": "The exact operations and actor class were executed in the existing integration-strengthened test, supplying negative notifications and state checks without duplicating tests.",
+      "assertionDetails": [
+        "Ordinary Alice and anonymous callers attempt every one of the40 implemented administrative operations under both aliases, including account listing/inspection, disable, password reset, session disconnection and broadcast; exact403/401 are required.",
+        "Three independently authenticated actual event sockets receive empty arrays; owner/member/outsider IRC devices emit only PONG after the rejected requests.",
+        "Protected and unrelated message controls and target account remain readable; eleven stopped SQLite stores equal their pre-denial snapshots."
+      ],
+      "transports": [
+        "REST",
+        "IRC over real WebSocket",
+        "stopped-runtime SQLite",
+        "local Miniflare/workerd"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": {
+          "status": "not-applicable",
+          "rationale": "This scenario inspects a read-only REST projection. The documented admin interface returns its data to the requesting administrator, with no recipient subscription/notification contract; it is not a client mutation. Negative mutation event checks are retained separately."
+        },
+        "transport": "required",
+        "restart": {
+          "status": "not-applicable",
+          "rationale": "Universal §2 requires the change to survive runtime restart where applicable: disconnecting an existing socket and sending a live network notice create no stored entitlement/message. A process restart cannot resurrect that closed socket or replay a transient notice; durable credential revocation is a separate tested policy."
+        },
+        "unrelatedResources": "required"
+      },
+      "sourceAssertions": [
+        {
+          "file": "tests/security/matrix-admin-positive.test.ts",
+          "lines": [
+            1370,
+            1524
+          ],
+          "assertion": "Concrete40-operation request table, both alias loops, three event arrays==[], IRC PONG-only output and eleven-table equality."
+        }
+      ],
+      "reviewOnlySupplement": true
+    },
+    {
+      "id": "ADMIN-002",
+      "kind": "test",
+      "executionId": "final06-integrated-full",
+      "bundleSha256": "2f7699fc944db7d62a6297952220503010e7da298e8a3fcb5a5780838d613794",
+      "testFile": "tests/security/matrix-admin-positive.test.ts",
+      "testTitle": "matrix administrative positive controls and complete branch inventory ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations",
+      "outcome": "PASS",
+      "scenarioScope": "Administrator can inspect permitted account administration metadata.",
+      "rationale": "The exact operations and actor class were executed in the existing integration-strengthened test, supplying negative notifications and state checks without duplicating tests.",
+      "assertionDetails": [
+        "Ordinary Alice and anonymous callers attempt every one of the40 implemented administrative operations under both aliases, including account listing/inspection, disable, password reset, session disconnection and broadcast; exact403/401 are required.",
+        "Three independently authenticated actual event sockets receive empty arrays; owner/member/outsider IRC devices emit only PONG after the rejected requests.",
+        "Protected and unrelated message controls and target account remain readable; eleven stopped SQLite stores equal their pre-denial snapshots."
+      ],
+      "transports": [
+        "REST",
+        "IRC over real WebSocket",
+        "stopped-runtime SQLite",
+        "local Miniflare/workerd"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": {
+          "status": "not-applicable",
+          "rationale": "This scenario inspects a read-only REST projection. The documented admin interface returns its data to the requesting administrator, with no recipient subscription/notification contract; it is not a client mutation. Negative mutation event checks are retained separately."
+        },
+        "transport": "required",
+        "restart": {
+          "status": "not-applicable",
+          "rationale": "Universal §2 requires the change to survive runtime restart where applicable: disconnecting an existing socket and sending a live network notice create no stored entitlement/message. A process restart cannot resurrect that closed socket or replay a transient notice; durable credential revocation is a separate tested policy."
+        },
+        "unrelatedResources": "required"
+      },
+      "sourceAssertions": [
+        {
+          "file": "tests/security/matrix-admin-positive.test.ts",
+          "lines": [
+            1370,
+            1524
+          ],
+          "assertion": "Concrete40-operation request table, both alias loops, three event arrays==[], IRC PONG-only output and eleven-table equality."
+        }
+      ],
+      "reviewOnlySupplement": true
+    },
+    {
+      "id": "ADMIN-014",
+      "kind": "test",
+      "executionId": "final06-integrated-full",
+      "bundleSha256": "2f7699fc944db7d62a6297952220503010e7da298e8a3fcb5a5780838d613794",
+      "testFile": "tests/security/matrix-admin-positive.test.ts",
+      "testTitle": "matrix administrative positive controls and complete branch inventory ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations",
+      "outcome": "PASS",
+      "scenarioScope": "Administrator can broadcast network notices.",
+      "rationale": "The exact operations and actor class were executed in the existing integration-strengthened test, supplying negative notifications and state checks without duplicating tests.",
+      "assertionDetails": [
+        "Ordinary Alice and anonymous callers attempt every one of the40 implemented administrative operations under both aliases, including account listing/inspection, disable, password reset, session disconnection and broadcast; exact403/401 are required.",
+        "Three independently authenticated actual event sockets receive empty arrays; owner/member/outsider IRC devices emit only PONG after the rejected requests.",
+        "Protected and unrelated message controls and target account remain readable; eleven stopped SQLite stores equal their pre-denial snapshots."
+      ],
+      "transports": [
+        "REST",
+        "IRC over real WebSocket",
+        "stopped-runtime SQLite",
+        "local Miniflare/workerd"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": {
+          "status": "not-applicable",
+          "rationale": "This scenario inspects a read-only REST projection. The documented admin interface returns its data to the requesting administrator, with no recipient subscription/notification contract; it is not a client mutation. Negative mutation event checks are retained separately."
+        },
+        "transport": "required",
+        "restart": {
+          "status": "not-applicable",
+          "rationale": "Universal §2 requires the change to survive runtime restart where applicable: disconnecting an existing socket and sending a live network notice create no stored entitlement/message. A process restart cannot resurrect that closed socket or replay a transient notice; durable credential revocation is a separate tested policy."
+        },
+        "unrelatedResources": "required"
+      },
+      "sourceAssertions": [
+        {
+          "file": "tests/security/matrix-admin-positive.test.ts",
+          "lines": [
+            1370,
+            1524
+          ],
+          "assertion": "Concrete40-operation request table, both alias loops, three event arrays==[], IRC PONG-only output and eleven-table equality."
+        }
+      ],
+      "reviewOnlySupplement": true
+    },
+    {
+      "id": "ADMIN-015",
+      "kind": "test",
+      "executionId": "final06-integrated-full",
+      "bundleSha256": "2f7699fc944db7d62a6297952220503010e7da298e8a3fcb5a5780838d613794",
+      "testFile": "tests/security/matrix-admin-positive.test.ts",
+      "testTitle": "matrix administrative positive controls and complete branch inventory ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations",
+      "outcome": "PASS",
+      "scenarioScope": "Administrator can inspect operational statistics.",
+      "rationale": "The exact operations and actor class were executed in the existing integration-strengthened test, supplying negative notifications and state checks without duplicating tests.",
+      "assertionDetails": [
+        "Ordinary Alice and anonymous callers attempt every one of the40 implemented administrative operations under both aliases, including account listing/inspection, disable, password reset, session disconnection and broadcast; exact403/401 are required.",
+        "Three independently authenticated actual event sockets receive empty arrays; owner/member/outsider IRC devices emit only PONG after the rejected requests.",
+        "Protected and unrelated message controls and target account remain readable; eleven stopped SQLite stores equal their pre-denial snapshots."
+      ],
+      "transports": [
+        "REST",
+        "IRC over real WebSocket",
+        "stopped-runtime SQLite",
+        "local Miniflare/workerd"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": {
+          "status": "not-applicable",
+          "rationale": "This scenario inspects a read-only REST projection. The documented admin interface returns its data to the requesting administrator, with no recipient subscription/notification contract; it is not a client mutation. Negative mutation event checks are retained separately."
+        },
+        "transport": "required",
+        "restart": {
+          "status": "not-applicable",
+          "rationale": "Universal §2 requires the change to survive runtime restart where applicable: disconnecting an existing socket and sending a live network notice create no stored entitlement/message. A process restart cannot resurrect that closed socket or replay a transient notice; durable credential revocation is a separate tested policy."
+        },
+        "unrelatedResources": "required"
+      },
+      "sourceAssertions": [
+        {
+          "file": "tests/security/matrix-admin-positive.test.ts",
+          "lines": [
+            1370,
+            1524
+          ],
+          "assertion": "Concrete40-operation request table, both alias loops, three event arrays==[], IRC PONG-only output and eleven-table equality."
+        }
+      ],
+      "reviewOnlySupplement": true
+    },
+    {
+      "id": "ADMIN-019",
+      "kind": "test",
+      "executionId": "final06-integrated-full",
+      "bundleSha256": "2f7699fc944db7d62a6297952220503010e7da298e8a3fcb5a5780838d613794",
+      "testFile": "tests/security/matrix-admin-positive.test.ts",
+      "testTitle": "matrix administrative positive controls and complete branch inventory ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations",
+      "outcome": "PASS",
+      "scenarioScope": "Ordinary users cannot enumerate all accounts through admin APIs.",
+      "rationale": "The exact operations and actor class were executed in the existing integration-strengthened test, supplying negative notifications and state checks without duplicating tests.",
+      "assertionDetails": [
+        "Ordinary Alice and anonymous callers attempt every one of the40 implemented administrative operations under both aliases, including account listing/inspection, disable, password reset, session disconnection and broadcast; exact403/401 are required.",
+        "Three independently authenticated actual event sockets receive empty arrays; owner/member/outsider IRC devices emit only PONG after the rejected requests.",
+        "Protected and unrelated message controls and target account remain readable; eleven stopped SQLite stores equal their pre-denial snapshots."
+      ],
+      "transports": [
+        "REST",
+        "IRC over real WebSocket",
+        "stopped-runtime SQLite",
+        "local Miniflare/workerd"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": {
+          "status": "not-applicable",
+          "rationale": "This scenario inspects a read-only REST projection. The documented admin interface returns its data to the requesting administrator, with no recipient subscription/notification contract; it is not a client mutation. Negative mutation event checks are retained separately."
+        },
+        "transport": "required",
+        "restart": {
+          "status": "not-applicable",
+          "rationale": "Universal §2 requires the change to survive runtime restart where applicable: disconnecting an existing socket and sending a live network notice create no stored entitlement/message. A process restart cannot resurrect that closed socket or replay a transient notice; durable credential revocation is a separate tested policy."
+        },
+        "unrelatedResources": "required"
+      },
+      "sourceAssertions": [
+        {
+          "file": "tests/security/matrix-admin-positive.test.ts",
+          "lines": [
+            1370,
+            1524
+          ],
+          "assertion": "Concrete40-operation request table, both alias loops, three event arrays==[], IRC PONG-only output and eleven-table equality."
+        }
+      ],
+      "reviewOnlySupplement": true
+    },
+    {
+      "id": "ADMIN-020",
+      "kind": "test",
+      "executionId": "final06-integrated-full",
+      "bundleSha256": "2f7699fc944db7d62a6297952220503010e7da298e8a3fcb5a5780838d613794",
+      "testFile": "tests/security/matrix-admin-positive.test.ts",
+      "testTitle": "matrix administrative positive controls and complete branch inventory ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations",
+      "outcome": "PASS",
+      "scenarioScope": "Ordinary users cannot disable other accounts.",
+      "rationale": "The exact operations and actor class were executed in the existing integration-strengthened test, supplying negative notifications and state checks without duplicating tests.",
+      "assertionDetails": [
+        "Ordinary Alice and anonymous callers attempt every one of the40 implemented administrative operations under both aliases, including account listing/inspection, disable, password reset, session disconnection and broadcast; exact403/401 are required.",
+        "Three independently authenticated actual event sockets receive empty arrays; owner/member/outsider IRC devices emit only PONG after the rejected requests.",
+        "Protected and unrelated message controls and target account remain readable; eleven stopped SQLite stores equal their pre-denial snapshots."
+      ],
+      "transports": [
+        "REST",
+        "IRC over real WebSocket",
+        "stopped-runtime SQLite",
+        "local Miniflare/workerd"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": {
+          "status": "not-applicable",
+          "rationale": "This scenario inspects a read-only REST projection. The documented admin interface returns its data to the requesting administrator, with no recipient subscription/notification contract; it is not a client mutation. Negative mutation event checks are retained separately."
+        },
+        "transport": "required",
+        "restart": {
+          "status": "not-applicable",
+          "rationale": "Universal §2 requires the change to survive runtime restart where applicable: disconnecting an existing socket and sending a live network notice create no stored entitlement/message. A process restart cannot resurrect that closed socket or replay a transient notice; durable credential revocation is a separate tested policy."
+        },
+        "unrelatedResources": "required"
+      },
+      "sourceAssertions": [
+        {
+          "file": "tests/security/matrix-admin-positive.test.ts",
+          "lines": [
+            1370,
+            1524
+          ],
+          "assertion": "Concrete40-operation request table, both alias loops, three event arrays==[], IRC PONG-only output and eleven-table equality."
+        }
+      ],
+      "reviewOnlySupplement": true
+    },
+    {
+      "id": "ADMIN-021",
+      "kind": "test",
+      "executionId": "final06-integrated-full",
+      "bundleSha256": "2f7699fc944db7d62a6297952220503010e7da298e8a3fcb5a5780838d613794",
+      "testFile": "tests/security/matrix-admin-positive.test.ts",
+      "testTitle": "matrix administrative positive controls and complete branch inventory ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations",
+      "outcome": "PASS",
+      "scenarioScope": "Ordinary users cannot reset other users' passwords.",
+      "rationale": "The exact operations and actor class were executed in the existing integration-strengthened test, supplying negative notifications and state checks without duplicating tests.",
+      "assertionDetails": [
+        "Ordinary Alice and anonymous callers attempt every one of the40 implemented administrative operations under both aliases, including account listing/inspection, disable, password reset, session disconnection and broadcast; exact403/401 are required.",
+        "Three independently authenticated actual event sockets receive empty arrays; owner/member/outsider IRC devices emit only PONG after the rejected requests.",
+        "Protected and unrelated message controls and target account remain readable; eleven stopped SQLite stores equal their pre-denial snapshots."
+      ],
+      "transports": [
+        "REST",
+        "IRC over real WebSocket",
+        "stopped-runtime SQLite",
+        "local Miniflare/workerd"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": {
+          "status": "not-applicable",
+          "rationale": "This scenario inspects a read-only REST projection. The documented admin interface returns its data to the requesting administrator, with no recipient subscription/notification contract; it is not a client mutation. Negative mutation event checks are retained separately."
+        },
+        "transport": "required",
+        "restart": {
+          "status": "not-applicable",
+          "rationale": "Universal §2 requires the change to survive runtime restart where applicable: disconnecting an existing socket and sending a live network notice create no stored entitlement/message. A process restart cannot resurrect that closed socket or replay a transient notice; durable credential revocation is a separate tested policy."
+        },
+        "unrelatedResources": "required"
+      },
+      "sourceAssertions": [
+        {
+          "file": "tests/security/matrix-admin-positive.test.ts",
+          "lines": [
+            1370,
+            1524
+          ],
+          "assertion": "Concrete40-operation request table, both alias loops, three event arrays==[], IRC PONG-only output and eleven-table equality."
+        }
+      ],
+      "reviewOnlySupplement": true
+    },
+    {
+      "id": "ADMIN-023",
+      "kind": "test",
+      "executionId": "final06-integrated-full",
+      "bundleSha256": "2f7699fc944db7d62a6297952220503010e7da298e8a3fcb5a5780838d613794",
+      "testFile": "tests/security/matrix-admin-positive.test.ts",
+      "testTitle": "matrix administrative positive controls and complete branch inventory ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations",
+      "outcome": "PASS",
+      "scenarioScope": "Ordinary users cannot revoke other users' sessions.",
+      "rationale": "The exact operations and actor class were executed in the existing integration-strengthened test, supplying negative notifications and state checks without duplicating tests.",
+      "assertionDetails": [
+        "Ordinary Alice and anonymous callers attempt every one of the40 implemented administrative operations under both aliases, including account listing/inspection, disable, password reset, session disconnection and broadcast; exact403/401 are required.",
+        "Three independently authenticated actual event sockets receive empty arrays; owner/member/outsider IRC devices emit only PONG after the rejected requests.",
+        "Protected and unrelated message controls and target account remain readable; eleven stopped SQLite stores equal their pre-denial snapshots."
+      ],
+      "transports": [
+        "REST",
+        "IRC over real WebSocket",
+        "stopped-runtime SQLite",
+        "local Miniflare/workerd"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": {
+          "status": "not-applicable",
+          "rationale": "This scenario inspects a read-only REST projection. The documented admin interface returns its data to the requesting administrator, with no recipient subscription/notification contract; it is not a client mutation. Negative mutation event checks are retained separately."
+        },
+        "transport": "required",
+        "restart": {
+          "status": "not-applicable",
+          "rationale": "Universal §2 requires the change to survive runtime restart where applicable: disconnecting an existing socket and sending a live network notice create no stored entitlement/message. A process restart cannot resurrect that closed socket or replay a transient notice; durable credential revocation is a separate tested policy."
+        },
+        "unrelatedResources": "required"
+      },
+      "sourceAssertions": [
+        {
+          "file": "tests/security/matrix-admin-positive.test.ts",
+          "lines": [
+            1370,
+            1524
+          ],
+          "assertion": "Concrete40-operation request table, both alias loops, three event arrays==[], IRC PONG-only output and eleven-table equality."
+        }
+      ],
+      "reviewOnlySupplement": true
+    },
+    {
+      "id": "ADMIN-024",
+      "kind": "test",
+      "executionId": "final06-integrated-full",
+      "bundleSha256": "2f7699fc944db7d62a6297952220503010e7da298e8a3fcb5a5780838d613794",
+      "testFile": "tests/security/matrix-admin-positive.test.ts",
+      "testTitle": "matrix administrative positive controls and complete branch inventory ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations",
+      "outcome": "PASS",
+      "scenarioScope": "Ordinary users cannot issue network-wide announcements.",
+      "rationale": "The exact operations and actor class were executed in the existing integration-strengthened test, supplying negative notifications and state checks without duplicating tests.",
+      "assertionDetails": [
+        "Ordinary Alice and anonymous callers attempt every one of the40 implemented administrative operations under both aliases, including account listing/inspection, disable, password reset, session disconnection and broadcast; exact403/401 are required.",
+        "Three independently authenticated actual event sockets receive empty arrays; owner/member/outsider IRC devices emit only PONG after the rejected requests.",
+        "Protected and unrelated message controls and target account remain readable; eleven stopped SQLite stores equal their pre-denial snapshots."
+      ],
+      "transports": [
+        "REST",
+        "IRC over real WebSocket",
+        "stopped-runtime SQLite",
+        "local Miniflare/workerd"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": {
+          "status": "not-applicable",
+          "rationale": "This scenario inspects a read-only REST projection. The documented admin interface returns its data to the requesting administrator, with no recipient subscription/notification contract; it is not a client mutation. Negative mutation event checks are retained separately."
+        },
+        "transport": "required",
+        "restart": {
+          "status": "not-applicable",
+          "rationale": "Universal §2 requires the change to survive runtime restart where applicable: disconnecting an existing socket and sending a live network notice create no stored entitlement/message. A process restart cannot resurrect that closed socket or replay a transient notice; durable credential revocation is a separate tested policy."
+        },
+        "unrelatedResources": "required"
+      },
+      "sourceAssertions": [
+        {
+          "file": "tests/security/matrix-admin-positive.test.ts",
+          "lines": [
+            1370,
+            1524
+          ],
+          "assertion": "Concrete40-operation request table, both alias loops, three event arrays==[], IRC PONG-only output and eleven-table equality."
+        }
+      ],
+      "reviewOnlySupplement": true
+    },
+    {
+      "id": "ADMIN-005",
+      "kind": "test",
+      "executionId": "final06-integrated-full",
+      "bundleSha256": "2f7699fc944db7d62a6297952220503010e7da298e8a3fcb5a5780838d613794",
+      "testFile": "tests/security/matrix-admin-positive.test.ts",
+      "testTitle": "matrix administrative positive controls and complete branch inventory ADMIN-005 ADMIN-006 USER-009: session inspection, revocation, and active IRC user disconnection without secret exposure",
+      "outcome": "PASS",
+      "scenarioScope": "Administrator can revoke a session.",
+      "rationale": "These administration operations have transient connection/output effects, rather than a durable grant to restore after a process restart.",
+      "assertionDetails": [
+        "Real Bob session ID and later nickname are disconnected by root; ordinary caller gets403, both actual target sockets close, Charlie remains live via PONG and Bob independent account bearer intentionally remains200."
+      ],
+      "transports": [
+        "REST",
+        "IRC over real WebSocket",
+        "stopped-runtime SQLite",
+        "local Miniflare/workerd"
+      ],
+      "assertions": [
+        "authorization",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": {
+          "status": "not-applicable",
+          "rationale": "Universal §2 requires the change to survive runtime restart where applicable: disconnecting an existing socket and sending a live network notice create no stored entitlement/message. A process restart cannot resurrect that closed socket or replay a transient notice; durable credential revocation is a separate tested policy."
+        },
+        "unrelatedResources": "required"
+      },
+      "sourceAssertions": [
+        {
+          "file": "tests/security/matrix-admin-positive.test.ts",
+          "lines": [
+            156,
+            250
+          ],
+          "assertion": "Actual target-ID and nickname disconnect requests, expected403/200, independent socket-close waiters, Charlie live control and still-valid Bob bearer."
+        }
+      ],
+      "reviewOnlySupplement": true
+    },
+    {
+      "id": "ADMIN-006",
+      "kind": "test",
+      "executionId": "final06-integrated-full",
+      "bundleSha256": "2f7699fc944db7d62a6297952220503010e7da298e8a3fcb5a5780838d613794",
+      "testFile": "tests/security/matrix-admin-positive.test.ts",
+      "testTitle": "matrix administrative positive controls and complete branch inventory ADMIN-005 ADMIN-006 USER-009: session inspection, revocation, and active IRC user disconnection without secret exposure",
+      "outcome": "PASS",
+      "scenarioScope": "Administrator can disconnect an active IRC user.",
+      "rationale": "These administration operations have transient connection/output effects, rather than a durable grant to restore after a process restart.",
+      "assertionDetails": [
+        "Real Bob session ID and later nickname are disconnected by root; ordinary caller gets403, both actual target sockets close, Charlie remains live via PONG and Bob independent account bearer intentionally remains200."
+      ],
+      "transports": [
+        "REST",
+        "IRC over real WebSocket",
+        "stopped-runtime SQLite",
+        "local Miniflare/workerd"
+      ],
+      "assertions": [
+        "authorization",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": {
+          "status": "not-applicable",
+          "rationale": "Universal §2 requires the change to survive runtime restart where applicable: disconnecting an existing socket and sending a live network notice create no stored entitlement/message. A process restart cannot resurrect that closed socket or replay a transient notice; durable credential revocation is a separate tested policy."
+        },
+        "unrelatedResources": "required"
+      },
+      "sourceAssertions": [
+        {
+          "file": "tests/security/matrix-admin-positive.test.ts",
+          "lines": [
+            156,
+            250
+          ],
+          "assertion": "Actual target-ID and nickname disconnect requests, expected403/200, independent socket-close waiters, Charlie live control and still-valid Bob bearer."
+        }
+      ],
+      "reviewOnlySupplement": true
+    },
+    {
+      "id": "ADMIN-014",
+      "kind": "test",
+      "executionId": "final06-integrated-full",
+      "bundleSha256": "2f7699fc944db7d62a6297952220503010e7da298e8a3fcb5a5780838d613794",
+      "testFile": "tests/security/matrix-admin-positive.test.ts",
+      "testTitle": "matrix administrative positive controls and complete branch inventory ADMIN-014 ADMIN-015 ADMIN-024: operational statistics, configuration and broadcast with alias parity and recipient isolation",
+      "outcome": "PASS",
+      "scenarioScope": "Administrator can broadcast network notices.",
+      "rationale": "These administration operations have transient connection/output effects, rather than a durable grant to restore after a process restart.",
+      "assertionDetails": [
+        "Both aliases reject ordinary broadcast403; forbidden marker reaches neither of two independent clients after barriers.",
+        "Root permitted NOTICE and standard broadcast each return200 with sentCount>=2; both actual client recipients receive the exact markers. Stats reads separately return200/403/401 and the specified projection properties."
+      ],
+      "transports": [
+        "REST",
+        "IRC over real WebSocket",
+        "stopped-runtime SQLite",
+        "local Miniflare/workerd"
+      ],
+      "assertions": [
+        "authorization",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": {
+          "status": "not-applicable",
+          "rationale": "Universal §2 requires the change to survive runtime restart where applicable: disconnecting an existing socket and sending a live network notice create no stored entitlement/message. A process restart cannot resurrect that closed socket or replay a transient notice; durable credential revocation is a separate tested policy."
+        },
+        "unrelatedResources": "required"
+      },
+      "sourceAssertions": [
+        {
+          "file": "tests/security/matrix-admin-positive.test.ts",
+          "lines": [
+            54,
+            153
+          ],
+          "assertion": "Exact stats read responses and concrete negative/positive broadcast outputs under both aliases."
+        }
+      ],
+      "reviewOnlySupplement": true
+    },
+    {
+      "id": "ADMIN-024",
+      "kind": "test",
+      "executionId": "final06-integrated-full",
+      "bundleSha256": "2f7699fc944db7d62a6297952220503010e7da298e8a3fcb5a5780838d613794",
+      "testFile": "tests/security/matrix-admin-positive.test.ts",
+      "testTitle": "matrix administrative positive controls and complete branch inventory ADMIN-014 ADMIN-015 ADMIN-024: operational statistics, configuration and broadcast with alias parity and recipient isolation",
+      "outcome": "PASS",
+      "scenarioScope": "Ordinary users cannot issue network-wide announcements.",
+      "rationale": "These administration operations have transient connection/output effects, rather than a durable grant to restore after a process restart.",
+      "assertionDetails": [
+        "Both aliases reject ordinary broadcast403; forbidden marker reaches neither of two independent clients after barriers.",
+        "Root permitted NOTICE and standard broadcast each return200 with sentCount>=2; both actual client recipients receive the exact markers. Stats reads separately return200/403/401 and the specified projection properties."
+      ],
+      "transports": [
+        "REST",
+        "IRC over real WebSocket",
+        "stopped-runtime SQLite",
+        "local Miniflare/workerd"
+      ],
+      "assertions": [
+        "authorization",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": {
+          "status": "not-applicable",
+          "rationale": "Universal §2 requires the change to survive runtime restart where applicable: disconnecting an existing socket and sending a live network notice create no stored entitlement/message. A process restart cannot resurrect that closed socket or replay a transient notice; durable credential revocation is a separate tested policy."
+        },
+        "unrelatedResources": "required"
+      },
+      "sourceAssertions": [
+        {
+          "file": "tests/security/matrix-admin-positive.test.ts",
+          "lines": [
+            54,
+            153
+          ],
+          "assertion": "Exact stats read responses and concrete negative/positive broadcast outputs under both aliases."
+        }
+      ],
+      "reviewOnlySupplement": true
+    },
+    {
+      "id": "ADMIN-001",
+      "kind": "test",
+      "executionId": "final06-integrated-full",
+      "bundleSha256": "2f7699fc944db7d62a6297952220503010e7da298e8a3fcb5a5780838d613794",
+      "testFile": "tests/security/matrix-admin-positive.test.ts",
+      "testTitle": "matrix administrative positive controls and complete branch inventory ADMIN-001 ADMIN-002 ADMIN-003 ADMIN-004 ADMIN-007 ADMIN-008 ADMIN-019 ADMIN-020 ADMIN-021 ADMIN-022 ADMIN-023 AUTH-009 AUTH-023 USER-009: account provisioning, profile, credentials, roles, enable/disable and deletion across aliases",
+      "outcome": "PASS",
+      "scenarioScope": "Administrator can list accounts.",
+      "rationale": "Apply dimensions to the exact inspection/enumeration requirement, not unrelated mutations sharing an aggregate test.",
+      "assertionDetails": [
+        "Root lists the known created accounts and filters oper membership correctly; ordinary account lists and account details are403 under both aliases.",
+        "Permitted detail contains exact account username/current roles; listing/detail omit password and SCRAM material."
+      ],
+      "transports": [
+        "REST",
+        "IRC over real WebSocket",
+        "stopped-runtime SQLite",
+        "local Miniflare/workerd"
+      ],
+      "assertions": [
+        "authorization",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": {
+          "status": "not-applicable",
+          "rationale": "This scenario inspects a read-only REST projection. The documented admin interface returns its data to the requesting administrator, with no recipient subscription/notification contract; it is not a client mutation. Negative mutation event checks are retained separately."
+        },
+        "transport": "required",
+        "restart": {
+          "status": "not-applicable",
+          "rationale": "The operation reads a current projection and changes no durable resource or policy. Repeating it after a process restart would not establish persistence of an intended change (§2 where applicable)."
+        },
+        "unrelatedResources": "required"
+      },
+      "sourceAssertions": [
+        {
+          "file": "tests/security/matrix-admin-positive.test.ts",
+          "lines": [
+            290,
+            331
+          ],
+          "assertion": "Concrete account-list/filter/detail bodies, both alias responses and forbidden ordinary caller checks."
+        }
+      ],
+      "reviewOnlySupplement": true
+    },
+    {
+      "id": "ADMIN-002",
+      "kind": "test",
+      "executionId": "final06-integrated-full",
+      "bundleSha256": "2f7699fc944db7d62a6297952220503010e7da298e8a3fcb5a5780838d613794",
+      "testFile": "tests/security/matrix-admin-positive.test.ts",
+      "testTitle": "matrix administrative positive controls and complete branch inventory ADMIN-001 ADMIN-002 ADMIN-003 ADMIN-004 ADMIN-007 ADMIN-008 ADMIN-019 ADMIN-020 ADMIN-021 ADMIN-022 ADMIN-023 AUTH-009 AUTH-023 USER-009: account provisioning, profile, credentials, roles, enable/disable and deletion across aliases",
+      "outcome": "PASS",
+      "scenarioScope": "Administrator can inspect permitted account administration metadata.",
+      "rationale": "Apply dimensions to the exact inspection/enumeration requirement, not unrelated mutations sharing an aggregate test.",
+      "assertionDetails": [
+        "Root lists the known created accounts and filters oper membership correctly; ordinary account lists and account details are403 under both aliases.",
+        "Permitted detail contains exact account username/current roles; listing/detail omit password and SCRAM material."
+      ],
+      "transports": [
+        "REST",
+        "IRC over real WebSocket",
+        "stopped-runtime SQLite",
+        "local Miniflare/workerd"
+      ],
+      "assertions": [
+        "authorization",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": {
+          "status": "not-applicable",
+          "rationale": "This scenario inspects a read-only REST projection. The documented admin interface returns its data to the requesting administrator, with no recipient subscription/notification contract; it is not a client mutation. Negative mutation event checks are retained separately."
+        },
+        "transport": "required",
+        "restart": {
+          "status": "not-applicable",
+          "rationale": "The operation reads a current projection and changes no durable resource or policy. Repeating it after a process restart would not establish persistence of an intended change (§2 where applicable)."
+        },
+        "unrelatedResources": "required"
+      },
+      "sourceAssertions": [
+        {
+          "file": "tests/security/matrix-admin-positive.test.ts",
+          "lines": [
+            290,
+            331
+          ],
+          "assertion": "Concrete account-list/filter/detail bodies, both alias responses and forbidden ordinary caller checks."
+        }
+      ],
+      "reviewOnlySupplement": true
+    },
+    {
+      "id": "ADMIN-019",
+      "kind": "test",
+      "executionId": "final06-integrated-full",
+      "bundleSha256": "2f7699fc944db7d62a6297952220503010e7da298e8a3fcb5a5780838d613794",
+      "testFile": "tests/security/matrix-admin-positive.test.ts",
+      "testTitle": "matrix administrative positive controls and complete branch inventory ADMIN-001 ADMIN-002 ADMIN-003 ADMIN-004 ADMIN-007 ADMIN-008 ADMIN-019 ADMIN-020 ADMIN-021 ADMIN-022 ADMIN-023 AUTH-009 AUTH-023 USER-009: account provisioning, profile, credentials, roles, enable/disable and deletion across aliases",
+      "outcome": "PASS",
+      "scenarioScope": "Ordinary users cannot enumerate all accounts through admin APIs.",
+      "rationale": "Apply dimensions to the exact inspection/enumeration requirement, not unrelated mutations sharing an aggregate test.",
+      "assertionDetails": [
+        "Root lists the known created accounts and filters oper membership correctly; ordinary account lists and account details are403 under both aliases.",
+        "Permitted detail contains exact account username/current roles; listing/detail omit password and SCRAM material."
+      ],
+      "transports": [
+        "REST",
+        "IRC over real WebSocket",
+        "stopped-runtime SQLite",
+        "local Miniflare/workerd"
+      ],
+      "assertions": [
+        "authorization",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": {
+          "status": "not-applicable",
+          "rationale": "This scenario inspects a read-only REST projection. The documented admin interface returns its data to the requesting administrator, with no recipient subscription/notification contract; it is not a client mutation. Negative mutation event checks are retained separately."
+        },
+        "transport": "required",
+        "restart": {
+          "status": "not-applicable",
+          "rationale": "The operation reads a current projection and changes no durable resource or policy. Repeating it after a process restart would not establish persistence of an intended change (§2 where applicable)."
+        },
+        "unrelatedResources": "required"
+      },
+      "sourceAssertions": [
+        {
+          "file": "tests/security/matrix-admin-positive.test.ts",
+          "lines": [
+            290,
+            331
+          ],
+          "assertion": "Concrete account-list/filter/detail bodies, both alias responses and forbidden ordinary caller checks."
+        }
+      ],
+      "reviewOnlySupplement": true
+    },
+    {
+      "id": "ADMIN-015",
+      "kind": "test",
+      "executionId": "final06-integrated-full",
+      "bundleSha256": "2f7699fc944db7d62a6297952220503010e7da298e8a3fcb5a5780838d613794",
+      "testFile": "tests/security/matrix-admin-positive.test.ts",
+      "testTitle": "matrix administrative positive controls and complete branch inventory ADMIN-014 ADMIN-015 ADMIN-024: operational statistics, configuration and broadcast with alias parity and recipient isolation",
+      "outcome": "PASS",
+      "scenarioScope": "Administrator can inspect operational statistics.",
+      "rationale": "Apply dimensions to the exact inspection/enumeration requirement, not unrelated mutations sharing an aggregate test.",
+      "assertionDetails": [
+        "Both aliases reject ordinary broadcast403; forbidden marker reaches neither of two independent clients after barriers.",
+        "Root permitted NOTICE and standard broadcast each return200 with sentCount>=2; both actual client recipients receive the exact markers. Stats reads separately return200/403/401 and the specified projection properties."
+      ],
+      "transports": [
+        "REST",
+        "IRC over real WebSocket",
+        "stopped-runtime SQLite",
+        "local Miniflare/workerd"
+      ],
+      "assertions": [
+        "authorization",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": {
+          "status": "not-applicable",
+          "rationale": "This scenario inspects a read-only REST projection. The documented admin interface returns its data to the requesting administrator, with no recipient subscription/notification contract; it is not a client mutation. Negative mutation event checks are retained separately."
+        },
+        "transport": "required",
+        "restart": {
+          "status": "not-applicable",
+          "rationale": "The operation reads a current projection and changes no durable resource or policy. Repeating it after a process restart would not establish persistence of an intended change (§2 where applicable)."
+        },
+        "unrelatedResources": "required"
+      },
+      "sourceAssertions": [
+        {
+          "file": "tests/security/matrix-admin-positive.test.ts",
+          "lines": [
+            54,
+            153
+          ],
+          "assertion": "Exact stats read responses and concrete negative/positive broadcast outputs under both aliases."
+        }
+      ],
+      "reviewOnlySupplement": true
+    },
+    {
+      "id": "ADMIN-023",
+      "kind": "test",
+      "executionId": "final06-integrated-full",
+      "bundleSha256": "2f7699fc944db7d62a6297952220503010e7da298e8a3fcb5a5780838d613794",
+      "testFile": "tests/security/matrix-admin-positive.test.ts",
+      "testTitle": "matrix administrative positive controls and complete branch inventory ADMIN-028 ADMIN-030: legacy and alias denial integrity and rejected attempt state immutability across all 40 operations",
+      "outcome": "PASS",
+      "scenarioScope": "Ordinary users cannot revoke other users' sessions.",
+      "rationale": "This endpoint disconnects live IRC sessions, and intentionally does not revoke an account bearer. No durable disconnection entitlement is claimed.",
+      "assertionDetails": [
+        "Exact existing-target session disconnect is rejected for ordinary/anonymous callers under both aliases with no IRC/event output and unchanged protected stores; target credential remains valid."
+      ],
+      "transports": [
+        "REST",
+        "IRC over real WebSocket",
+        "stopped-runtime SQLite",
+        "local Miniflare/workerd"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": {
+          "status": "not-applicable",
+          "rationale": "The forbidden live-socket disconnection changes no persisted permission; the authorized connection-close control is transient. Credential revocation persistence is separate from this endpoint."
+        },
+        "unrelatedResources": "required"
+      },
+      "sourceAssertions": [
+        {
+          "file": "tests/security/matrix-admin-positive.test.ts",
+          "lines": [
+            1417,
+            1430
+          ],
+          "assertion": "Concrete /sessions/disconnect existing targetuser nickname in forbidden request list."
+        },
+        {
+          "file": "tests/security/matrix-admin-positive.test.ts",
+          "lines": [
+            1485,
+            1522
+          ],
+          "assertion": "Both403/401 loops, no recipient output and preserved target/unrelated state."
+        }
+      ],
+      "reviewOnlySupplement": true
+    },
+    {
+      "id": "DB-014",
+      "kind": "test",
+      "executionId": "final06-integrated-full",
+      "bundleSha256": "2f7699fc944db7d62a6297952220503010e7da298e8a3fcb5a5780838d613794",
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[DB-013 DB-014 DB-028] actual SQLite foreign keys, unique sequences and indexed bounded history queries enforce integrity",
+      "outcome": "PASS",
+      "scenarioScope": "Unique constraints reject duplicate records.",
+      "rationale": "A raw SQLite schema integrity requirement does not require inventing an IRC event or client-facing SQL authorization interface.",
+      "assertionDetails": [
+        "Public operations populate120 real messages and one role assignment. A fresh Node SQLite connection to the stopped actual workerd database rejects duplicate role assignment and duplicate message sequence with UNIQUE errors.",
+        "The original120 message rows remain. UNIQUE index enforcement is not enabled by PRAGMA foreign_keys and is not a claim about the Worker foreign-key connection."
+      ],
+      "transports": [
+        "real Miniflare/workerd REST population",
+        "fresh connection to actual stopped SQLite file"
+      ],
+      "assertions": [
+        "state",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": {
+          "status": "not-applicable",
+          "rationale": "The requirement is intrinsic UNIQUE constraint rejection in the actual persisted SQLite schema, not a user-authorized write API. The test deliberately submits raw SQL to the stopped database; no client command grants raw-SQL access."
+        },
+        "state": "required",
+        "events": {
+          "status": "not-applicable",
+          "rationale": "The tested operation is direct stopped-database constraint enforcement. It has no attached client/notification contract; this does not exempt any denied REST/IRC mutation from event checks."
+        },
+        "transport": "required",
+        "restart": {
+          "status": "not-applicable",
+          "rationale": "SQLite UNIQUE enforcement is intrinsic to these on-disk schema indexes and is exercised on a fresh independently opened database connection. There is no changed application authorization/cache generation to restore, unlike connection-specific foreign_keys."
+        },
+        "unrelatedResources": "required"
+      },
+      "sourceAssertions": [
+        {
+          "file": "tests/security/matrix-persistence.test.ts",
+          "lines": [
+            800,
+            879
+          ],
+          "assertion": "Actual schema duplicate SQL inserts throw UNIQUE; message count remains120; foreign_keys switch is separated from intrinsic unique-index assertions."
+        }
+      ],
+      "reviewOnlySupplement": true
+    },
+    {
+      "id": "DB-028",
+      "kind": "test",
+      "executionId": "final06-integrated-full",
+      "bundleSha256": "2f7699fc944db7d62a6297952220503010e7da298e8a3fcb5a5780838d613794",
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[DB-013 DB-014 DB-028] actual SQLite foreign keys, unique sequences and indexed bounded history queries enforce integrity",
+      "outcome": "PASS",
+      "scenarioScope": "SQL indexes support bounded history and authorization queries without full-table scans under representative load.",
+      "rationale": "Index-plan assertions establish the requested internal SQL property directly; network events/IRC policy are not the planner interface.",
+      "assertionDetails": [
+        "A120-message fixture returns100 then20 disjoint history records despite an extreme requested limit.",
+        "EXPLAIN for redacted/expiry/sequence-range history must say SEARCH messages USING INDEX matching sequence; the user-role authorization lookup must say SEARCH channel_user_roles USING.",
+        "Scope is those actual representative SQL query shapes and120 rows, not production-scale tuning, all cursor forms or a deployed query-plan audit."
+      ],
+      "transports": [
+        "actual REST history pagination",
+        "stopped SQLite EXPLAIN QUERY PLAN"
+      ],
+      "assertions": [
+        "state",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": {
+          "status": "not-applicable",
+          "rationale": "EXPLAIN of the history/role lookup SQL is an internal query-plan inspection, not an externally authorized client operation. Live account authentication is setup, not the property established by the planner assertions."
+        },
+        "state": "required",
+        "events": {
+          "status": "not-applicable",
+          "rationale": "EXPLAIN/query-plan inspection is read-only internal maintenance and has no recipient/event contract."
+        },
+        "transport": "required",
+        "restart": {
+          "status": "not-applicable",
+          "rationale": "The read-only planner checks immutable persisted indexes on a fresh SQLite connection. No intended stored change needs post-runtime restoration."
+        },
+        "unrelatedResources": {
+          "status": "not-applicable",
+          "rationale": "Read-only EXPLAIN and bounded SELECT inspect no mutable resource and have no unrelated write target; the120-row count also remains unchanged."
+        }
+      },
+      "sourceAssertions": [
+        {
+          "file": "tests/security/matrix-persistence.test.ts",
+          "lines": [
+            804,
+            840
+          ],
+          "assertion": "120 real message writes and disjoint bounded100/20 pages."
+        },
+        {
+          "file": "tests/security/matrix-persistence.test.ts",
+          "lines": [
+            860,
+            875
+          ],
+          "assertion": "Exact indexed history and user-role EXPLAIN assertions on the persisted database."
+        }
+      ],
+      "reviewOnlySupplement": true
+    },
+    {
+      "id": "DB-027",
+      "kind": "test",
+      "executionId": "final06-integrated-full",
+      "bundleSha256": "2f7699fc944db7d62a6297952220503010e7da298e8a3fcb5a5780838d613794",
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[DB-009 DB-010 DB-011 MSG-026 DM-017 DB-027] independent runtime restart preserves private messages, edits and redactions and rejects foreign cursors",
+      "outcome": "PASS",
+      "scenarioScope": "Query pagination cannot escape the intended account/channel scope.",
+      "rationale": "The operation is a read-only scoped query; persistence/access controls are already rechecked after real recreation.",
+      "assertionDetails": [
+        "After complete recreation, outsiders receive403 for foreign cursors/extreme limits with no private bodies. An authorized unrelated-channel around query using a private message ID returns at most one scoped record and no private body.",
+        "The correct private edit/redaction/DM remains intact through REST independent reads and actual SQL redaction/FTS checks."
+      ],
+      "transports": [
+        "REST",
+        "full workerd recreation",
+        "stopped SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": {
+          "status": "not-applicable",
+          "rationale": "History pagination is a requester-only read, not a mutation or event subscription. No query-triggered recipient notification exists in the operation contract (authorization-matrix history row says Reads)."
+        },
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "sourceAssertions": [
+        {
+          "file": "tests/security/matrix-persistence.test.ts",
+          "lines": [
+            728,
+            798
+          ],
+          "assertion": "Explicit post-restart cross-channel before/around scope checks plus exact persisted private rows/FTS."
+        }
+      ],
+      "reviewOnlySupplement": true
+    },
+    {
+      "id": "SVC-006",
+      "kind": "test",
+      "executionId": "final06-integrated-full",
+      "bundleSha256": "2f7699fc944db7d62a6297952220503010e7da298e8a3fcb5a5780838d613794",
+      "testFile": "tests/security/matrix-services.test.ts",
+      "testTitle": "matrix F command authority SVC-005 SVC-006 SVC-008 SVC-009 SVC-010 SVC-011 SVC-017: grants and denials respect ranks and channel boundaries",
+      "outcome": "PASS",
+      "scenarioScope": "F OP respects channel access lists.",
+      "rationale": "Exact transient F output controls supplement the independently executed recreated-runtime rank test; no assertion is attributed to a different test title.",
+      "assertionDetails": [
+        "Ordinary Bob F OP/VOICE/CHANLEV requests are denied. Founder F OP Bob delivers MODE+o, operator Bob F VOICE and DEVOICE Charlie each deliver the corresponding MODE delta, and founder F DEOP Bob delivers MODE-o.",
+        "After removal Bob DEVOICE is denied; unrelated channel receives no forged mode and target founder is not deopped; legitimate founder REST control still succeeds."
+      ],
+      "transports": [
+        "REST",
+        "IRC over real WebSocket",
+        "stopped-runtime SQLite",
+        "local Miniflare/workerd"
+      ],
+      "assertions": [
+        "authorization",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "sourceAssertions": [
+        {
+          "file": "tests/security/matrix-services.test.ts",
+          "lines": [
+            146,
+            205
+          ],
+          "assertion": "Actual same F commands with positive MODE delivery waiters, denied ordinary/currently-revoked authority and independent channel/recipient controls."
+        }
+      ],
+      "reviewOnlySupplement": true
+    },
+    {
+      "id": "SVC-007",
+      "kind": "test",
+      "executionId": "final06-integrated-full",
+      "bundleSha256": "2f7699fc944db7d62a6297952220503010e7da298e8a3fcb5a5780838d613794",
+      "testFile": "tests/security/matrix-services.test.ts",
+      "testTitle": "matrix F command authority SVC-005 SVC-006 SVC-008 SVC-009 SVC-010 SVC-011 SVC-017: grants and denials respect ranks and channel boundaries",
+      "outcome": "PASS",
+      "scenarioScope": "F DEOP respects hierarchy restrictions.",
+      "rationale": "Exact transient F output controls supplement the independently executed recreated-runtime rank test; no assertion is attributed to a different test title.",
+      "assertionDetails": [
+        "Ordinary Bob F OP/VOICE/CHANLEV requests are denied. Founder F OP Bob delivers MODE+o, operator Bob F VOICE and DEVOICE Charlie each deliver the corresponding MODE delta, and founder F DEOP Bob delivers MODE-o.",
+        "After removal Bob DEVOICE is denied; unrelated channel receives no forged mode and target founder is not deopped; legitimate founder REST control still succeeds."
+      ],
+      "transports": [
+        "REST",
+        "IRC over real WebSocket",
+        "stopped-runtime SQLite",
+        "local Miniflare/workerd"
+      ],
+      "assertions": [
+        "authorization",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "sourceAssertions": [
+        {
+          "file": "tests/security/matrix-services.test.ts",
+          "lines": [
+            146,
+            205
+          ],
+          "assertion": "Actual same F commands with positive MODE delivery waiters, denied ordinary/currently-revoked authority and independent channel/recipient controls."
+        }
+      ],
+      "reviewOnlySupplement": true
+    },
+    {
+      "id": "SVC-008",
+      "kind": "test",
+      "executionId": "final06-integrated-full",
+      "bundleSha256": "2f7699fc944db7d62a6297952220503010e7da298e8a3fcb5a5780838d613794",
+      "testFile": "tests/security/matrix-services.test.ts",
+      "testTitle": "matrix F command authority SVC-005 SVC-006 SVC-008 SVC-009 SVC-010 SVC-011 SVC-017: grants and denials respect ranks and channel boundaries",
+      "outcome": "PASS",
+      "scenarioScope": "F VOICE and DEVOICE respect assigned privileges.",
+      "rationale": "Exact transient F output controls supplement the independently executed recreated-runtime rank test; no assertion is attributed to a different test title.",
+      "assertionDetails": [
+        "Ordinary Bob F OP/VOICE/CHANLEV requests are denied. Founder F OP Bob delivers MODE+o, operator Bob F VOICE and DEVOICE Charlie each deliver the corresponding MODE delta, and founder F DEOP Bob delivers MODE-o.",
+        "After removal Bob DEVOICE is denied; unrelated channel receives no forged mode and target founder is not deopped; legitimate founder REST control still succeeds."
+      ],
+      "transports": [
+        "REST",
+        "IRC over real WebSocket",
+        "stopped-runtime SQLite",
+        "local Miniflare/workerd"
+      ],
+      "assertions": [
+        "authorization",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "sourceAssertions": [
+        {
+          "file": "tests/security/matrix-services.test.ts",
+          "lines": [
+            146,
+            205
+          ],
+          "assertion": "Actual same F commands with positive MODE delivery waiters, denied ordinary/currently-revoked authority and independent channel/recipient controls."
+        }
+      ],
+      "reviewOnlySupplement": true
+    },
+    {
+      "id": "DB-018",
+      "kind": "test",
+      "executionId": "final06-integrated-full",
+      "bundleSha256": "2f7699fc944db7d62a6297952220503010e7da298e8a3fcb5a5780838d613794",
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[DB-018 DB-019] actual workerd alarms delete expired rows and reschedule after both deletion and a no-op",
+      "outcome": "PASS",
+      "scenarioScope": "Ninety-day retention removes expired messages.",
+      "rationale": "Apply internal maintenance applicability instead of client-interface requirements, but preserve the missing post-cleanup reactivation assertion.",
+      "assertionDetails": [
+        "Real stored expired/fresh messages are prepared with distinct bodies, and another channel has an independent retained message.",
+        "Actual scheduled local workerd alarm (observed subclass invokes unchanged super.alarm) deletes only expired row/FTS, preserves fresh/unrelated histories and reschedules after deletion and again after a no-op.",
+        "Final independent stopped SQLite read confirms exact retained body and absence of expired FTS. The test does not recreate a runtime after cleanup; earlier recreation prepares the alarm fixture."
+      ],
+      "transports": [
+        "actual scheduled local workerd alarm",
+        "REST readback",
+        "stopped SQLite"
+      ],
+      "assertions": [
+        "state",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": {
+          "status": "not-applicable",
+          "rationale": "Ninety-day cleanup is a privileged internal alarm/maintenance RPC with no public IRC/REST client dispatch; authorization-matrix explicitly separates internal maintenance RPCs from client allowlisted operations. Public history access remains independently authenticated."
+        },
+        "state": "required",
+        "events": {
+          "status": "not-applicable",
+          "rationale": "Expired-history cleanup has no recipient notification contract: production alarm calls cleanup and deletes expired SQL rows/FTS and reschedules. This is not a client mutation denial with an omitted event observer."
+        },
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "sourceAssertions": [
+        {
+          "file": "tests/security/matrix-persistence.test.ts",
+          "lines": [
+            927,
+            996
+          ],
+          "assertion": "Actual scheduled alarm barriers, fresh/unrelated history and final SQL/FTS checks; no runtime start after deletion."
+        },
+        {
+          "file": "tests/security/matrix-persistence.test.ts",
+          "lines": [
+            881,
+            925
+          ],
+          "assertion": "The cleanup RPC test starts before cleanup; final stop/SQL read is not a second post-cleanup runtime."
+        },
+        {
+          "file": "server/durable-objects/channel.ts",
+          "lines": [
+            458,
+            492
+          ],
+          "assertion": "Operation classification only: internal alarm/cleanup owns retention and scheduling, with no public mutation dispatch or notification contract."
+        }
+      ],
+      "reviewOnlySupplement": true
+    },
+    {
+      "id": "DB-019",
+      "kind": "test",
+      "executionId": "final06-integrated-full",
+      "bundleSha256": "2f7699fc944db7d62a6297952220503010e7da298e8a3fcb5a5780838d613794",
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[DB-018 DB-019] actual workerd alarms delete expired rows and reschedule after both deletion and a no-op",
+      "outcome": "PASS",
+      "scenarioScope": "Retention cleanup does not remove unexpired messages.",
+      "rationale": "Apply internal maintenance applicability instead of client-interface requirements, but preserve the missing post-cleanup reactivation assertion.",
+      "assertionDetails": [
+        "Real stored expired/fresh messages are prepared with distinct bodies, and another channel has an independent retained message.",
+        "Actual scheduled local workerd alarm (observed subclass invokes unchanged super.alarm) deletes only expired row/FTS, preserves fresh/unrelated histories and reschedules after deletion and again after a no-op.",
+        "Final independent stopped SQLite read confirms exact retained body and absence of expired FTS. The test does not recreate a runtime after cleanup; earlier recreation prepares the alarm fixture."
+      ],
+      "transports": [
+        "actual scheduled local workerd alarm",
+        "REST readback",
+        "stopped SQLite"
+      ],
+      "assertions": [
+        "state",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": {
+          "status": "not-applicable",
+          "rationale": "Ninety-day cleanup is a privileged internal alarm/maintenance RPC with no public IRC/REST client dispatch; authorization-matrix explicitly separates internal maintenance RPCs from client allowlisted operations. Public history access remains independently authenticated."
+        },
+        "state": "required",
+        "events": {
+          "status": "not-applicable",
+          "rationale": "Expired-history cleanup has no recipient notification contract: production alarm calls cleanup and deletes expired SQL rows/FTS and reschedules. This is not a client mutation denial with an omitted event observer."
+        },
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "sourceAssertions": [
+        {
+          "file": "tests/security/matrix-persistence.test.ts",
+          "lines": [
+            927,
+            996
+          ],
+          "assertion": "Actual scheduled alarm barriers, fresh/unrelated history and final SQL/FTS checks; no runtime start after deletion."
+        },
+        {
+          "file": "tests/security/matrix-persistence.test.ts",
+          "lines": [
+            881,
+            925
+          ],
+          "assertion": "The cleanup RPC test starts before cleanup; final stop/SQL read is not a second post-cleanup runtime."
+        },
+        {
+          "file": "server/durable-objects/channel.ts",
+          "lines": [
+            458,
+            492
+          ],
+          "assertion": "Operation classification only: internal alarm/cleanup owns retention and scheduling, with no public mutation dispatch or notification contract."
+        }
+      ],
+      "reviewOnlySupplement": true
+    },
+    {
+      "id": "DB-003",
+      "kind": "test",
+      "executionId": "final06-integrated-full",
+      "bundleSha256": "2f7699fc944db7d62a6297952220503010e7da298e8a3fcb5a5780838d613794",
+      "testFile": "tests/security/matrix-admin-positive.test.ts",
+      "testTitle": "matrix administrative positive controls and complete branch inventory ADMIN-001 ADMIN-002 ADMIN-003 ADMIN-004 ADMIN-007 ADMIN-008 ADMIN-019 ADMIN-020 ADMIN-021 ADMIN-022 ADMIN-023 AUTH-009 AUTH-023 USER-009: account provisioning, profile, credentials, roles, enable/disable and deletion across aliases",
+      "outcome": "PASS",
+      "scenarioScope": "Account updates survive runtime restart.",
+      "rationale": "This is actual account-update persistence, not credit inferred from fixture creation. Recipient notifications for the account mutation remain unverified.",
+      "assertionDetails": [
+        "Root account PATCH sets Managed1 displayName through both aliases, ordinary PATCH403; stopped SQL keeps managed1/unrelated accounts.",
+        "After full f.restart, both admin detail aliases return the exact updated displayName and bot/no-oper roles; all older tokens/passwords fail, fresh current password and unrelated account work."
+      ],
+      "transports": [
+        "REST",
+        "IRC over real WebSocket",
+        "stopped-runtime SQLite",
+        "local Miniflare/workerd"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "sourceAssertions": [
+        {
+          "file": "tests/security/matrix-admin-positive.test.ts",
+          "lines": [
+            334,
+            350
+          ],
+          "assertion": "Real authorized and forbidden account display-name PATCH operations."
+        },
+        {
+          "file": "tests/security/matrix-admin-positive.test.ts",
+          "lines": [
+            551,
+            603
+          ],
+          "assertion": "Stopped users/roles and recreated runtime exact displayName/role/credentials/unrelated reads."
+        }
+      ],
+      "reviewOnlySupplement": true
+    },
+    {
+      "id": "DB-005",
+      "kind": "test",
+      "executionId": "final06-integrated-full",
+      "bundleSha256": "2f7699fc944db7d62a6297952220503010e7da298e8a3fcb5a5780838d613794",
+      "testFile": "tests/security/matrix-roles.test.ts",
+      "testTitle": "matrix role hierarchy expanded ROLE-001 ROLE-002 ROLE-003 ROLE-004: founder settings and complete role CRUD persist with denied member controls",
+      "outcome": "PASS",
+      "scenarioScope": "Channel registration persists.",
+      "rationale": "This establishes supported registered-channel persistence, not an unexecuted administrative registration notification check.",
+      "assertionDetails": [
+        "roleRig explicitly issues authenticated CS REGISTER, accepting successful/already-registered registered-channel control.",
+        "disk() selects the registered channel metadata and recreates workerd, independently reads founder/modes/role IDs and compares channel_metadata including registered state after stopping again."
+      ],
+      "transports": [
+        "REST",
+        "IRC over real WebSocket",
+        "stopped-runtime SQLite",
+        "local Miniflare/workerd"
+      ],
+      "assertions": [
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "sourceAssertions": [
+        {
+          "file": "tests/security/matrix-roles.test.ts",
+          "lines": [
+            386,
+            410
+          ],
+          "assertion": "Authenticated CS REGISTER and independent registered staff setup."
+        },
+        {
+          "file": "tests/security/matrix-roles.test.ts",
+          "lines": [
+            286,
+            359
+          ],
+          "assertion": "Persisted registered metadata conditions, new runtime info/roles and exact table equality."
+        }
+      ],
+      "reviewOnlySupplement": true
+    },
+    {
+      "id": "DB-006",
+      "kind": "test",
+      "executionId": "final06-integrated-full",
+      "bundleSha256": "2f7699fc944db7d62a6297952220503010e7da298e8a3fcb5a5780838d613794",
+      "testFile": "tests/security/matrix-roles.test.ts",
+      "testTitle": "matrix role hierarchy expanded ROLE-026: custom manage_channel grants only metadata through supported transports and survives restart",
+      "outcome": "PASS",
+      "scenarioScope": "Channel metadata updates persist.",
+      "rationale": "This is the same persistent channel metadata operation; no positive metadata event is inferred merely from a passing general flush helper.",
+      "assertionDetails": [
+        "Before the custom grant, the exact REST description mutation is403 with no IRC/event output and unchanged protected snapshots.",
+        "After assignment, the same mutation is200; disk() asserts the exact description row and independently recreated info.description agrees with it while staff remains unchanged."
+      ],
+      "transports": [
+        "REST",
+        "IRC over real WebSocket",
+        "stopped-runtime SQLite",
+        "local Miniflare/workerd"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "sourceAssertions": [
+        {
+          "file": "tests/security/matrix-roles.test.ts",
+          "lines": [
+            1030,
+            1141
+          ],
+          "assertion": "Actual generated manage_channel/metadata case; forbidden before grant, allowed after grant and exact metadata SQL row."
+        },
+        {
+          "file": "tests/security/matrix-roles.test.ts",
+          "lines": [
+            286,
+            412
+          ],
+          "assertion": "disk validates independently recreated info.description from saved metadata; live outsider and staff sentinel checks."
+        }
+      ],
+      "reviewOnlySupplement": true
+    },
+    {
+      "id": "AUTH-021",
+      "kind": "test",
+      "executionId": "final06-integrated-full",
+      "bundleSha256": "2f7699fc944db7d62a6297952220503010e7da298e8a3fcb5a5780838d613794",
+      "testFile": "tests/security/matrix-push-abuse.test.ts",
+      "testTitle": "matrix push and abuse ABUSE-004 failed authentication is rate limited without creating sessions or affecting another user",
+      "outcome": "PASS",
+      "scenarioScope": "Multiple failed logins trigger appropriate rate limits.",
+      "rationale": "The account rate-limit scenario is already an actual executable abuse test; event silence and restart of the limiter are not supplied by this mapping.",
+      "assertionDetails": [
+        "Twelve wrong-password requests all401; first error Invalid credentials and final three Too many authentication attempts.",
+        "Alice original token remains200, Bob real password still logs in200; stopped sessions contain only Alice original1 and Bob original plus legitimate login2."
+      ],
+      "transports": [
+        "REST",
+        "IRC over real WebSocket",
+        "stopped-runtime SQLite",
+        "local Miniflare/workerd"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "sourceAssertions": [
+        {
+          "file": "tests/security/matrix-push-abuse.test.ts",
+          "lines": [
+            618,
+            655
+          ],
+          "assertion": "Exact account-specific rate-limit messages, independent Bob success and per-account SQL session counts."
+        }
+      ],
+      "reviewOnlySupplement": true
+    },
+    {
+      "id": "SVC-003",
+      "kind": "test",
+      "executionId": "final06-integrated-full",
+      "bundleSha256": "2f7699fc944db7d62a6297952220503010e7da298e8a3fcb5a5780838d613794",
+      "testFile": "tests/security/matrix-identity.test.ts",
+      "testTitle": "matrix isolated identity substitution USER-010 USER-011: NickServ groups and drops only the authenticated account's nicknames",
+      "outcome": "PASS",
+      "scenarioScope": "Users cannot register another user's nickname.",
+      "rationale": "Ownership is asserted through actual NickServ commands, but a different account nickname cannot be assumed registered simply from a helper name; restart and negative recipient observations remain gaps.",
+      "assertionDetails": [
+        "Alice groups then drops her own new nickname; Alice NS DROP Bob fails and NICK Bob returns433. Bob admin details and stopped nickname rows retain Bob; Alice extra nickname is absent."
+      ],
+      "transports": [
+        "REST",
+        "IRC over real WebSocket",
+        "stopped-runtime SQLite",
+        "local Miniflare/workerd"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "sourceAssertions": [
+        {
+          "file": "tests/security/matrix-identity.test.ts",
+          "lines": [
+            262,
+            291
+          ],
+          "assertion": "Concrete own GROUP/DROP controls, protected Bob denial, account-detail independent reads and actual registered_nicks checks."
+        }
+      ],
+      "reviewOnlySupplement": true
+    },
+    {
+      "id": "MEDIA-001",
+      "kind": "test",
+      "executionId": "media-persistence-06",
+      "bundleSha256": "2f7699fc944db7d62a6297952220503010e7da298e8a3fcb5a5780838d613794",
+      "testFile": "tests/security/matrix-media-persistence.test.ts",
+      "testTitle": "matrix media persistence r2 MEDIA-001 MEDIA-002 MEDIA-003 MEDIA-006 MEDIA-013 MEDIA-014 private ownership and deletion persist",
+      "outcome": "PASS",
+      "scenarioScope": "Miniflare R2 and SQLite durable-object persistence with actual public REST and IRC; no deployment, IAM, signed-link or delivery-feature claim.",
+      "rationale": "Independently inspected new four-test R2 execution on the SAME frozen06 bundle; this closes the former R2 lifecycle gap without relabelling the356-test final run.",
+      "assertionDetails": [
+        "Owner and unrelated account upload; anonymous upload denied; unrelated deletion denied; owner deletion removes R2 object and SQLite row while unrelated bytes remain.",
+        "After dispose and restart with persistent R2 and SQLite, fresh password logins verify deleted URL including legacy query variants stays 404, unrelated bytes survive, and wrong owner is denied.",
+        "Actual SQLite rows and bucket objects inspected independently; upload/delete have no IRC event contract and no media identifiers or bytes appear on connected IRC streams."
+      ],
+      "transports": [
+        "REST",
+        "IRC"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources",
+        "events"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "routeBehavior": [
+        {
+          "route": "/api/v1/media/upload",
+          "method": "POST",
+          "alias": "/api/v1/media/upload",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/media/{id}",
+          "method": "GET",
+          "alias": "/media/7cd5f6ff-4ccb-4bdc-bcef-48130b389d10.txt",
+          "outcome": "negative",
+          "responseKind": "secure-denial"
+        },
+        {
+          "route": "/api/v1/media/{id}",
+          "method": "DELETE",
+          "alias": "/api/v1/media/7cd5f6ff-4ccb-4bdc-bcef-48130b389d10.txt",
+          "outcome": "negative",
+          "responseKind": "secure-denial"
+        },
+        {
+          "route": "/api/v1/media/{id}",
+          "method": "DELETE",
+          "alias": "/api/v1/media/7cd5f6ff-4ccb-4bdc-bcef-48130b389d10.txt",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/media/{id}",
+          "method": "GET",
+          "alias": "/media/922e0e34-ab91-4f0a-8585-2625cb467f36.txt",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        }
+      ],
+      "sourceAssertions": [
+        {
+          "file": "tests/security/matrix-media-persistence.test.ts",
+          "lines": [
+            1,
+            101
+          ],
+          "assertion": "Isolated actual workerd and SQLite/R2 persist paths; full dispose/recreation; fresh per-account password login with stable-ID equality."
+        },
+        {
+          "file": "tests/security/matrix-media-persistence.test.ts",
+          "lines": [
+            152,
+            368
+          ],
+          "assertion": "Real upload/download/deny/delete or private-channel/DM checks; actual bucket bytes/metadata and stopped SQL; independent unrelated objects and post-recreation reads."
+        }
+      ],
+      "reviewOnlySupplement": true
+    },
+    {
+      "id": "MEDIA-003",
+      "kind": "test",
+      "executionId": "media-persistence-06",
+      "bundleSha256": "2f7699fc944db7d62a6297952220503010e7da298e8a3fcb5a5780838d613794",
+      "testFile": "tests/security/matrix-media-persistence.test.ts",
+      "testTitle": "matrix media persistence r2 MEDIA-001 MEDIA-002 MEDIA-003 MEDIA-006 MEDIA-013 MEDIA-014 private ownership and deletion persist",
+      "outcome": "PASS",
+      "scenarioScope": "Miniflare R2 and SQLite durable-object persistence with actual public REST and IRC; no deployment, IAM, signed-link or delivery-feature claim.",
+      "rationale": "Independently inspected new four-test R2 execution on the SAME frozen06 bundle; this closes the former R2 lifecycle gap without relabelling the356-test final run.",
+      "assertionDetails": [
+        "Owner and unrelated account upload; anonymous upload denied; unrelated deletion denied; owner deletion removes R2 object and SQLite row while unrelated bytes remain.",
+        "After dispose and restart with persistent R2 and SQLite, fresh password logins verify deleted URL including legacy query variants stays 404, unrelated bytes survive, and wrong owner is denied.",
+        "Actual SQLite rows and bucket objects inspected independently; upload/delete have no IRC event contract and no media identifiers or bytes appear on connected IRC streams."
+      ],
+      "transports": [
+        "REST",
+        "IRC"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources",
+        "events"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "routeBehavior": [
+        {
+          "route": "/api/v1/media/upload",
+          "method": "POST",
+          "alias": "/api/v1/media/upload",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/media/{id}",
+          "method": "GET",
+          "alias": "/media/7cd5f6ff-4ccb-4bdc-bcef-48130b389d10.txt",
+          "outcome": "negative",
+          "responseKind": "secure-denial"
+        },
+        {
+          "route": "/api/v1/media/{id}",
+          "method": "DELETE",
+          "alias": "/api/v1/media/7cd5f6ff-4ccb-4bdc-bcef-48130b389d10.txt",
+          "outcome": "negative",
+          "responseKind": "secure-denial"
+        },
+        {
+          "route": "/api/v1/media/{id}",
+          "method": "DELETE",
+          "alias": "/api/v1/media/7cd5f6ff-4ccb-4bdc-bcef-48130b389d10.txt",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/media/{id}",
+          "method": "GET",
+          "alias": "/media/922e0e34-ab91-4f0a-8585-2625cb467f36.txt",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        }
+      ],
+      "sourceAssertions": [
+        {
+          "file": "tests/security/matrix-media-persistence.test.ts",
+          "lines": [
+            1,
+            101
+          ],
+          "assertion": "Isolated actual workerd and SQLite/R2 persist paths; full dispose/recreation; fresh per-account password login with stable-ID equality."
+        },
+        {
+          "file": "tests/security/matrix-media-persistence.test.ts",
+          "lines": [
+            152,
+            368
+          ],
+          "assertion": "Real upload/download/deny/delete or private-channel/DM checks; actual bucket bytes/metadata and stopped SQL; independent unrelated objects and post-recreation reads."
+        }
+      ],
+      "reviewOnlySupplement": true
+    },
+    {
+      "id": "MEDIA-006",
+      "kind": "test",
+      "executionId": "media-persistence-06",
+      "bundleSha256": "2f7699fc944db7d62a6297952220503010e7da298e8a3fcb5a5780838d613794",
+      "testFile": "tests/security/matrix-media-persistence.test.ts",
+      "testTitle": "matrix media persistence r2 MEDIA-001 MEDIA-002 MEDIA-003 MEDIA-006 MEDIA-013 MEDIA-014 private ownership and deletion persist",
+      "outcome": "PASS",
+      "scenarioScope": "Miniflare R2 and SQLite durable-object persistence with actual public REST and IRC; no deployment, IAM, signed-link or delivery-feature claim.",
+      "rationale": "Independently inspected new four-test R2 execution on the SAME frozen06 bundle; this closes the former R2 lifecycle gap without relabelling the356-test final run.",
+      "assertionDetails": [
+        "Owner and unrelated account upload; anonymous upload denied; unrelated deletion denied; owner deletion removes R2 object and SQLite row while unrelated bytes remain.",
+        "After dispose and restart with persistent R2 and SQLite, fresh password logins verify deleted URL including legacy query variants stays 404, unrelated bytes survive, and wrong owner is denied.",
+        "Actual SQLite rows and bucket objects inspected independently; upload/delete have no IRC event contract and no media identifiers or bytes appear on connected IRC streams."
+      ],
+      "transports": [
+        "REST",
+        "IRC"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources",
+        "events"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "routeBehavior": [
+        {
+          "route": "/api/v1/media/upload",
+          "method": "POST",
+          "alias": "/api/v1/media/upload",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/media/{id}",
+          "method": "GET",
+          "alias": "/media/7cd5f6ff-4ccb-4bdc-bcef-48130b389d10.txt",
+          "outcome": "negative",
+          "responseKind": "secure-denial"
+        },
+        {
+          "route": "/api/v1/media/{id}",
+          "method": "DELETE",
+          "alias": "/api/v1/media/7cd5f6ff-4ccb-4bdc-bcef-48130b389d10.txt",
+          "outcome": "negative",
+          "responseKind": "secure-denial"
+        },
+        {
+          "route": "/api/v1/media/{id}",
+          "method": "DELETE",
+          "alias": "/api/v1/media/7cd5f6ff-4ccb-4bdc-bcef-48130b389d10.txt",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/media/{id}",
+          "method": "GET",
+          "alias": "/media/922e0e34-ab91-4f0a-8585-2625cb467f36.txt",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        }
+      ],
+      "sourceAssertions": [
+        {
+          "file": "tests/security/matrix-media-persistence.test.ts",
+          "lines": [
+            1,
+            101
+          ],
+          "assertion": "Isolated actual workerd and SQLite/R2 persist paths; full dispose/recreation; fresh per-account password login with stable-ID equality."
+        },
+        {
+          "file": "tests/security/matrix-media-persistence.test.ts",
+          "lines": [
+            152,
+            368
+          ],
+          "assertion": "Real upload/download/deny/delete or private-channel/DM checks; actual bucket bytes/metadata and stopped SQL; independent unrelated objects and post-recreation reads."
+        }
+      ],
+      "reviewOnlySupplement": true
+    },
+    {
+      "id": "MEDIA-013",
+      "kind": "test",
+      "executionId": "media-persistence-06",
+      "bundleSha256": "2f7699fc944db7d62a6297952220503010e7da298e8a3fcb5a5780838d613794",
+      "testFile": "tests/security/matrix-media-persistence.test.ts",
+      "testTitle": "matrix media persistence r2 MEDIA-001 MEDIA-002 MEDIA-003 MEDIA-006 MEDIA-013 MEDIA-014 private ownership and deletion persist",
+      "outcome": "PASS",
+      "scenarioScope": "Miniflare R2 and SQLite durable-object persistence with actual public REST and IRC; no deployment, IAM, signed-link or delivery-feature claim.",
+      "rationale": "Independently inspected new four-test R2 execution on the SAME frozen06 bundle; this closes the former R2 lifecycle gap without relabelling the356-test final run.",
+      "assertionDetails": [
+        "Owner and unrelated account upload; anonymous upload denied; unrelated deletion denied; owner deletion removes R2 object and SQLite row while unrelated bytes remain.",
+        "After dispose and restart with persistent R2 and SQLite, fresh password logins verify deleted URL including legacy query variants stays 404, unrelated bytes survive, and wrong owner is denied.",
+        "Actual SQLite rows and bucket objects inspected independently; upload/delete have no IRC event contract and no media identifiers or bytes appear on connected IRC streams."
+      ],
+      "transports": [
+        "REST",
+        "IRC"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources",
+        "events"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "routeBehavior": [
+        {
+          "route": "/api/v1/media/upload",
+          "method": "POST",
+          "alias": "/api/v1/media/upload",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/media/{id}",
+          "method": "GET",
+          "alias": "/media/7cd5f6ff-4ccb-4bdc-bcef-48130b389d10.txt",
+          "outcome": "negative",
+          "responseKind": "secure-denial"
+        },
+        {
+          "route": "/api/v1/media/{id}",
+          "method": "DELETE",
+          "alias": "/api/v1/media/7cd5f6ff-4ccb-4bdc-bcef-48130b389d10.txt",
+          "outcome": "negative",
+          "responseKind": "secure-denial"
+        },
+        {
+          "route": "/api/v1/media/{id}",
+          "method": "DELETE",
+          "alias": "/api/v1/media/7cd5f6ff-4ccb-4bdc-bcef-48130b389d10.txt",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/media/{id}",
+          "method": "GET",
+          "alias": "/media/922e0e34-ab91-4f0a-8585-2625cb467f36.txt",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        }
+      ],
+      "sourceAssertions": [
+        {
+          "file": "tests/security/matrix-media-persistence.test.ts",
+          "lines": [
+            1,
+            101
+          ],
+          "assertion": "Isolated actual workerd and SQLite/R2 persist paths; full dispose/recreation; fresh per-account password login with stable-ID equality."
+        },
+        {
+          "file": "tests/security/matrix-media-persistence.test.ts",
+          "lines": [
+            152,
+            368
+          ],
+          "assertion": "Real upload/download/deny/delete or private-channel/DM checks; actual bucket bytes/metadata and stopped SQL; independent unrelated objects and post-recreation reads."
+        }
+      ],
+      "reviewOnlySupplement": true
+    },
+    {
+      "id": "MEDIA-014",
+      "kind": "test",
+      "executionId": "media-persistence-06",
+      "bundleSha256": "2f7699fc944db7d62a6297952220503010e7da298e8a3fcb5a5780838d613794",
+      "testFile": "tests/security/matrix-media-persistence.test.ts",
+      "testTitle": "matrix media persistence r2 MEDIA-001 MEDIA-002 MEDIA-003 MEDIA-006 MEDIA-013 MEDIA-014 private ownership and deletion persist",
+      "outcome": "PASS",
+      "scenarioScope": "Miniflare R2 and SQLite durable-object persistence with actual public REST and IRC; no deployment, IAM, signed-link or delivery-feature claim.",
+      "rationale": "Independently inspected new four-test R2 execution on the SAME frozen06 bundle; this closes the former R2 lifecycle gap without relabelling the356-test final run.",
+      "assertionDetails": [
+        "Owner and unrelated account upload; anonymous upload denied; unrelated deletion denied; owner deletion removes R2 object and SQLite row while unrelated bytes remain.",
+        "After dispose and restart with persistent R2 and SQLite, fresh password logins verify deleted URL including legacy query variants stays 404, unrelated bytes survive, and wrong owner is denied.",
+        "Actual SQLite rows and bucket objects inspected independently; upload/delete have no IRC event contract and no media identifiers or bytes appear on connected IRC streams."
+      ],
+      "transports": [
+        "REST",
+        "IRC"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources",
+        "events"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "routeBehavior": [
+        {
+          "route": "/api/v1/media/upload",
+          "method": "POST",
+          "alias": "/api/v1/media/upload",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/media/{id}",
+          "method": "GET",
+          "alias": "/media/7cd5f6ff-4ccb-4bdc-bcef-48130b389d10.txt",
+          "outcome": "negative",
+          "responseKind": "secure-denial"
+        },
+        {
+          "route": "/api/v1/media/{id}",
+          "method": "DELETE",
+          "alias": "/api/v1/media/7cd5f6ff-4ccb-4bdc-bcef-48130b389d10.txt",
+          "outcome": "negative",
+          "responseKind": "secure-denial"
+        },
+        {
+          "route": "/api/v1/media/{id}",
+          "method": "DELETE",
+          "alias": "/api/v1/media/7cd5f6ff-4ccb-4bdc-bcef-48130b389d10.txt",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/media/{id}",
+          "method": "GET",
+          "alias": "/media/922e0e34-ab91-4f0a-8585-2625cb467f36.txt",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        }
+      ],
+      "sourceAssertions": [
+        {
+          "file": "tests/security/matrix-media-persistence.test.ts",
+          "lines": [
+            1,
+            101
+          ],
+          "assertion": "Isolated actual workerd and SQLite/R2 persist paths; full dispose/recreation; fresh per-account password login with stable-ID equality."
+        },
+        {
+          "file": "tests/security/matrix-media-persistence.test.ts",
+          "lines": [
+            152,
+            368
+          ],
+          "assertion": "Real upload/download/deny/delete or private-channel/DM checks; actual bucket bytes/metadata and stopped SQL; independent unrelated objects and post-recreation reads."
+        }
+      ],
+      "reviewOnlySupplement": true
+    },
+    {
+      "id": "MEDIA-004",
+      "kind": "test",
+      "executionId": "media-persistence-06",
+      "bundleSha256": "2f7699fc944db7d62a6297952220503010e7da298e8a3fcb5a5780838d613794",
+      "testFile": "tests/security/matrix-media-persistence.test.ts",
+      "testTitle": "matrix media persistence r2 MEDIA-004 MEDIA-005 MEDIA-008 MEDIA-010 MEDIA-011 channel and DM scopes protect bytes and headers",
+      "outcome": "PASS",
+      "scenarioScope": "Miniflare R2 and SQLite durable-object persistence with actual public REST and IRC; no deployment, IAM, signed-link or delivery-feature claim.",
+      "rationale": "Independently inspected new four-test R2 execution on the SAME frozen06 bundle; this closes the former R2 lifecycle gap without relabelling the356-test final run.",
+      "assertionDetails": [
+        "Private #private and public #public plus Alice/Bob DM created through authenticated REST and IRC; third principal denied secret and DM bytes and private response metadata, including forged query identity.",
+        "HTML filename, attachment disposition, CSP sandbox, nosniff and private no-store checked; exact bytes and MIME metadata independently read from R2 and scopes and filename from SQLite.",
+        "PART revokes Bob private-channel access before and after complete recreation, while Alice and DM participant Bob retain access; public channel remains accessible to authenticated Charlie.",
+        "IRC PRIVMSG live-control reaches private member Bob and not Charlie; upload IDs and bytes do not appear on monitored streams, with no claimed upload event contract."
+      ],
+      "transports": [
+        "REST",
+        "IRC"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources",
+        "events"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "routeBehavior": [
+        {
+          "route": "/api/media/upload",
+          "method": "POST",
+          "alias": "/api/media/upload?channel=%23private",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/api/v1/media/upload",
+          "method": "POST",
+          "alias": "/api/v1/media/upload?dm=bob",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/api/v1/media/upload",
+          "method": "POST",
+          "alias": "/api/v1/media/upload?channel=%23public",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/media/{id}",
+          "method": "GET",
+          "alias": "/media/412527a3-5e49-49b6-8187-89d641048e6f.html",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/media/{id}",
+          "method": "GET",
+          "alias": "/media/412527a3-5e49-49b6-8187-89d641048e6f.html",
+          "outcome": "negative",
+          "responseKind": "secure-denial"
+        },
+        {
+          "route": "/media/{id}",
+          "method": "GET",
+          "alias": "/media/564d6f84-7214-4773-8744-d0143c026524.txt",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        }
+      ],
+      "commandBehavior": [
+        {
+          "command": "JOIN",
+          "outcome": "positive"
+        },
+        {
+          "command": "MODE",
+          "outcome": "positive"
+        },
+        {
+          "command": "PART",
+          "outcome": "positive"
+        },
+        {
+          "command": "PRIVMSG",
+          "outcome": "positive"
+        }
+      ],
+      "sourceAssertions": [
+        {
+          "file": "tests/security/matrix-media-persistence.test.ts",
+          "lines": [
+            1,
+            101
+          ],
+          "assertion": "Isolated actual workerd and SQLite/R2 persist paths; full dispose/recreation; fresh per-account password login with stable-ID equality."
+        },
+        {
+          "file": "tests/security/matrix-media-persistence.test.ts",
+          "lines": [
+            152,
+            368
+          ],
+          "assertion": "Real upload/download/deny/delete or private-channel/DM checks; actual bucket bytes/metadata and stopped SQL; independent unrelated objects and post-recreation reads."
+        }
+      ],
+      "reviewOnlySupplement": true
+    },
+    {
+      "id": "MEDIA-005",
+      "kind": "test",
+      "executionId": "media-persistence-06",
+      "bundleSha256": "2f7699fc944db7d62a6297952220503010e7da298e8a3fcb5a5780838d613794",
+      "testFile": "tests/security/matrix-media-persistence.test.ts",
+      "testTitle": "matrix media persistence r2 MEDIA-004 MEDIA-005 MEDIA-008 MEDIA-010 MEDIA-011 channel and DM scopes protect bytes and headers",
+      "outcome": "PASS",
+      "scenarioScope": "Miniflare R2 and SQLite durable-object persistence with actual public REST and IRC; no deployment, IAM, signed-link or delivery-feature claim.",
+      "rationale": "Independently inspected new four-test R2 execution on the SAME frozen06 bundle; this closes the former R2 lifecycle gap without relabelling the356-test final run.",
+      "assertionDetails": [
+        "Private #private and public #public plus Alice/Bob DM created through authenticated REST and IRC; third principal denied secret and DM bytes and private response metadata, including forged query identity.",
+        "HTML filename, attachment disposition, CSP sandbox, nosniff and private no-store checked; exact bytes and MIME metadata independently read from R2 and scopes and filename from SQLite.",
+        "PART revokes Bob private-channel access before and after complete recreation, while Alice and DM participant Bob retain access; public channel remains accessible to authenticated Charlie.",
+        "IRC PRIVMSG live-control reaches private member Bob and not Charlie; upload IDs and bytes do not appear on monitored streams, with no claimed upload event contract."
+      ],
+      "transports": [
+        "REST",
+        "IRC"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources",
+        "events"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "routeBehavior": [
+        {
+          "route": "/api/media/upload",
+          "method": "POST",
+          "alias": "/api/media/upload?channel=%23private",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/api/v1/media/upload",
+          "method": "POST",
+          "alias": "/api/v1/media/upload?dm=bob",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/api/v1/media/upload",
+          "method": "POST",
+          "alias": "/api/v1/media/upload?channel=%23public",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/media/{id}",
+          "method": "GET",
+          "alias": "/media/412527a3-5e49-49b6-8187-89d641048e6f.html",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/media/{id}",
+          "method": "GET",
+          "alias": "/media/412527a3-5e49-49b6-8187-89d641048e6f.html",
+          "outcome": "negative",
+          "responseKind": "secure-denial"
+        },
+        {
+          "route": "/media/{id}",
+          "method": "GET",
+          "alias": "/media/564d6f84-7214-4773-8744-d0143c026524.txt",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        }
+      ],
+      "commandBehavior": [
+        {
+          "command": "JOIN",
+          "outcome": "positive"
+        },
+        {
+          "command": "MODE",
+          "outcome": "positive"
+        },
+        {
+          "command": "PART",
+          "outcome": "positive"
+        },
+        {
+          "command": "PRIVMSG",
+          "outcome": "positive"
+        }
+      ],
+      "sourceAssertions": [
+        {
+          "file": "tests/security/matrix-media-persistence.test.ts",
+          "lines": [
+            1,
+            101
+          ],
+          "assertion": "Isolated actual workerd and SQLite/R2 persist paths; full dispose/recreation; fresh per-account password login with stable-ID equality."
+        },
+        {
+          "file": "tests/security/matrix-media-persistence.test.ts",
+          "lines": [
+            152,
+            368
+          ],
+          "assertion": "Real upload/download/deny/delete or private-channel/DM checks; actual bucket bytes/metadata and stopped SQL; independent unrelated objects and post-recreation reads."
+        }
+      ],
+      "reviewOnlySupplement": true
+    },
+    {
+      "id": "MEDIA-008",
+      "kind": "test",
+      "executionId": "media-persistence-06",
+      "bundleSha256": "2f7699fc944db7d62a6297952220503010e7da298e8a3fcb5a5780838d613794",
+      "testFile": "tests/security/matrix-media-persistence.test.ts",
+      "testTitle": "matrix media persistence r2 MEDIA-004 MEDIA-005 MEDIA-008 MEDIA-010 MEDIA-011 channel and DM scopes protect bytes and headers",
+      "outcome": "PASS",
+      "scenarioScope": "Miniflare R2 and SQLite durable-object persistence with actual public REST and IRC; no deployment, IAM, signed-link or delivery-feature claim.",
+      "rationale": "Independently inspected new four-test R2 execution on the SAME frozen06 bundle; this closes the former R2 lifecycle gap without relabelling the356-test final run.",
+      "assertionDetails": [
+        "Private #private and public #public plus Alice/Bob DM created through authenticated REST and IRC; third principal denied secret and DM bytes and private response metadata, including forged query identity.",
+        "HTML filename, attachment disposition, CSP sandbox, nosniff and private no-store checked; exact bytes and MIME metadata independently read from R2 and scopes and filename from SQLite.",
+        "PART revokes Bob private-channel access before and after complete recreation, while Alice and DM participant Bob retain access; public channel remains accessible to authenticated Charlie.",
+        "IRC PRIVMSG live-control reaches private member Bob and not Charlie; upload IDs and bytes do not appear on monitored streams, with no claimed upload event contract."
+      ],
+      "transports": [
+        "REST",
+        "IRC"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources",
+        "events"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "routeBehavior": [
+        {
+          "route": "/api/media/upload",
+          "method": "POST",
+          "alias": "/api/media/upload?channel=%23private",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/api/v1/media/upload",
+          "method": "POST",
+          "alias": "/api/v1/media/upload?dm=bob",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/api/v1/media/upload",
+          "method": "POST",
+          "alias": "/api/v1/media/upload?channel=%23public",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/media/{id}",
+          "method": "GET",
+          "alias": "/media/412527a3-5e49-49b6-8187-89d641048e6f.html",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/media/{id}",
+          "method": "GET",
+          "alias": "/media/412527a3-5e49-49b6-8187-89d641048e6f.html",
+          "outcome": "negative",
+          "responseKind": "secure-denial"
+        },
+        {
+          "route": "/media/{id}",
+          "method": "GET",
+          "alias": "/media/564d6f84-7214-4773-8744-d0143c026524.txt",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        }
+      ],
+      "commandBehavior": [
+        {
+          "command": "JOIN",
+          "outcome": "positive"
+        },
+        {
+          "command": "MODE",
+          "outcome": "positive"
+        },
+        {
+          "command": "PART",
+          "outcome": "positive"
+        },
+        {
+          "command": "PRIVMSG",
+          "outcome": "positive"
+        }
+      ],
+      "sourceAssertions": [
+        {
+          "file": "tests/security/matrix-media-persistence.test.ts",
+          "lines": [
+            1,
+            101
+          ],
+          "assertion": "Isolated actual workerd and SQLite/R2 persist paths; full dispose/recreation; fresh per-account password login with stable-ID equality."
+        },
+        {
+          "file": "tests/security/matrix-media-persistence.test.ts",
+          "lines": [
+            152,
+            368
+          ],
+          "assertion": "Real upload/download/deny/delete or private-channel/DM checks; actual bucket bytes/metadata and stopped SQL; independent unrelated objects and post-recreation reads."
+        }
+      ],
+      "reviewOnlySupplement": true
+    },
+    {
+      "id": "USER-019",
+      "kind": "test",
+      "executionId": "user-gaps-frozen06-01",
+      "bundleSha256": "2f7699fc944db7d62a6297952220503010e7da298e8a3fcb5a5780838d613794",
+      "testFile": "tests/security/matrix-user-gaps.test.ts",
+      "testTitle": "matrix user gaps rejects profile writes from disabled existing sessions and preserves other accounts across restart",
+      "outcome": "PASS",
+      "scenarioScope": "Disabled accounts cannot update profiles using existing sessions.",
+      "rationale": "The supported mutation denial and persisted state are demonstrated; lack of a recipient observer is a missing assertion, never a valid event N/A rationale.",
+      "assertionDetails": [
+        "Two independently logged-in Alice tokens each get401 for profile PATCH after disable; target and Bob profiles equal pre-disable projections, stopped metadata retains originals and no attack fields.",
+        "After runtime recreation and fresh root/Bob logins both profile projections are unchanged. No IRC/event observer exists in this test."
+      ],
+      "transports": [
+        "REST",
+        "IRC over real WebSocket",
+        "stopped-runtime SQLite",
+        "local Miniflare/workerd"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "sourceAssertions": [
+        {
+          "file": "tests/security/matrix-user-gaps.test.ts",
+          "testTitle": "matrix user gaps rejects profile writes from disabled existing sessions and preserves other accounts across restart",
+          "assertion": "Two token PATCH401, target/Bob equality, stopped original metadata and fresh restarted readbacks",
+          "sourceVersion": "Observed original two-test frozen06 baseline; later current file adds observers and held-delivery cases. Those added assertions are NOT credited to the baseline execution."
+        }
+      ],
+      "reviewOnlySupplement": true
+    },
+    {
+      "id": "USER-016",
+      "kind": "test",
+      "executionId": "user-gaps-frozen06-01",
+      "bundleSha256": "2f7699fc944db7d62a6297952220503010e7da298e8a3fcb5a5780838d613794",
+      "testFile": "tests/security/matrix-user-gaps.test.ts",
+      "testTitle": "matrix user gaps delivers REST profile updates to subscribed shared-channel IRC peers",
+      "outcome": "FAIL",
+      "scenarioScope": "Profile updates propagate correctly to subscribed IRC clients.",
+      "rationale": "This is a current frozen06 product failure in a separately executed test, not a timeout-as-denial or a completed feature claim.",
+      "assertionDetails": [
+        "Bob negotiates draft/metadata-3, subscribes to display-name/avatar/custom-status and shares the channel. Alice IRC SET avatar positive control actually reaches Bob.",
+        "REST PATCH returns200 and Bob independent profile read contains the three new values; after the PONG barrier the first expect(received).toContain(rest-display) FAILS.",
+        "Later avatar/status expectations were not reached. No claim is made that the notification dimension passed; the failed assertion is the preserved product regression."
+      ],
+      "transports": [
+        "REST",
+        "IRC over real WebSocket",
+        "stopped-runtime SQLite",
+        "local Miniflare/workerd"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "sourceAssertions": [
+        {
+          "file": "tests/security/matrix-user-gaps.test.ts",
+          "testTitle": "matrix user gaps delivers REST profile updates to subscribed shared-channel IRC peers",
+          "assertion": "expect(received).toContain(\"rest-display\") fails after real IRC SET positive control, PATCH200, profile field readback and PONG barrier",
+          "sourceVersion": "Observed original two-test frozen06 baseline; later current file adds observers and held-delivery cases. Those added assertions are NOT credited to the baseline execution."
+        }
+      ],
+      "reviewOnlySupplement": true
+    },
+    {
+      "id": "MEDIA-009",
+      "kind": "test",
+      "executionId": "media-persistence-06",
+      "bundleSha256": "2f7699fc944db7d62a6297952220503010e7da298e8a3fcb5a5780838d613794",
+      "testFile": "tests/security/matrix-media-persistence.test.ts",
+      "testTitle": "matrix media persistence r2 MEDIA-009 MEDIA-012 ABUSE-007 enforces byte limit and cumulative quota without harming another owner",
+      "outcome": "PASS",
+      "scenarioScope": "File-size limits are enforced.",
+      "rationale": "Reuse actual current06 quota lifecycle execution as partial evidence; reject source events N/A because the missing check is a negative client-mutation notification observable.",
+      "assertionDetails": [
+        "Real10MiB+1 upload413; ten10MiB accepted; over100MiB403; delete releases capacity, alias overage403, independent Bob bytes and bucket object count preserved.",
+        "After actual complete R2/SQLite recreation and fresh logins, quota403 and removed-object404 remain, Bob bytes and remaining bucket metadata match.",
+        "There are NO recipient observers in this quota test. Events remain required and unverified for the denied client mutations."
+      ],
+      "transports": [
+        "REST"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "sourceAssertions": [
+        {
+          "file": "tests/security/matrix-media-persistence.test.ts",
+          "lines": [
+            371,
+            427
+          ],
+          "assertion": "Actual upload size/quota/reclaim and recreated R2 checks; no IRC/event observers created in this test."
+        }
+      ]
+    },
+    {
+      "id": "MEDIA-012",
+      "kind": "test",
+      "executionId": "media-persistence-06",
+      "bundleSha256": "2f7699fc944db7d62a6297952220503010e7da298e8a3fcb5a5780838d613794",
+      "testFile": "tests/security/matrix-media-persistence.test.ts",
+      "testTitle": "matrix media persistence r2 MEDIA-009 MEDIA-012 ABUSE-007 enforces byte limit and cumulative quota without harming another owner",
+      "outcome": "PASS",
+      "scenarioScope": "Users cannot bypass storage quotas.",
+      "rationale": "Reuse actual current06 quota lifecycle execution as partial evidence; reject source events N/A because the missing check is a negative client-mutation notification observable.",
+      "assertionDetails": [
+        "Real10MiB+1 upload413; ten10MiB accepted; over100MiB403; delete releases capacity, alias overage403, independent Bob bytes and bucket object count preserved.",
+        "After actual complete R2/SQLite recreation and fresh logins, quota403 and removed-object404 remain, Bob bytes and remaining bucket metadata match.",
+        "There are NO recipient observers in this quota test. Events remain required and unverified for the denied client mutations."
+      ],
+      "transports": [
+        "REST"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "sourceAssertions": [
+        {
+          "file": "tests/security/matrix-media-persistence.test.ts",
+          "lines": [
+            371,
+            427
+          ],
+          "assertion": "Actual upload size/quota/reclaim and recreated R2 checks; no IRC/event observers created in this test."
+        }
+      ]
+    },
+    {
+      "id": "ABUSE-007",
+      "kind": "test",
+      "executionId": "media-persistence-06",
+      "bundleSha256": "2f7699fc944db7d62a6297952220503010e7da298e8a3fcb5a5780838d613794",
+      "testFile": "tests/security/matrix-media-persistence.test.ts",
+      "testTitle": "matrix media persistence r2 MEDIA-009 MEDIA-012 ABUSE-007 enforces byte limit and cumulative quota without harming another owner",
+      "outcome": "PASS",
+      "scenarioScope": "Excessive media uploads are controlled.",
+      "rationale": "Reuse actual current06 quota lifecycle execution as partial evidence; reject source events N/A because the missing check is a negative client-mutation notification observable.",
+      "assertionDetails": [
+        "Real10MiB+1 upload413; ten10MiB accepted; over100MiB403; delete releases capacity, alias overage403, independent Bob bytes and bucket object count preserved.",
+        "After actual complete R2/SQLite recreation and fresh logins, quota403 and removed-object404 remain, Bob bytes and remaining bucket metadata match.",
+        "There are NO recipient observers in this quota test. Events remain required and unverified for the denied client mutations."
+      ],
+      "transports": [
+        "REST"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "sourceAssertions": [
+        {
+          "file": "tests/security/matrix-media-persistence.test.ts",
+          "lines": [
+            371,
+            427
+          ],
+          "assertion": "Actual upload size/quota/reclaim and recreated R2 checks; no IRC/event observers created in this test."
+        }
+      ]
+    },
+    {
+      "id": "DB-013",
+      "kind": "test",
+      "executionId": "final06-integrated-full",
+      "bundleSha256": "2f7699fc944db7d62a6297952220503010e7da298e8a3fcb5a5780838d613794",
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[DB-013 DB-014 DB-028] actual SQLite foreign keys, unique sequences and indexed bounded history queries enforce integrity",
+      "outcome": "PASS",
+      "scenarioScope": "Foreign-key constraints actually reject invalid references within one database.",
+      "rationale": "Intrinsic schema checks are not a client authorization/event endpoint, but Worker connection enforcement remains a genuine runtime evidence gap.",
+      "assertionDetails": [
+        "The stopped database is opened through a fresh Node DatabaseSync connection, explicitly PRAGMA foreign_keys=ON, and an absent-role INSERT throws FOREIGN KEY while the valid role and120 original message rows remain.",
+        "This proves the actual persisted schema and Node connection only. It does NOT prove foreign-key enforcement on the Worker-owned SQL connection."
+      ],
+      "transports": [
+        "real Miniflare/workerd REST population",
+        "fresh connection to actual stopped SQLite file"
+      ],
+      "assertions": [
+        "state",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": {
+          "status": "not-applicable",
+          "rationale": "This is raw database-constraint inspection, with no public client SQL dispatch or authority parameter; permission on a raw SQL interface is not the requirement."
+        },
+        "state": "required",
+        "events": {
+          "status": "not-applicable",
+          "rationale": "The tested operation is direct stopped-database constraint enforcement. It has no attached client/notification contract; this does not exempt any denied REST/IRC mutation from event checks."
+        },
+        "transport": "required",
+        "restart": {
+          "status": "not-applicable",
+          "rationale": "A fresh SQL connection exercises the persisted schema; the missing observable is enforcement on the Worker connection itself, not an unrelated application cache restart."
+        },
+        "unrelatedResources": "required"
+      },
+      "sourceAssertions": [
+        {
+          "file": "tests/security/matrix-persistence.test.ts",
+          "lines": [
+            800,
+            879
+          ],
+          "assertion": "Actual schema duplicate SQL inserts throw UNIQUE; message count remains120; foreign_keys switch is separated from intrinsic unique-index assertions."
+        }
+      ],
+      "reviewOnlySupplement": true
+    },
+    {
+      "id": "DB-013",
+      "kind": "disposition",
+      "outcome": "NOT IMPLEMENTED",
+      "scenarioScope": "Foreign-key constraints actually reject invalid references within one database.",
+      "rationale": "Node PRAGMA foreign_keys=ON does not establish invalid-reference rejection on the actual Worker connection; preserve this runtime gap.",
+      "basis": "tests/security/matrix-persistence.test.ts:800-879 (actual persisted schema, Node DatabaseSync EXPLAIN/constraint checks); independent scope review, not a missing-endpoint denial.",
+      "capability": "Missing actual Worker connection assertion, not missing SQL or history capability."
+    },
+    {
+      "id": "DB-028",
+      "kind": "disposition",
+      "outcome": "NOT IMPLEMENTED",
+      "scenarioScope": "SQL indexes support bounded history and authorization queries without full-table scans under representative load.",
+      "rationale": "EXPLAIN is executed on a Node SQLite connection against the real persisted schema, not on the actual Worker SQLite planner/connection. REST100/20 paging is real, but the exact production Worker query plan is not observed; retain that concrete runtime-plan gap without demanding IRC/event assertions.",
+      "basis": "tests/security/matrix-persistence.test.ts:800-879 (actual persisted schema, Node DatabaseSync EXPLAIN/constraint checks); independent scope review, not a missing-endpoint denial.",
+      "capability": "Missing actual Worker connection assertion, not missing SQL or history capability."
+    }
+  ]
+}

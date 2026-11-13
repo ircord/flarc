@@ -1,0 +1,267 @@
+{
+  "version": 1,
+  "artifactKind": "historical-source10-focused-prerequisite-regressions",
+  "scope": "Preserved actual focused result, not an unfiltered run and not full ENV feature acceptance; current changing tests are not retrospectively hashed as source10 test bodies.",
+  "bundleSha256": "973e0a9f38f4a56015ac70817e61335807189786176cae416acb2eab9ceee701",
+  "sourceDiffSha256": "8dd41f92d2e4f30d39d6a0c1c021d177424ff4cdb06911e073e449e76ea345a2",
+  "sourceBindingAuthority": {
+    "freezeReceipt": "msg_ecdc492b8b63",
+    "reviewReceipt": "msg_026cd6038ef8",
+    "confirmedFailure": "Hard-coded middleware10MiB cap rejects both configured10485761-byte SQLite and R2 uploads with413."
+  },
+  "rawResult": {
+    "path": "/tmp/flarc-matrix-run_01d0e4aeb274/media-source10-focused.json",
+    "sha256": "d821386af754e6b9c1c2ade5d6126c245f817df40778d2b6f8a9296653535475"
+  },
+  "actualFocusedCounts": {
+    "passed": 29,
+    "failed": 2,
+    "skipped": 0,
+    "total": 31,
+    "testFiles": 5
+  },
+  "testResults": [
+    {
+      "name": "tests/security/api-contract.test.ts",
+      "assertionResults": [
+        {
+          "fullName": "API documentation matches the authenticated implementation documents every client file route and its actual method, including aliases",
+          "title": "documents every client file route and its actual method, including aliases",
+          "status": "passed",
+          "failureMessages": []
+        },
+        {
+          "fullName": "API documentation matches the authenticated implementation uses account sessions, excludes public role assignment, and documents real login/ticket responses",
+          "title": "uses account sessions, excludes public role assignment, and documents real login/ticket responses",
+          "status": "passed",
+          "failureMessages": []
+        }
+      ]
+    },
+    {
+      "name": "tests/security/matrix-media-chunks.test.ts",
+      "assertionResults": [
+        {
+          "fullName": "media configuration and chunk integrity reads each environment independently and rejects malformed limits",
+          "title": "reads each environment independently and rejects malformed limits",
+          "status": "passed",
+          "failureMessages": []
+        },
+        {
+          "fullName": "media configuration and chunk integrity sqlite: raw multipart and streaming enforce per-environment file bytes through both aliases",
+          "title": "sqlite: raw multipart and streaming enforce per-environment file bytes through both aliases",
+          "status": "passed",
+          "failureMessages": []
+        },
+        {
+          "fullName": "media configuration and chunk integrity sqlite: above-default limit permits a real 10 MiB plus one file",
+          "title": "sqlite: above-default limit permits a real 10 MiB plus one file",
+          "status": "failed",
+          "failureMessages": [
+            "AssertionError: expected 413 to be 201 // Object.is equality"
+          ]
+        },
+        {
+          "fullName": "media configuration and chunk integrity sqlite: unset limit keeps the default bound",
+          "title": "sqlite: unset limit keeps the default bound",
+          "status": "passed",
+          "failureMessages": []
+        },
+        {
+          "fullName": "media configuration and chunk integrity sqlite: 0 limit keeps the default bound",
+          "title": "sqlite: 0 limit keeps the default bound",
+          "status": "passed",
+          "failureMessages": []
+        },
+        {
+          "fullName": "media configuration and chunk integrity sqlite: -1 limit keeps the default bound",
+          "title": "sqlite: -1 limit keeps the default bound",
+          "status": "passed",
+          "failureMessages": []
+        },
+        {
+          "fullName": "media configuration and chunk integrity sqlite: invalid limit keeps the default bound",
+          "title": "sqlite: invalid limit keeps the default bound",
+          "status": "passed",
+          "failureMessages": []
+        },
+        {
+          "fullName": "media configuration and chunk integrity sqlite: 9007199254740992 limit keeps the default bound",
+          "title": "sqlite: 9007199254740992 limit keeps the default bound",
+          "status": "passed",
+          "failureMessages": []
+        },
+        {
+          "fullName": "media configuration and chunk integrity r2: raw multipart and streaming enforce per-environment file bytes through both aliases",
+          "title": "r2: raw multipart and streaming enforce per-environment file bytes through both aliases",
+          "status": "passed",
+          "failureMessages": []
+        },
+        {
+          "fullName": "media configuration and chunk integrity r2: above-default limit permits a real 10 MiB plus one file",
+          "title": "r2: above-default limit permits a real 10 MiB plus one file",
+          "status": "failed",
+          "failureMessages": [
+            "AssertionError: expected 413 to be 201 // Object.is equality"
+          ]
+        },
+        {
+          "fullName": "media configuration and chunk integrity r2: unset limit keeps the default bound",
+          "title": "r2: unset limit keeps the default bound",
+          "status": "passed",
+          "failureMessages": []
+        },
+        {
+          "fullName": "media configuration and chunk integrity r2: 0 limit keeps the default bound",
+          "title": "r2: 0 limit keeps the default bound",
+          "status": "passed",
+          "failureMessages": []
+        },
+        {
+          "fullName": "media configuration and chunk integrity r2: -1 limit keeps the default bound",
+          "title": "r2: -1 limit keeps the default bound",
+          "status": "passed",
+          "failureMessages": []
+        },
+        {
+          "fullName": "media configuration and chunk integrity r2: invalid limit keeps the default bound",
+          "title": "r2: invalid limit keeps the default bound",
+          "status": "passed",
+          "failureMessages": []
+        },
+        {
+          "fullName": "media configuration and chunk integrity r2: 9007199254740992 limit keeps the default bound",
+          "title": "r2: 9007199254740992 limit keeps the default bound",
+          "status": "passed",
+          "failureMessages": []
+        },
+        {
+          "fullName": "media configuration and chunk integrity SQLite chunk failure rolls back metadata and quota, while corrupt and missing chunks fail closed and inline legacy data stays protected",
+          "title": "SQLite chunk failure rolls back metadata and quota, while corrupt and missing chunks fail closed and inline legacy data stays protected",
+          "status": "passed",
+          "failureMessages": []
+        }
+      ]
+    },
+    {
+      "name": "tests/security/matrix-media-persistence.test.ts",
+      "assertionResults": [
+        {
+          "fullName": "matrix media persistence r2 MEDIA-001 MEDIA-002 MEDIA-003 MEDIA-006 MEDIA-013 MEDIA-014 private ownership and deletion persist",
+          "title": "r2 MEDIA-001 MEDIA-002 MEDIA-003 MEDIA-006 MEDIA-013 MEDIA-014 private ownership and deletion persist",
+          "status": "passed",
+          "failureMessages": []
+        },
+        {
+          "fullName": "matrix media persistence r2 MEDIA-004 MEDIA-005 MEDIA-008 MEDIA-010 MEDIA-011 channel and DM scopes protect bytes and headers",
+          "title": "r2 MEDIA-004 MEDIA-005 MEDIA-008 MEDIA-010 MEDIA-011 channel and DM scopes protect bytes and headers",
+          "status": "passed",
+          "failureMessages": []
+        },
+        {
+          "fullName": "matrix media persistence r2 MEDIA-009 MEDIA-012 ABUSE-007 enforces byte limit and cumulative quota without harming another owner",
+          "title": "r2 MEDIA-009 MEDIA-012 ABUSE-007 enforces byte limit and cumulative quota without harming another owner",
+          "status": "passed",
+          "failureMessages": []
+        },
+        {
+          "fullName": "matrix media persistence r2 missing object fails closed while unrelated object and persisted metadata remain intact",
+          "title": "r2 missing object fails closed while unrelated object and persisted metadata remain intact",
+          "status": "passed",
+          "failureMessages": []
+        }
+      ]
+    },
+    {
+      "name": "tests/security/matrix-media-quota-gaps.test.ts",
+      "assertionResults": [
+        {
+          "fullName": "sqlite 10485760 byte real upload limits MEDIA-009 MEDIA-012 ABUSE-007: oversized and exhausted quota denials are silent and inert across restart",
+          "title": "MEDIA-009 MEDIA-012 ABUSE-007: oversized and exhausted quota denials are silent and inert across restart",
+          "status": "passed",
+          "failureMessages": []
+        },
+        {
+          "fullName": "sqlite 1048576 byte real upload limits MEDIA-009 MEDIA-012 ABUSE-007: oversized and exhausted quota denials are silent and inert across restart",
+          "title": "MEDIA-009 MEDIA-012 ABUSE-007: oversized and exhausted quota denials are silent and inert across restart",
+          "status": "passed",
+          "failureMessages": []
+        },
+        {
+          "fullName": "r2 10485760 byte real upload limits MEDIA-009 MEDIA-012 ABUSE-007: oversized and exhausted quota denials are silent and inert across restart",
+          "title": "MEDIA-009 MEDIA-012 ABUSE-007: oversized and exhausted quota denials are silent and inert across restart",
+          "status": "passed",
+          "failureMessages": []
+        }
+      ]
+    },
+    {
+      "name": "tests/security/matrix-media.test.ts",
+      "assertionResults": [
+        {
+          "fullName": "matrix media sqlite MEDIA-001 MEDIA-002 MEDIA-003 MEDIA-006 MEDIA-013 MEDIA-014 private ownership and deletion persist",
+          "title": "sqlite MEDIA-001 MEDIA-002 MEDIA-003 MEDIA-006 MEDIA-013 MEDIA-014 private ownership and deletion persist",
+          "status": "passed",
+          "failureMessages": []
+        },
+        {
+          "fullName": "matrix media sqlite MEDIA-004 MEDIA-005 MEDIA-008 MEDIA-010 MEDIA-011 channel and DM scopes protect bytes and headers",
+          "title": "sqlite MEDIA-004 MEDIA-005 MEDIA-008 MEDIA-010 MEDIA-011 channel and DM scopes protect bytes and headers",
+          "status": "passed",
+          "failureMessages": []
+        },
+        {
+          "fullName": "matrix media r2 MEDIA-001 MEDIA-002 MEDIA-003 MEDIA-006 MEDIA-013 MEDIA-014 private ownership and deletion persist",
+          "title": "r2 MEDIA-001 MEDIA-002 MEDIA-003 MEDIA-006 MEDIA-013 MEDIA-014 private ownership and deletion persist",
+          "status": "passed",
+          "failureMessages": []
+        },
+        {
+          "fullName": "matrix media r2 MEDIA-004 MEDIA-005 MEDIA-008 MEDIA-010 MEDIA-011 channel and DM scopes protect bytes and headers",
+          "title": "r2 MEDIA-004 MEDIA-005 MEDIA-008 MEDIA-010 MEDIA-011 channel and DM scopes protect bytes and headers",
+          "status": "passed",
+          "failureMessages": []
+        },
+        {
+          "fullName": "matrix media r2 MEDIA-009 MEDIA-012 ABUSE-007 enforces byte limit and cumulative quota without harming another owner",
+          "title": "r2 MEDIA-009 MEDIA-012 ABUSE-007 enforces byte limit and cumulative quota without harming another owner",
+          "status": "passed",
+          "failureMessages": []
+        },
+        {
+          "fullName": "matrix media r2 missing object fails closed while unrelated object and persisted metadata remain intact",
+          "title": "r2 missing object fails closed while unrelated object and persisted metadata remain intact",
+          "status": "passed",
+          "failureMessages": []
+        }
+      ]
+    }
+  ],
+  "failedPrerequisites": [
+    {
+      "file": "tests/security/matrix-media-chunks.test.ts",
+      "fullName": "media configuration and chunk integrity sqlite: above-default limit permits a real 10 MiB plus one file",
+      "title": "sqlite: above-default limit permits a real 10 MiB plus one file",
+      "status": "failed",
+      "failureMessages": [
+        "AssertionError: expected 413 to be 201 // Object.is equality"
+      ]
+    },
+    {
+      "file": "tests/security/matrix-media-chunks.test.ts",
+      "fullName": "media configuration and chunk integrity r2: above-default limit permits a real 10 MiB plus one file",
+      "title": "r2: above-default limit permits a real 10 MiB plus one file",
+      "status": "failed",
+      "failureMessages": [
+        "AssertionError: expected 413 to be 201 // Object.is equality"
+      ]
+    }
+  ],
+  "retainedProofScopes": [
+    "Default10MiB SQLite quota/restart succeeds onsource10",
+    "Low limits, corruption, rollback, and compatible inline read paths have passing focused cases; see exact records for scope"
+  ],
+  "remainingUnsupportedAcceptance": "Above-default ENV upload limit across request middleware is not established; no blanket source10 configured-limit acceptance or deployed proof.",
+  "nextAction": "Owner correcting middleware/shared request-bound helper for a new frozen11; fullsuite and source-bound irctest held pending coordinated freeze.",
+  "scenarioStatusRule": "No unrelated quota/abuse scenario is failed solely by overlapping tags or phases not reached by these configured-limit failures."
+}

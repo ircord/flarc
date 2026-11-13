@@ -43,6 +43,35 @@ export const SERVER_CONFIG = {
   adminToken: null as string | null,
 };
 
+export const DEFAULT_FILEHOST_MAX_UPLOAD_BYTES = 10 * 1024 * 1024;
+
+/** Resolve per deployment; never let a caller choose the event routing topology. */
+export function eventShardCount(env: { EVENT_SHARD_COUNT?: string }): number {
+  const raw = env.EVENT_SHARD_COUNT;
+  if (!raw || !/^\d+$/.test(raw)) return 4;
+  const value = Number(raw);
+  return Number.isSafeInteger(value) ? Math.max(1, Math.min(16, value)) : 4;
+}
+
+/** Read this per environment rather than caching it in the mutable server configuration. */
+export function filehostMaxUploadBytes(env: { FILEHOST_MAX_UPLOAD_BYTES?: string }): number {
+  const value = env.FILEHOST_MAX_UPLOAD_BYTES;
+  if (!value || !/^\d+$/.test(value)) return DEFAULT_FILEHOST_MAX_UPLOAD_BYTES;
+  const parsed = Number(value);
+  return Number.isSafeInteger(parsed) && parsed > 0 ? parsed : DEFAULT_FILEHOST_MAX_UPLOAD_BYTES;
+}
+
+/** Bound multipart framing separately while keeping the actual file limit unchanged. */
+export function filehostMaxRequestBytes(
+  env: { FILEHOST_MAX_UPLOAD_BYTES?: string },
+  contentType: string,
+): number {
+  const maxBytes = filehostMaxUploadBytes(env);
+  return contentType.toLowerCase().includes("multipart/form-data")
+    ? Math.min(Number.MAX_SAFE_INTEGER, maxBytes + 64 * 1024)
+    : maxBytes;
+}
+
 /**
  * Apply deployment configuration from Worker/DO env bindings.
  * Safe to call repeatedly (idempotent).

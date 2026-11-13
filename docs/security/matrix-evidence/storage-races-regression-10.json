@@ -1,0 +1,347 @@
+{
+  "version": 1,
+  "artifactKind": "historical-source10-media-race-regressions",
+  "scope": "Two separately reproduced deterministic race failures; no fullsuite or conformance and no later-source repair is inferred.",
+  "executionManifest": {
+    "version": 1,
+    "id": "media-races-source10",
+    "bundleSha256": "973e0a9f38f4a56015ac70817e61335807189786176cae416acb2eab9ceee701",
+    "vitestJson": "./media-races-03.json"
+  },
+  "rawManifest": {
+    "path": "/tmp/flarc-matrix-run_01d0e4aeb274/media-races-source10-manifest.json",
+    "sha256": "efd972208b01658a48978e2d37a8d608410a5d48f40c132c2b05dff3dd28053d"
+  },
+  "rawResults": {
+    "path": "/tmp/flarc-matrix-run_01d0e4aeb274/media-races-03.json",
+    "sha256": "207ac3d66f2d98c8ac8cd3eb8749f6eed4d4a675b52791d99f4d56c9b0240818"
+  },
+  "workerEvidenceSnapshot": {
+    "path": "docs/security/matrix-evidence/media-races.json",
+    "sha256": "07e7312ecbb046715a81d5aa9e39375d4a3c49edd9b3890eee51e89c1d47b9da",
+    "declaredRows": [
+      {
+        "id": "MEDIA-001",
+        "kind": "test",
+        "executionId": "media-races-source10",
+        "bundleSha256": "973e0a9f38f4a56015ac70817e61335807189786176cae416acb2eab9ceee701",
+        "testFile": "tests/security/matrix-media-races.test.ts",
+        "testTitle": "[MEDIA-001 AUTH-011 DB-025] revoked upload cannot commit after authenticated channel scope was paused",
+        "outcome": "FAIL",
+        "scenarioScope": "Channel-scoped upload paused after the Accounts DO session check and before the durable commit; conservative policy requires rejection after committed revocation.",
+        "rationale": "Frozen source10 deterministic test-only gate records real authentication, committed logout and actual Worker SQLite/R2 state; failures retained as regression evidence.",
+        "assertionDetails": [
+          "Real channel.getMediaScope returns successfully then its subclass pauses before returning to storePrivateMedia; session logout returns 200 and old bearer is independently denied 401 before release.",
+          "On source10 the pending upload incorrectly returns 201 and commits a new 21-byte metadata row and SQLite chunk; pre-existing independently owned files survive.",
+          "IRC and event observers receive message barriers and no race content, filename or new media ID; no post-recreation assertion was performed."
+        ],
+        "transports": [
+          "REST",
+          "IRC",
+          "events",
+          "Worker SQLite"
+        ],
+        "assertions": [
+          "authorization",
+          "state",
+          "events",
+          "transport",
+          "unrelatedResources"
+        ],
+        "dimensionDisposition": {
+          "authorization": "required",
+          "state": "required",
+          "events": "required",
+          "transport": "required",
+          "restart": "required",
+          "unrelatedResources": "required"
+        }
+      },
+      {
+        "id": "AUTH-011",
+        "kind": "test",
+        "executionId": "media-races-source10",
+        "bundleSha256": "973e0a9f38f4a56015ac70817e61335807189786176cae416acb2eab9ceee701",
+        "testFile": "tests/security/matrix-media-races.test.ts",
+        "testTitle": "[MEDIA-001 AUTH-011 DB-025] revoked upload cannot commit after authenticated channel scope was paused",
+        "outcome": "FAIL",
+        "scenarioScope": "Channel-scoped upload paused after the Accounts DO session check and before the durable commit; conservative policy requires rejection after committed revocation.",
+        "rationale": "Frozen source10 deterministic test-only gate records real authentication, committed logout and actual Worker SQLite/R2 state; failures retained as regression evidence.",
+        "assertionDetails": [
+          "Real channel.getMediaScope returns successfully then its subclass pauses before returning to storePrivateMedia; session logout returns 200 and old bearer is independently denied 401 before release.",
+          "On source10 the pending upload incorrectly returns 201 and commits a new 21-byte metadata row and SQLite chunk; pre-existing independently owned files survive.",
+          "IRC and event observers receive message barriers and no race content, filename or new media ID; no post-recreation assertion was performed."
+        ],
+        "transports": [
+          "REST",
+          "IRC",
+          "events",
+          "Worker SQLite"
+        ],
+        "assertions": [
+          "authorization",
+          "state",
+          "events",
+          "transport",
+          "unrelatedResources"
+        ],
+        "dimensionDisposition": {
+          "authorization": "required",
+          "state": "required",
+          "events": "required",
+          "transport": "required",
+          "restart": "required",
+          "unrelatedResources": "required"
+        }
+      },
+      {
+        "id": "DB-025",
+        "kind": "test",
+        "executionId": "media-races-source10",
+        "bundleSha256": "973e0a9f38f4a56015ac70817e61335807189786176cae416acb2eab9ceee701",
+        "testFile": "tests/security/matrix-media-races.test.ts",
+        "testTitle": "[MEDIA-001 AUTH-011 DB-025] revoked upload cannot commit after authenticated channel scope was paused",
+        "outcome": "FAIL",
+        "scenarioScope": "Channel-scoped upload paused after the Accounts DO session check and before the durable commit; conservative policy requires rejection after committed revocation.",
+        "rationale": "Frozen source10 deterministic test-only gate records real authentication, committed logout and actual Worker SQLite/R2 state; failures retained as regression evidence.",
+        "assertionDetails": [
+          "Real channel.getMediaScope returns successfully then its subclass pauses before returning to storePrivateMedia; session logout returns 200 and old bearer is independently denied 401 before release.",
+          "On source10 the pending upload incorrectly returns 201 and commits a new 21-byte metadata row and SQLite chunk; pre-existing independently owned files survive.",
+          "IRC and event observers receive message barriers and no race content, filename or new media ID; no post-recreation assertion was performed."
+        ],
+        "transports": [
+          "REST",
+          "IRC",
+          "events",
+          "Worker SQLite"
+        ],
+        "assertions": [
+          "authorization",
+          "state",
+          "events",
+          "transport",
+          "unrelatedResources"
+        ],
+        "dimensionDisposition": {
+          "authorization": "required",
+          "state": "required",
+          "events": "required",
+          "transport": "required",
+          "restart": "required",
+          "unrelatedResources": "required"
+        }
+      },
+      {
+        "id": "MEDIA-009",
+        "kind": "test",
+        "executionId": "media-races-source10",
+        "bundleSha256": "973e0a9f38f4a56015ac70817e61335807189786176cae416acb2eab9ceee701",
+        "testFile": "tests/security/matrix-media-races.test.ts",
+        "testTitle": "[MEDIA-009 MEDIA-012 AUTH-011 DB-025] failed R2 put releases reservation even after originating session revocation",
+        "outcome": "FAIL",
+        "scenarioScope": "R2 put failure after revocation; reservation row and quota remain because cleanup uses deletePrivateMedia with the revoked token.",
+        "rationale": "Frozen source10 deterministic test-only gate records real authentication, committed logout and actual Worker SQLite/R2 state; failures retained as regression evidence.",
+        "assertionDetails": [
+          "A Worker test-only bucket proxy pauses the actual route put after real R2 metadata reservation; the named separate DO gate signals reached, logout commits and denies the old token, then release injects a put failure.",
+          "The response is safe 503 and R2 objects remain unchanged, but an 18-byte reservation remains in media_uploads and counts against the owner quota; unrelated Bob object and subsequent upload survive.",
+          "Normal non-revoked injected put failure removes its reservation, successful uploads work, and IRC/event observers receive live barriers without race identifiers; no post-recreation assertion was performed."
+        ],
+        "transports": [
+          "REST",
+          "IRC",
+          "events",
+          "Worker SQLite",
+          "R2"
+        ],
+        "assertions": [
+          "authorization",
+          "state",
+          "events",
+          "transport",
+          "unrelatedResources"
+        ],
+        "dimensionDisposition": {
+          "authorization": "required",
+          "state": "required",
+          "events": "required",
+          "transport": "required",
+          "restart": "required",
+          "unrelatedResources": "required"
+        }
+      },
+      {
+        "id": "MEDIA-012",
+        "kind": "test",
+        "executionId": "media-races-source10",
+        "bundleSha256": "973e0a9f38f4a56015ac70817e61335807189786176cae416acb2eab9ceee701",
+        "testFile": "tests/security/matrix-media-races.test.ts",
+        "testTitle": "[MEDIA-009 MEDIA-012 AUTH-011 DB-025] failed R2 put releases reservation even after originating session revocation",
+        "outcome": "FAIL",
+        "scenarioScope": "R2 put failure after revocation; reservation row and quota remain because cleanup uses deletePrivateMedia with the revoked token.",
+        "rationale": "Frozen source10 deterministic test-only gate records real authentication, committed logout and actual Worker SQLite/R2 state; failures retained as regression evidence.",
+        "assertionDetails": [
+          "A Worker test-only bucket proxy pauses the actual route put after real R2 metadata reservation; the named separate DO gate signals reached, logout commits and denies the old token, then release injects a put failure.",
+          "The response is safe 503 and R2 objects remain unchanged, but an 18-byte reservation remains in media_uploads and counts against the owner quota; unrelated Bob object and subsequent upload survive.",
+          "Normal non-revoked injected put failure removes its reservation, successful uploads work, and IRC/event observers receive live barriers without race identifiers; no post-recreation assertion was performed."
+        ],
+        "transports": [
+          "REST",
+          "IRC",
+          "events",
+          "Worker SQLite",
+          "R2"
+        ],
+        "assertions": [
+          "authorization",
+          "state",
+          "events",
+          "transport",
+          "unrelatedResources"
+        ],
+        "dimensionDisposition": {
+          "authorization": "required",
+          "state": "required",
+          "events": "required",
+          "transport": "required",
+          "restart": "required",
+          "unrelatedResources": "required"
+        }
+      },
+      {
+        "id": "AUTH-011",
+        "kind": "test",
+        "executionId": "media-races-source10",
+        "bundleSha256": "973e0a9f38f4a56015ac70817e61335807189786176cae416acb2eab9ceee701",
+        "testFile": "tests/security/matrix-media-races.test.ts",
+        "testTitle": "[MEDIA-009 MEDIA-012 AUTH-011 DB-025] failed R2 put releases reservation even after originating session revocation",
+        "outcome": "FAIL",
+        "scenarioScope": "R2 put failure after revocation; reservation row and quota remain because cleanup uses deletePrivateMedia with the revoked token.",
+        "rationale": "Frozen source10 deterministic test-only gate records real authentication, committed logout and actual Worker SQLite/R2 state; failures retained as regression evidence.",
+        "assertionDetails": [
+          "A Worker test-only bucket proxy pauses the actual route put after real R2 metadata reservation; the named separate DO gate signals reached, logout commits and denies the old token, then release injects a put failure.",
+          "The response is safe 503 and R2 objects remain unchanged, but an 18-byte reservation remains in media_uploads and counts against the owner quota; unrelated Bob object and subsequent upload survive.",
+          "Normal non-revoked injected put failure removes its reservation, successful uploads work, and IRC/event observers receive live barriers without race identifiers; no post-recreation assertion was performed."
+        ],
+        "transports": [
+          "REST",
+          "IRC",
+          "events",
+          "Worker SQLite",
+          "R2"
+        ],
+        "assertions": [
+          "authorization",
+          "state",
+          "events",
+          "transport",
+          "unrelatedResources"
+        ],
+        "dimensionDisposition": {
+          "authorization": "required",
+          "state": "required",
+          "events": "required",
+          "transport": "required",
+          "restart": "required",
+          "unrelatedResources": "required"
+        }
+      },
+      {
+        "id": "DB-025",
+        "kind": "test",
+        "executionId": "media-races-source10",
+        "bundleSha256": "973e0a9f38f4a56015ac70817e61335807189786176cae416acb2eab9ceee701",
+        "testFile": "tests/security/matrix-media-races.test.ts",
+        "testTitle": "[MEDIA-009 MEDIA-012 AUTH-011 DB-025] failed R2 put releases reservation even after originating session revocation",
+        "outcome": "FAIL",
+        "scenarioScope": "R2 put failure after revocation; reservation row and quota remain because cleanup uses deletePrivateMedia with the revoked token.",
+        "rationale": "Frozen source10 deterministic test-only gate records real authentication, committed logout and actual Worker SQLite/R2 state; failures retained as regression evidence.",
+        "assertionDetails": [
+          "A Worker test-only bucket proxy pauses the actual route put after real R2 metadata reservation; the named separate DO gate signals reached, logout commits and denies the old token, then release injects a put failure.",
+          "The response is safe 503 and R2 objects remain unchanged, but an 18-byte reservation remains in media_uploads and counts against the owner quota; unrelated Bob object and subsequent upload survive.",
+          "Normal non-revoked injected put failure removes its reservation, successful uploads work, and IRC/event observers receive live barriers without race identifiers; no post-recreation assertion was performed."
+        ],
+        "transports": [
+          "REST",
+          "IRC",
+          "events",
+          "Worker SQLite",
+          "R2"
+        ],
+        "assertions": [
+          "authorization",
+          "state",
+          "events",
+          "transport",
+          "unrelatedResources"
+        ],
+        "dimensionDisposition": {
+          "authorization": "required",
+          "state": "required",
+          "events": "required",
+          "transport": "required",
+          "restart": "required",
+          "unrelatedResources": "required"
+        }
+      }
+    ]
+  },
+  "rootReviewMessage": "msg_3e4f225fdd09",
+  "counts": {
+    "pass": 0,
+    "fail": 2,
+    "skip": 0,
+    "total": 2
+  },
+  "testResults": [
+    {
+      "name": "tests/security/matrix-media-races.test.ts",
+      "assertionResults": [
+        {
+          "fullName": "[MEDIA-001 AUTH-011 DB-025] revoked upload cannot commit after authenticated channel scope was paused",
+          "title": "[MEDIA-001 AUTH-011 DB-025] revoked upload cannot commit after authenticated channel scope was paused",
+          "status": "failed",
+          "failureMessages": [
+            "AssertionError: expected [ 401, 403 ] to include 201",
+            "AssertionError: expected [ { \u2026(5) }, { \u2026(5) }, { \u2026(5) } ] to deeply equal [ { \u2026(5) }, { \u2026(5) } ]",
+            "AssertionError: expected [ { \u2026(3) }, { \u2026(3) }, { \u2026(3) } ] to deeply equal [ { \u2026(3) }, { \u2026(3) } ]"
+          ]
+        },
+        {
+          "fullName": "[MEDIA-009 MEDIA-012 AUTH-011 DB-025] failed R2 put releases reservation even after originating session revocation",
+          "title": "[MEDIA-009 MEDIA-012 AUTH-011 DB-025] failed R2 put releases reservation even after originating session revocation",
+          "status": "failed",
+          "failureMessages": [
+            "AssertionError: expected [ { \u2026(5) }, { \u2026(5) }, { \u2026(5) } ] to deeply equal [ { \u2026(5) }, { \u2026(5) } ]"
+          ]
+        }
+      ]
+    }
+  ],
+  "phaseSpecificFindings": [
+    {
+      "testTitle": "[MEDIA-001 AUTH-011 DB-025] revoked upload cannot commit after authenticated channel scope was paused",
+      "property": "Pending channel-scoped SQLite upload rechecks committed bearer-session revocation before durable commit",
+      "actual": "Logout200 and independent stale-bearer401 occur before release, yet pending upload returns201 and inserts a21-byte metadata row and a SQLite chunk.",
+      "relevantScopes": [
+        "AUTH-011 in-flight bearer revocation",
+        "MEDIA-001 authorized-upload prerequisite",
+        "DB-025 exact denied-operation stored-state invariant"
+      ],
+      "controls": "Actual valid uploads and an independent Bob file survive; real IRC/event barriers observe no race identifiers.",
+      "notClaimed": "No post-recreation assertion; only the exact raced operation state is evaluated, not all DB025 operations/transports."
+    },
+    {
+      "testTitle": "[MEDIA-009 MEDIA-012 AUTH-011 DB-025] failed R2 put releases reservation even after originating session revocation",
+      "property": "R2 put-failure compensation must release reservation independent of the originating session remaining usable",
+      "actual": "After metadata reservation, logout and injected put failure, route503 is safe and bucket remains unchanged, but an18-byte quota reservation is retained.",
+      "relevantScopes": [
+        "MEDIA-012 reservation/quota persistence and failed-put cleanup"
+      ],
+      "controls": "Normal failed put removes reservation, Bob upload/download and follow-up succeed, positive recipient barriers remain live.",
+      "notClaimed": "Not a failed file-size-limit check or stale-bearer authorization bypass; broad MEDIA009/AUTH011/DB025 labels on this second test do not all establish those properties failed."
+    }
+  ],
+  "nextAction": "Assigned source11 fixes; keep actual10 failures separate from future matched passing regression evidence.",
+  "historicalTestCopy": "/tmp/flarc-matrix-run_01d0e4aeb274/media-races-source10-observed.test.ts",
+  "historicalTestCopySha256": "d46869b56b6f6a10d338ab2e8be1c88ec4ed6e8452f1dfd6b749cf4ce36d918b"
+}

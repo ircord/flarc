@@ -12,6 +12,7 @@ export const UserProfileSchema = z.object({
   timezone: z.string().nullable(),
   roles: z.array(z.string()),
   createdAt: z.number(),
+  revision: z.number().int().nonnegative().default(0),
 });
 
 export const UpdateProfileSchema = z.object({

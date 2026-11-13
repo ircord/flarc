@@ -3,6 +3,8 @@ import type { ChannelDO } from "../durable-objects/channel";
 import type { SessionDO } from "../durable-objects/session";
 
 export interface Env {
+  ALLOWLIST_YAML?: string;
+  PUSH_ALLOWED_HOSTS?: string;
   EMBED_ALLOWED_HOSTS?: string;
   OUTGOING_WEBHOOK_ALLOWED_HOSTS?: string;
   ALLOWED_ORIGINS?: string;
@@ -10,6 +12,8 @@ export interface Env {
   SIGNUP_TOKEN?: string;
   MIN_PASSWORD_LENGTH?: string;
   WEBPUSH_VAPID_PUBLIC_KEY?: string;
+  WEBPUSH_VAPID_PRIVATE_KEY?: string;
+  WEBPUSH_VAPID_SUBJECT?: string;
   REQUIRE_ACCOUNTS?: string;
   AUTO_REGISTER_CHANNELS?: string;
   SESSION: DurableObjectNamespace<SessionDO>;
@@ -18,6 +22,14 @@ export interface Env {
   MEDIA_BUCKET?: R2Bucket;
   ADMIN_TOKEN?: string;
   ADMIN_API_KEY?: string;
+  AUDIT_LOG_ENABLED?: string;
+  EVENT_JOURNAL_MAX_EVENTS?: string;
+  EVENT_JOURNAL_RETENTION_MS?: string;
+  EVENT_SHARD_COUNT?: string;
+  SQLITE_MIGRATION_MAX_BYTES?: string;
+  SQLITE_MIGRATION_MAX_ROWS?: string;
+  LOCAL_IRC_BRIDGE_SECRET?: string;
+  REQUEST_SOURCE?: string;
   SERVER_NAME?: string;
   NETWORK_NAME?: string;
   SERVER_PASSWORD?: string;
@@ -25,6 +37,7 @@ export interface Env {
   DEFAULT_USER_MODES?: string;
   CASEMAPPING?: string;
   FILEHOST_ENABLED?: string;
+  FILEHOST_MAX_UPLOAD_BYTES?: string;
   FILEHOST_REQUIRE_REG?: string;
   REG_BEFORE_CONNECT?: string;
   REG_REQUIRES_EMAIL?: string;
@@ -52,6 +65,7 @@ export interface SessionAttachment {
   userId: string;
   accountName: string | null;
   credentialVersion?: number;
+  credentialSessionHash?: string;
   nickname: string | null;
   requestedNick?: string | null;
   username: string | null;
@@ -123,6 +137,7 @@ export interface StoredChannelMessage {
 }
 
 export interface ChannelStateSummary {
+  generation?: string;
   name: string;
   canonicalName: string;
   topic: string | null;
@@ -172,6 +187,7 @@ export interface UserProfileInput {
 }
 
 export interface ChannelInfo {
+  generation?: string;
   channel: string;
   canonicalName: string;
   topic: string | null;

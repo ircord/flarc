@@ -1,0 +1,402 @@
+{
+  "version": 2,
+  "evidence": [
+    {
+      "id": "DB-013",
+      "kind": "test",
+      "executionId": "database-gaps-denial-09",
+      "bundleSha256": "5894497f55587e0e691458a6db9dad9472d93b36756e0bec50cdded299bf6446",
+      "testFile": "tests/security/matrix-database-gaps.test.ts",
+      "testTitle": "[DB-013] Worker SQLite enforces channel role references after recreation",
+      "outcome": "PASS",
+      "scenarioScope": "Intra-channel role foreign key with independently created second-channel grant sentinel.",
+      "rationale": "Exact frozen Worker bundle, SQLite storage, independently authenticated seed accounts, and full runtime recreation.",
+      "assertionDetails": [
+        "Actual Worker connection reports foreign_keys=1 without setting the pragma and rejects an absent role reference, accepts a real role reference, preserves both grants and foreign_key_check across recreation.",
+        "The FK is intra-channel DO; user identities live in the accounts DO and no cross-DO FK is claimed.",
+        "A separate channel role and grant are independently read before and after the invalid write and again after recreation."
+      ],
+      "transports": [
+        "REST",
+        "IRC",
+        "Worker SQLite"
+      ],
+      "assertions": [
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": {
+          "status": "not-applicable",
+          "rationale": "Raw SQL is an internal test-only Worker storage operation; no public raw SQL endpoint or event contract exists."
+        },
+        "state": "required",
+        "events": {
+          "status": "not-applicable",
+          "rationale": "Raw SQL is an internal test-only Worker storage operation; no public raw SQL endpoint or event contract exists."
+        },
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "DB-018",
+      "kind": "test",
+      "executionId": "database-gaps-denial-09",
+      "bundleSha256": "5894497f55587e0e691458a6db9dad9472d93b36756e0bec50cdded299bf6446",
+      "testFile": "tests/security/matrix-database-gaps.test.ts",
+      "testTitle": "[DB-018 DB-019] cleanup survives later runtime recreation with history and FTS intact",
+      "outcome": "PASS",
+      "scenarioScope": "Production alarm invocation and post-cleanup recreation; scheduler delivery covered separately.",
+      "rationale": "Exact frozen Worker bundle, SQLite storage, independently authenticated seed accounts, and full runtime recreation.",
+      "assertionDetails": [
+        "Publicly posted messages use the 90-day expiry; one is aged in stopped SQLite fixture, production alarm invoked, then a separate runtime is recreated.",
+        "Exact expired and fresh rows and FTS checked via Worker SQL, authenticated history and search reread, plus unrelated channel history."
+      ],
+      "transports": [
+        "REST",
+        "IRC",
+        "Worker SQLite"
+      ],
+      "assertions": [
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": {
+          "status": "not-applicable",
+          "rationale": "Cleanup is internal alarm maintenance, not a public client mutation; it has no notification contract."
+        },
+        "state": "required",
+        "events": {
+          "status": "not-applicable",
+          "rationale": "Cleanup is internal alarm maintenance, not a public client mutation; it has no notification contract."
+        },
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "DB-019",
+      "kind": "test",
+      "executionId": "database-gaps-denial-09",
+      "bundleSha256": "5894497f55587e0e691458a6db9dad9472d93b36756e0bec50cdded299bf6446",
+      "testFile": "tests/security/matrix-database-gaps.test.ts",
+      "testTitle": "[DB-018 DB-019] cleanup survives later runtime recreation with history and FTS intact",
+      "outcome": "PASS",
+      "scenarioScope": "Production alarm invocation and post-cleanup recreation; scheduler delivery covered separately.",
+      "rationale": "Exact frozen Worker bundle, SQLite storage, independently authenticated seed accounts, and full runtime recreation.",
+      "assertionDetails": [
+        "Publicly posted messages use the 90-day expiry; one is aged in stopped SQLite fixture, production alarm invoked, then a separate runtime is recreated.",
+        "Exact expired and fresh rows and FTS checked via Worker SQL, authenticated history and search reread, plus unrelated channel history."
+      ],
+      "transports": [
+        "REST",
+        "IRC",
+        "Worker SQLite"
+      ],
+      "assertions": [
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": {
+          "status": "not-applicable",
+          "rationale": "Cleanup is internal alarm maintenance, not a public client mutation; it has no notification contract."
+        },
+        "state": "required",
+        "events": {
+          "status": "not-applicable",
+          "rationale": "Cleanup is internal alarm maintenance, not a public client mutation; it has no notification contract."
+        },
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "DB-021",
+      "kind": "test",
+      "executionId": "database-gaps-denial-09",
+      "bundleSha256": "5894497f55587e0e691458a6db9dad9472d93b36756e0bec50cdded299bf6446",
+      "testFile": "tests/security/matrix-database-gaps.test.ts",
+      "testTitle": "[DB-021] deleting an account retains channel history and unrelated messages after recreation",
+      "outcome": "PASS",
+      "scenarioScope": "Account deletion and channel history; live IRC and events observers and conservative preservation decision.",
+      "rationale": "Real independent principals; deletion denial observed on actual IRC and event streams with positive barriers and persistent history controls.",
+      "assertionDetails": [
+        "Unauthorized deletion is denied; owner and unrelated observer IRC and event streams have successful message delivery barriers on both sides, with no other output in the observed denial interval.",
+        "Authorized deletion yields observed IRC QUIT; exact message bodies, unrelated profile and independent role grant survive recreation, Bob logs in afresh, and Alice credentials and old bearer return 401.",
+        "Review decision: conservatively preserve observed authored channel history on account deletion; this is not a separately documented product retention policy."
+      ],
+      "transports": [
+        "REST",
+        "IRC",
+        "Worker SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources",
+        "events"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "DB-012",
+      "kind": "test",
+      "executionId": "database-gaps-denial-09",
+      "bundleSha256": "5894497f55587e0e691458a6db9dad9472d93b36756e0bec50cdded299bf6446",
+      "testFile": "tests/security/matrix-database-gaps.test.ts",
+      "testTitle": "[DB-012] authenticated per-account MARKREAD values remain monotonic after recreation",
+      "outcome": "PASS",
+      "scenarioScope": "Authenticated IRC marker persistence, device notification and protected REST unread identity binding.",
+      "rationale": "Frozen production Worker bundle on SQLite with real accounts and recreated runtime.",
+      "assertionDetails": [
+        "Two Alice devices and Bob use authenticated IRC; marker update reaches the other Alice device while Bob receives no marker before a PING barrier.",
+        "Bob receives a distinct marker; Alice cannot use the supported channel unread route with username=bob, receiving 403, while Bob reads his exact timestamp.",
+        "A backward timestamp cannot rewind Alice\u2019s marker; stopped SQLite and post-recreation IRC independently verify exact per-account and per-target values.",
+        "All three IRC observer streams are drained before the foreign unread 403, bounded by fresh PING barriers afterward, and show no MARKREAD; exact Alice and Bob marker targets and values are reread after the denial."
+      ],
+      "transports": [
+        "IRC",
+        "Worker SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "DB-020",
+      "kind": "test",
+      "executionId": "database-gaps-denial-09",
+      "bundleSha256": "5894497f55587e0e691458a6db9dad9472d93b36756e0bec50cdded299bf6446",
+      "testFile": "tests/security/matrix-database-gaps.test.ts",
+      "testTitle": "[DB-020 DB-023] legacy account columns migrate without losing real account data on repeated recreation",
+      "outcome": "PASS",
+      "scenarioScope": "Selected account-column migration and repeated startup; broader historical migrations remain untested.",
+      "rationale": "Frozen production Worker bundle on SQLite with real accounts and recreated runtime.",
+      "assertionDetails": [
+        "Reconstructed only the legacy users table columns described by commit a9db5e6, with publicly created real accounts and roles; other tables remain current, so this is a partial historical fixture.",
+        "Two Worker startups restore canonical and credential columns; real logins, IDs, credential hashes, role rows, unique canonical index and one version-2 migration record remain stable.",
+        "The fixture is not a complete historical database snapshot and does not cover all old migrations or trigger invariants."
+      ],
+      "transports": [
+        "REST",
+        "Worker SQLite"
+      ],
+      "assertions": [
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": {
+          "status": "not-applicable",
+          "rationale": "Migration is internal startup maintenance, not a public client mutation."
+        },
+        "state": "required",
+        "events": {
+          "status": "not-applicable",
+          "rationale": "Schema startup maintenance has no recipient notification contract."
+        },
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "DB-023",
+      "kind": "test",
+      "executionId": "database-gaps-denial-09",
+      "bundleSha256": "5894497f55587e0e691458a6db9dad9472d93b36756e0bec50cdded299bf6446",
+      "testFile": "tests/security/matrix-database-gaps.test.ts",
+      "testTitle": "[DB-020 DB-023] legacy account columns migrate without losing real account data on repeated recreation",
+      "outcome": "PASS",
+      "scenarioScope": "Selected account-column migration and repeated startup; broader historical migrations remain untested.",
+      "rationale": "Frozen production Worker bundle on SQLite with real accounts and recreated runtime.",
+      "assertionDetails": [
+        "Reconstructed only the legacy users table columns described by commit a9db5e6, with publicly created real accounts and roles; other tables remain current, so this is a partial historical fixture.",
+        "Two Worker startups restore canonical and credential columns; real logins, IDs, credential hashes, role rows, unique canonical index and one version-2 migration record remain stable.",
+        "The fixture is not a complete historical database snapshot and does not cover all old migrations or trigger invariants."
+      ],
+      "transports": [
+        "REST",
+        "Worker SQLite"
+      ],
+      "assertions": [
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": {
+          "status": "not-applicable",
+          "rationale": "Migration is internal startup maintenance, not a public client mutation."
+        },
+        "state": "required",
+        "events": {
+          "status": "not-applicable",
+          "rationale": "Schema startup maintenance has no recipient notification contract."
+        },
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "DB-028",
+      "kind": "test",
+      "executionId": "database-gaps-denial-09",
+      "bundleSha256": "5894497f55587e0e691458a6db9dad9472d93b36756e0bec50cdded299bf6446",
+      "testFile": "tests/security/matrix-database-gaps.test.ts",
+      "testTitle": "[DB-028] Worker query plans bound history and role lookup under populated channel scope",
+      "outcome": "PASS",
+      "scenarioScope": "Actual Worker query plans with 120 messages and 21 assigned roles plus an unrelated channel.",
+      "rationale": "Frozen production Worker bundle on SQLite with real accounts and recreated runtime.",
+      "assertionDetails": [
+        "120 real messages and 21 role assignments populate a channel; authenticated bounded history succeeds.",
+        "After recreation Worker EXPLAIN reports indexed SEARCH and no full SCAN for the selected history and authorization join; exact role count and independent channel message and lack of Bob grants remain scoped."
+      ],
+      "transports": [
+        "REST",
+        "IRC",
+        "Worker SQLite"
+      ],
+      "assertions": [
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": {
+          "status": "not-applicable",
+          "rationale": "EXPLAIN is a test-only internal SQL observation, not a public authorization operation."
+        },
+        "state": "required",
+        "events": {
+          "status": "not-applicable",
+          "rationale": "EXPLAIN query planning is read-only and has no event contract."
+        },
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "DB-020",
+      "kind": "test",
+      "executionId": "database-gaps-denial-09",
+      "bundleSha256": "5894497f55587e0e691458a6db9dad9472d93b36756e0bec50cdded299bf6446",
+      "testFile": "tests/security/matrix-database-gaps.test.ts",
+      "testTitle": "[DB-020 DB-023] historical accounts session and channel schemas migrate twice with real records",
+      "outcome": "PASS",
+      "scenarioScope": "Portable a9db5e6 Accounts, Channel and Session initial DDL with projected real account, message, role and DM records; two fresh Workerd startups.",
+      "rationale": "Frozen production Worker bundle on SQLite with real accounts and recreated runtime.",
+      "assertionDetails": [
+        "Historical initial DDL is embedded with provenance, and stopped SQLite projects selected publicly created records into those schemas, omitting current-only tables and columns.",
+        "After each production migration and recreation, three credential logins and IDs, channel and DM bodies, role grant, admin role, FTS contents and three triggers, migration version and selected account, channel and session indexes survive.",
+        "This covers one historical revision and selected records, not every intermediate schema or all stored features."
+      ],
+      "transports": [
+        "IRC",
+        "REST",
+        "Worker SQLite"
+      ],
+      "assertions": [
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": {
+          "status": "not-applicable",
+          "rationale": "Migration is internal startup maintenance, not a public client mutation."
+        },
+        "state": "required",
+        "events": {
+          "status": "not-applicable",
+          "rationale": "Schema startup maintenance has no recipient notification contract."
+        },
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "DB-023",
+      "kind": "test",
+      "executionId": "database-gaps-denial-09",
+      "bundleSha256": "5894497f55587e0e691458a6db9dad9472d93b36756e0bec50cdded299bf6446",
+      "testFile": "tests/security/matrix-database-gaps.test.ts",
+      "testTitle": "[DB-020 DB-023] historical accounts session and channel schemas migrate twice with real records",
+      "outcome": "PASS",
+      "scenarioScope": "Portable a9db5e6 Accounts, Channel and Session initial DDL with projected real account, message, role and DM records; two fresh Workerd startups.",
+      "rationale": "Frozen production Worker bundle on SQLite with real accounts and recreated runtime.",
+      "assertionDetails": [
+        "Historical initial DDL is embedded with provenance, and stopped SQLite projects selected publicly created records into those schemas, omitting current-only tables and columns.",
+        "After each production migration and recreation, three credential logins and IDs, channel and DM bodies, role grant, admin role, FTS contents and three triggers, migration version and selected account, channel and session indexes survive.",
+        "This covers one historical revision and selected records, not every intermediate schema or all stored features."
+      ],
+      "transports": [
+        "IRC",
+        "REST",
+        "Worker SQLite"
+      ],
+      "assertions": [
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": {
+          "status": "not-applicable",
+          "rationale": "Migration is internal startup maintenance, not a public client mutation."
+        },
+        "state": "required",
+        "events": {
+          "status": "not-applicable",
+          "rationale": "Schema startup maintenance has no recipient notification contract."
+        },
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    }
+  ]
+}

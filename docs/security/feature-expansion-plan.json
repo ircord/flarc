@@ -1,0 +1,902 @@
+{
+  "phase": "Local implementation and reviewed verification complete:336PASS3N/A,632application passes; see matrix-results.md",
+  "createdAt": "2026-11-12T18:58:12.529893+00:00",
+  "runId": "run_01d0e4aeb274",
+  "baseline": {
+    "snapshot": 17,
+    "applicationPassed": 510,
+    "files": 62,
+    "scenarioCounts": {
+      "PASS": 292,
+      "NOT IMPLEMENTED": 44,
+      "NOT APPLICABLE": 3
+    },
+    "sourceArchive": "/tmp/flarc-feature-expansion/baseline17-source.tar.gz",
+    "sourceArchiveSha256": "5b63432541b6dd70293ccdc499de054ee6180a5c219b8b1c7ce7bdf667c9f680",
+    "changesPreviouslyUncommitted": true
+  },
+  "userRequirements": {
+    "featureHoldLifted": true,
+    "transportParity": [
+      "REST",
+      "IRC/IRCv3",
+      "IRC services",
+      "WebSocket events/commands"
+    ],
+    "auditEnabledByDefault": false,
+    "allowlistFile": "allowlist.yaml",
+    "kubernetesMountedConfig": true,
+    "fastMode": false,
+    "noBroadSuitesUntilImplementationComplete": true,
+    "noGitHubPushDeployment": true,
+    "prefilledAllowlist": true,
+    "deploymentAndCI": {
+      "containerBuild": "Bun",
+      "runtime": "Node/Miniflare/workerd prebuilt bundle",
+      "branchPush": "no workflow trigger",
+      "pullRequest": "static checks only",
+      "versionTag": "build + matrix/application + unchanged irctest in parallel; publish already-built image and GitHub release after all succeed",
+      "registry": "ghcr.io/ircord/flarc",
+      "noActualPublishOrClusterApply": true
+    }
+  },
+  "contracts": [
+    "Domain-owning object revalidates actual credential/session identity and current permission; public DTO identity cannot override actor.",
+    "REST and IRC share durable message/channel/role operations; canonical IDs and revisions emitted in typed WebSocket events.",
+    "Event journal is durable, bounded and cursor-scoped; replay rechecks current access and returns explicit resync when cursor expires. Never claim cross-DO snapshot atomicity without protocol evidence.",
+    "Network administration does not grant access to private conversations. Explicit private metadata is owner-only across projection, GET/SUB/SYNC and replay.",
+    "Audit disabled means no records written. Enabled logs have actor/action/target/outcome/transport/time, no bearer/password/key/private message payload.",
+    "New sessions/cookies/scoped integration credentials preserve existing bearer defaults. Cookie mutations require session-bound CSRF token and exact allowed Origin.",
+    "Same-channel bulk operations are atomic where possible; multi-resource results disclose per-item outcomes and never imply a distributed transaction.",
+    "Durable event IDs plus client operation IDs prevent repeat mutations; read-only replay never applies a mutation.",
+    "New APIs document millisecond timestamps or ISO8601 explicitly, typed payloads/errors, operation IDs and bounds.",
+    "Account/channel generations fence retired identity and stale media/role grants. Re-registration creates fresh generation and cannot adopt old membership/media.",
+    "ChannelDO address remains networkId:canonicalName; resource_id generation fences archive/re-register callbacks. Old retained history moves to generation-keyed archive, inaccessible through new room.",
+    "REST membership uses internally generated api:<account UUID> provenance; real IRC session membership remains distinct; Session rechecks authoritative generation before reconciling.",
+    "Accounts must support both bearer/scoped-credential and verified accountId/credentialVersion operation authorization for IRC parity.",
+    "private: metadata is explicitly owner-only; existing ordinary custom IRC metadata remains public."
+  ],
+  "ownership": {
+    "accounts": "Terra: accounts.ts; account schema; auth utils/middleware/routes; admin dispatcher/schema; audit/scopes/global bans/credentials; later media/push/recovery",
+    "channels": "Terra: channel.ts; channel schema; channel routes/schemas; IRC channel commands and ChanServ/F role hooks",
+    "sessions": "Sol: session.ts; session schema; messaging/history/profile/event routes; IRC messaging/metadata/dispatcher; events schema",
+    "root": "shared core/types.ts and config.ts; migrations/init.ts integration; server.ts/nitro config; package/lock; OpenAPI integration; launcher/allowlist; build/test scheduling",
+    "deployment": "Accounts Terra (while waiting for feature build): Dockerfile/.dockerignore/.github/deploy manifests/README and production launcher mode; root retains package/lock and YAML helpers",
+    "egress": "Accounts Terra temporarily owns scripts/safe-outbound.mjs + types/tests and Node launcher adapter integration; root owns YAML policy, shared config and Cloudflare flag.",
+    "existingMediaTests": "Accounts Terra: tests/security/matrix-media*.test.ts and tests/helpers/media-*.ts; object_key/lease/alarm adaptation only, preserve security assertions and historical evidence",
+    "existingDmTests": "Sessions Sol: narrow immutable account-ID selector expectation updates in matrix-dm-gaps and matrix-dm; preserve confidentiality and historical source17 evidence",
+    "schemaMigration": "Accounts Terra: NEW primary-nullability migration helper and focused real-workerd tests only. Root reviews before any production constructor wiring; no existing deployment mutation.",
+    "requestSource": "Root: server/core/request-source.ts, narrow auth/middleware/login/register hooks, Env/Cloudflare binding, request-source tests/docs. Session Sol integrates IRC/events peer attribution and revalidation.",
+    "flowControl": "Channel Terra: NEW session/flow-control.ts + focused helper tests. Root review requested pre-expiry challenge timer; Session integration follows source19 corrections."
+  },
+  "waves": [
+    {
+      "id": "F1",
+      "work": "Accounts/admin authorization, scoped and revocable credentials, optional cookie auth, audit default-off, global bans",
+      "owner": "accounts",
+      "ids": [
+        "ADMIN-005",
+        "ADMIN-012",
+        "ADMIN-013",
+        "ADMIN-016",
+        "ADMIN-018",
+        "ADMIN-023",
+        "ADMIN-027",
+        "ADMIN-029",
+        "API-019",
+        "SVC-016"
+      ],
+      "status": "implemented and verified within final documented scope; exact scenario and operation evidence in reconciliation-34",
+      "task": {
+        "taskId": "task_5e6853f9522f",
+        "dispatchId": "ctx_4f8bba2b439d",
+        "terminal": "term_782ebbcc0ff95b1fc09468e2ed8be1e6",
+        "state": "ready",
+        "previousFailedDispatch": "ctx_404f7bdf249d"
+      },
+      "historicalStatus": "source captured in immutable18, build/typecheck pass; focused new-feature runtime tests dispatched"
+    },
+    {
+      "id": "F2",
+      "work": "Atomic channel create/join/part/invite/members REST parity; fresh generation re-registration; bounded role inheritance and explicit bulk operations",
+      "owner": "channels",
+      "ids": [
+        "CHAN-022",
+        "CHAN-023",
+        "CHAN-033",
+        "ROLE-034",
+        "API-016"
+      ],
+      "status": "implemented and verified within final documented scope; exact scenario and operation evidence in reconciliation-34",
+      "task": {
+        "taskId": "task_3acdb9540b66",
+        "dispatchId": "ctx_c8f8079bdf17",
+        "terminal": "term_a5dd243d7a5893f78bd86b70c3395e43",
+        "state": "ready"
+      },
+      "historicalStatus": "source captured in immutable18, build/typecheck pass; focused new-feature runtime tests dispatched"
+    },
+    {
+      "id": "F3",
+      "work": "DM conversations/send/edit/redact/offline/read/unread; profile/public/private metadata events; subscription/replay/cursor/operation idempotency",
+      "owner": "sessions",
+      "ids": [
+        "USER-017",
+        "USER-018",
+        "DM-005",
+        "DM-008",
+        "DM-009",
+        "DM-010",
+        "DM-012",
+        "DM-013",
+        "DM-016",
+        "DM-019",
+        "DM-022",
+        "WS-010",
+        "WS-011",
+        "WS-017",
+        "WS-018",
+        "WS-022"
+      ],
+      "status": "implemented and verified within final documented scope; exact scenario and operation evidence in reconciliation-34",
+      "task": {
+        "taskId": "task_493b6a2755de",
+        "dispatchId": "ctx_05d6722b3e66",
+        "terminal": "term_50e3fc40e6c5352023c4377eaab001d9",
+        "state": "ready"
+      },
+      "historicalStatus": "ten complete conversation/event feature tests PASS20 including secret bootstrap cursor regression"
+    },
+    {
+      "id": "F4",
+      "work": "Scoped media listings, fenced pending upload recovery, encrypted push dispatch/preferences/revocation/provider cleanup/bounded retry",
+      "owner": "accounts",
+      "deps": [
+        "F1",
+        "F3"
+      ],
+      "ids": [
+        "MEDIA-015",
+        "PUSH-006",
+        "PUSH-007",
+        "PUSH-008",
+        "PUSH-009",
+        "PUSH-010",
+        "PUSH-011",
+        "DB-016"
+      ],
+      "status": "implemented and verified within final documented scope; exact scenario and operation evidence in reconciliation-34",
+      "historicalStatus": "13 encrypted local-provider policy cases PASS21-push; previous media/R2 recovery cases passed18; final integration pending"
+    },
+    {
+      "id": "F5",
+      "work": "Editable mounted YAML allowlist, restricted egress and DNS pinning/provider policy adapters",
+      "owner": "root",
+      "ids": [
+        "ABUSE-017"
+      ],
+      "status": "implemented and verified within final documented scope; exact scenario and operation evidence in reconciliation-34",
+      "historicalStatus": "3 YAML policy and 10 DNS-pinning/egress adapter tests passed; actual application/container wiring verification pending"
+    },
+    {
+      "id": "F6",
+      "work": "Real multi-SessionDO routing/directory with global nickname ownership; bounded acknowledged event streams and IRC liveness/backpressure",
+      "owner": "sessions",
+      "deps": [
+        "F1",
+        "F2",
+        "F3"
+      ],
+      "ids": [
+        "WS-019",
+        "WS-021",
+        "ABUSE-012"
+      ],
+      "status": "implemented and verified within final documented scope; exact scenario and operation evidence in reconciliation-34",
+      "historicalStatus": "7 reader-window unit tests pass; event sharding/native socket integration in progress"
+    },
+    {
+      "id": "F7",
+      "work": "Schema/migration parity and deployment-verification tooling; OpenAPI/client/route inventory integration; final matrix",
+      "owner": "root",
+      "deps": [
+        "F1",
+        "F2",
+        "F3",
+        "F4",
+        "F5",
+        "F6"
+      ],
+      "ids": [
+        "DB-022"
+      ],
+      "status": "implemented and verified within final documented scope; exact scenario and operation evidence in reconciliation-34",
+      "historicalStatus": "metadata diagnostic and two actual Accounts migration tests pass; Channel/Session migration, constructor wiring and complete model/deployed schema verification pending"
+    },
+    {
+      "id": "F8",
+      "work": "Bun container build, production launcher, simple Kubernetes manifests, PR-static/tag-release gated CI",
+      "owner": "accounts",
+      "status": "implemented and verified within final documented scope; exact scenario and operation evidence in reconciliation-34",
+      "spec": "/tmp/flarc-feature-expansion/deployment-ci-spec.txt",
+      "historicalStatus": "CI/container/Kubernetes source implemented; root-reviewed, Node-version/default-signup corrections assigned; build/smoke pending stable feature context"
+    }
+  ],
+  "workers": {
+    "accounts": {
+      "taskId": "task_5e6853f9522f",
+      "dispatchId": "ctx_4f8bba2b439d",
+      "terminal": "term_782ebbcc0ff95b1fc09468e2ed8be1e6",
+      "state": "stopped on platform security-filter error; existing artifacts preserved; source19 targeted retest pending",
+      "previousFailedDispatch": "ctx_404f7bdf249d"
+    },
+    "channels": {
+      "taskId": "task_3acdb9540b66",
+      "dispatchId": "ctx_c8f8079bdf17",
+      "terminal": "term_a5dd243d7a5893f78bd86b70c3395e43",
+      "state": "F2 settled successfully; push follow-up failed with reproduced preference bug and incomplete alarm fixture, new bounded continuation dispatched"
+    },
+    "sessions": {
+      "taskId": "task_3fa068005a47",
+      "dispatchId": "ctx_902e9c0a47c1",
+      "terminal": "term_cd7c50a6-d92b-434d-9a32-b7fd22d91653",
+      "state": "completed: remaining nativeEOF and relayinputcases PASS25;finalglobalverification pending",
+      "previousDispatch": "ctx_51e7f86274fd"
+    },
+    "pushPolicy": {
+      "taskId": "task_730c04de2c2c",
+      "dispatchId": "ctx_35c81a6ca049",
+      "terminal": "term_3de66097056238f49b36e5616e954846",
+      "state": "succeeded:13/13 on isolated21-push; prior failures retained"
+    },
+    "schemaDomains": {
+      "taskId": "task_c53d2fb4b439",
+      "dispatchId": "ctx_1178a35db701",
+      "terminal": "term_4135ccf35f8afad3bfcd5c228ca7789e",
+      "state": "completed:2/2 real Channel/Session migration tests passed21-push; subsequently four helper tests pass integrated22",
+      "spec": "/tmp/flarc-feature-expansion/schema-domain-migration-spec.txt",
+      "previousDispatch": "ctx_c99bee3d796b"
+    },
+    "apiLedger": {
+      "taskId": "task_5289a32c38b4",
+      "dispatchId": "ctx_96f963067ce8",
+      "terminal": "term_1601fbf7-2c39-4756-8c40-20d30b62aada",
+      "state": "completed207-source mapping review and focused alias tests;three concrete audit/bot gaps identified for implementation",
+      "spec": "/tmp/flarc-feature-expansion/api-ledger-expansion-spec.txt",
+      "previousDispatch": "ctx_3b6b817f5809"
+    },
+    "serviceAudit": {
+      "taskId": "task_ec16344591c2",
+      "dispatchId": "ctx_a7bf63bcdc17",
+      "terminal": "term_1de9b2488d2e630a25e066145bc29f3c",
+      "state": "completed4/4focusedPASS26;two test-only fixture corrections included in combined snapshot",
+      "spec": "/tmp/flarc-feature-expansion/service-audit-credentials-spec.txt"
+    },
+    "conformance26": {
+      "taskId": "task_c817c89048da",
+      "dispatchId": "ctx_b822c9f04c8b",
+      "terminal": "term_d5eef6e65de9e978dddec3ecffaa7db0",
+      "state": "one unchanged pinned full selection authorized and running",
+      "spec": "/tmp/flarc-feature-expansion/conformance26-spec.txt"
+    },
+    "ircTriage": {
+      "taskId": "task_408326c7add8",
+      "dispatchId": "ctx_e42542c2f926",
+      "terminal": "term_b3fa9a87c21fdd76f49c31cd1f766caa",
+      "spec": "/tmp/flarc-feature-expansion/triage26-irc-spec.txt",
+      "state": "targeted failure triage active"
+    },
+    "eventsTriage": {
+      "taskId": "task_a2f34fb9655e",
+      "dispatchId": "ctx_cb5133301cd0",
+      "terminal": "term_3ed6e4d3c408964dd4f5336257f5133d",
+      "spec": "/tmp/flarc-feature-expansion/triage26-events-spec.txt",
+      "state": "targeted failure triage active"
+    },
+    "fixturesTriage": {
+      "taskId": "task_e7fd393d60cc",
+      "dispatchId": "ctx_812bb4b6bbfa",
+      "terminal": "term_4908f404-c9d6-460a-a292-13e80f6cbf2f",
+      "spec": "/tmp/flarc-feature-expansion/triage26-fixtures-spec.txt",
+      "state": "targeted failure triage active"
+    }
+  },
+  "integrationContract": "/tmp/flarc-feature-expansion/integration-contract-1.txt",
+  "allowlistProgress": {
+    "configuration": "implemented; root-owned parser, launcher mount/reload and worker helper",
+    "defaults": {
+      "embeds": 37,
+      "webhooks": 2,
+      "push": 3
+    },
+    "validation": "3 focused policy/loader tests passed; shipped defaults and ConfigMap equality validated",
+    "runtimeEndpointIntegration": "pending feature bundle",
+    "DNSProviderEnforcement": "remaining F5 implementation, not claimed complete",
+    "adapter": "10 focused adapter cases passed; connected-slot recovery fixed; actual Miniflare application integration unrun"
+  },
+  "apiContracts": {
+    "channelsDraft": {
+      "create": "POST /api/v1/channels: name, privacy public|secret; current draft defaults secret; generation returned",
+      "membership": [
+        "POST /api/v1/channels/{channel}/join",
+        "POST /api/v1/channels/{channel}/leave",
+        "POST /api/v1/channels/{channel}/invites",
+        "DELETE /api/v1/channels/{channel}/invites/{username}",
+        "GET /api/v1/channels/{channel}/members"
+      ],
+      "bulk": "POST /api/v1/channels/{channel}/messages/bulk-redact: ids[1..50], operationId epochMs.UUID",
+      "status": "draft, not yet built or tested; generation/revision-scoped durable intents require Session integration"
+    },
+    "push": "Accounts.enqueuePushEvent(eventId,recipientAccountId); Session.getEventForRecipient(eventId,accountId,credentialVersion) rechecks intended and current audience; Session durable pending intents drain idempotently"
+  },
+  "cloudflareOutboundPolicy": {
+    "compatibilityFlag": "global_fetch_strictly_public",
+    "runtimeVerification": "pending coordinated feature build; production Cloudflare not deployed"
+  },
+  "queuedOwnerInstructions": {
+    "F4": "/tmp/flarc-feature-expansion/media-push-recovery-spec.txt",
+    "F6": "/tmp/flarc-feature-expansion/shards-backpressure-spec.txt",
+    "F7": "/tmp/flarc-feature-expansion/schema-migration-spec.txt",
+    "conformance26": "/tmp/flarc-feature-expansion/conformance26-spec.txt"
+  },
+  "recoveryPolicy": {
+    "model": "Owning database immutable attempt/generation fences plus bounded recurring R2 owned-prefix reconciliation",
+    "storageNamespace": "random persisted Accounts namespace; new immutable upload attempt object keys",
+    "legacy": "preserve bare-ID reads; only known tracked legacy pending keys may be cleaned, never arbitrary shared-bucket keys",
+    "guarantees": [
+      "aborted uploads never publish",
+      "eventual cleanup after provider recovery and fair alarm progress",
+      "bounded scan pages, persisted cursor, bounded tombstone/retry/admission state",
+      "late puts after initial delete discovered by later scan"
+    ],
+    "notClaimed": [
+      "cross-object atomic transaction",
+      "absolute deletion deadline under unbounded provider latency"
+    ]
+  },
+  "channelObserverPolicy": {
+    "legacyPublicLiveObservation": "preserved",
+    "durableReplayAndPush": "Channel-owned account/generation observer registration captured with commit-time audience and current authorization recheck",
+    "statusPrefixedMessages": "original eligible members only",
+    "phase": "F2/F3 implementation now, not deferred"
+  },
+  "scopeProgress": {
+    "accountSource": "written; audit outcome/negative-effect refinements and integration in progress",
+    "channelSource": "atomic settings, inheritance, bulk, membership/retirement written; re-registration and audience/operation fencing in progress",
+    "sessionSource": "conversation/journal/subscription/profile modules and callbacks in progress",
+    "push": "RFC crypto independent test passed; live provider/recipient/retry integration unrun",
+    "egress": "10 deterministic adapter tests passed; application wiring/container unrun",
+    "deployment": "Linuxamd64container23 built; actual REST/TCP/v2 events/private access, restartcredentials/history andstrictallDomainSQLschema passed; finalproductionimage refresh pending"
+  },
+  "recoveryProgress": "Source implemented: owned-prefix immutable attempts,15minute leases,pending owner listing/cancel,persisted-cursor scan,legacy cleanup tracking; new failure/restart tests and runtime verification pending",
+  "schemaVerification": {
+    "source": [
+      "scripts/verify-schema.ts",
+      "scripts/schema/compare.ts",
+      "scripts/schema/expressions.ts"
+    ],
+    "test": "tests/features/schema-verifier.test.ts",
+    "results": "/tmp/flarc-feature-expansion/schema-verifier-unit.json",
+    "unitPassed": 4,
+    "runtimeFeatureSchema": "PASS actual22 Accounts/Channel/Session models,columns/types/nullability/defaults/PK/unique/indexes/FK/CHECKs and exactFTS layouts;provider-owned tables separately listed",
+    "legacyNullability": "reported as differences, not waived",
+    "deployment": "read-only CLI included in container source; image build and live deployment verification pending",
+    "migrationPrototype": {
+      "status": "wired production version1000 all3 DOs;two startup/upgrade tests and four helper/rollback tests PASS22",
+      "artifact": "/tmp/flarc-feature-expansion/schema-migration20-canonical-dependencies.json",
+      "source": "server/storage/migrations/primary-nullability.ts",
+      "constraints": "approved tables; complete FK closure; transactionSync; preserved rowids/indexes/triggers/autoincrement; rejects NULL/cyclic/unapproved/generated schema;32MiB database/100000 staged row limits",
+      "initialFailures": [
+        "test borrowed RPC object invalidated after runtime disposal",
+        "workerd rejects PRAGMA page_size; replaced with documented SqlStorage.databaseSize"
+      ],
+      "notClaimed": [
+        "Production constructor migration",
+        "Remote deployment schema equivalence"
+      ]
+    },
+    "limits": "32MiB DB/100000 affected rows defaults;operator can explicitly raise SQLITE_MIGRATION_MAX_BYTES/ROWS during maintenance;failure rolls back;deployed Cloudflare not inspected"
+  },
+  "F6TopologyDecision": "Separate actual SessionDO event-connection shards; central IRC nickname/session and conversation/journal authority retained. No horizontal IRC socket distribution claimed. Bound authenticated shard routing, original/current audience, revocation and acknowledged-reader output required.",
+  "apiContractProgress": {
+    "operations": 200,
+    "uniqueOperationIds": 200,
+    "routeInventoryAndContractTests": {
+      "passed": 2,
+      "failed": 0,
+      "path": "/tmp/flarc-feature-expansion/api-contract-feature.json"
+    },
+    "knownPayloads": "generated union uses runtime named event payload schemas; unproduced legacy kinds explicitly remain unknown",
+    "sourceSha256": "c07be7e4f2dac73c1e0ba77a509fd1fda272fb00cb2fb8b29781378671d5d2fb",
+    "remaining": "final combined verification and exact execution evidence; generated client refreshed for v2 and /api/events alias"
+  },
+  "checkpoints": {
+    "F2": {
+      "path": "/tmp/flarc-feature-expansion/f2-source-checkpoint.json",
+      "sha256": "3e25ad5ad39b9c9af6381ab3a5a4370c7bf38fcdd8a85795960710657c5322eb",
+      "verifiedOwnedFiles": 30
+    },
+    "F1F4": {
+      "path": "/tmp/flarc-feature-expansion/f1-f4-source-checkpoint.json",
+      "sha256": "031472b64e2913f101b05a9b9c14c6f97fc8ded43663e2aeeddd62f73d9ac282",
+      "verifiedOwnedFiles": 50,
+      "verifiedSelectedTests": 18
+    }
+  },
+  "featureSnapshot": {
+    "number": 18,
+    "bundle": "/tmp/flarc-matrix-run_01d0e4aeb274/server-18/index.mjs",
+    "sha256": "edddfee3194e8ffdc0908c02d95b175bde2f672bebf4577edb1f1ab189ce5180",
+    "sourceRoot": "/tmp/flarc-feature-expansion/source18",
+    "manifest": "/tmp/flarc-feature-expansion/bundle-18.json",
+    "sourceFileCount": 447,
+    "bundleFileCount": 136,
+    "build": "PASS",
+    "typecheck": "PASS",
+    "focusedRuntime": "dispatched; no result yet",
+    "fullSuite": "NOT RUN, held until implementation integrated",
+    "irctest": "NOT RUN, held until implementation integrated"
+  },
+  "focused18Progress": {
+    "accountsMediaPush": {
+      "newInitial": {
+        "passed": 11,
+        "failed": 1,
+        "total": 12
+      },
+      "newCorrectedMedia": {
+        "passed": 1,
+        "failed": 0
+      },
+      "relatedInitial": {
+        "passed": 98,
+        "failed": 11,
+        "total": 109,
+        "unhandledErrors": 1
+      },
+      "relatedCorrectedMediaFiles": {
+        "passed": 6,
+        "failed": 0,
+        "unhandledErrors": 0
+      },
+      "outboundApplication": {
+        "passed": 1,
+        "filteredPending": 10
+      },
+      "liveLocalIngress": {
+        "passed": 1,
+        "failed": 0
+      },
+      "hostmaskBypassRegression": {
+        "passed": 0,
+        "failed": 1,
+        "status": "confirmed IRC welcome despite hostmask ban; Session owner fixing"
+      },
+      "remaining": "8 auth/revocation timeouts; original failures preserved"
+    },
+    "channels": {
+      "newFeatures": {
+        "passed": 8,
+        "failed": 0
+      },
+      "relatedInitial": {
+        "passed": 139,
+        "failed": 9,
+        "collectionErrors": 1
+      },
+      "remaining": "control-line/redaction/revocation delivery and previous-event observation boundary; insertion-order outbox fix assigned"
+    },
+    "sessions": {
+      "newInitial": {
+        "passed": 1,
+        "failed": 6,
+        "total": 7
+      },
+      "rootCauses": "h3 query object RPC serialization; mutable Map iteration; bootstrap scope/order and cursor-before-write corrections also assigned"
+    }
+  },
+  "reporterIntegration": {
+    "adminShapes": 48,
+    "initialToolingTests": {
+      "passed": 0,
+      "failed": 12,
+      "cause": "duplicate audit path annotation plus stale count guard"
+    },
+    "correctedToolingTests": {
+      "passed": 12,
+      "failed": 0,
+      "artifact": "/tmp/flarc-feature-expansion/inventory-feature-corrected.json"
+    },
+    "oldEvidence": "unchanged; no new runtime PASS claims from inventory"
+  },
+  "post18Fixes": [
+    "Plain validated query DTOs across RPC",
+    "Snapshot session Map iteration during callbacks/reload",
+    "Bootstrap joined/granted channel selection, pagination and registration-before-snapshot",
+    "Validate supplied event cursor before subscription writes",
+    "Trusted hostmask checks on IRC registration/dispatch",
+    "Generation-fenced control/redaction/invalidation delivery",
+    "Channel outbox commit ordering rather than clock/random UUID ordering"
+  ],
+  "post18OutboxFix": {
+    "bug": "committed event order changed by equal/backward created_at and random identifier tie-breaks",
+    "reproduced": "two actual authorized REST edits with held journal transport; frozen18 delivered second before first",
+    "evidence": "/tmp/flarc-feature-expansion/f2-outbox18-two-clocks.json",
+    "fix": "durable owner-local sequence plus serialized drain; source19 verification pending"
+  },
+  "requestSourceProgress": {
+    "helperTests": {
+      "passed": 2,
+      "filteredPending": 1
+    },
+    "REST18Regression": {
+      "passed": 0,
+      "failed": 1,
+      "cause": "matching hostmask does not deny existing REST session on18"
+    },
+    "fix": "trusted numeric peer provenance plus protected REST, public-auth budget, login and signup checks; source/helper typecheck passed, two pure tests passed, real source19 verification pending",
+    "nativeCloudflare": "explicit REQUEST_SOURCE binding, deployment behavior not yet tested",
+    "policyDoc": "docs/security/request-source-policy.md",
+    "signup18Regression": {
+      "passed": 0,
+      "failed": 1,
+      "cause": "matching hostmask signup succeeds201 on18",
+      "artifact": "/tmp/flarc-feature-expansion/request-source-signup18-initial.json"
+    },
+    "rest18RegressionArtifact": "/tmp/flarc-feature-expansion/request-source-rest18-initial.json"
+  },
+  "flowControlProgress": {
+    "state": "review correction implemented; authenticated socket integration pending",
+    "unitPassed": 7,
+    "unitFailed": 0,
+    "artifact": "/tmp/flarc-feature-expansion/f6-flow-control-idle-revised.json",
+    "reviewFix": "low-traffic challenge at20s before30s hard deadline; namespace feature PONGs; preserves debt/deadlines through rehydration",
+    "notClaimed": [
+      "native FlaRC slow-reader bound",
+      "global provider memory ceiling",
+      "event sharding complete"
+    ]
+  },
+  "featureSnapshot19": {
+    "bundle": "/tmp/flarc-matrix-run_01d0e4aeb274/server-19/index.mjs",
+    "sha256": "e82a3feb35686328801834a562c2f7c993d8138d34b95a9dfde8431b652756be",
+    "sourceFiles": 454,
+    "bundleFiles": 136,
+    "manifest": "/tmp/flarc-feature-expansion/bundle-19.json",
+    "build": "PASS",
+    "typecheck": "PASS"
+  },
+  "focused19Progress": {
+    "rootAuth": {
+      "collected": 42,
+      "selected": 12,
+      "passed": 4,
+      "failed": 8,
+      "nameFilteredPending": 30,
+      "artifact": "/tmp/flarc-feature-expansion/root-auth-revocation19-initial.json",
+      "passedScope": "IRC login+active hostmask, REST hostmask existing/login, hostmask signup",
+      "remaining": "same8auth/revocation/hibernationtimeouts; exact-stage diagnostic assigned"
+    },
+    "channels": {
+      "passed": 7,
+      "failed": 2,
+      "artifact": "/tmp/flarc-feature-expansion/f2-targeted19-initial.json",
+      "fixPending": "REST REDACT missing generation and control flag fixed in shared source,20verification pending"
+    },
+    "sessions": {
+      "passed": 8,
+      "failed": 1,
+      "collected": 9,
+      "artifact": "/tmp/flarc-feature-expansion/f3-focus19-task493b6a2755de-01.json",
+      "failure": "bootstrap test expected history.messages while response is array; test correction pending separate evidence",
+      "newReviewFinding": "pagination raw nextChannelAfter leaks inaccessible secret name; opaque account-bound cursor assigned",
+      "testOnlyCorrection": {
+        "passed": 1,
+        "filtered": 8,
+        "artifact": "/tmp/flarc-feature-expansion/f3-focus19-task493b6a2755de-02.json",
+        "uniquePassingFeatureCasesAcrossRuns": 9,
+        "caveat": "new secret-pagination regression fails19;9passing cases do not prove bootstrap confidentiality"
+      }
+    }
+  },
+  "closeDiagnosis": {
+    "19": "Close1008 received and server webSocketClose callback finishes, but native client remainsCLOSING at15seconds; cleanup terminates it",
+    "instrumented17": "five-second wrapper also remainedCLOSING; not proof of provider drift",
+    "originalUnwrapped17": {
+      "passed": 1,
+      "filtered": 6,
+      "durationMs": 10436,
+      "artifact": "/tmp/flarc-feature-expansion/root-raw-logout17-comparison.json"
+    },
+    "original19": "same original logout test times out20seconds",
+    "next": "No further close experiments needed; integrate F6",
+    "failedHypotheses": [
+      "auto-close compatibility flag alone: close-flag19-logout.json failed",
+      "delete settled delivery promises alone: delivery-release19-logout.json failed",
+      "additional inline verified close: f2-inline-close19-logout.json failed"
+    ],
+    "currentFinding": "Resolved by aligned256-byte push identifier admission; all8 original auth/revocation/hibernation controls passed20 unchanged."
+  },
+  "opaqueBootstrap": {
+    "regression": "f3-bootstrap-secret19-task493b6a2755de-01.json:1selected failed,10thcase reveals#hidden-private-099",
+    "fix": "server-only bootstrap_pages table, random64hex account-bound tokens,15minute/originalcursor expiry,64 peraccount, earliest recoverycursor preserved",
+    "runtime": "PASS frozen20 genuine secret paging, foreign token, expiry and overlap recovery tests",
+    "api": "root OpenAPI updated to pageToken/nextPageToken; no hidden-name cursor"
+  },
+  "featureSnapshot20": {
+    "bundle": "/tmp/flarc-matrix-run_01d0e4aeb274/server-20/index.mjs",
+    "sha256": "146c457c3dbb32b583db29b28e297b0c26fea79873d6cd24ff4be72e34d0efc6",
+    "sourceFiles": 456,
+    "bundleFiles": 136,
+    "manifest": "/tmp/flarc-feature-expansion/bundle-20.json",
+    "build": "PASS",
+    "typecheck": "PASS",
+    "focusedRuntime": "Root9 PASS; F3 ten PASS; F2 three PASS. Push-policy extension reproduces missing mentions enforcement; correction written, new bundle verification pending.",
+    "fullSuite": "NOT RUN",
+    "irctest": "NOT RUN"
+  },
+  "pushIdentifierFix": {
+    "cause": "generated membership ID140chars exceeded Accounts enqueue limit128, poisoning the front of the durable handoff queue and triggering5s retry alarms",
+    "before": "push-membership19-initial.json:1selected failed; encrypted DM notification never arrived after real channel creation",
+    "isolatedAfter": "push-id-limit19-delivery.json:1selected passed with only128->256 changed",
+    "lifecycleIsolation": "push-id-limit19-logout.json:original logout case passes10.606s with only128->256 changed",
+    "sourceFix": "shared MAX_REALTIME_EVENT_ID_LENGTH=256 used by journal schema and Accounts enqueue; no intent dropped",
+    "sourceTest": "webpush-delivery includes after-membership delivery plus independent SQLite handoff persistence assertions",
+    "productionAcceptance": "PASS actual20 encrypted DM after channel creation, independent SQLite accepted handoff and all8 original auth/revocation timeout cases"
+  },
+  "focused20Progress": {
+    "root": {
+      "passed": 9,
+      "failed": 0,
+      "nameFilteredPending": 29,
+      "artifact": "/tmp/flarc-feature-expansion/root-auth-push20-initial.json"
+    },
+    "sessions": {
+      "passed": 10,
+      "failed": 0,
+      "skipped": 0,
+      "filtered": 0,
+      "manifest": "/tmp/flarc-feature-expansion/f3-focus20-task493b6a2755de-01-manifest.json"
+    },
+    "channels": {
+      "passed": 3,
+      "failed": 0,
+      "artifact": "/tmp/flarc-feature-expansion/f2-targeted20-initial.json"
+    }
+  },
+  "pushPolicyFixes": {
+    "regressions": [
+      "Default mentions and queued preference changes ignored",
+      "Unsubscribe plus identical endpoint/keys re-registration revives queued notification",
+      "Old in-flight404 deletes replacement subscription"
+    ],
+    "source": "Accounts push-only preferences recheck immediately before fetch; atomic queue/subscription removal; current delivery-row checks and scoped stale response cleanup",
+    "bundle": "/tmp/flarc-feature-expansion/bundle-21-push.json",
+    "results": {
+      "passed": 13,
+      "failed": 0,
+      "skipped": 0,
+      "artifact": "/tmp/flarc-push-policy-730c04de-21.json"
+    },
+    "notClaimed": [
+      "External push provider behavior",
+      "Recall of a request already sent"
+    ]
+  },
+  "coordinator": "term_5ae5d2bf-24a5-4ac9-8404-4ad87d33f43c",
+  "featureSnapshot22": {
+    "bundle": "/tmp/flarc-matrix-run_01d0e4aeb274/server-22/index.mjs",
+    "sha256": "24ac544618a80dd1c8e8db5f2e9b5f84c351eda3af807c00d19659a7f258f323",
+    "sourceFiles": 472,
+    "manifest": "/tmp/flarc-feature-expansion/bundle-22.json",
+    "build": "PASS",
+    "typecheck": "PASS",
+    "fullSuite": "NOT RUN",
+    "irctest": "NOT RUN"
+  },
+  "focused22Progress": {
+    "schemaStartup": {
+      "passed": 2,
+      "failed": 0,
+      "artifact": "/tmp/flarc-feature-expansion/schema-startup22-initial.json",
+      "scope": "actual startup all3 complete Drizzle constraints/FTS layouts,IRC hibernation;production constructor repairs reconstructed legacy nullability preserving credentials/privacy/history/dependents"
+    },
+    "schemaHelpers": {
+      "passed": 4,
+      "failed": 0,
+      "artifact": "/tmp/flarc-feature-expansion/schema-integrated22.json"
+    },
+    "F6Initial": {
+      "passed": 1,
+      "failed": 7,
+      "skipped": 0,
+      "artifact": "/tmp/flarc-feature-expansion/f6-focus22-task3fa068005a47-01-manifest.json",
+      "cause": "five invalid active-runtime snapshot calls; two healthy OPEN no-frame waits reproduced alarm deadline overwrite race, correction assigned"
+    }
+  },
+  "featureSnapshot23": {
+    "bundle": "/tmp/flarc-matrix-run_01d0e4aeb274/server-23/index.mjs",
+    "sha256": "552ded51fd1ef8e34723dd073555a587c9048e126ffb40ac9c39b307b3806a72",
+    "sourceFiles": 475,
+    "build": "PASS",
+    "typecheck": "PASS",
+    "manifest": "/tmp/flarc-feature-expansion/bundle-23.json",
+    "fullSuite": "NOT RUN",
+    "irctest": "NOT RUN"
+  },
+  "focused23Progress": {
+    "F6": {
+      "passed": 6,
+      "failed": 2,
+      "artifact": "/tmp/flarc-feature-expansion/f6-focus23-task3fa068005a47-01-manifest.json",
+      "remaining": "idle reader expired alarm reschedule and physical close completion across nested edge upgrade;24corrections underway"
+    },
+    "apiContract": {
+      "passed": 2,
+      "failed": 0,
+      "artifact": "/tmp/flarc-feature-expansion/api-contract-v2-23.json"
+    }
+  },
+  "deploymentValidation": {
+    "context": "local OrbStack unix socket; no publishing or cluster apply",
+    "image": "flarc:audit-23",
+    "imageDigest": "sha256:5fbbfacd822c1045f2dbd3835d5adcbc6b49d6ea6b1929b98769dfa503b9e488",
+    "platform": "linux/amd64",
+    "build": "PASS",
+    "seed": "PASS real REST auth,secretchannel,TCPIRC,WebSocketv2delivery,outsider403",
+    "seedLog": "/tmp/flarc-feature-expansion/container-smoke23-seed.log",
+    "restart": "PASS persisted credentials/message,founder access,departed member403,authorized rejoin,outsider403",
+    "restartLog": "/tmp/flarc-feature-expansion/container-smoke23-restart-policy.log",
+    "schema": "PASS Accounts/Channel/centralSession/eventShard,all strict model constraints andFTS;provider metadata databases NOT APPLICABLE",
+    "schemaArtifact": "/tmp/flarc-feature-expansion/container-schema23-copy.json",
+    "initialFailures": [
+      "read-only mounted SQLite directory required writable consistent copy inclWAL/SHM; original source unchanged",
+      "restart probe ran before readiness; health wait added",
+      "smoke fixture assumed IRC membership survives disconnect; corrected to assert403 thenexplicitjoin"
+    ],
+    "cleanup": "owned disposable container and volume removed;image retained locally",
+    "currentSourceCaveat": "image23 predates ongoing24socket corrections andlatestcoverage/doc changes"
+  },
+  "apiLedgerProgress": {
+    "routeEntries": 206,
+    "nitroFiles": 110,
+    "adminAliasEntries": 96,
+    "openApiOperationsAtReview": 199,
+    "adminShapes": 48,
+    "status": "returned incomplete;44 new operation/alias mappings require exactassertionverification, not44remainingfeatures",
+    "artifact": "/tmp/flarc-api-expansion-818c3596-manifest.txt",
+    "next": "continue individualreview,addmissingoperationtests,restore strict zero-unresolvedguard;newlegacy/api/events addsoneoperation"
+  },
+  "featureSnapshot24": {
+    "bundle": "/tmp/flarc-matrix-run_01d0e4aeb274/server-24/index.mjs",
+    "sha256": "61cbfdb31204bbb2386a2702becf56800064fd65723bb5dd71c9ffc848daf163",
+    "sourceFiles": 477,
+    "build": "PASS",
+    "manifest": "/tmp/flarc-feature-expansion/bundle-24.json",
+    "focusedRuntime": "two formerly failing native event close cases dispatched,thenupdatedalias/admissioncase",
+    "fullSuite": "NOT RUN",
+    "irctest": "NOT RUN",
+    "typecheck": "PASS"
+  },
+  "pauseCheckpoint": {
+    "at": "2026-11-12T23:36:57.942090+00:00",
+    "reason": "User requested pause for the night",
+    "workersStopped": [
+      "ctx_51e7f86274fd",
+      "ctx_3b6b817f5809"
+    ],
+    "stopConfirmed": true,
+    "latestFrozenBundle": "/tmp/flarc-feature-expansion/bundle-24.json",
+    "latestF6Artifacts": [
+      "/tmp/flarc-feature-expansion/f6-close24-task3fa068005a47-01-before.json",
+      "/tmp/flarc-feature-expansion/f6-close24-task3fa068005a47-01.json",
+      "/tmp/flarc-feature-expansion/f6-close24-task3fa068005a47-01.log",
+      "/tmp/flarc-feature-expansion/f6-source24-corrections-manifest.json",
+      "/tmp/flarc-feature-expansion/f6-source24-final-diff.log",
+      "/tmp/flarc-feature-expansion/f6-source24-final-lint.log",
+      "/tmp/flarc-feature-expansion/f6-source24-final-typecheck.log",
+      "/tmp/flarc-feature-expansion/f6-source24-lint.log",
+      "/tmp/flarc-feature-expansion/f6-source24-typecheck.log"
+    ],
+    "resumeWork": [
+      "Review any completed24focusedclose/alias results before running anything",
+      "Finish exact API route/alias proof mappings and restore strict unresolved guard",
+      "Integrate final corrections, regenerate typed client/evidence, then one coordinated full suite and unchanged irctest",
+      "Repeat container smoke only if final production changes require it;23image already exercised"
+    ],
+    "constraints": [
+      "No additional work until user resumes",
+      "No commits,pushes,publishing or cluster deployment performed",
+      "All shared working-tree edits and earlier raw failures preserved",
+      "No full-suite or irctest run during the feature implementation phase"
+    ]
+  },
+  "resumedAt": "2026-11-13T08:19:53.839961+00:00",
+  "focused24Progress": {
+    "pausedAndIdle": {
+      "passed": 1,
+      "failed": 1,
+      "nameFiltered": 6,
+      "artifact": "/tmp/flarc-feature-expansion/f6-close24-task3fa068005a47-01.json",
+      "pass": "idle deadline",
+      "fail": "native paused socket received1008 but remainsCLOSING afterresume while independenthealthyedge socket persists"
+    }
+  },
+  "remainingConcreteAcceptanceGaps": [
+    "ADMIN-018 administrator other-account bot credential revocation test",
+    "ADMIN-029 exact actor ID audit assertion",
+    "SVC-016 service action audit implementation and real command tests",
+    "F6 one native paused-reader EOF correction and new relay bounds",
+    "Final combinedverification/reconciliation"
+  ],
+  "focused25Progress": {
+    "F6": "native paused reader PASS (actual EOF,healthy72ordered,outsiderprivacy,boundedoutput);publicoversize/rate/closedrelay PASS aftertestonlycursorquota refinement",
+    "report": "/tmp/flarc-feature-expansion/f6-final25-report.json",
+    "productionSourceDrift": [],
+    "firstRun": {
+      "passed": 1,
+      "failed": 1,
+      "filtered": 7
+    },
+    "finalInput": {
+      "passed": 1,
+      "failed": 0,
+      "filtered": 8
+    },
+    "retainedEvidence": "six23cases and idle24/updatedalias24 accepted,not re-summed as unique new tests"
+  },
+  "featureSnapshot26": {
+    "bundle": "/tmp/flarc-matrix-run_01d0e4aeb274/server-26/index.mjs",
+    "sha256": "9ae26ef2013d27c63d061c9b2ba87caa07375a67853529e869c9ab12dc4afaef",
+    "sourceFiles": 483,
+    "build": "PASS",
+    "typecheck": "PASS",
+    "lint": "PASS365files",
+    "manifest": "/tmp/flarc-feature-expansion/bundle-26.json",
+    "fullSuite": "RUNNING all83testfiles",
+    "irctest": "RUNNING originalpinnedselection,no modifications"
+  },
+  "combinedApplication26": {
+    "state": "COMPLETE FAILED",
+    "execSessionId": 62667,
+    "preflight": "/tmp/flarc-feature-expansion/application26-preflight.json",
+    "source": "/tmp/flarc-feature-expansion/source26-final",
+    "raw": "/tmp/flarc-feature-expansion/application26-initial.json",
+    "log": "/tmp/flarc-feature-expansion/application26-initial.log",
+    "testFiles": 83,
+    "workers": 4,
+    "filters": [],
+    "pass": 478,
+    "fail": 135,
+    "skip": 0,
+    "todo": 0,
+    "testFilesPassed": 53,
+    "testFilesFailed": 30,
+    "total": 613,
+    "durationSeconds": 362.04,
+    "failures": "/tmp/flarc-feature-expansion/application26-failures.json",
+    "bundleModuleDrift": []
+  },
+  "conformance26": {
+    "state": "COMPLETE FAILED",
+    "pass": 413,
+    "fail": 57,
+    "skip": 18,
+    "xfail": 0,
+    "xpass": 3,
+    "error": 0,
+    "warnings": 16,
+    "selected": 491,
+    "collectedBeforeMarkers": "not observed by xdist output",
+    "deselected": "not observed by xdist output",
+    "durationSeconds": 166.93,
+    "manifest": "/tmp/flarc-feature-expansion/conformance26-manifest.json"
+  },
+  "rootTriageRemaining": [
+    "admin metadata update500",
+    "media-chunks EPIPE underlyingruntimecause",
+    "other isolated profile/dm/archive assertions after sharedIRC/eventfixes",
+    "final evidence reconciliation after actualpassingcombinedrun"
+  ],
+  "finalEvidence": "docs/security/matrix-evidence/reconciliation-34.json"
+}

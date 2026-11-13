@@ -1,0 +1,941 @@
+{
+  "version": 2,
+  "command": "FLARC_TEST_BUNDLE=/tmp/flarc-matrix-run_01d0e4aeb274/server-04/index.mjs bunx vitest run --config /tmp/flarc-matrix-run_01d0e4aeb274/vitest.frozen.config.mts tests/security/matrix-services.test.ts --reporter=default --reporter=json --outputFile=/tmp/flarc-matrix-run_01d0e4aeb274/services-04c-results.json",
+  "counts": {
+    "pass": 6,
+    "fail": 1,
+    "skip": 0,
+    "xfail": 0,
+    "xpass": 0,
+    "deselected": 0
+  },
+  "baselineBundleSha256": "8faa527957fdb3fa7024565646648394f19da0a4a5d20b9cfa3b4f8e17e91213",
+  "executionManifest": "/tmp/flarc-matrix-run_01d0e4aeb274/services-04c-manifest.json",
+  "bugs": [
+    "SVC-007: live operator F DEOP removes founder +o and emits mode instead of denying."
+  ],
+  "limitations": [
+    "All rows are partial where required dimensions are not listed as asserted. Explicit manual registration with auto-registration disabled, registered nickname takeover while owner is offline, full service alias/rank matrix, unauthorized real-time event subscriptions, and independent restart checks remain gaps.",
+    "SVC-007 failed before its post-denial state and recipient checks; original 04 run captured the unauthorized mode and success notice."
+  ],
+  "evidence": [
+    {
+      "id": "SVC-001",
+      "kind": "test",
+      "executionId": "services-04c",
+      "bundleSha256": "8faa527957fdb3fa7024565646648394f19da0a4a5d20b9cfa3b4f8e17e91213",
+      "testFile": "tests/security/matrix-services.test.ts",
+      "testTitle": "matrix service authentication and identities SVC-001 SVC-004 SVC-014: pre-auth service commands and unregistered channel requests are denied",
+      "outcome": "PASS",
+      "scenarioScope": "Unauthenticated users cannot use privileged service commands.",
+      "rationale": "Focused evidence only; unasserted required dimensions and unexercised variants remain gaps.",
+      "assertionDetails": [
+        "Before authentication CS REGISTER, F OP and PRIVMSG ChanServ REGISTER return 451; authenticated founder control is registered."
+      ],
+      "transports": [
+        "IRC over WebSocket",
+        "stopped SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "commandBehavior": [
+        {
+          "command": "CS",
+          "outcome": "negative",
+          "actualCommand": "CS REGISTER #unregistered"
+        },
+        {
+          "command": "F",
+          "outcome": "negative",
+          "actualCommand": "F OP #unregistered guest"
+        },
+        {
+          "command": "PRIVMSG",
+          "outcome": "negative",
+          "actualCommand": "PRIVMSG ChanServ :REGISTER #unregistered"
+        }
+      ]
+    },
+    {
+      "id": "SVC-004",
+      "kind": "test",
+      "executionId": "services-04c",
+      "bundleSha256": "8faa527957fdb3fa7024565646648394f19da0a4a5d20b9cfa3b4f8e17e91213",
+      "testFile": "tests/security/matrix-services.test.ts",
+      "testTitle": "matrix service authentication and identities SVC-001 SVC-004 SVC-014: pre-auth service commands and unregistered channel requests are denied",
+      "outcome": "PASS",
+      "scenarioScope": "Channel registration requires the defined permissions and prerequisites.",
+      "rationale": "Focused evidence only; unasserted required dimensions and unexercised variants remain gaps.",
+      "assertionDetails": [
+        "Authenticated nonmember CS REGISTER is denied, joining a new channel auto-registers founder; stopped permissions contain only one founder grant."
+      ],
+      "transports": [
+        "IRC over WebSocket",
+        "stopped SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "commandBehavior": [
+        {
+          "command": "CS",
+          "outcome": "negative",
+          "actualCommand": "CS REGISTER #unregistered"
+        },
+        {
+          "command": "CS",
+          "outcome": "positive",
+          "actualCommand": "CS INFO #control"
+        }
+      ]
+    },
+    {
+      "id": "SVC-014",
+      "kind": "test",
+      "executionId": "services-04c",
+      "bundleSha256": "8faa527957fdb3fa7024565646648394f19da0a4a5d20b9cfa3b4f8e17e91213",
+      "testFile": "tests/security/matrix-services.test.ts",
+      "testTitle": "matrix service authentication and identities SVC-001 SVC-004 SVC-014: pre-auth service commands and unregistered channel requests are denied",
+      "outcome": "PASS",
+      "scenarioScope": "Unregistered channels do not receive unauthorized service-bot privileges.",
+      "rationale": "Focused evidence only; unasserted required dimensions and unexercised variants remain gaps.",
+      "assertionDetails": [
+        "F REQUESTBOT and CHANLEV on an unregistered channel are denied; stopped SQLite has no extra founder grant."
+      ],
+      "transports": [
+        "IRC over WebSocket",
+        "stopped SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "commandBehavior": [
+        {
+          "command": "F",
+          "outcome": "negative",
+          "actualCommand": "F REQUESTBOT #unregistered"
+        },
+        {
+          "command": "F",
+          "outcome": "negative",
+          "actualCommand": "F CHANLEV #unregistered alice +q"
+        }
+      ]
+    },
+    {
+      "id": "SVC-002",
+      "kind": "test",
+      "executionId": "services-04c",
+      "bundleSha256": "8faa527957fdb3fa7024565646648394f19da0a4a5d20b9cfa3b4f8e17e91213",
+      "testFile": "tests/security/matrix-services.test.ts",
+      "testTitle": "matrix service authentication and identities SVC-002 SVC-003 SVC-015: failed service identity changes and reserved nicknames cannot impersonate accounts or services",
+      "outcome": "PASS",
+      "scenarioScope": "Users cannot authenticate as another account with invalid credentials.",
+      "rationale": "Focused evidence only; unasserted required dimensions and unexercised variants remain gaps.",
+      "assertionDetails": [
+        "Wrong Alice password through NS, NickServ PRIVMSG and F AUTH is rejected; Bob remains unable to grant himself founder."
+      ],
+      "transports": [
+        "IRC over WebSocket",
+        "stopped SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "commandBehavior": [
+        {
+          "command": "NS",
+          "outcome": "negative",
+          "actualCommand": "NS IDENTIFY alice wrong-password"
+        },
+        {
+          "command": "PRIVMSG",
+          "outcome": "negative",
+          "actualCommand": "PRIVMSG NickServ :IDENTIFY alice wrong-password"
+        },
+        {
+          "command": "F",
+          "outcome": "negative",
+          "actualCommand": "F AUTH alice wrong-password"
+        }
+      ]
+    },
+    {
+      "id": "SVC-003",
+      "kind": "test",
+      "executionId": "services-04c",
+      "bundleSha256": "8faa527957fdb3fa7024565646648394f19da0a4a5d20b9cfa3b4f8e17e91213",
+      "testFile": "tests/security/matrix-services.test.ts",
+      "testTitle": "matrix service authentication and identities SVC-002 SVC-003 SVC-015: failed service identity changes and reserved nicknames cannot impersonate accounts or services",
+      "outcome": "PASS",
+      "scenarioScope": "Users cannot register another user's nickname.",
+      "rationale": "Focused evidence only; unasserted required dimensions and unexercised variants remain gaps.",
+      "assertionDetails": [
+        "Bob cannot take Alice\u2019s active nickname or drop her registration, but can group his own new nickname; admin read and stopped SQLite retain Alice\u2019s registration."
+      ],
+      "transports": [
+        "IRC over WebSocket",
+        "stopped SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "commandBehavior": [
+        {
+          "command": "NICK",
+          "outcome": "negative",
+          "actualCommand": "NICK alice"
+        },
+        {
+          "command": "NS",
+          "outcome": "negative",
+          "actualCommand": "NS DROP alice"
+        },
+        {
+          "command": "NS",
+          "outcome": "positive",
+          "actualCommand": "NS GROUP"
+        }
+      ]
+    },
+    {
+      "id": "SVC-015",
+      "kind": "test",
+      "executionId": "services-04c",
+      "bundleSha256": "8faa527957fdb3fa7024565646648394f19da0a4a5d20b9cfa3b4f8e17e91213",
+      "testFile": "tests/security/matrix-services.test.ts",
+      "testTitle": "matrix service authentication and identities SVC-002 SVC-003 SVC-015: failed service identity changes and reserved nicknames cannot impersonate accounts or services",
+      "outcome": "PASS",
+      "scenarioScope": "Service-bot identities cannot be spoofed by ordinary IRC clients.",
+      "rationale": "Focused evidence only; unasserted required dimensions and unexercised variants remain gaps.",
+      "assertionDetails": [
+        "Authenticated Bob is denied NICK NickServ, ChanServ, F, Q and FlareServ and can group his own nickname."
+      ],
+      "transports": [
+        "IRC over WebSocket",
+        "stopped SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "commandBehavior": [
+        {
+          "command": "NICK",
+          "outcome": "negative",
+          "actualCommand": "NICK NickServ"
+        },
+        {
+          "command": "NICK",
+          "outcome": "negative",
+          "actualCommand": "NICK ChanServ"
+        },
+        {
+          "command": "NICK",
+          "outcome": "negative",
+          "actualCommand": "NICK F"
+        },
+        {
+          "command": "NICK",
+          "outcome": "negative",
+          "actualCommand": "NICK Q"
+        },
+        {
+          "command": "NICK",
+          "outcome": "negative",
+          "actualCommand": "NICK FlareServ"
+        },
+        {
+          "command": "NICK",
+          "outcome": "positive",
+          "actualCommand": "NICK BobExtra"
+        }
+      ]
+    },
+    {
+      "id": "SVC-005",
+      "kind": "test",
+      "executionId": "services-04c",
+      "bundleSha256": "8faa527957fdb3fa7024565646648394f19da0a4a5d20b9cfa3b4f8e17e91213",
+      "testFile": "tests/security/matrix-services.test.ts",
+      "testTitle": "matrix F command authority SVC-005 SVC-006 SVC-008 SVC-009 SVC-010 SVC-011 SVC-017: grants and denials respect ranks and channel boundaries",
+      "outcome": "PASS",
+      "scenarioScope": "Ordinary members cannot request founder privileges from F.",
+      "rationale": "Focused evidence only; unasserted required dimensions and unexercised variants remain gaps.",
+      "assertionDetails": [
+        "Ordinary Bob is denied F CHANLEV self +q, including after a live +o grant."
+      ],
+      "transports": [
+        "IRC over WebSocket",
+        "stopped SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "commandBehavior": [
+        {
+          "command": "F",
+          "outcome": "negative",
+          "actualCommand": "F CHANLEV #service bob +q"
+        }
+      ]
+    },
+    {
+      "id": "SVC-006",
+      "kind": "test",
+      "executionId": "services-04c",
+      "bundleSha256": "8faa527957fdb3fa7024565646648394f19da0a4a5d20b9cfa3b4f8e17e91213",
+      "testFile": "tests/security/matrix-services.test.ts",
+      "testTitle": "matrix F command authority SVC-005 SVC-006 SVC-008 SVC-009 SVC-010 SVC-011 SVC-017: grants and denials respect ranks and channel boundaries",
+      "outcome": "PASS",
+      "scenarioScope": "F OP respects channel access lists.",
+      "rationale": "Focused evidence only; unasserted required dimensions and unexercised variants remain gaps.",
+      "assertionDetails": [
+        "Ordinary Bob cannot F OP himself; founder grants Bob live +o; Bob has no F OP authority in unrelated channel; target receives mode and outsider does not."
+      ],
+      "transports": [
+        "IRC over WebSocket",
+        "stopped SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "commandBehavior": [
+        {
+          "command": "F",
+          "outcome": "negative",
+          "actualCommand": "F OP #service bob"
+        },
+        {
+          "command": "F",
+          "outcome": "positive",
+          "actualCommand": "F OP #service bob"
+        },
+        {
+          "command": "F",
+          "outcome": "negative",
+          "actualCommand": "F OP #other bob"
+        }
+      ]
+    },
+    {
+      "id": "SVC-008",
+      "kind": "test",
+      "executionId": "services-04c",
+      "bundleSha256": "8faa527957fdb3fa7024565646648394f19da0a4a5d20b9cfa3b4f8e17e91213",
+      "testFile": "tests/security/matrix-services.test.ts",
+      "testTitle": "matrix F command authority SVC-005 SVC-006 SVC-008 SVC-009 SVC-010 SVC-011 SVC-017: grants and denials respect ranks and channel boundaries",
+      "outcome": "PASS",
+      "scenarioScope": "F VOICE and DEVOICE respect assigned privileges.",
+      "rationale": "Focused evidence only; unasserted required dimensions and unexercised variants remain gaps.",
+      "assertionDetails": [
+        "Ordinary Bob cannot F VOICE; after live op, Bob grants and removes Charlie voice; Charlie receives both modes and unrelated channel outsider receives no mode."
+      ],
+      "transports": [
+        "IRC over WebSocket",
+        "stopped SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "commandBehavior": [
+        {
+          "command": "F",
+          "outcome": "negative",
+          "actualCommand": "F VOICE #service bob"
+        },
+        {
+          "command": "F",
+          "outcome": "positive",
+          "actualCommand": "F VOICE #service charlie"
+        },
+        {
+          "command": "F",
+          "outcome": "positive",
+          "actualCommand": "F DEVOICE #service charlie"
+        },
+        {
+          "command": "F",
+          "outcome": "negative",
+          "actualCommand": "F DEVOICE #service charlie"
+        }
+      ]
+    },
+    {
+      "id": "SVC-009",
+      "kind": "test",
+      "executionId": "services-04c",
+      "bundleSha256": "8faa527957fdb3fa7024565646648394f19da0a4a5d20b9cfa3b4f8e17e91213",
+      "testFile": "tests/security/matrix-services.test.ts",
+      "testTitle": "matrix F command authority SVC-005 SVC-006 SVC-008 SVC-009 SVC-010 SVC-011 SVC-017: grants and denials respect ranks and channel boundaries",
+      "outcome": "PASS",
+      "scenarioScope": "F CHANLEV cannot assign permissions exceeding the actor's authority.",
+      "rationale": "Focused evidence only; unasserted required dimensions and unexercised variants remain gaps.",
+      "assertionDetails": [
+        "Bob cannot grant himself +q as member or live operator and cannot create a REST founder role; no Bob permission row exists after stop."
+      ],
+      "transports": [
+        "IRC over WebSocket",
+        "REST over HTTP",
+        "stopped SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "commandBehavior": [
+        {
+          "command": "F",
+          "outcome": "negative",
+          "actualCommand": "F CHANLEV #service bob +q"
+        }
+      ],
+      "routeBehavior": [
+        {
+          "route": "/api/v1/channels/{channel}/roles",
+          "method": "POST",
+          "alias": "/api/v1/channels/%23service/roles",
+          "outcome": "negative",
+          "responseKind": "secure-denial"
+        }
+      ]
+    },
+    {
+      "id": "SVC-017",
+      "kind": "test",
+      "executionId": "services-04c",
+      "bundleSha256": "8faa527957fdb3fa7024565646648394f19da0a4a5d20b9cfa3b4f8e17e91213",
+      "testFile": "tests/security/matrix-services.test.ts",
+      "testTitle": "matrix F command authority SVC-005 SVC-006 SVC-008 SVC-009 SVC-010 SVC-011 SVC-017: grants and denials respect ranks and channel boundaries",
+      "outcome": "PASS",
+      "scenarioScope": "A user with privileges in one channel cannot use them in another.",
+      "rationale": "Focused evidence only; unasserted required dimensions and unexercised variants remain gaps.",
+      "assertionDetails": [
+        "Bob gets live operator on #service but F OP on #other is denied; #other founder receives no +o for Bob."
+      ],
+      "transports": [
+        "IRC over WebSocket",
+        "stopped SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "commandBehavior": [
+        {
+          "command": "F",
+          "outcome": "positive",
+          "actualCommand": "F OP #service bob"
+        },
+        {
+          "command": "F",
+          "outcome": "negative",
+          "actualCommand": "F OP #other bob"
+        }
+      ]
+    },
+    {
+      "id": "SVC-010",
+      "kind": "test",
+      "executionId": "services-04c",
+      "bundleSha256": "8faa527957fdb3fa7024565646648394f19da0a4a5d20b9cfa3b4f8e17e91213",
+      "testFile": "tests/security/matrix-services.test.ts",
+      "testTitle": "matrix F command authority SVC-010 SVC-011: persistent F grants and REST authorization agree across aliases",
+      "outcome": "PASS",
+      "scenarioScope": "F cannot be used to bypass REST authorization.",
+      "rationale": "Focused evidence only; unasserted required dimensions and unexercised variants remain gaps.",
+      "assertionDetails": [
+        "Charlie cannot grant himself F access or patch channel info; founder grants Bob +o with PRIVMSG F, Bob can patch and FLARESERV VOICE, then F removes grant and both Q OP and PATCH are denied; independent read retains only authorized description and stopped ACL excludes Bob and Charlie."
+      ],
+      "transports": [
+        "IRC over WebSocket",
+        "REST over HTTP",
+        "stopped SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "commandBehavior": [
+        {
+          "command": "Q",
+          "outcome": "negative",
+          "actualCommand": "Q CHANLEV #grants charlie +o"
+        },
+        {
+          "command": "PRIVMSG",
+          "outcome": "positive",
+          "actualCommand": "PRIVMSG F :CHANLEV #grants bob +o"
+        },
+        {
+          "command": "FLARESERV",
+          "outcome": "positive",
+          "actualCommand": "FLARESERV VOICE #grants charlie"
+        },
+        {
+          "command": "F",
+          "outcome": "positive",
+          "actualCommand": "F CHANLEV #grants bob -o"
+        },
+        {
+          "command": "Q",
+          "outcome": "negative",
+          "actualCommand": "Q OP #grants charlie"
+        }
+      ],
+      "routeBehavior": [
+        {
+          "route": "/api/v1/channels/{channel}/info",
+          "method": "PATCH",
+          "alias": "/api/v1/channels/%23grants/info",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/api/v1/channels/{channel}/info",
+          "method": "PATCH",
+          "alias": "/api/v1/channels/%23grants/info",
+          "outcome": "negative",
+          "responseKind": "secure-denial"
+        }
+      ]
+    },
+    {
+      "id": "SVC-011",
+      "kind": "test",
+      "executionId": "services-04c",
+      "bundleSha256": "8faa527957fdb3fa7024565646648394f19da0a4a5d20b9cfa3b4f8e17e91213",
+      "testFile": "tests/security/matrix-services.test.ts",
+      "testTitle": "matrix F command authority SVC-010 SVC-011: persistent F grants and REST authorization agree across aliases",
+      "outcome": "PASS",
+      "scenarioScope": "REST cannot be used to bypass service-bot authorization.",
+      "rationale": "Focused evidence only; unasserted required dimensions and unexercised variants remain gaps.",
+      "assertionDetails": [
+        "Charlie cannot grant himself F access or patch channel info; founder grants Bob +o with PRIVMSG F, Bob can patch and FLARESERV VOICE, then F removes grant and both Q OP and PATCH are denied; independent read retains only authorized description and stopped ACL excludes Bob and Charlie."
+      ],
+      "transports": [
+        "IRC over WebSocket",
+        "REST over HTTP",
+        "stopped SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "commandBehavior": [
+        {
+          "command": "Q",
+          "outcome": "negative",
+          "actualCommand": "Q CHANLEV #grants charlie +o"
+        },
+        {
+          "command": "PRIVMSG",
+          "outcome": "positive",
+          "actualCommand": "PRIVMSG F :CHANLEV #grants bob +o"
+        },
+        {
+          "command": "FLARESERV",
+          "outcome": "positive",
+          "actualCommand": "FLARESERV VOICE #grants charlie"
+        },
+        {
+          "command": "F",
+          "outcome": "positive",
+          "actualCommand": "F CHANLEV #grants bob -o"
+        },
+        {
+          "command": "Q",
+          "outcome": "negative",
+          "actualCommand": "Q OP #grants charlie"
+        }
+      ],
+      "routeBehavior": [
+        {
+          "route": "/api/v1/channels/{channel}/info",
+          "method": "PATCH",
+          "alias": "/api/v1/channels/%23grants/info",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/api/v1/channels/{channel}/info",
+          "method": "PATCH",
+          "alias": "/api/v1/channels/%23grants/info",
+          "outcome": "negative",
+          "responseKind": "secure-denial"
+        }
+      ]
+    },
+    {
+      "id": "SVC-007",
+      "kind": "test",
+      "executionId": "services-04c",
+      "bundleSha256": "8faa527957fdb3fa7024565646648394f19da0a4a5d20b9cfa3b4f8e17e91213",
+      "testFile": "tests/security/matrix-services.test.ts",
+      "testTitle": "matrix F command authority SVC-007: F DEOP cannot strip a founder's operator mode",
+      "outcome": "FAIL",
+      "scenarioScope": "F DEOP respects hierarchy restrictions.",
+      "rationale": "Focused evidence only; unasserted required dimensions and unexercised variants remain gaps.",
+      "assertionDetails": [
+        "Founder grants Bob live operator; Bob F DEOP against founder must be denied. Actual reply says DEOP applied and MODE -o was observed in initial run; subsequent event assertion was not reached."
+      ],
+      "transports": [
+        "IRC over WebSocket",
+        "stopped SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "commandBehavior": [
+        {
+          "command": "F",
+          "outcome": "positive",
+          "actualCommand": "F OP #hierarchy bob"
+        },
+        {
+          "command": "F",
+          "outcome": "negative",
+          "actualCommand": "F DEOP #hierarchy alice"
+        }
+      ]
+    },
+    {
+      "id": "SVC-012",
+      "kind": "test",
+      "executionId": "services-04c",
+      "bundleSha256": "8faa527957fdb3fa7024565646648394f19da0a4a5d20b9cfa3b4f8e17e91213",
+      "testFile": "tests/security/matrix-services.test.ts",
+      "testTitle": "matrix F command authority SVC-012 SVC-013: persistent ChanServ access survives reconnect and removal revokes multiple devices",
+      "outcome": "PASS",
+      "scenarioScope": "ChanServ access assignments persist across reconnects.",
+      "rationale": "Focused evidence only; unasserted required dimensions and unexercised variants remain gaps.",
+      "assertionDetails": [
+        "CS AMODE +o Bob, restart workerd, reconnect both Bob devices, then Bob F VOICE succeeds and Charlie receives the mode."
+      ],
+      "transports": [
+        "IRC over WebSocket",
+        "stopped SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "events",
+        "transport",
+        "restart"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "commandBehavior": [
+        {
+          "command": "CS",
+          "outcome": "positive",
+          "actualCommand": "CS AMODE #persist +o bob"
+        },
+        {
+          "command": "F",
+          "outcome": "positive",
+          "actualCommand": "F VOICE #persist charlie"
+        }
+      ]
+    },
+    {
+      "id": "SVC-013",
+      "kind": "test",
+      "executionId": "services-04c",
+      "bundleSha256": "8faa527957fdb3fa7024565646648394f19da0a4a5d20b9cfa3b4f8e17e91213",
+      "testFile": "tests/security/matrix-services.test.ts",
+      "testTitle": "matrix F command authority SVC-012 SVC-013: persistent ChanServ access survives reconnect and removal revokes multiple devices",
+      "outcome": "PASS",
+      "scenarioScope": "Removing ChanServ access revokes effective privileges.",
+      "rationale": "Focused evidence only; unasserted required dimensions and unexercised variants remain gaps.",
+      "assertionDetails": [
+        "CS AMODE -o Bob after restart prevents F OP from both devices and Bob REST info PATCH returns 403; Charlie sees no +o and stopped SQLite lacks Bob grant while retaining Alice."
+      ],
+      "transports": [
+        "IRC over WebSocket",
+        "REST over HTTP",
+        "stopped SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "commandBehavior": [
+        {
+          "command": "CS",
+          "outcome": "positive",
+          "actualCommand": "CS AMODE #persist -o bob"
+        },
+        {
+          "command": "F",
+          "outcome": "negative",
+          "actualCommand": "F OP #persist charlie"
+        }
+      ],
+      "routeBehavior": [
+        {
+          "route": "/api/v1/channels/{channel}/info",
+          "method": "PATCH",
+          "alias": "/api/v1/channels/%23persist/info",
+          "outcome": "negative",
+          "responseKind": "secure-denial"
+        }
+      ]
+    },
+    {
+      "id": "SVC-009",
+      "kind": "test",
+      "executionId": "services-04c",
+      "bundleSha256": "8faa527957fdb3fa7024565646648394f19da0a4a5d20b9cfa3b4f8e17e91213",
+      "testFile": "tests/security/matrix-services.test.ts",
+      "testTitle": "matrix channel services SVC-009 SVC-017: ChanServ and F enforce rank ceilings and channel scope",
+      "outcome": "PASS",
+      "scenarioScope": "F CHANLEV cannot assign permissions exceeding the actor's authority.",
+      "rationale": "Focused evidence only; unasserted required dimensions and unexercised variants remain gaps.",
+      "assertionDetails": [
+        "Halfop cannot use F CHANLEV to promote himself to operator; founder grants higher modes as control."
+      ],
+      "transports": [
+        "IRC over WebSocket",
+        "stopped SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "commandBehavior": [
+        {
+          "command": "F",
+          "outcome": "negative",
+          "actualCommand": "F CHANLEV #roles bob +o"
+        },
+        {
+          "command": "CS",
+          "outcome": "positive",
+          "actualCommand": "CS AMODE #roles +o bob"
+        }
+      ]
+    },
+    {
+      "id": "SVC-017",
+      "kind": "test",
+      "executionId": "services-04c",
+      "bundleSha256": "8faa527957fdb3fa7024565646648394f19da0a4a5d20b9cfa3b4f8e17e91213",
+      "testFile": "tests/security/matrix-services.test.ts",
+      "testTitle": "matrix channel services SVC-009 SVC-017: ChanServ and F enforce rank ceilings and channel scope",
+      "outcome": "PASS",
+      "scenarioScope": "A user with privileges in one channel cannot use them in another.",
+      "rationale": "Focused evidence only; unasserted required dimensions and unexercised variants remain gaps.",
+      "assertionDetails": [
+        "Bob cannot CS OP in Charlie\u2019s channel, and Charlie sees no forged mode; Bob REST PATCH denied and independent read unchanged."
+      ],
+      "transports": [
+        "IRC over WebSocket",
+        "REST over HTTP",
+        "stopped SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "commandBehavior": [
+        {
+          "command": "CS",
+          "outcome": "negative",
+          "actualCommand": "CS OP #staff bob"
+        }
+      ],
+      "routeBehavior": [
+        {
+          "route": "/api/v1/channels/{channel}/info",
+          "method": "PATCH",
+          "alias": "/api/v1/channels/%23staff/info",
+          "outcome": "negative",
+          "responseKind": "secure-denial"
+        }
+      ]
+    },
+    {
+      "id": "SVC-016",
+      "kind": "disposition",
+      "outcome": "NOT IMPLEMENTED",
+      "scenarioScope": "Service actions produce the correct audit events.",
+      "rationale": "No durable or queryable service-action audit event facility was found; service notices and IRC MODE deliveries are not audit records.",
+      "basis": "Source inspection: server/protocol/irc/commands/services/{fbot,chanserv,nickserv}.ts and search for audit log/event/trail in server returned no audit implementation.",
+      "capability": "service action audit log"
+    }
+  ]
+}

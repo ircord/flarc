@@ -1,0 +1,759 @@
+{
+  "version": 2,
+  "evidence": [
+    {
+      "id": "SVC-005",
+      "kind": "test",
+      "executionId": "service-gaps-correction-09",
+      "bundleSha256": "5894497f55587e0e691458a6db9dad9472d93b36756e0bec50cdded299bf6446",
+      "testFile": "tests/security/matrix-service-gaps.test.ts",
+      "testTitle": "[SVC-005 SVC-006 SVC-007 SVC-008 SVC-009 SVC-010 SVC-011 SVC-013 SVC-017] F aliases enforce rank and persistent grant removal after recreation",
+      "outcome": "PASS",
+      "scenarioScope": "F rank and privilege observations with repeated ordinary-user denial after recreation.",
+      "rationale": "Actual frozen Worker SQLite with independent authenticated accounts and real IRC and REST entrypoints.",
+      "assertionDetails": [
+        "Real F OP, DEOP, VOICE and DEVOICE produce MODE; lower-rank requests and founder-target DEOP are denied, and founder/outsider IRC and event streams have public delivery barriers.",
+        "After recreation the ordinary member is again denied founder-rank or voice elevation, and unrelated channel grant and member grant absence are read from SQLite.",
+        "Founder creates a REST role and issues IRC MODE controls; an ordinary member is denied the corresponding privileged actions, including IRC MODE after recreation.",
+        "Exact successful aliases exercised are F OP, PRIVMSG F :DEOP, F VOICE and PRIVMSG F :DEVOICE; direct F CHANLEV and PRIVMSG F :CHANLEV are separately executed."
+      ],
+      "transports": [
+        "IRC",
+        "REST",
+        "events"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources",
+        "restart"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "SVC-007",
+      "kind": "test",
+      "executionId": "service-gaps-correction-09",
+      "bundleSha256": "5894497f55587e0e691458a6db9dad9472d93b36756e0bec50cdded299bf6446",
+      "testFile": "tests/security/matrix-service-gaps.test.ts",
+      "testTitle": "[SVC-005 SVC-006 SVC-007 SVC-008 SVC-009 SVC-010 SVC-011 SVC-013 SVC-017] F aliases enforce rank and persistent grant removal after recreation",
+      "outcome": "PASS",
+      "scenarioScope": "F rank ceiling, recipient observation and repeated founder-target DEOP denial after recreation.",
+      "rationale": "Actual frozen Worker SQLite with independent authenticated accounts and real IRC and REST entrypoints.",
+      "assertionDetails": [
+        "Real F OP, DEOP, VOICE and DEVOICE produce MODE; lower-rank requests and founder-target DEOP are denied, and founder/outsider IRC and event streams have public delivery barriers.",
+        "Founder privilege, unrelated channel grant and member grant absence are read from SQLite after recreation; the exact denied founder request was not repeated after recreation.",
+        "Founder creates a REST role and issues IRC MODE controls; an ordinary member is denied the corresponding privileged actions, including IRC MODE after recreation.",
+        "After recreation an independently authenticated channel administrator is denied F DEOP against the founder.",
+        "Exact successful aliases exercised are F OP, PRIVMSG F :DEOP, F VOICE and PRIVMSG F :DEVOICE; direct F CHANLEV and PRIVMSG F :CHANLEV are separately executed."
+      ],
+      "transports": [
+        "IRC",
+        "REST",
+        "events"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources",
+        "restart"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "SVC-008",
+      "kind": "test",
+      "executionId": "service-gaps-correction-09",
+      "bundleSha256": "5894497f55587e0e691458a6db9dad9472d93b36756e0bec50cdded299bf6446",
+      "testFile": "tests/security/matrix-service-gaps.test.ts",
+      "testTitle": "[SVC-005 SVC-006 SVC-007 SVC-008 SVC-009 SVC-010 SVC-011 SVC-013 SVC-017] F aliases enforce rank and persistent grant removal after recreation",
+      "outcome": "PASS",
+      "scenarioScope": "F rank and privilege observations with repeated ordinary-user denial after recreation.",
+      "rationale": "Actual frozen Worker SQLite with independent authenticated accounts and real IRC and REST entrypoints.",
+      "assertionDetails": [
+        "Real F OP, DEOP, VOICE and DEVOICE produce MODE; lower-rank requests and founder-target DEOP are denied, and founder/outsider IRC and event streams have public delivery barriers.",
+        "After recreation the ordinary member is again denied founder-rank or voice elevation, and unrelated channel grant and member grant absence are read from SQLite.",
+        "Founder creates a REST role and issues IRC MODE controls; an ordinary member is denied the corresponding privileged actions, including IRC MODE after recreation.",
+        "Exact successful aliases exercised are F OP, PRIVMSG F :DEOP, F VOICE and PRIVMSG F :DEVOICE; direct F CHANLEV and PRIVMSG F :CHANLEV are separately executed."
+      ],
+      "transports": [
+        "IRC",
+        "REST",
+        "events"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources",
+        "restart"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "SVC-006",
+      "kind": "test",
+      "executionId": "service-gaps-correction-09",
+      "bundleSha256": "5894497f55587e0e691458a6db9dad9472d93b36756e0bec50cdded299bf6446",
+      "testFile": "tests/security/matrix-service-gaps.test.ts",
+      "testTitle": "[SVC-005 SVC-006 SVC-007 SVC-008 SVC-009 SVC-010 SVC-011 SVC-013 SVC-017] F aliases enforce rank and persistent grant removal after recreation",
+      "outcome": "PASS",
+      "scenarioScope": "Direct F commands, IRC MODE and REST parity; single populated scenario.",
+      "rationale": "Actual frozen Worker SQLite with independent authenticated accounts and real IRC and REST entrypoints.",
+      "assertionDetails": [
+        "Founder F CHANLEV grants and removes an operator; real +a, +o, voice and cross-channel sentinel controls are present. Operator founder-rank and cross-channel attempts are denied without observer MODE or event output bounded by real message delivery.",
+        "After removal and recreation operator F/CHANLEV and REST info mutation are denied; founder can read prior authorized metadata and unrelated voice grant remains in SQLite.",
+        "Founder creates a REST role and issues IRC MODE controls; an ordinary member is denied the corresponding privileged actions, including IRC MODE after recreation.",
+        "Exact successful aliases exercised are F OP, PRIVMSG F :DEOP, F VOICE and PRIVMSG F :DEVOICE; direct F CHANLEV and PRIVMSG F :CHANLEV are separately executed."
+      ],
+      "transports": [
+        "IRC",
+        "REST",
+        "events"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "SVC-009",
+      "kind": "test",
+      "executionId": "service-gaps-correction-09",
+      "bundleSha256": "5894497f55587e0e691458a6db9dad9472d93b36756e0bec50cdded299bf6446",
+      "testFile": "tests/security/matrix-service-gaps.test.ts",
+      "testTitle": "[SVC-005 SVC-006 SVC-007 SVC-008 SVC-009 SVC-010 SVC-011 SVC-013 SVC-017] F aliases enforce rank and persistent grant removal after recreation",
+      "outcome": "PASS",
+      "scenarioScope": "Direct F commands, IRC MODE and REST parity; single populated scenario.",
+      "rationale": "Actual frozen Worker SQLite with independent authenticated accounts and real IRC and REST entrypoints.",
+      "assertionDetails": [
+        "Founder F CHANLEV grants and removes an operator; real +a, +o, voice and cross-channel sentinel controls are present. Operator founder-rank and cross-channel attempts are denied without observer MODE or event output bounded by real message delivery.",
+        "After removal and recreation operator F/CHANLEV and REST info mutation are denied; founder can read prior authorized metadata and unrelated voice grant remains in SQLite.",
+        "Founder creates a REST role and issues IRC MODE controls; an ordinary member is denied the corresponding privileged actions, including IRC MODE after recreation.",
+        "Exact successful aliases exercised are F OP, PRIVMSG F :DEOP, F VOICE and PRIVMSG F :DEVOICE; direct F CHANLEV and PRIVMSG F :CHANLEV are separately executed."
+      ],
+      "transports": [
+        "IRC",
+        "REST",
+        "events"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "SVC-010",
+      "kind": "test",
+      "executionId": "service-gaps-correction-09",
+      "bundleSha256": "5894497f55587e0e691458a6db9dad9472d93b36756e0bec50cdded299bf6446",
+      "testFile": "tests/security/matrix-service-gaps.test.ts",
+      "testTitle": "[SVC-005 SVC-006 SVC-007 SVC-008 SVC-009 SVC-010 SVC-011 SVC-013 SVC-017] F aliases enforce rank and persistent grant removal after recreation",
+      "outcome": "PASS",
+      "scenarioScope": "Direct F commands, IRC MODE and REST parity; single populated scenario.",
+      "rationale": "Actual frozen Worker SQLite with independent authenticated accounts and real IRC and REST entrypoints.",
+      "assertionDetails": [
+        "Founder F CHANLEV grants and removes an operator; real +a, +o, voice and cross-channel sentinel controls are present. Operator founder-rank and cross-channel attempts are denied without observer MODE or event output bounded by real message delivery.",
+        "After removal and recreation operator F/CHANLEV and REST info mutation are denied; founder can read prior authorized metadata and unrelated voice grant remains in SQLite.",
+        "Founder creates a REST role and issues IRC MODE controls; an ordinary member is denied the corresponding privileged actions, including IRC MODE after recreation.",
+        "Exact successful aliases exercised are F OP, PRIVMSG F :DEOP, F VOICE and PRIVMSG F :DEVOICE; direct F CHANLEV and PRIVMSG F :CHANLEV are separately executed."
+      ],
+      "transports": [
+        "IRC",
+        "REST",
+        "events"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "SVC-017",
+      "kind": "test",
+      "executionId": "service-gaps-correction-09",
+      "bundleSha256": "5894497f55587e0e691458a6db9dad9472d93b36756e0bec50cdded299bf6446",
+      "testFile": "tests/security/matrix-service-gaps.test.ts",
+      "testTitle": "[SVC-005 SVC-006 SVC-007 SVC-008 SVC-009 SVC-010 SVC-011 SVC-013 SVC-017] F aliases enforce rank and persistent grant removal after recreation",
+      "outcome": "PASS",
+      "scenarioScope": "Direct F commands, IRC MODE and REST parity; single populated scenario.",
+      "rationale": "Actual frozen Worker SQLite with independent authenticated accounts and real IRC and REST entrypoints.",
+      "assertionDetails": [
+        "Founder F CHANLEV grants and removes an operator; real +a, +o, voice and cross-channel sentinel controls are present. Operator founder-rank and cross-channel attempts are denied without observer MODE or event output bounded by real message delivery.",
+        "After removal and recreation operator F/CHANLEV and REST info mutation are denied; founder can read prior authorized metadata and unrelated voice grant remains in SQLite.",
+        "Founder creates a REST role and issues IRC MODE controls; an ordinary member is denied the corresponding privileged actions, including IRC MODE after recreation.",
+        "Exact successful aliases exercised are F OP, PRIVMSG F :DEOP, F VOICE and PRIVMSG F :DEVOICE; direct F CHANLEV and PRIVMSG F :CHANLEV are separately executed."
+      ],
+      "transports": [
+        "IRC",
+        "REST",
+        "events"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "SVC-011",
+      "kind": "test",
+      "executionId": "service-gaps-correction-09",
+      "bundleSha256": "5894497f55587e0e691458a6db9dad9472d93b36756e0bec50cdded299bf6446",
+      "testFile": "tests/security/matrix-service-gaps.test.ts",
+      "testTitle": "[SVC-005 SVC-006 SVC-007 SVC-008 SVC-009 SVC-010 SVC-011 SVC-013 SVC-017] F aliases enforce rank and persistent grant removal after recreation",
+      "outcome": "PASS",
+      "scenarioScope": "Immediate service and REST controls; this test does not repeat the exact REST role-create request after recreation.",
+      "rationale": "Actual frozen Worker SQLite with independent authenticated accounts and real IRC and REST entrypoints.",
+      "assertionDetails": [
+        "Ordinary REST role creation and F privilege requests are denied; ChanServ grant/removal changes immediate F and REST authority.",
+        "Runtime recreation after ChanServ removal preserves REST/F denials, the admin grant, founder resource and independent channel grant.",
+        "Founder creates a REST role and issues IRC MODE controls; an ordinary member is denied the corresponding privileged actions, including IRC MODE after recreation.",
+        "Exact successful aliases exercised are F OP, PRIVMSG F :DEOP, F VOICE and PRIVMSG F :DEVOICE; direct F CHANLEV and PRIVMSG F :CHANLEV are separately executed."
+      ],
+      "transports": [
+        "IRC",
+        "REST",
+        "events"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "SVC-013",
+      "kind": "test",
+      "executionId": "service-gaps-correction-09",
+      "bundleSha256": "5894497f55587e0e691458a6db9dad9472d93b36756e0bec50cdded299bf6446",
+      "testFile": "tests/security/matrix-service-gaps.test.ts",
+      "testTitle": "[SVC-005 SVC-006 SVC-007 SVC-008 SVC-009 SVC-010 SVC-011 SVC-013 SVC-017] F aliases enforce rank and persistent grant removal after recreation",
+      "outcome": "PASS",
+      "scenarioScope": "Immediate service and REST controls; this test does not repeat the exact REST role-create request after recreation.",
+      "rationale": "Actual frozen Worker SQLite with independent authenticated accounts and real IRC and REST entrypoints.",
+      "assertionDetails": [
+        "Ordinary REST role creation and F privilege requests are denied; ChanServ grant/removal changes immediate F and REST authority.",
+        "Runtime recreation after ChanServ removal preserves REST/F denials, the admin grant, founder resource and independent channel grant.",
+        "Founder creates a REST role and issues IRC MODE controls; an ordinary member is denied the corresponding privileged actions, including IRC MODE after recreation.",
+        "Exact successful aliases exercised are F OP, PRIVMSG F :DEOP, F VOICE and PRIVMSG F :DEVOICE; direct F CHANLEV and PRIVMSG F :CHANLEV are separately executed."
+      ],
+      "transports": [
+        "IRC",
+        "REST",
+        "events"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "SVC-010",
+      "kind": "test",
+      "executionId": "service-gaps-correction-09",
+      "bundleSha256": "5894497f55587e0e691458a6db9dad9472d93b36756e0bec50cdded299bf6446",
+      "testFile": "tests/security/matrix-service-gaps.test.ts",
+      "testTitle": "[SVC-010 SVC-011 SVC-012 SVC-013] actual F and ChanServ persistent removals survive independent recreations",
+      "outcome": "PASS",
+      "scenarioScope": "Separate recreations after each F and ChanServ grant and removal.",
+      "rationale": "Actual frozen Worker SQLite with independent authenticated accounts and real IRC and REST entrypoints.",
+      "assertionDetails": [
+        "For both actual F CHANLEV and CS AMODE, real grants persist through recreation and authorized F and REST controls, then removal immediately rejects F OP, REST info PATCH and REST role creation.",
+        "Each immediate and post-recreation denial has its own IRC and event subscriber window bounded by real positive message barriers; no misleading MODE or events are observed.",
+        "Independent read-only SQLite reads compare exact channel_permissions rows in #grants and #sentinel immediately before and after every denial, preserve sentinel across transitions, and confirm the granted state and removed baseline across independent runtime recreations."
+      ],
+      "transports": [
+        "IRC",
+        "REST",
+        "events"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "SVC-011",
+      "kind": "test",
+      "executionId": "service-gaps-correction-09",
+      "bundleSha256": "5894497f55587e0e691458a6db9dad9472d93b36756e0bec50cdded299bf6446",
+      "testFile": "tests/security/matrix-service-gaps.test.ts",
+      "testTitle": "[SVC-010 SVC-011 SVC-012 SVC-013] actual F and ChanServ persistent removals survive independent recreations",
+      "outcome": "PASS",
+      "scenarioScope": "Separate recreations after each F and ChanServ grant and removal.",
+      "rationale": "Actual frozen Worker SQLite with independent authenticated accounts and real IRC and REST entrypoints.",
+      "assertionDetails": [
+        "For both actual F CHANLEV and CS AMODE, real grants persist through recreation and authorized F and REST controls, then removal immediately rejects F OP, REST info PATCH and REST role creation.",
+        "Each immediate and post-recreation denial has its own IRC and event subscriber window bounded by real positive message barriers; no misleading MODE or events are observed.",
+        "Independent read-only SQLite reads compare exact channel_permissions rows in #grants and #sentinel immediately before and after every denial, preserve sentinel across transitions, and confirm the granted state and removed baseline across independent runtime recreations."
+      ],
+      "transports": [
+        "IRC",
+        "REST",
+        "events"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "SVC-013",
+      "kind": "test",
+      "executionId": "service-gaps-correction-09",
+      "bundleSha256": "5894497f55587e0e691458a6db9dad9472d93b36756e0bec50cdded299bf6446",
+      "testFile": "tests/security/matrix-service-gaps.test.ts",
+      "testTitle": "[SVC-010 SVC-011 SVC-012 SVC-013] actual F and ChanServ persistent removals survive independent recreations",
+      "outcome": "PASS",
+      "scenarioScope": "Separate recreations after each F and ChanServ grant and removal.",
+      "rationale": "Actual frozen Worker SQLite with independent authenticated accounts and real IRC and REST entrypoints.",
+      "assertionDetails": [
+        "For both actual F CHANLEV and CS AMODE, real grants persist through recreation and authorized F and REST controls, then removal immediately rejects F OP, REST info PATCH and REST role creation.",
+        "Each immediate and post-recreation denial has its own IRC and event subscriber window bounded by real positive message barriers; no misleading MODE or events are observed.",
+        "Independent read-only SQLite reads compare exact channel_permissions rows in #grants and #sentinel immediately before and after every denial, preserve sentinel across transitions, and confirm the granted state and removed baseline across independent runtime recreations."
+      ],
+      "transports": [
+        "IRC",
+        "REST",
+        "events"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "SVC-012",
+      "kind": "test",
+      "executionId": "service-gaps-correction-09",
+      "bundleSha256": "5894497f55587e0e691458a6db9dad9472d93b36756e0bec50cdded299bf6446",
+      "testFile": "tests/security/matrix-service-gaps.test.ts",
+      "testTitle": "[SVC-010 SVC-011 SVC-012 SVC-013] actual F and ChanServ persistent removals survive independent recreations",
+      "outcome": "PASS",
+      "scenarioScope": "Separate recreations after each F and ChanServ grant and removal.",
+      "rationale": "Actual frozen Worker SQLite with independent authenticated accounts and real IRC and REST entrypoints.",
+      "assertionDetails": [
+        "For both actual F CHANLEV and CS AMODE, real grants persist through recreation and authorized F and REST controls, then removal immediately rejects F OP, REST info PATCH and REST role creation.",
+        "Each immediate and post-recreation denial has its own IRC and event subscriber window bounded by real positive message barriers; no misleading MODE or events are observed.",
+        "Independent read-only SQLite reads compare exact channel_permissions rows in #grants and #sentinel immediately before and after every denial, preserve sentinel across transitions, and confirm the granted state and removed baseline across independent runtime recreations."
+      ],
+      "transports": [
+        "IRC",
+        "REST",
+        "events"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "SVC-001",
+      "kind": "test",
+      "executionId": "service-gaps-correction-09",
+      "bundleSha256": "5894497f55587e0e691458a6db9dad9472d93b36756e0bec50cdded299bf6446",
+      "testFile": "tests/security/matrix-service-gaps.test.ts",
+      "testTitle": "[SVC-001 SVC-002 SVC-003 SVC-004 SVC-014 SVC-015] service authentication and identity gates retain independent grants after restart",
+      "outcome": "PASS",
+      "scenarioScope": "Independent service authentication, selected negative controls and their post-recreation repetition.",
+      "rationale": "Actual frozen Worker SQLite with independent authenticated accounts and real IRC and REST entrypoints.",
+      "assertionDetails": [
+        "Unauthenticated service commands, invalid NickServ/F authentication, reserved service nicknames, dropping Alice nickname and unauthorized registration are rejected.",
+        "Founder unregisters and reregisters; member cannot register unregistered channel, and a real F JOIN provides a positive control. A forged F prefix is delivered with Bob identity.",
+        "IRC and event observers have message barriers around denial sequence; final SQLite verifies account nick ownership and independent channel grant.",
+        "After recreation a fresh guest and separately authenticated Bob repeat the corresponding selected authentication, identity and registration denials."
+      ],
+      "transports": [
+        "IRC",
+        "REST",
+        "events"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources",
+        "restart"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "SVC-002",
+      "kind": "test",
+      "executionId": "service-gaps-correction-09",
+      "bundleSha256": "5894497f55587e0e691458a6db9dad9472d93b36756e0bec50cdded299bf6446",
+      "testFile": "tests/security/matrix-service-gaps.test.ts",
+      "testTitle": "[SVC-001 SVC-002 SVC-003 SVC-004 SVC-014 SVC-015] service authentication and identity gates retain independent grants after restart",
+      "outcome": "PASS",
+      "scenarioScope": "Independent service authentication, selected negative controls and their post-recreation repetition.",
+      "rationale": "Actual frozen Worker SQLite with independent authenticated accounts and real IRC and REST entrypoints.",
+      "assertionDetails": [
+        "Real F AUTH with Bob own password succeeds, while F AUTH alice with the wrong password and NickServ invalid credential attempts fail; the F invalid request repeats after recreation.",
+        "Independent account nickname ownership and unrelated grants persist; denial recipient windows have IRC and event barriers."
+      ],
+      "transports": [
+        "IRC",
+        "REST",
+        "events"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources",
+        "restart"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "SVC-003",
+      "kind": "test",
+      "executionId": "service-gaps-correction-09",
+      "bundleSha256": "5894497f55587e0e691458a6db9dad9472d93b36756e0bec50cdded299bf6446",
+      "testFile": "tests/security/matrix-service-gaps.test.ts",
+      "testTitle": "[SVC-001 SVC-002 SVC-003 SVC-004 SVC-014 SVC-015] service authentication and identity gates retain independent grants after restart",
+      "outcome": "PASS",
+      "scenarioScope": "Actual NickServ grouping and account registration attempts against another account nickname.",
+      "rationale": "Actual frozen Worker SQLite with independent authenticated accounts and real IRC and REST entrypoints.",
+      "assertionDetails": [
+        "Bob successfully groups his own BobExtra nickname; NICK alice is rejected as belonging to Alice, NS GROUP alice acts on BobExtra rather than transferring Alice, and unauthorized NS SAREGISTER alice is rejected.",
+        "An IRC and event denial window surrounds the attack; after recreation Bob repeats the nickname, grouping and registration attacks, and SQLite identifies Alice as owner of alice and Bob as owner of bob and bobextra.",
+        "No claim that GROUP accepts a target: its argument is ignored, and the authenticated current nickname is the actual target."
+      ],
+      "transports": [
+        "IRC",
+        "REST",
+        "events"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources",
+        "restart"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "SVC-004",
+      "kind": "test",
+      "executionId": "service-gaps-correction-09",
+      "bundleSha256": "5894497f55587e0e691458a6db9dad9472d93b36756e0bec50cdded299bf6446",
+      "testFile": "tests/security/matrix-service-gaps.test.ts",
+      "testTitle": "[SVC-001 SVC-002 SVC-003 SVC-004 SVC-014 SVC-015] service authentication and identity gates retain independent grants after restart",
+      "outcome": "PASS",
+      "scenarioScope": "Selected pre-authentication, registration and source-identity checks; specific denial repetition after recreation remains incomplete.",
+      "rationale": "Actual frozen Worker SQLite with independent authenticated accounts and real IRC and REST entrypoints.",
+      "assertionDetails": [
+        "Unauthenticated service commands, invalid NickServ/F authentication, reserved service nicknames, dropping Alice nickname and unauthorized registration are rejected.",
+        "Founder unregisters and reregisters; member cannot register unregistered channel, and a real F JOIN provides a positive control. A forged F prefix is delivered with Bob identity.",
+        "IRC and event observers have message barriers around denial sequence; final SQLite verifies account nick ownership and independent channel grant.",
+        "After recreation a fresh guest and separately authenticated Bob repeat the corresponding selected authentication, identity and registration denials.",
+        "The unregistered-channel registration denial is repeated inside the bounded IRC and event recipient observation window."
+      ],
+      "transports": [
+        "IRC",
+        "REST",
+        "events"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "unrelatedResources",
+        "restart",
+        "events"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "SVC-015",
+      "kind": "test",
+      "executionId": "service-gaps-correction-09",
+      "bundleSha256": "5894497f55587e0e691458a6db9dad9472d93b36756e0bec50cdded299bf6446",
+      "testFile": "tests/security/matrix-service-gaps.test.ts",
+      "testTitle": "[SVC-001 SVC-002 SVC-003 SVC-004 SVC-014 SVC-015] service authentication and identity gates retain independent grants after restart",
+      "outcome": "PASS",
+      "scenarioScope": "Selected pre-authentication, registration and source-identity checks; specific denial repetition after recreation remains incomplete.",
+      "rationale": "Actual frozen Worker SQLite with independent authenticated accounts and real IRC and REST entrypoints.",
+      "assertionDetails": [
+        "Unauthenticated service commands, invalid NickServ/F authentication, reserved service nicknames, dropping Alice nickname and unauthorized registration are rejected.",
+        "Founder unregisters and reregisters; member cannot register unregistered channel, and a real F JOIN provides a positive control. A forged F prefix is delivered with Bob identity.",
+        "IRC and event observers have message barriers around denial sequence; final SQLite verifies account nick ownership and independent channel grant.",
+        "After recreation a fresh guest and separately authenticated Bob repeat the corresponding selected authentication, identity and registration denials."
+      ],
+      "transports": [
+        "IRC",
+        "REST",
+        "events"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources",
+        "restart"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "SVC-014",
+      "kind": "test",
+      "executionId": "service-gaps-correction-09",
+      "bundleSha256": "5894497f55587e0e691458a6db9dad9472d93b36756e0bec50cdded299bf6446",
+      "testFile": "tests/security/matrix-service-gaps.test.ts",
+      "testTitle": "[SVC-001 SVC-002 SVC-003 SVC-004 SVC-014 SVC-015] service authentication and identity gates retain independent grants after restart",
+      "outcome": "PASS",
+      "scenarioScope": "Service requests against unregistered channels and authorized registered-channel control.",
+      "rationale": "Actual frozen Worker SQLite with independent authenticated accounts and real IRC and REST entrypoints.",
+      "assertionDetails": [
+        "F REQUESTBOT, CHANLEV and OP against an unregistered channel are denied, while a founder REQUESTBOT on a registered channel emits an observed F JOIN.",
+        "An independent IRC/event observation window surrounds a repeated unregistered REQUESTBOT denial, which is retried after recreation; SQLite retains an unrelated channel grant."
+      ],
+      "transports": [
+        "IRC",
+        "REST",
+        "events"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "SVC-016",
+      "kind": "disposition",
+      "outcome": "NOT IMPLEMENTED",
+      "scenarioScope": "Durable service action audit events",
+      "rationale": "Queryable durable service-action auditing is not implemented; IRC notices and mode broadcasts are not audit records.",
+      "basis": "Existing source review of fbot, chanserv and nickserv handlers and audit inventory in applicability-review.json."
+    },
+    {
+      "id": "SVC-012",
+      "kind": "test",
+      "executionId": "service-gaps-correction-09",
+      "bundleSha256": "5894497f55587e0e691458a6db9dad9472d93b36756e0bec50cdded299bf6446",
+      "testFile": "tests/security/matrix-service-gaps.test.ts",
+      "testTitle": "[SVC-005 SVC-006 SVC-007 SVC-008 SVC-009 SVC-010 SVC-011 SVC-013 SVC-017] F aliases enforce rank and persistent grant removal after recreation",
+      "outcome": "PASS",
+      "scenarioScope": "Positive ChanServ grant MODE delivery with IRC/event stream liveness control.",
+      "rationale": "Actual frozen Worker SQLite with independent authenticated accounts and real IRC and REST entrypoints.",
+      "assertionDetails": [
+        "A real CS AMODE +o grant emits MODE to an independent IRC member; both event subscribers and IRC observers subsequently receive the live message barrier.",
+        "Persistence of the granted authority across recreation is supported by the separate exact test in this evidence.",
+        "Exact successful aliases exercised are F OP, PRIVMSG F :DEOP, F VOICE and PRIVMSG F :DEVOICE; direct F CHANLEV and PRIVMSG F :CHANLEV are separately executed."
+      ],
+      "transports": [
+        "IRC",
+        "REST",
+        "events"
+      ],
+      "assertions": [
+        "events",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    }
+  ]
+}

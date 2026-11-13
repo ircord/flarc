@@ -5,6 +5,7 @@ import { encodeIRCMessage } from "~/protocol/irc/encoder";
 import { Numerics } from "~/protocol/irc/numerics";
 import { canonicalizeIRCName } from "~/protocol/irc/parser";
 import type { ISessionDO } from "../types";
+import { serviceAudit, serviceAuditActor, serviceAudited } from "./audit";
 import { sendServiceResponse } from "./helpers";
 
 export async function handleFBot(
@@ -17,6 +18,63 @@ export async function handleFBot(
   const parts = rawText.trim().split(/\s+/).filter(Boolean);
   const cmd = (parts[0] ?? "HELP").toUpperCase();
   const args = parts.slice(1);
+  const actor = await serviceAuditActor(session, attachment);
+  const mutating =
+    ["REQUESTBOT", "UNREQUESTBOT", "OP", "DEOP", "VOICE", "DEVOICE", "CHANLEV", "WELCOME"].includes(
+      cmd,
+    ) &&
+    (cmd !== "CHANLEV" || Boolean(args[2]));
+  const isChannelCommand = [
+    "REQUESTBOT",
+    "UNREQUESTBOT",
+    "OP",
+    "DEOP",
+    "VOICE",
+    "DEVOICE",
+    "CHANLEV",
+    "WELCOME",
+    "STATUS",
+  ].includes(cmd);
+  const requestedChannel =
+    isChannelCommand && args[0]
+      ? args[0].startsWith("#") || args[0].startsWith("&")
+        ? args[0]
+        : `#${args[0]}`
+      : undefined;
+  const bound = requestedChannel
+    ? session
+        .getSessionChannels(attachment.sessionId)
+        .find((row) => row.canonicalChannel === canonicalizeIRCName(requestedChannel))
+    : undefined;
+  const expectedGeneration = requestedChannel
+    ? ((bound as { generation?: string } | undefined)?.generation ??
+      (await session.getChannelStub(requestedChannel).getExistingChannelGeneration()) ??
+      undefined)
+    : undefined;
+  if (
+    requestedChannel &&
+    attachment.authenticated &&
+    !(await session
+      .getAccountsStub()
+      .authorizeAccountActor(
+        attachment.userId,
+        attachment.credentialVersion ?? 0,
+        cmd === "STATUS" ? "channel.read" : "channel.manage",
+        canonicalizeIRCName(requestedChannel),
+      ))
+  ) {
+    if (mutating)
+      await serviceAudit(
+        session,
+        actor,
+        `service.f.${cmd.toLowerCase()}` as any,
+        "channel",
+        requestedChannel ?? args[0] ?? "",
+        "denied",
+      );
+    sendServiceResponse(session, ws, attachment, "F", ["Channel access denied"], labelTags);
+    return;
+  }
   if (
     args[0]?.startsWith("#") &&
     !(await session.getChannelStub(args[0]).canReadAccount({
@@ -25,6 +83,15 @@ export async function handleFBot(
       isAdmin: attachment.isOper,
     }))
   ) {
+    if (mutating)
+      await serviceAudit(
+        session,
+        actor,
+        `service.f.${cmd.toLowerCase()}` as any,
+        "channel",
+        requestedChannel ?? args[0] ?? "",
+        "denied",
+      );
     sendServiceResponse(session, ws, attachment, "F", ["Channel access denied"], labelTags);
     return;
   }
@@ -195,6 +262,7 @@ export async function handleFBot(
     const chanStub = session.getChannelStub(channelName);
     const chanInfo = await chanStub.csInfo(channelName);
     if (!chanInfo.registered) {
+      await serviceAudit(session, actor, "service.f.requestbot", "channel", channelName, "denied");
       sendServiceResponse(
         session,
         ws,
@@ -215,6 +283,14 @@ export async function handleFBot(
         canonicalizeIRCName(attachment.accountName) === canonicalizeIRCName(chanInfo.founder),
     );
     if (!attachment.isOper && !isOwner && !hasChannelOp(caller?.modes ?? "", false)) {
+      await serviceAudit(
+        session,
+        actor,
+        `service.f.${cmd.toLowerCase()}` as any,
+        "channel",
+        channelName,
+        "denied",
+      );
       sendServiceResponse(
         session,
         ws,
@@ -226,7 +302,15 @@ export async function handleFBot(
       return;
     }
 
-    await chanStub.setBotConfig({ enabled: true });
+    await serviceAudited(
+      session,
+      actor,
+      "service.f.requestbot",
+      "channel",
+      channelName,
+      () => chanStub.setBotConfig({ enabled: true }, expectedGeneration),
+      () => true,
+    );
     const botPrefix = `F!services@${SERVER_CONFIG.serverName}`;
     for (const m of members) {
       if (m.sessionId.startsWith("service:")) continue;
@@ -279,6 +363,14 @@ export async function handleFBot(
         canonicalizeIRCName(attachment.accountName) === canonicalizeIRCName(chanInfo.founder),
     );
     if (!attachment.isOper && !isOwner && !hasChannelOp(caller?.modes ?? "", false)) {
+      await serviceAudit(
+        session,
+        actor,
+        `service.f.${cmd.toLowerCase()}` as any,
+        "channel",
+        channelName,
+        "denied",
+      );
       sendServiceResponse(
         session,
         ws,
@@ -290,7 +382,15 @@ export async function handleFBot(
       return;
     }
 
-    await chanStub.setBotConfig({ enabled: false });
+    await serviceAudited(
+      session,
+      actor,
+      "service.f.unrequestbot",
+      "channel",
+      channelName,
+      () => chanStub.setBotConfig({ enabled: false }, expectedGeneration),
+      () => true,
+    );
     const botPrefix = `F!services@${SERVER_CONFIG.serverName}`;
     for (const m of members) {
       if (m.sessionId.startsWith("service:")) continue;
@@ -335,6 +435,14 @@ export async function handleFBot(
         canonicalizeIRCName(attachment.accountName) === canonicalizeIRCName(chanInfo.founder),
     );
     if (!attachment.isOper && !isOwner && !hasChannelOp(caller?.modes ?? "", false)) {
+      await serviceAudit(
+        session,
+        actor,
+        `service.f.${cmd.toLowerCase()}` as any,
+        "channel",
+        channelName,
+        "denied",
+      );
       sendServiceResponse(
         session,
         ws,
@@ -348,14 +456,28 @@ export async function handleFBot(
 
     const modeFlag = cmd === "OP" || cmd === "DEOP" ? "o" : "v";
     const add = cmd === "OP" || cmd === "VOICE";
-    const modRes = await chanStub.setMemberModes({
+    const modRes = await serviceAudited(
+      session,
+      actor,
+      `service.f.${cmd.toLowerCase()}` as
+        | "service.f.op"
+        | "service.f.deop"
+        | "service.f.voice"
+        | "service.f.devoice",
+      "channel",
       channelName,
-      actorSessionId: attachment.sessionId,
-      targetNick,
-      add,
-      mode: modeFlag,
-      isOper: attachment.isOper || isOwner,
-    });
+      () =>
+        chanStub.setMemberModes({
+          channelName,
+          expectedGeneration,
+          actorSessionId: attachment.sessionId,
+          targetNick,
+          add,
+          mode: modeFlag,
+          isOper: attachment.isOper || isOwner,
+        }),
+      (result) => result.ok,
+    );
 
     if (!modRes.ok) {
       sendServiceResponse(
@@ -413,6 +535,7 @@ export async function handleFBot(
     if (args.length === 1) {
       const res = await chanStub.csAmode({
         channelName,
+        expectedGeneration,
         actorSessionId: attachment.sessionId,
         actorUserId: attachment.userId,
         actorAccount: attachment.accountName,
@@ -439,16 +562,38 @@ export async function handleFBot(
         }
       }
     }
-    const res = await chanStub.csAmode({
-      channelName,
-      actorSessionId: attachment.sessionId,
-      actorUserId: attachment.userId,
-      actorAccount: attachment.accountName,
-      modeChange: flags,
-      targetAccount: resolvedAccount,
-      targetUserId,
-      isOper: attachment.isOper,
-    });
+    const res = flags
+      ? await serviceAudited(
+          session,
+          actor,
+          "service.f.chanlev",
+          "channel",
+          channelName,
+          () =>
+            chanStub.csAmode({
+              channelName,
+              expectedGeneration,
+              actorSessionId: attachment.sessionId,
+              actorUserId: attachment.userId,
+              actorAccount: attachment.accountName,
+              modeChange: flags,
+              targetAccount: resolvedAccount,
+              targetUserId,
+              isOper: attachment.isOper,
+            }),
+          (result) => result.ok,
+        )
+      : await chanStub.csAmode({
+          channelName,
+          expectedGeneration,
+          actorSessionId: attachment.sessionId,
+          actorUserId: attachment.userId,
+          actorAccount: attachment.accountName,
+          modeChange: flags,
+          targetAccount: resolvedAccount,
+          targetUserId,
+          isOper: attachment.isOper,
+        });
     sendServiceResponse(session, ws, attachment, "F", res.lines, labelTags);
     return;
   }
@@ -477,6 +622,14 @@ export async function handleFBot(
         canonicalizeIRCName(attachment.accountName) === canonicalizeIRCName(chanInfo.founder),
     );
     if (!attachment.isOper && !isOwner && !hasChannelOp(caller?.modes ?? "", false)) {
+      await serviceAudit(
+        session,
+        actor,
+        `service.f.${cmd.toLowerCase()}` as any,
+        "channel",
+        channelName,
+        "denied",
+      );
       sendServiceResponse(
         session,
         ws,
@@ -490,7 +643,15 @@ export async function handleFBot(
 
     const welcomeMsg = args.slice(1).join(" ");
     if (!welcomeMsg || welcomeMsg.toUpperCase() === "CLEAR" || welcomeMsg.toUpperCase() === "OFF") {
-      await chanStub.setBotConfig({ welcomeMessage: null });
+      await serviceAudited(
+        session,
+        actor,
+        "service.f.welcome",
+        "channel",
+        channelName,
+        () => chanStub.setBotConfig({ welcomeMessage: null }, expectedGeneration),
+        () => true,
+      );
       sendServiceResponse(
         session,
         ws,
@@ -500,7 +661,15 @@ export async function handleFBot(
         labelTags,
       );
     } else {
-      await chanStub.setBotConfig({ welcomeMessage: welcomeMsg });
+      await serviceAudited(
+        session,
+        actor,
+        "service.f.welcome",
+        "channel",
+        channelName,
+        () => chanStub.setBotConfig({ welcomeMessage: welcomeMsg }, expectedGeneration),
+        () => true,
+      );
       sendServiceResponse(
         session,
         ws,

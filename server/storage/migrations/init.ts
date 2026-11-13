@@ -110,6 +110,12 @@ export function initAccountsStorage(sql: SqlStorage): void {
       data BLOB NOT NULL,
       created_at INTEGER NOT NULL
     );
+    CREATE TABLE IF NOT EXISTS media_upload_chunks (
+      media_id TEXT NOT NULL REFERENCES media_uploads(id) ON DELETE CASCADE,
+      chunk_index INTEGER NOT NULL,
+      data BLOB NOT NULL,
+      PRIMARY KEY (media_id, chunk_index)
+    );
   `);
 
   const safeAlterations = [

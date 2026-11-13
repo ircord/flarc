@@ -373,6 +373,7 @@ describe("IRCord Edit Protocol, FTS5 Search & Incoming Webhooks", () => {
     const outListRes = await request(`${url.origin}/api/v1/channels/%23alerts/outgoing-webhooks`, {
       headers: { Authorization: `Bearer ${ADMIN_TOKEN}` },
     });
+    expect(outListRes.status).toBe(200);
     const outListData = (await outListRes.json()) as any;
     expect(outListData.ok).toBe(true);
     expect(outListData.webhooks.some((w: any) => w.id === hookId)).toBe(true);

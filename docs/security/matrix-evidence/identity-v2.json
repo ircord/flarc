@@ -1,0 +1,1155 @@
+{
+  "version": 2,
+  "evidence": [
+    {
+      "id": "AUTH-005",
+      "kind": "test",
+      "executionId": "identity-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-identity.test.ts",
+      "testTitle": "matrix identity AUTH-005 AUTH-006 AUTH-007 AUTH-011 AUTH-012 AUTH-013 AUTH-022: independent credentials and device logout",
+      "outcome": "PASS",
+      "scenarioScope": "Independent login credentials and logout of only the selected session.",
+      "rationale": "Only the listed source-verified assertions are credited; all other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "Second login has a distinct token but the same account ID; Alice and Bob account IDs differ.",
+        "Wrong-password and unknown-user login each return 401 and no token field.",
+        "Logging out Alice\u2019s first session returns 200; that token gets 401 on profile read while her second token and Bob\u2019s token still get 200."
+      ],
+      "transports": [
+        "REST"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "AUTH-006",
+      "kind": "test",
+      "executionId": "identity-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-identity.test.ts",
+      "testTitle": "matrix identity AUTH-005 AUTH-006 AUTH-007 AUTH-011 AUTH-012 AUTH-013 AUTH-022: independent credentials and device logout",
+      "outcome": "PASS",
+      "scenarioScope": "Independent login credentials and logout of only the selected session.",
+      "rationale": "Only the listed source-verified assertions are credited; all other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "Second login has a distinct token but the same account ID; Alice and Bob account IDs differ.",
+        "Wrong-password and unknown-user login each return 401 and no token field.",
+        "Logging out Alice\u2019s first session returns 200; that token gets 401 on profile read while her second token and Bob\u2019s token still get 200."
+      ],
+      "transports": [
+        "REST"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "AUTH-007",
+      "kind": "test",
+      "executionId": "identity-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-identity.test.ts",
+      "testTitle": "matrix identity AUTH-005 AUTH-006 AUTH-007 AUTH-011 AUTH-012 AUTH-013 AUTH-022: independent credentials and device logout",
+      "outcome": "PASS",
+      "scenarioScope": "Independent login credentials and logout of only the selected session.",
+      "rationale": "Only the listed source-verified assertions are credited; all other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "Second login has a distinct token but the same account ID; Alice and Bob account IDs differ.",
+        "Wrong-password and unknown-user login each return 401 and no token field.",
+        "Logging out Alice\u2019s first session returns 200; that token gets 401 on profile read while her second token and Bob\u2019s token still get 200."
+      ],
+      "transports": [
+        "REST"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "AUTH-011",
+      "kind": "test",
+      "executionId": "identity-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-identity.test.ts",
+      "testTitle": "matrix identity AUTH-005 AUTH-006 AUTH-007 AUTH-011 AUTH-012 AUTH-013 AUTH-022: independent credentials and device logout",
+      "outcome": "PASS",
+      "scenarioScope": "Independent login credentials and logout of only the selected session.",
+      "rationale": "Only the listed source-verified assertions are credited; all other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "Second login has a distinct token but the same account ID; Alice and Bob account IDs differ.",
+        "Wrong-password and unknown-user login each return 401 and no token field.",
+        "Logging out Alice\u2019s first session returns 200; that token gets 401 on profile read while her second token and Bob\u2019s token still get 200."
+      ],
+      "transports": [
+        "REST"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "AUTH-012",
+      "kind": "test",
+      "executionId": "identity-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-identity.test.ts",
+      "testTitle": "matrix identity AUTH-005 AUTH-006 AUTH-007 AUTH-011 AUTH-012 AUTH-013 AUTH-022: independent credentials and device logout",
+      "outcome": "PASS",
+      "scenarioScope": "Independent login credentials and logout of only the selected session.",
+      "rationale": "Only the listed source-verified assertions are credited; all other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "Second login has a distinct token but the same account ID; Alice and Bob account IDs differ.",
+        "Wrong-password and unknown-user login each return 401 and no token field.",
+        "Logging out Alice\u2019s first session returns 200; that token gets 401 on profile read while her second token and Bob\u2019s token still get 200."
+      ],
+      "transports": [
+        "REST"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "AUTH-013",
+      "kind": "test",
+      "executionId": "identity-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-identity.test.ts",
+      "testTitle": "matrix identity AUTH-005 AUTH-006 AUTH-007 AUTH-011 AUTH-012 AUTH-013 AUTH-022: independent credentials and device logout",
+      "outcome": "PASS",
+      "scenarioScope": "Independent login credentials and logout of only the selected session.",
+      "rationale": "Only the listed source-verified assertions are credited; all other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "Second login has a distinct token but the same account ID; Alice and Bob account IDs differ.",
+        "Wrong-password and unknown-user login each return 401 and no token field.",
+        "Logging out Alice\u2019s first session returns 200; that token gets 401 on profile read while her second token and Bob\u2019s token still get 200."
+      ],
+      "transports": [
+        "REST"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "AUTH-022",
+      "kind": "test",
+      "executionId": "identity-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-identity.test.ts",
+      "testTitle": "matrix identity AUTH-005 AUTH-006 AUTH-007 AUTH-011 AUTH-012 AUTH-013 AUTH-022: independent credentials and device logout",
+      "outcome": "PASS",
+      "scenarioScope": "Independent login credentials and logout of only the selected session.",
+      "rationale": "Only the listed source-verified assertions are credited; all other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "Second login has a distinct token but the same account ID; Alice and Bob account IDs differ.",
+        "Wrong-password and unknown-user login each return 401 and no token field.",
+        "Logging out Alice\u2019s first session returns 200; that token gets 401 on profile read while her second token and Bob\u2019s token still get 200."
+      ],
+      "transports": [
+        "REST"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "USER-001",
+      "kind": "test",
+      "executionId": "identity-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-identity.test.ts",
+      "testTitle": "matrix identity USER-001 USER-002 USER-003 USER-004 USER-005 USER-006 USER-012 USER-013 USER-014: profile path and body identity are bound to session",
+      "outcome": "PASS",
+      "scenarioScope": "Profile path/body identity binding, protected fields and persisted state.",
+      "rationale": "Only the listed source-verified assertions are credited; all other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "Bob establishes a profile baseline; Alice PATCH to Bob\u2019s profile with conflicting query, body username and x-user header returns 403 and Bob remains unchanged.",
+        "Alice own-profile PATCH succeeds despite a body username and privileged role fields; readback contains the requested display name and not admin role.",
+        "Bob remains unchanged; Alice is denied admin account listing while root is allowed.",
+        "After stopping the runtime, user_metadata contains the authorized Alice and Bob values and excludes the denied value."
+      ],
+      "transports": [
+        "REST",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "USER-002",
+      "kind": "test",
+      "executionId": "identity-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-identity.test.ts",
+      "testTitle": "matrix identity USER-001 USER-002 USER-003 USER-004 USER-005 USER-006 USER-012 USER-013 USER-014: profile path and body identity are bound to session",
+      "outcome": "PASS",
+      "scenarioScope": "Profile path/body identity binding, protected fields and persisted state.",
+      "rationale": "Only the listed source-verified assertions are credited; all other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "Bob establishes a profile baseline; Alice PATCH to Bob\u2019s profile with conflicting query, body username and x-user header returns 403 and Bob remains unchanged.",
+        "Alice own-profile PATCH succeeds despite a body username and privileged role fields; readback contains the requested display name and not admin role.",
+        "Bob remains unchanged; Alice is denied admin account listing while root is allowed.",
+        "After stopping the runtime, user_metadata contains the authorized Alice and Bob values and excludes the denied value."
+      ],
+      "transports": [
+        "REST",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "USER-003",
+      "kind": "test",
+      "executionId": "identity-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-identity.test.ts",
+      "testTitle": "matrix identity USER-001 USER-002 USER-003 USER-004 USER-005 USER-006 USER-012 USER-013 USER-014: profile path and body identity are bound to session",
+      "outcome": "PASS",
+      "scenarioScope": "Profile path/body identity binding, protected fields and persisted state.",
+      "rationale": "Only the listed source-verified assertions are credited; all other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "Bob establishes a profile baseline; Alice PATCH to Bob\u2019s profile with conflicting query, body username and x-user header returns 403 and Bob remains unchanged.",
+        "Alice own-profile PATCH succeeds despite a body username and privileged role fields; readback contains the requested display name and not admin role.",
+        "Bob remains unchanged; Alice is denied admin account listing while root is allowed.",
+        "After stopping the runtime, user_metadata contains the authorized Alice and Bob values and excludes the denied value."
+      ],
+      "transports": [
+        "REST",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "USER-004",
+      "kind": "test",
+      "executionId": "identity-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-identity.test.ts",
+      "testTitle": "matrix identity USER-001 USER-002 USER-003 USER-004 USER-005 USER-006 USER-012 USER-013 USER-014: profile path and body identity are bound to session",
+      "outcome": "PASS",
+      "scenarioScope": "Profile path/body identity binding, protected fields and persisted state.",
+      "rationale": "Only the listed source-verified assertions are credited; all other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "Bob establishes a profile baseline; Alice PATCH to Bob\u2019s profile with conflicting query, body username and x-user header returns 403 and Bob remains unchanged.",
+        "Alice own-profile PATCH succeeds despite a body username and privileged role fields; readback contains the requested display name and not admin role.",
+        "Bob remains unchanged; Alice is denied admin account listing while root is allowed.",
+        "After stopping the runtime, user_metadata contains the authorized Alice and Bob values and excludes the denied value."
+      ],
+      "transports": [
+        "REST",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "USER-005",
+      "kind": "test",
+      "executionId": "identity-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-identity.test.ts",
+      "testTitle": "matrix identity USER-001 USER-002 USER-003 USER-004 USER-005 USER-006 USER-012 USER-013 USER-014: profile path and body identity are bound to session",
+      "outcome": "PASS",
+      "scenarioScope": "Profile path/body identity binding, protected fields and persisted state.",
+      "rationale": "Only the listed source-verified assertions are credited; all other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "Bob establishes a profile baseline; Alice PATCH to Bob\u2019s profile with conflicting query, body username and x-user header returns 403 and Bob remains unchanged.",
+        "Alice own-profile PATCH succeeds despite a body username and privileged role fields; readback contains the requested display name and not admin role.",
+        "Bob remains unchanged; Alice is denied admin account listing while root is allowed.",
+        "After stopping the runtime, user_metadata contains the authorized Alice and Bob values and excludes the denied value."
+      ],
+      "transports": [
+        "REST",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "USER-006",
+      "kind": "test",
+      "executionId": "identity-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-identity.test.ts",
+      "testTitle": "matrix identity USER-001 USER-002 USER-003 USER-004 USER-005 USER-006 USER-012 USER-013 USER-014: profile path and body identity are bound to session",
+      "outcome": "PASS",
+      "scenarioScope": "Profile path/body identity binding, protected fields and persisted state.",
+      "rationale": "Only the listed source-verified assertions are credited; all other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "Bob establishes a profile baseline; Alice PATCH to Bob\u2019s profile with conflicting query, body username and x-user header returns 403 and Bob remains unchanged.",
+        "Alice own-profile PATCH succeeds despite a body username and privileged role fields; readback contains the requested display name and not admin role.",
+        "Bob remains unchanged; Alice is denied admin account listing while root is allowed.",
+        "After stopping the runtime, user_metadata contains the authorized Alice and Bob values and excludes the denied value."
+      ],
+      "transports": [
+        "REST",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "USER-012",
+      "kind": "test",
+      "executionId": "identity-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-identity.test.ts",
+      "testTitle": "matrix identity USER-001 USER-002 USER-003 USER-004 USER-005 USER-006 USER-012 USER-013 USER-014: profile path and body identity are bound to session",
+      "outcome": "PASS",
+      "scenarioScope": "Profile path/body identity binding, protected fields and persisted state.",
+      "rationale": "Only the listed source-verified assertions are credited; all other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "Bob establishes a profile baseline; Alice PATCH to Bob\u2019s profile with conflicting query, body username and x-user header returns 403 and Bob remains unchanged.",
+        "Alice own-profile PATCH succeeds despite a body username and privileged role fields; readback contains the requested display name and not admin role.",
+        "Bob remains unchanged; Alice is denied admin account listing while root is allowed.",
+        "After stopping the runtime, user_metadata contains the authorized Alice and Bob values and excludes the denied value."
+      ],
+      "transports": [
+        "REST",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "USER-013",
+      "kind": "test",
+      "executionId": "identity-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-identity.test.ts",
+      "testTitle": "matrix identity USER-001 USER-002 USER-003 USER-004 USER-005 USER-006 USER-012 USER-013 USER-014: profile path and body identity are bound to session",
+      "outcome": "PASS",
+      "scenarioScope": "Profile path/body identity binding, protected fields and persisted state.",
+      "rationale": "Only the listed source-verified assertions are credited; all other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "Bob establishes a profile baseline; Alice PATCH to Bob\u2019s profile with conflicting query, body username and x-user header returns 403 and Bob remains unchanged.",
+        "Alice own-profile PATCH succeeds despite a body username and privileged role fields; readback contains the requested display name and not admin role.",
+        "Bob remains unchanged; Alice is denied admin account listing while root is allowed.",
+        "After stopping the runtime, user_metadata contains the authorized Alice and Bob values and excludes the denied value."
+      ],
+      "transports": [
+        "REST",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "USER-014",
+      "kind": "test",
+      "executionId": "identity-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-identity.test.ts",
+      "testTitle": "matrix identity USER-001 USER-002 USER-003 USER-004 USER-005 USER-006 USER-012 USER-013 USER-014: profile path and body identity are bound to session",
+      "outcome": "PASS",
+      "scenarioScope": "Profile path/body identity binding, protected fields and persisted state.",
+      "rationale": "Only the listed source-verified assertions are credited; all other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "Bob establishes a profile baseline; Alice PATCH to Bob\u2019s profile with conflicting query, body username and x-user header returns 403 and Bob remains unchanged.",
+        "Alice own-profile PATCH succeeds despite a body username and privileged role fields; readback contains the requested display name and not admin role.",
+        "Bob remains unchanged; Alice is denied admin account listing while root is allowed.",
+        "After stopping the runtime, user_metadata contains the authorized Alice and Bob values and excludes the denied value."
+      ],
+      "transports": [
+        "REST",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "AUTH-008",
+      "kind": "test",
+      "executionId": "identity-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-identity.test.ts",
+      "testTitle": "matrix identity AUTH-008 AUTH-024 AUTH-025: disable revokes both devices and reenable does not revive them",
+      "outcome": "PASS",
+      "scenarioScope": "Disabled-account denial and revocation of two existing sessions.",
+      "rationale": "Only the listed source-verified assertions are credited; all other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "Admin disable returns 200; a new login and profile reads using both existing Alice tokens return 401.",
+        "Admin reenable returns 200; both old tokens remain 401, a new login succeeds, and Bob profile remains accessible."
+      ],
+      "transports": [
+        "REST"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "AUTH-024",
+      "kind": "test",
+      "executionId": "identity-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-identity.test.ts",
+      "testTitle": "matrix identity AUTH-008 AUTH-024 AUTH-025: disable revokes both devices and reenable does not revive them",
+      "outcome": "PASS",
+      "scenarioScope": "Disabled-account denial and revocation of two existing sessions.",
+      "rationale": "Only the listed source-verified assertions are credited; all other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "Admin disable returns 200; a new login and profile reads using both existing Alice tokens return 401.",
+        "Admin reenable returns 200; both old tokens remain 401, a new login succeeds, and Bob profile remains accessible."
+      ],
+      "transports": [
+        "REST"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "AUTH-025",
+      "kind": "test",
+      "executionId": "identity-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-identity.test.ts",
+      "testTitle": "matrix identity AUTH-008 AUTH-024 AUTH-025: disable revokes both devices and reenable does not revive them",
+      "outcome": "PASS",
+      "scenarioScope": "Disabled-account denial and revocation of two existing sessions.",
+      "rationale": "Only the listed source-verified assertions are credited; all other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "Admin disable returns 200; a new login and profile reads using both existing Alice tokens return 401.",
+        "Admin reenable returns 200; both old tokens remain 401, a new login succeeds, and Bob profile remains accessible."
+      ],
+      "transports": [
+        "REST"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "USER-010",
+      "kind": "test",
+      "executionId": "identity-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-identity.test.ts",
+      "testTitle": "matrix isolated identity substitution USER-010 USER-011: NickServ groups and drops only the authenticated account's nicknames",
+      "outcome": "PASS",
+      "scenarioScope": "NickServ nickname grouping and drop ownership.",
+      "rationale": "Only the listed source-verified assertions are credited; all other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "Alice groups AliceExtra and successfully drops it; her attempt to drop Bob nickname fails and NICK bob returns numeric 433.",
+        "Admin readback and stopped-runtime registered_nicks SQLite show Bob nickname retained and AliceExtra removed."
+      ],
+      "transports": [
+        "IRC",
+        "REST",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "commandBehavior": [
+        {
+          "command": "NICK",
+          "outcome": "positive"
+        },
+        {
+          "command": "NS",
+          "outcome": "positive"
+        }
+      ]
+    },
+    {
+      "id": "USER-011",
+      "kind": "test",
+      "executionId": "identity-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-identity.test.ts",
+      "testTitle": "matrix isolated identity substitution USER-010 USER-011: NickServ groups and drops only the authenticated account's nicknames",
+      "outcome": "PASS",
+      "scenarioScope": "NickServ nickname grouping and drop ownership.",
+      "rationale": "Only the listed source-verified assertions are credited; all other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "Alice groups AliceExtra and successfully drops it; her attempt to drop Bob nickname fails and NICK bob returns numeric 433.",
+        "Admin readback and stopped-runtime registered_nicks SQLite show Bob nickname retained and AliceExtra removed."
+      ],
+      "transports": [
+        "IRC",
+        "REST",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "commandBehavior": [
+        {
+          "command": "NICK",
+          "outcome": "positive"
+        },
+        {
+          "command": "NS",
+          "outcome": "positive"
+        }
+      ]
+    },
+    {
+      "id": "AUTH-014",
+      "kind": "test",
+      "executionId": "identity-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-identity.test.ts",
+      "testTitle": "matrix authentication transports AUTH-014 AUTH-015: NickServ and SASL resolve the REST account principal",
+      "outcome": "PASS",
+      "scenarioScope": "NickServ IDENTIFY and SASL PLAIN principal binding.",
+      "rationale": "Only the listed source-verified assertions are credited; all other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "Bob IRC connection identifies as Alice using NickServ and receives numeric 900 for Alice.",
+        "Separate SASL PLAIN connection receives numeric 900 and 903 for Alice, registers and joins a secret channel.",
+        "REST-authenticated Alice can read that channel while Bob receives 403."
+      ],
+      "transports": [
+        "IRC",
+        "SASL",
+        "REST"
+      ],
+      "assertions": [
+        "authorization",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "commandBehavior": [
+        {
+          "command": "NS",
+          "outcome": "positive"
+        },
+        {
+          "command": "AUTHENTICATE",
+          "outcome": "positive"
+        },
+        {
+          "command": "CAP",
+          "outcome": "positive"
+        },
+        {
+          "command": "NICK",
+          "outcome": "positive"
+        },
+        {
+          "command": "USER",
+          "outcome": "positive"
+        },
+        {
+          "command": "JOIN",
+          "outcome": "positive"
+        },
+        {
+          "command": "MODE",
+          "outcome": "positive"
+        }
+      ]
+    },
+    {
+      "id": "AUTH-015",
+      "kind": "test",
+      "executionId": "identity-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-identity.test.ts",
+      "testTitle": "matrix authentication transports AUTH-014 AUTH-015: NickServ and SASL resolve the REST account principal",
+      "outcome": "PASS",
+      "scenarioScope": "NickServ IDENTIFY and SASL PLAIN principal binding.",
+      "rationale": "Only the listed source-verified assertions are credited; all other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "Bob IRC connection identifies as Alice using NickServ and receives numeric 900 for Alice.",
+        "Separate SASL PLAIN connection receives numeric 900 and 903 for Alice, registers and joins a secret channel.",
+        "REST-authenticated Alice can read that channel while Bob receives 403."
+      ],
+      "transports": [
+        "IRC",
+        "SASL",
+        "REST"
+      ],
+      "assertions": [
+        "authorization",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "commandBehavior": [
+        {
+          "command": "NS",
+          "outcome": "positive"
+        },
+        {
+          "command": "AUTHENTICATE",
+          "outcome": "positive"
+        },
+        {
+          "command": "CAP",
+          "outcome": "positive"
+        },
+        {
+          "command": "NICK",
+          "outcome": "positive"
+        },
+        {
+          "command": "USER",
+          "outcome": "positive"
+        },
+        {
+          "command": "JOIN",
+          "outcome": "positive"
+        },
+        {
+          "command": "MODE",
+          "outcome": "positive"
+        }
+      ]
+    },
+    {
+      "id": "AUTH-023",
+      "kind": "test",
+      "executionId": "identity-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-identity.test.ts",
+      "testTitle": "matrix authentication transports AUTH-023: NickServ self password change revokes other devices without changing another account",
+      "outcome": "PASS",
+      "scenarioScope": "NickServ self password change revokes old devices.",
+      "rationale": "Only the listed source-verified assertions are credited; all other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "After NS PASSWD, IRC connection closes; both old REST sessions and old password receive 401.",
+        "New password authenticates to Alice same account ID while Bob original credentials still resolve to Bob."
+      ],
+      "transports": [
+        "IRC",
+        "REST"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "commandBehavior": [
+        {
+          "command": "NS",
+          "outcome": "positive"
+        }
+      ]
+    },
+    {
+      "id": "AUTH-010",
+      "kind": "test",
+      "executionId": "identity-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-identity.test.ts",
+      "testTitle": "matrix expired and unauthenticated access AUTH-010: an expired session is rejected while another device remains valid",
+      "outcome": "PASS",
+      "scenarioScope": "Expired-session rejection across runtime restart.",
+      "rationale": "Only the listed source-verified assertions are credited; all other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "With workerd stopped, fixture hashes Alice token and updates exactly one api_sessions expiry to zero.",
+        "After restart, that token receives 401 while Alice independent active token and Bob token receive 200."
+      ],
+      "transports": [
+        "REST",
+        "stopped-runtime SQLite",
+        "runtime restart"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      }
+    },
+    {
+      "id": "AUTH-001",
+      "kind": "test",
+      "executionId": "identity-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-identity.test.ts",
+      "testTitle": "matrix expired and unauthenticated access AUTH-001 AUTH-002 AUTH-003 AUTH-004: IRC NICK and USER alone cannot join or send messages",
+      "outcome": "PASS",
+      "scenarioScope": "Unauthenticated IRC registration, JOIN and PRIVMSG denial.",
+      "rationale": "Only the listed source-verified assertions are credited; all other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "Guest sends NICK/USER, JOIN, channel PRIVMSG and DM PRIVMSG then PING barrier; test observes no numeric 001 or JOIN and observes numeric 451.",
+        "Authenticated channel member sees neither attack marker after barrier; stopped-runtime messages and direct_messages snapshots contain neither marker."
+      ],
+      "transports": [
+        "IRC/WebSocket",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "commandBehavior": [
+        {
+          "command": "NICK",
+          "outcome": "negative"
+        },
+        {
+          "command": "USER",
+          "outcome": "negative"
+        },
+        {
+          "command": "JOIN",
+          "outcome": "negative"
+        },
+        {
+          "command": "PRIVMSG",
+          "outcome": "negative"
+        },
+        {
+          "command": "PING",
+          "outcome": "negative"
+        }
+      ]
+    },
+    {
+      "id": "AUTH-002",
+      "kind": "test",
+      "executionId": "identity-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-identity.test.ts",
+      "testTitle": "matrix expired and unauthenticated access AUTH-001 AUTH-002 AUTH-003 AUTH-004: IRC NICK and USER alone cannot join or send messages",
+      "outcome": "PASS",
+      "scenarioScope": "Unauthenticated IRC registration, JOIN and PRIVMSG denial.",
+      "rationale": "Only the listed source-verified assertions are credited; all other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "Guest sends NICK/USER, JOIN, channel PRIVMSG and DM PRIVMSG then PING barrier; test observes no numeric 001 or JOIN and observes numeric 451.",
+        "Authenticated channel member sees neither attack marker after barrier; stopped-runtime messages and direct_messages snapshots contain neither marker."
+      ],
+      "transports": [
+        "IRC/WebSocket",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "commandBehavior": [
+        {
+          "command": "NICK",
+          "outcome": "negative"
+        },
+        {
+          "command": "USER",
+          "outcome": "negative"
+        },
+        {
+          "command": "JOIN",
+          "outcome": "negative"
+        },
+        {
+          "command": "PRIVMSG",
+          "outcome": "negative"
+        },
+        {
+          "command": "PING",
+          "outcome": "negative"
+        }
+      ]
+    },
+    {
+      "id": "AUTH-003",
+      "kind": "test",
+      "executionId": "identity-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-identity.test.ts",
+      "testTitle": "matrix expired and unauthenticated access AUTH-001 AUTH-002 AUTH-003 AUTH-004: IRC NICK and USER alone cannot join or send messages",
+      "outcome": "PASS",
+      "scenarioScope": "Unauthenticated IRC registration, JOIN and PRIVMSG denial.",
+      "rationale": "Only the listed source-verified assertions are credited; all other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "Guest sends NICK/USER, JOIN, channel PRIVMSG and DM PRIVMSG then PING barrier; test observes no numeric 001 or JOIN and observes numeric 451.",
+        "Authenticated channel member sees neither attack marker after barrier; stopped-runtime messages and direct_messages snapshots contain neither marker."
+      ],
+      "transports": [
+        "IRC/WebSocket",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "commandBehavior": [
+        {
+          "command": "NICK",
+          "outcome": "negative"
+        },
+        {
+          "command": "USER",
+          "outcome": "negative"
+        },
+        {
+          "command": "JOIN",
+          "outcome": "negative"
+        },
+        {
+          "command": "PRIVMSG",
+          "outcome": "negative"
+        },
+        {
+          "command": "PING",
+          "outcome": "negative"
+        }
+      ]
+    },
+    {
+      "id": "AUTH-004",
+      "kind": "test",
+      "executionId": "identity-v2",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "testFile": "tests/security/matrix-identity.test.ts",
+      "testTitle": "matrix expired and unauthenticated access AUTH-001 AUTH-002 AUTH-003 AUTH-004: IRC NICK and USER alone cannot join or send messages",
+      "outcome": "PASS",
+      "scenarioScope": "Unauthenticated IRC registration, JOIN and PRIVMSG denial.",
+      "rationale": "Only the listed source-verified assertions are credited; all other dimensions remain required and uncovered unless another matched test covers them.",
+      "assertionDetails": [
+        "Guest sends NICK/USER, JOIN, channel PRIVMSG and DM PRIVMSG then PING barrier; test observes no numeric 001 or JOIN and observes numeric 451.",
+        "Authenticated channel member sees neither attack marker after barrier; stopped-runtime messages and direct_messages snapshots contain neither marker."
+      ],
+      "transports": [
+        "IRC/WebSocket",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "commandBehavior": [
+        {
+          "command": "NICK",
+          "outcome": "negative"
+        },
+        {
+          "command": "USER",
+          "outcome": "negative"
+        },
+        {
+          "command": "JOIN",
+          "outcome": "negative"
+        },
+        {
+          "command": "PRIVMSG",
+          "outcome": "negative"
+        },
+        {
+          "command": "PING",
+          "outcome": "negative"
+        }
+      ]
+    }
+  ]
+}

@@ -1,7 +1,25 @@
 import { z } from "zod";
 
+export const ChannelCreateSchema = z
+  .object({
+    name: z.string().min(2).max(64),
+    privacy: z.enum(["public", "secret"]).default("secret"),
+    inviteOnly: z.boolean().default(false),
+    key: z
+      .string()
+      .min(1)
+      .max(128)
+      .regex(/^[^\s,\x00-\x1f\x7f]+$/)
+      .optional(),
+    registeredOnly: z.boolean().default(false),
+    moderated: z.boolean().default(false),
+    readOnly: z.boolean().default(false),
+  })
+  .strict();
+
 export const ChannelInfoSchema = z.object({
   channel: z.string(),
+  generation: z.string().uuid(),
   canonicalName: z.string(),
   topic: z.string().nullable(),
   topicSetBy: z.string().nullable(),
@@ -35,6 +53,7 @@ export const UpdateChannelInfoSchema = z.object({
 export const ChannelRoleGroupSchema = z.object({
   id: z.string(),
   name: z.string(),
+  parentId: z.string().uuid().nullable(),
   ircPrefix: z.string().nullable(),
   ircMode: z.string().nullable(),
   priority: z.number(),
@@ -44,6 +63,7 @@ export const ChannelRoleGroupSchema = z.object({
 
 export const CreateRoleGroupSchema = z.object({
   name: z.string().min(1).max(32),
+  parentId: z.string().uuid().nullable().optional(),
   color: z
     .string()
     .regex(/^#[0-9a-f]{6}$/i)
@@ -65,6 +85,11 @@ export const CreateRoleGroupSchema = z.object({
     )
     .max(6)
     .default([]),
+});
+
+export const UpdateRoleGroupSchema = CreateRoleGroupSchema.partial().extend({
+  priority: CreateRoleGroupSchema.shape.priority.unwrap().optional(),
+  permissions: CreateRoleGroupSchema.shape.permissions.unwrap().optional(),
 });
 
 export const AssignUserRoleSchema = z

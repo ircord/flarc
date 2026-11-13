@@ -1,5 +1,7 @@
 # Security and integrity findings
 
+> Historical initial-audit record. Current feature-expansion results, superseded limitations, exact test totals and remaining policies are in [the final matrix report](matrix-results.md).
+
 Audit target: original commit `a9db5e6760603453bed682509b90eff457ed8f23`; remediation accompanies this report. Severity describes the original behavior. **Fixed** below means a code change plus the listed local verification, not proof against every possible exploit. No known P0/P1 remains open in the reviewed paths. Deployment controls and remaining P2/P3 work are listed separately.
 
 | ID | Original severity | Component / exploit | Impact | Fix and evidence (Fixed) |

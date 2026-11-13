@@ -1,0 +1,2968 @@
+{
+  "version": 1,
+  "slice": "races",
+  "requirements": "docs/security/matrix-requirements.md",
+  "catalog": "tests/security/matrix-scenarios.json",
+  "catalogScenarioCount": 339,
+  "authProvisioning": "Independent public registration/bootstrap/admin provisioning, unique random password per account, real REST credentials and IRC PASS authentication; no fabricated principal flags.",
+  "ownership": [
+    "tests/security/matrix-revocation.test.ts",
+    "tests/security/matrix-concurrency.test.ts",
+    "tests/security/matrix-persistence.test.ts",
+    "docs/security/matrix-evidence/races.json",
+    "server/durable-objects/channel.ts (explicit coordinator delegation after reproduced failures)"
+  ],
+  "baselineBundle": {
+    "baseCommit": "a9db5e6760603453bed682509b90eff457ed8f23",
+    "bundle": "/tmp/flarc-matrix-run_01d0e4aeb274/server/index.mjs",
+    "sha256": "6a58f6b9fd8f938777db4fcce55c336f21fa9e8de694c85e155d66c898c0e0a8",
+    "note": "Fresh build of shared working tree; source changes require a new coordinated bundle."
+  },
+  "verifiedBundle": {
+    "baseCommit": "361ee8c5ff44551b1d8740eaea695191c211d134",
+    "bundle": "/tmp/flarc-matrix-run_01d0e4aeb274/server-03/index.mjs",
+    "sha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+    "allFilesSha256": "6196885ab91fef0203f233e76d6f0a8dc9ce75784a1b85d555e8ff2ffeadc5dc"
+  },
+  "runs": [
+    {
+      "name": "initial complete owned slice before fixes and before two later alarm/redirect tests",
+      "command": "FLARC_TEST_BUNDLE=/tmp/flarc-matrix-run_01d0e4aeb274/server/index.mjs bunx vitest run --config /tmp/flarc-matrix-run_01d0e4aeb274/vitest.frozen.config.mts tests/security/matrix-revocation.test.ts tests/security/matrix-concurrency.test.ts tests/security/matrix-persistence.test.ts --reporter=default --reporter=json --outputFile=/tmp/flarc-matrix-run_01d0e4aeb274/races-original-final-results.json",
+      "resultsPath": "/tmp/flarc-matrix-run_01d0e4aeb274/races-original-final-results.json",
+      "bundleSha256": "6a58f6b9fd8f938777db4fcce55c336f21fa9e8de694c85e155d66c898c0e0a8",
+      "counts": {
+        "pass": 21,
+        "fail": 5,
+        "skip": 1,
+        "xfail": 0,
+        "xpass": 0,
+        "deselected": 0
+      },
+      "tests": [
+        {
+          "testFile": "tests/security/matrix-concurrency.test.ts",
+          "testTitle": "[WS-001 WS-006 WS-016 WS-023] event tickets cannot authenticate IRC and cross-origin or credential-query event handshakes are denied",
+          "status": "passed",
+          "failures": []
+        },
+        {
+          "testFile": "tests/security/matrix-concurrency.test.ts",
+          "testTitle": "[WS-002 WS-004 WS-005 WS-007 ABUSE-016] eight simultaneous real WebSocket ticket redemptions have exactly one authenticated winner",
+          "status": "passed",
+          "failures": []
+        },
+        {
+          "testFile": "tests/security/matrix-concurrency.test.ts",
+          "testTitle": "[MSG-023 DB-017 DB-024] concurrent idempotent retries commit once and duplicate client keys stay scoped to account and channel",
+          "status": "passed",
+          "failures": []
+        },
+        {
+          "testFile": "tests/security/matrix-concurrency.test.ts",
+          "testTitle": "[MSG-024 MSG-028] concurrent distinct writes produce one canonical sequence and matching ordered IRC delivery",
+          "status": "passed",
+          "failures": []
+        },
+        {
+          "testFile": "tests/security/matrix-concurrency.test.ts",
+          "testTitle": "[AUTH-011 API-004 DB-025] a revoked real principal cannot mutate through REST or the owning-object session recheck",
+          "status": "passed",
+          "failures": []
+        },
+        {
+          "testFile": "tests/security/matrix-concurrency.test.ts",
+          "testTitle": "[ROLE-027 ROLE-029 ROLE-033 DB-017] concurrent role deletion, assignment and sends cannot resurrect voice or bypass later authorization",
+          "status": "passed",
+          "failures": []
+        },
+        {
+          "testFile": "tests/security/matrix-persistence.test.ts",
+          "testTitle": "[MSG-025 DB-015] failed SQL insertion emits no durable acknowledgement and rolls back the sequence reservation",
+          "status": "failed",
+          "failures": [
+            "AssertionError: expected { value: '3' } to deeply equal { value: '2' }\n    at /Users/karbowiak/Projects/CFCord/tests/security/matrix-persistence.test.ts:202:9\n    at async file:///Users/karbowiak/Projects/CFCord/node_modules/vitest/dist/chunks/run.CjdgFZiW.js:2801:20"
+          ]
+        },
+        {
+          "testFile": "tests/security/matrix-persistence.test.ts",
+          "testTitle": "[MSG-025 DB-015] a real SQL edit-lineage fault cannot leave an unacknowledged partial message in history",
+          "status": "failed",
+          "failures": [
+            "AssertionError: expected [ 'unacknowledged-edit-body', \u2026(1) ] to deeply equal [ 'original-before-edit-fault' ]\n    at /Users/karbowiak/Projects/CFCord/tests/security/matrix-persistence.test.ts:245:8\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///Users/karbowiak/Projects/CFCord/node_modules/vitest/dist/chunks/run.CjdgFZiW.js:2801:20",
+            "AssertionError: expected [ { \u2026(14) }, { \u2026(14) } ] to deeply equal [ { \u2026(14) } ]\n    at /Users/karbowiak/Projects/CFCord/tests/security/matrix-persistence.test.ts:249:61\n    at async file:///Users/karbowiak/Projects/CFCord/node_modules/vitest/dist/chunks/run.CjdgFZiW.js:2801:20"
+          ]
+        },
+        {
+          "testFile": "tests/security/matrix-persistence.test.ts",
+          "testTitle": "[MSG-025 DB-015] an original-message UPDATE fault rolls back the append, lineage and FTS before publishing any event",
+          "status": "failed",
+          "failures": [
+            "AssertionError: expected [ 'must-rollback-failed-update', \u2026(1) ] to deeply equal [ 'unchanged-original-update-fault' ]\n    at /Users/karbowiak/Projects/CFCord/tests/security/matrix-persistence.test.ts:331:8\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///Users/karbowiak/Projects/CFCord/node_modules/vitest/dist/chunks/run.CjdgFZiW.js:2801:20",
+            "AssertionError: expected [ { \u2026(14) }, { \u2026(14) } ] to deeply equal [ { \u2026(14) } ]\n    at /Users/karbowiak/Projects/CFCord/tests/security/matrix-persistence.test.ts:336:66\n    at async file:///Users/karbowiak/Projects/CFCord/node_modules/vitest/dist/chunks/run.CjdgFZiW.js:2801:20",
+            "AssertionError: expected [ { \u2026(2) } ] to have a length of +0 but got 1\n    at Proxy.<anonymous> (file:///Users/karbowiak/Projects/CFCord/node_modules/vitest/dist/chunks/index.CZzC1gGg.js:1861:20)\n    at Proxy.<anonymous> (file:///Users/karbowiak/Projects/CFCord/node_modules/vitest/dist/chunks/index.CZzC1gGg.js:1661:22)\n    at Proxy.methodWrapper (file:///Users/karbowiak/Projects/CFCord/node_modules/chai/index.js:1737:25)\n    at /Users/karbowiak/Projects/CFCord/tests/security/matrix-persistence.test.ts:337:71\n    at async file:///Users/karbowiak/Projects/CFCord/node_modules/vitest/dist/chunks/run.CjdgFZiW.js:2801:20",
+            "AssertionError: expected { value: '3' } to deeply equal { value: '2' }\n    at /Users/karbowiak/Projects/CFCord/tests/security/matrix-persistence.test.ts:340:10\n    at async file:///Users/karbowiak/Projects/CFCord/node_modules/vitest/dist/chunks/run.CjdgFZiW.js:2801:20",
+            "AssertionError: expected [ { \u2026(3) } ] to have a length of +0 but got 1\n    at Proxy.<anonymous> (file:///Users/karbowiak/Projects/CFCord/node_modules/vitest/dist/chunks/index.CZzC1gGg.js:1861:20)\n    at Proxy.<anonymous> (file:///Users/karbowiak/Projects/CFCord/node_modules/vitest/dist/chunks/index.CZzC1gGg.js:1656:14)\n    at Proxy.methodWrapper (file:///Users/karbowiak/Projects/CFCord/node_modules/chai/index.js:1737:25)\n    at /Users/karbowiak/Projects/CFCord/tests/security/matrix-persistence.test.ts:343:9\n    at async file:///Users/karbowiak/Projects/CFCord/node_modules/vitest/dist/chunks/run.CjdgFZiW.js:2801:20"
+          ]
+        },
+        {
+          "testFile": "tests/security/matrix-persistence.test.ts",
+          "testTitle": "[API-014 CHAN-010 DB-025] literal FTS punctuation, phrases and malformed text remain safe across REST and IRC without changing private history",
+          "status": "failed",
+          "failures": [
+            "AssertionError: REST query private-replay-needle: expected 500 to be 200 // Object.is equality\n    at /Users/karbowiak/Projects/CFCord/tests/security/matrix-persistence.test.ts:388:55\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///Users/karbowiak/Projects/CFCord/node_modules/vitest/dist/chunks/run.CjdgFZiW.js:2801:20",
+            "AssertionError: IRC query private-replay-needle: expected true to be false // Object.is equality\n    at /Users/karbowiak/Projects/CFCord/tests/security/matrix-persistence.test.ts:407:10\n    at async file:///Users/karbowiak/Projects/CFCord/node_modules/vitest/dist/chunks/run.CjdgFZiW.js:2801:20",
+            "AssertionError: IRC query private-replay-needle: expected false to be true // Object.is equality\n    at /Users/karbowiak/Projects/CFCord/tests/security/matrix-persistence.test.ts:417:12\n    at async file:///Users/karbowiak/Projects/CFCord/node_modules/vitest/dist/chunks/run.CjdgFZiW.js:2801:20",
+            "AssertionError: IRC query private-replay-needle: expected +0 to be 1 // Object.is equality\n    at /Users/karbowiak/Projects/CFCord/tests/security/matrix-persistence.test.ts:421:10\n    at async file:///Users/karbowiak/Projects/CFCord/node_modules/vitest/dist/chunks/run.CjdgFZiW.js:2801:20",
+            "AssertionError: REST query https://example.com/a: expected 500 to be 200 // Object.is equality\n    at /Users/karbowiak/Projects/CFCord/tests/security/matrix-persistence.test.ts:388:55\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///Users/karbowiak/Projects/CFCord/node_modules/vitest/dist/chunks/run.CjdgFZiW.js:2801:20",
+            "AssertionError: IRC query https://example.com/a: expected true to be false // Object.is equality\n    at /Users/karbowiak/Projects/CFCord/tests/security/matrix-persistence.test.ts:407:10\n    at async file:///Users/karbowiak/Projects/CFCord/node_modules/vitest/dist/chunks/run.CjdgFZiW.js:2801:20",
+            "AssertionError: IRC query https://example.com/a: expected false to be true // Object.is equality\n    at /Users/karbowiak/Projects/CFCord/tests/security/matrix-persistence.test.ts:417:12\n    at async file:///Users/karbowiak/Projects/CFCord/node_modules/vitest/dist/chunks/run.CjdgFZiW.js:2801:20",
+            "AssertionError: IRC query https://example.com/a: expected +0 to be 1 // Object.is equality\n    at /Users/karbowiak/Projects/CFCord/tests/security/matrix-persistence.test.ts:421:10\n    at async file:///Users/karbowiak/Projects/CFCord/node_modules/vitest/dist/chunks/run.CjdgFZiW.js:2801:20",
+            "AssertionError: can't: expected [] to deeply equal [ Array(1) ]\n    at /Users/karbowiak/Projects/CFCord/tests/security/matrix-persistence.test.ts:392:12\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///Users/karbowiak/Projects/CFCord/node_modules/vitest/dist/chunks/run.CjdgFZiW.js:2801:20",
+            "AssertionError: IRC query can't: expected false to be true // Object.is equality\n    at /Users/karbowiak/Projects/CFCord/tests/security/matrix-persistence.test.ts:417:12\n    at async file:///Users/karbowiak/Projects/CFCord/node_modules/vitest/dist/chunks/run.CjdgFZiW.js:2801:20",
+            "AssertionError: IRC query can't: expected +0 to be 1 // Object.is equality\n    at /Users/karbowiak/Projects/CFCord/tests/security/matrix-persistence.test.ts:421:10\n    at async file:///Users/karbowiak/Projects/CFCord/node_modules/vitest/dist/chunks/run.CjdgFZiW.js:2801:20",
+            "AssertionError: \"red blue\": expected [ \u2026(3) ] to deeply equal [ \u2026(2) ]\n    at /Users/karbowiak/Projects/CFCord/tests/security/matrix-persistence.test.ts:392:12\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///Users/karbowiak/Projects/CFCord/node_modules/vitest/dist/chunks/run.CjdgFZiW.js:2801:20",
+            "AssertionError: IRC query \"red blue\": expected 3 to be 2 // Object.is equality\n    at /Users/karbowiak/Projects/CFCord/tests/security/matrix-persistence.test.ts:421:10\n    at async file:///Users/karbowiak/Projects/CFCord/node_modules/vitest/dist/chunks/run.CjdgFZiW.js:2801:20",
+            "AssertionError: \"\": expected [ \u2026(6) ] to deeply equal []\n    at /Users/karbowiak/Projects/CFCord/tests/security/matrix-persistence.test.ts:392:12\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///Users/karbowiak/Projects/CFCord/node_modules/vitest/dist/chunks/run.CjdgFZiW.js:2801:20",
+            "AssertionError: IRC query \"\": expected 6 to be +0 // Object.is equality\n    at /Users/karbowiak/Projects/CFCord/tests/security/matrix-persistence.test.ts:421:10\n    at async file:///Users/karbowiak/Projects/CFCord/node_modules/vitest/dist/chunks/run.CjdgFZiW.js:2801:20",
+            "AssertionError: REST query ***: expected 500 to be 200 // Object.is equality\n    at /Users/karbowiak/Projects/CFCord/tests/security/matrix-persistence.test.ts:388:55\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///Users/karbowiak/Projects/CFCord/node_modules/vitest/dist/chunks/run.CjdgFZiW.js:2801:20",
+            "AssertionError: IRC query ***: expected true to be false // Object.is equality\n    at /Users/karbowiak/Projects/CFCord/tests/security/matrix-persistence.test.ts:407:10\n    at async file:///Users/karbowiak/Projects/CFCord/node_modules/vitest/dist/chunks/run.CjdgFZiW.js:2801:20",
+            "AssertionError: REST query (\"unterminated: expected 500 to be 200 // Object.is equality\n    at /Users/karbowiak/Projects/CFCord/tests/security/matrix-persistence.test.ts:388:55\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///Users/karbowiak/Projects/CFCord/node_modules/vitest/dist/chunks/run.CjdgFZiW.js:2801:20",
+            "AssertionError: IRC query (\"unterminated: expected true to be false // Object.is equality\n    at /Users/karbowiak/Projects/CFCord/tests/security/matrix-persistence.test.ts:407:10\n    at async file:///Users/karbowiak/Projects/CFCord/node_modules/vitest/dist/chunks/run.CjdgFZiW.js:2801:20",
+            "AssertionError: REST query messages_fts:private: expected 500 to be 200 // Object.is equality\n    at /Users/karbowiak/Projects/CFCord/tests/security/matrix-persistence.test.ts:388:55\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///Users/karbowiak/Projects/CFCord/node_modules/vitest/dist/chunks/run.CjdgFZiW.js:2801:20",
+            "AssertionError: IRC query messages_fts:private: expected true to be false // Object.is equality\n    at /Users/karbowiak/Projects/CFCord/tests/security/matrix-persistence.test.ts:407:10\n    at async file:///Users/karbowiak/Projects/CFCord/node_modules/vitest/dist/chunks/run.CjdgFZiW.js:2801:20"
+          ]
+        },
+        {
+          "testFile": "tests/security/matrix-persistence.test.ts",
+          "testTitle": "[MSG-025 DB-015] a failed edit commit never reaches the outbound webhook sink while authorized controls do",
+          "status": "failed",
+          "failures": [
+            "Error: Webhook sink missing authorized-webhook-control\n    at Timeout._onTimeout (/Users/karbowiak/Projects/CFCord/tests/security/matrix-persistence.test.ts:463:16)\n    at listOnTimeout (node:internal/timers:685:17)\n    at process.processTimers (node:internal/timers:618:7)"
+          ]
+        },
+        {
+          "testFile": "tests/security/matrix-persistence.test.ts",
+          "testTitle": "[DB-015 DB-002] SQL credential failure rolls back hashes, SCRAM credentials, credential version and existing sessions",
+          "status": "passed",
+          "failures": []
+        },
+        {
+          "testFile": "tests/security/matrix-persistence.test.ts",
+          "testTitle": "[DB-004 DB-007 DB-008 ROLE-027 ROLE-029 ROLE-030 CHAN-032] restart preserves retained grants without resurrecting removed roles or kicked private membership",
+          "status": "passed",
+          "failures": []
+        },
+        {
+          "testFile": "tests/security/matrix-persistence.test.ts",
+          "testTitle": "[DB-009 DB-010 DB-011 MSG-026 DM-017 DB-027] independent runtime restart preserves private messages, edits and redactions and rejects foreign cursors",
+          "status": "passed",
+          "failures": []
+        },
+        {
+          "testFile": "tests/security/matrix-persistence.test.ts",
+          "testTitle": "[DB-013 DB-014 DB-028] actual SQLite foreign keys, unique sequences and indexed bounded history queries enforce integrity",
+          "status": "passed",
+          "failures": []
+        },
+        {
+          "testFile": "tests/security/matrix-persistence.test.ts",
+          "testTitle": "[DB-018 DB-019] production retention cleanup deletes distinct expired rows and FTS while preserving unexpired rows across restart",
+          "status": "passed",
+          "failures": []
+        },
+        {
+          "testFile": "tests/security/matrix-persistence.test.ts",
+          "testTitle": "BLOCKED: actual retention alarm firing and no-op alarm rescheduling need a scheduler control absent from the installed Miniflare API",
+          "status": "skipped",
+          "failures": []
+        },
+        {
+          "testFile": "tests/security/matrix-persistence.test.ts",
+          "testTitle": "[WS-003] persisted expired ticket cannot authorize an event stream after full runtime restart",
+          "status": "passed",
+          "failures": []
+        },
+        {
+          "testFile": "tests/security/matrix-persistence.test.ts",
+          "testTitle": "[AUTH-010 API-003] persisted expired parent-session cannot authorize an event stream after full runtime restart",
+          "status": "passed",
+          "failures": []
+        },
+        {
+          "testFile": "tests/security/matrix-persistence.test.ts",
+          "testTitle": "[DB-016 DB-025] destination commit followed by a real Accounts SQL fault keeps both rename generations fail-closed after restart",
+          "status": "passed",
+          "failures": []
+        },
+        {
+          "testFile": "tests/security/matrix-revocation.test.ts",
+          "testTitle": "[WS-012 WS-024 CHAN-014 CHAN-032] idle kick revokes private IRC and event delivery while unrelated delivery stays live",
+          "status": "passed",
+          "failures": []
+        },
+        {
+          "testFile": "tests/security/matrix-revocation.test.ts",
+          "testTitle": "[WS-012 WS-024 CHAN-014 CHAN-028] idle ban revokes private IRC and event delivery while unrelated delivery stays live",
+          "status": "passed",
+          "failures": []
+        },
+        {
+          "testFile": "tests/security/matrix-revocation.test.ts",
+          "testTitle": "[AUTH-022 DM-015 WS-024] logout invalidates an idle receiving event credential and preserves independent authorization",
+          "status": "passed",
+          "failures": []
+        },
+        {
+          "testFile": "tests/security/matrix-revocation.test.ts",
+          "testTitle": "[AUTH-024 AUTH-025 WS-013 WS-024] disable invalidates an idle receiving event credential and preserves independent authorization",
+          "status": "passed",
+          "failures": []
+        },
+        {
+          "testFile": "tests/security/matrix-revocation.test.ts",
+          "testTitle": "[AUTH-023 WS-024] reset invalidates an idle receiving event credential and preserves independent authorization",
+          "status": "passed",
+          "failures": []
+        },
+        {
+          "testFile": "tests/security/matrix-revocation.test.ts",
+          "testTitle": "[WS-014] local workerd hibernating eviction rechecks logout without a receiving-client reconnect",
+          "status": "passed",
+          "failures": []
+        },
+        {
+          "testFile": "tests/security/matrix-revocation.test.ts",
+          "testTitle": "[WS-015] local workerd hibernating eviction rechecks admin-role without a receiving-client reconnect",
+          "status": "passed",
+          "failures": []
+        }
+      ]
+    },
+    {
+      "name": "bundle 02 regression and related existing verification",
+      "resultsPath": "/tmp/flarc-matrix-run_01d0e4aeb274/races-fixed-results.json",
+      "bundleSha256": "edc004e6fea208cdb64d54567f55df0a726b5f1050b0dc7c1f21a033788b533f",
+      "counts": {
+        "pass": 32,
+        "fail": 1,
+        "skip": 1,
+        "xfail": 0,
+        "xpass": 0,
+        "deselected": 0
+      }
+    },
+    {
+      "name": "bundle 03 final owned and related verification",
+      "command": "FLARC_TEST_BUNDLE=/tmp/flarc-matrix-run_01d0e4aeb274/server-03/index.mjs bunx vitest run --config /tmp/flarc-matrix-run_01d0e4aeb274/vitest.frozen.config.mts tests/security/matrix-revocation.test.ts tests/security/matrix-concurrency.test.ts tests/security/matrix-persistence.test.ts tests/security/storage.test.ts tests/integration/ircord-edit-fts-webhooks.test.ts --reporter=default --reporter=json --outputFile=/tmp/flarc-matrix-run_01d0e4aeb274/races-final-results.json",
+      "resultsPath": "/tmp/flarc-matrix-run_01d0e4aeb274/races-final-results.json",
+      "bundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89",
+      "allFilesSha256": "6196885ab91fef0203f233e76d6f0a8dc9ce75784a1b85d555e8ff2ffeadc5dc",
+      "counts": {
+        "pass": 35,
+        "fail": 0,
+        "skip": 0,
+        "xfail": 0,
+        "xpass": 0,
+        "deselected": 0
+      },
+      "ownedCounts": {
+        "pass": 28,
+        "fail": 0,
+        "skip": 0,
+        "xfail": 0,
+        "xpass": 0,
+        "deselected": 0
+      },
+      "relatedExistingCounts": {
+        "pass": 7,
+        "fail": 0,
+        "skip": 0,
+        "xfail": 0,
+        "xpass": 0,
+        "deselected": 0
+      },
+      "tests": [
+        {
+          "testFile": "tests/integration/ircord-edit-fts-webhooks.test.ts",
+          "testTitle": "IRCord Edit Protocol, FTS5 Search & Incoming Webhooks supports IRCord message editing protocol (+ircord/edit) and ISUPPORT CLIENTTAGDENY",
+          "status": "passed",
+          "failures": []
+        },
+        {
+          "testFile": "tests/integration/ircord-edit-fts-webhooks.test.ts",
+          "testTitle": "IRCord Edit Protocol, FTS5 Search & Incoming Webhooks indexes messages in SQLite FTS5 and supports search via REST and IRC SEARCH command",
+          "status": "passed",
+          "failures": []
+        },
+        {
+          "testFile": "tests/integration/ircord-edit-fts-webhooks.test.ts",
+          "testTitle": "IRCord Edit Protocol, FTS5 Search & Incoming Webhooks supports Discord/Slack compatible incoming webhooks",
+          "status": "passed",
+          "failures": []
+        },
+        {
+          "testFile": "tests/integration/ircord-edit-fts-webhooks.test.ts",
+          "testTitle": "IRCord Edit Protocol, FTS5 Search & Incoming Webhooks supports channel notification preferences, outgoing webhooks, prometheus metrics, and paginated message history",
+          "status": "passed",
+          "failures": []
+        },
+        {
+          "testFile": "tests/security/matrix-concurrency.test.ts",
+          "testTitle": "[WS-001 WS-006 WS-016 WS-023] event tickets cannot authenticate IRC and cross-origin or credential-query event handshakes are denied",
+          "status": "passed",
+          "failures": []
+        },
+        {
+          "testFile": "tests/security/matrix-concurrency.test.ts",
+          "testTitle": "[WS-002 WS-004 WS-005 WS-007 ABUSE-016] eight simultaneous real WebSocket ticket redemptions have exactly one authenticated winner",
+          "status": "passed",
+          "failures": []
+        },
+        {
+          "testFile": "tests/security/matrix-concurrency.test.ts",
+          "testTitle": "[MSG-023 DB-017 DB-024] concurrent idempotent retries commit once and duplicate client keys stay scoped to account and channel",
+          "status": "passed",
+          "failures": []
+        },
+        {
+          "testFile": "tests/security/matrix-concurrency.test.ts",
+          "testTitle": "[MSG-024 MSG-028] concurrent distinct writes produce one canonical sequence and matching ordered IRC delivery",
+          "status": "passed",
+          "failures": []
+        },
+        {
+          "testFile": "tests/security/matrix-concurrency.test.ts",
+          "testTitle": "[AUTH-011 API-004 DB-025] a revoked real principal cannot mutate through REST or the owning-object session recheck",
+          "status": "passed",
+          "failures": []
+        },
+        {
+          "testFile": "tests/security/matrix-concurrency.test.ts",
+          "testTitle": "[ROLE-027 ROLE-029 ROLE-033 DB-017] concurrent role deletion, assignment and sends cannot resurrect voice or bypass later authorization",
+          "status": "passed",
+          "failures": []
+        },
+        {
+          "testFile": "tests/security/matrix-persistence.test.ts",
+          "testTitle": "[MSG-025 DB-015] failed SQL insertion emits no durable acknowledgement and rolls back the sequence reservation",
+          "status": "passed",
+          "failures": []
+        },
+        {
+          "testFile": "tests/security/matrix-persistence.test.ts",
+          "testTitle": "[MSG-025 DB-015] a real SQL edit-lineage fault cannot leave an unacknowledged partial message in history",
+          "status": "passed",
+          "failures": []
+        },
+        {
+          "testFile": "tests/security/matrix-persistence.test.ts",
+          "testTitle": "[MSG-025 DB-015] an original-message UPDATE fault rolls back the append, lineage and FTS before publishing any event",
+          "status": "passed",
+          "failures": []
+        },
+        {
+          "testFile": "tests/security/matrix-persistence.test.ts",
+          "testTitle": "[API-014 CHAN-010 DB-025] literal FTS punctuation, phrases and malformed text remain safe across REST and IRC without changing private history",
+          "status": "passed",
+          "failures": []
+        },
+        {
+          "testFile": "tests/security/matrix-persistence.test.ts",
+          "testTitle": "[MSG-025 DB-015] a failed edit commit never reaches the outbound webhook sink while authorized controls do",
+          "status": "passed",
+          "failures": []
+        },
+        {
+          "testFile": "tests/security/matrix-persistence.test.ts",
+          "testTitle": "[DB-015 DB-002] SQL credential failure rolls back hashes, SCRAM credentials, credential version and existing sessions",
+          "status": "passed",
+          "failures": []
+        },
+        {
+          "testFile": "tests/security/matrix-persistence.test.ts",
+          "testTitle": "[DB-004 DB-007 DB-008 ROLE-027 ROLE-029 ROLE-030 CHAN-032] restart preserves retained grants without resurrecting removed roles or kicked private membership",
+          "status": "passed",
+          "failures": []
+        },
+        {
+          "testFile": "tests/security/matrix-persistence.test.ts",
+          "testTitle": "[DB-009 DB-010 DB-011 MSG-026 DM-017 DB-027] independent runtime restart preserves private messages, edits and redactions and rejects foreign cursors",
+          "status": "passed",
+          "failures": []
+        },
+        {
+          "testFile": "tests/security/matrix-persistence.test.ts",
+          "testTitle": "[DB-013 DB-014 DB-028] actual SQLite foreign keys, unique sequences and indexed bounded history queries enforce integrity",
+          "status": "passed",
+          "failures": []
+        },
+        {
+          "testFile": "tests/security/matrix-persistence.test.ts",
+          "testTitle": "[DB-018 DB-019] production retention cleanup deletes distinct expired rows and FTS while preserving unexpired rows across restart",
+          "status": "passed",
+          "failures": []
+        },
+        {
+          "testFile": "tests/security/matrix-persistence.test.ts",
+          "testTitle": "[DB-018 DB-019] actual workerd alarms delete expired rows and reschedule after both deletion and a no-op",
+          "status": "passed",
+          "failures": []
+        },
+        {
+          "testFile": "tests/security/matrix-persistence.test.ts",
+          "testTitle": "outgoing webhook 3xx responses never forward the body or secret to a second recipient",
+          "status": "passed",
+          "failures": []
+        },
+        {
+          "testFile": "tests/security/matrix-persistence.test.ts",
+          "testTitle": "[WS-003] persisted expired ticket cannot authorize an event stream after full runtime restart",
+          "status": "passed",
+          "failures": []
+        },
+        {
+          "testFile": "tests/security/matrix-persistence.test.ts",
+          "testTitle": "[AUTH-010 API-003] persisted expired parent-session cannot authorize an event stream after full runtime restart",
+          "status": "passed",
+          "failures": []
+        },
+        {
+          "testFile": "tests/security/matrix-persistence.test.ts",
+          "testTitle": "[DB-016 DB-025] destination commit followed by a real Accounts SQL fault keeps both rename generations fail-closed after restart",
+          "status": "passed",
+          "failures": []
+        },
+        {
+          "testFile": "tests/security/matrix-revocation.test.ts",
+          "testTitle": "[WS-012 WS-024 CHAN-014 CHAN-032] idle kick revokes private IRC and event delivery while unrelated delivery stays live",
+          "status": "passed",
+          "failures": []
+        },
+        {
+          "testFile": "tests/security/matrix-revocation.test.ts",
+          "testTitle": "[WS-012 WS-024 CHAN-014 CHAN-028] idle ban revokes private IRC and event delivery while unrelated delivery stays live",
+          "status": "passed",
+          "failures": []
+        },
+        {
+          "testFile": "tests/security/matrix-revocation.test.ts",
+          "testTitle": "[AUTH-022 DM-015 WS-024] logout invalidates an idle receiving event credential and preserves independent authorization",
+          "status": "passed",
+          "failures": []
+        },
+        {
+          "testFile": "tests/security/matrix-revocation.test.ts",
+          "testTitle": "[AUTH-024 AUTH-025 WS-013 WS-024] disable invalidates an idle receiving event credential and preserves independent authorization",
+          "status": "passed",
+          "failures": []
+        },
+        {
+          "testFile": "tests/security/matrix-revocation.test.ts",
+          "testTitle": "[AUTH-023 WS-024] reset invalidates an idle receiving event credential and preserves independent authorization",
+          "status": "passed",
+          "failures": []
+        },
+        {
+          "testFile": "tests/security/matrix-revocation.test.ts",
+          "testTitle": "[WS-014] local workerd hibernating eviction rechecks logout without a receiving-client reconnect",
+          "status": "passed",
+          "failures": []
+        },
+        {
+          "testFile": "tests/security/matrix-revocation.test.ts",
+          "testTitle": "[WS-015] local workerd hibernating eviction rechecks admin-role without a receiving-client reconnect",
+          "status": "passed",
+          "failures": []
+        },
+        {
+          "testFile": "tests/security/storage.test.ts",
+          "testTitle": "Real SQLite persistence, constraints and failure recovery rolls back a failed cross-object rename import and keeps the original private channel usable",
+          "status": "passed",
+          "failures": []
+        },
+        {
+          "testFile": "tests/security/storage.test.ts",
+          "testTitle": "Real SQLite persistence, constraints and failure recovery preserves accounts, sessions, channel state, roles, edits, markers, subscriptions and private media across a full runtime restart",
+          "status": "passed",
+          "failures": []
+        },
+        {
+          "testFile": "tests/security/storage.test.ts",
+          "testTitle": "Real SQLite persistence, constraints and failure recovery expires sessions and history from authoritative persisted timestamps, with no stale search results",
+          "status": "passed",
+          "failures": []
+        }
+      ]
+    }
+  ],
+  "counts": {
+    "pass": 28,
+    "fail": 0,
+    "skip": 0,
+    "xfail": 0,
+    "xpass": 0,
+    "deselected": 0
+  },
+  "scenarioEvidenceCount": 78,
+  "distinctScenarioIdsWithEvidence": [
+    "ABUSE-016",
+    "API-003",
+    "API-004",
+    "API-014",
+    "AUTH-010",
+    "AUTH-011",
+    "AUTH-022",
+    "AUTH-023",
+    "AUTH-024",
+    "AUTH-025",
+    "CHAN-010",
+    "CHAN-014",
+    "CHAN-028",
+    "CHAN-032",
+    "DB-002",
+    "DB-004",
+    "DB-007",
+    "DB-008",
+    "DB-009",
+    "DB-010",
+    "DB-011",
+    "DB-013",
+    "DB-014",
+    "DB-015",
+    "DB-016",
+    "DB-017",
+    "DB-018",
+    "DB-019",
+    "DB-024",
+    "DB-025",
+    "DB-027",
+    "DB-028",
+    "DM-015",
+    "DM-017",
+    "MSG-023",
+    "MSG-024",
+    "MSG-025",
+    "MSG-026",
+    "MSG-028",
+    "ROLE-027",
+    "ROLE-029",
+    "ROLE-030",
+    "ROLE-033",
+    "WS-001",
+    "WS-002",
+    "WS-003",
+    "WS-004",
+    "WS-005",
+    "WS-006",
+    "WS-007",
+    "WS-012",
+    "WS-013",
+    "WS-014",
+    "WS-015",
+    "WS-016",
+    "WS-023",
+    "WS-024"
+  ],
+  "distinctScenarioIdsWithCompleteScopedEvidence": [
+    "ABUSE-016",
+    "API-003",
+    "API-004",
+    "API-014",
+    "AUTH-010",
+    "AUTH-011",
+    "AUTH-022",
+    "AUTH-023",
+    "AUTH-024",
+    "AUTH-025",
+    "CHAN-010",
+    "CHAN-014",
+    "CHAN-028",
+    "CHAN-032",
+    "DB-002",
+    "DB-004",
+    "DB-007",
+    "DB-008",
+    "DB-009",
+    "DB-010",
+    "DB-011",
+    "DB-013",
+    "DB-014",
+    "DB-015",
+    "DB-017",
+    "DB-018",
+    "DB-019",
+    "DB-024",
+    "DB-025",
+    "DM-015",
+    "DM-017",
+    "MSG-023",
+    "MSG-024",
+    "MSG-025",
+    "MSG-026",
+    "MSG-028",
+    "ROLE-027",
+    "ROLE-029",
+    "ROLE-030",
+    "ROLE-033",
+    "WS-001",
+    "WS-002",
+    "WS-003",
+    "WS-004",
+    "WS-005",
+    "WS-006",
+    "WS-007",
+    "WS-012",
+    "WS-013",
+    "WS-014",
+    "WS-015",
+    "WS-016",
+    "WS-023",
+    "WS-024"
+  ],
+  "evidence": [
+    {
+      "id": "WS-001",
+      "outcome": "PASS",
+      "completeForScenario": true,
+      "testFile": "tests/security/matrix-concurrency.test.ts",
+      "testTitle": "[WS-001 WS-006 WS-016 WS-023] event tickets cannot authenticate IRC and cross-origin or credential-query event handshakes are denied",
+      "scenarioScope": "Endpoint binding, fresh unauthenticated reconnection and Origin policy with real tickets.",
+      "assertionDetails": [
+        "An event ticket in an IRC upgrade URL does not authenticate NICK/USER/JOIN; a PONG barrier confirms no registration or membership success.",
+        "Unauthenticated, invalid-ticket and reusable-credential-query event upgrades return 401; an untrusted Origin returns 403.",
+        "The same still-unconsumed ticket at its correct endpoint and trusted Origin receives the authorized message event, which is persisted with the real sender identity.",
+        "A new IRC connection without credentials still cannot register or join after the previous connection closes."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "events/WebSocket",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport"
+      ],
+      "command": "FLARC_TEST_BUNDLE=/tmp/flarc-matrix-run_01d0e4aeb274/server-03/index.mjs bunx vitest run --config /tmp/flarc-matrix-run_01d0e4aeb274/vitest.frozen.config.mts tests/security/matrix-revocation.test.ts tests/security/matrix-concurrency.test.ts tests/security/matrix-persistence.test.ts tests/security/storage.test.ts tests/integration/ircord-edit-fts-webhooks.test.ts --reporter=default --reporter=json --outputFile=/tmp/flarc-matrix-run_01d0e4aeb274/races-final-results.json",
+      "baselineBundleSha256": "6a58f6b9fd8f938777db4fcce55c336f21fa9e8de694c85e155d66c898c0e0a8",
+      "verifiedBundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89"
+    },
+    {
+      "id": "WS-006",
+      "outcome": "PASS",
+      "completeForScenario": true,
+      "testFile": "tests/security/matrix-concurrency.test.ts",
+      "testTitle": "[WS-001 WS-006 WS-016 WS-023] event tickets cannot authenticate IRC and cross-origin or credential-query event handshakes are denied",
+      "scenarioScope": "Endpoint binding, fresh unauthenticated reconnection and Origin policy with real tickets.",
+      "assertionDetails": [
+        "An event ticket in an IRC upgrade URL does not authenticate NICK/USER/JOIN; a PONG barrier confirms no registration or membership success.",
+        "Unauthenticated, invalid-ticket and reusable-credential-query event upgrades return 401; an untrusted Origin returns 403.",
+        "The same still-unconsumed ticket at its correct endpoint and trusted Origin receives the authorized message event, which is persisted with the real sender identity.",
+        "A new IRC connection without credentials still cannot register or join after the previous connection closes."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "events/WebSocket",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport"
+      ],
+      "command": "FLARC_TEST_BUNDLE=/tmp/flarc-matrix-run_01d0e4aeb274/server-03/index.mjs bunx vitest run --config /tmp/flarc-matrix-run_01d0e4aeb274/vitest.frozen.config.mts tests/security/matrix-revocation.test.ts tests/security/matrix-concurrency.test.ts tests/security/matrix-persistence.test.ts tests/security/storage.test.ts tests/integration/ircord-edit-fts-webhooks.test.ts --reporter=default --reporter=json --outputFile=/tmp/flarc-matrix-run_01d0e4aeb274/races-final-results.json",
+      "baselineBundleSha256": "6a58f6b9fd8f938777db4fcce55c336f21fa9e8de694c85e155d66c898c0e0a8",
+      "verifiedBundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89"
+    },
+    {
+      "id": "WS-016",
+      "outcome": "PASS",
+      "completeForScenario": true,
+      "testFile": "tests/security/matrix-concurrency.test.ts",
+      "testTitle": "[WS-001 WS-006 WS-016 WS-023] event tickets cannot authenticate IRC and cross-origin or credential-query event handshakes are denied",
+      "scenarioScope": "Endpoint binding, fresh unauthenticated reconnection and Origin policy with real tickets.",
+      "assertionDetails": [
+        "An event ticket in an IRC upgrade URL does not authenticate NICK/USER/JOIN; a PONG barrier confirms no registration or membership success.",
+        "Unauthenticated, invalid-ticket and reusable-credential-query event upgrades return 401; an untrusted Origin returns 403.",
+        "The same still-unconsumed ticket at its correct endpoint and trusted Origin receives the authorized message event, which is persisted with the real sender identity.",
+        "A new IRC connection without credentials still cannot register or join after the previous connection closes."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "events/WebSocket",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport"
+      ],
+      "command": "FLARC_TEST_BUNDLE=/tmp/flarc-matrix-run_01d0e4aeb274/server-03/index.mjs bunx vitest run --config /tmp/flarc-matrix-run_01d0e4aeb274/vitest.frozen.config.mts tests/security/matrix-revocation.test.ts tests/security/matrix-concurrency.test.ts tests/security/matrix-persistence.test.ts tests/security/storage.test.ts tests/integration/ircord-edit-fts-webhooks.test.ts --reporter=default --reporter=json --outputFile=/tmp/flarc-matrix-run_01d0e4aeb274/races-final-results.json",
+      "baselineBundleSha256": "6a58f6b9fd8f938777db4fcce55c336f21fa9e8de694c85e155d66c898c0e0a8",
+      "verifiedBundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89"
+    },
+    {
+      "id": "WS-023",
+      "outcome": "PASS",
+      "completeForScenario": true,
+      "testFile": "tests/security/matrix-concurrency.test.ts",
+      "testTitle": "[WS-001 WS-006 WS-016 WS-023] event tickets cannot authenticate IRC and cross-origin or credential-query event handshakes are denied",
+      "scenarioScope": "Endpoint binding, fresh unauthenticated reconnection and Origin policy with real tickets.",
+      "assertionDetails": [
+        "An event ticket in an IRC upgrade URL does not authenticate NICK/USER/JOIN; a PONG barrier confirms no registration or membership success.",
+        "Unauthenticated, invalid-ticket and reusable-credential-query event upgrades return 401; an untrusted Origin returns 403.",
+        "The same still-unconsumed ticket at its correct endpoint and trusted Origin receives the authorized message event, which is persisted with the real sender identity.",
+        "A new IRC connection without credentials still cannot register or join after the previous connection closes."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "events/WebSocket",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport"
+      ],
+      "command": "FLARC_TEST_BUNDLE=/tmp/flarc-matrix-run_01d0e4aeb274/server-03/index.mjs bunx vitest run --config /tmp/flarc-matrix-run_01d0e4aeb274/vitest.frozen.config.mts tests/security/matrix-revocation.test.ts tests/security/matrix-concurrency.test.ts tests/security/matrix-persistence.test.ts tests/security/storage.test.ts tests/integration/ircord-edit-fts-webhooks.test.ts --reporter=default --reporter=json --outputFile=/tmp/flarc-matrix-run_01d0e4aeb274/races-final-results.json",
+      "baselineBundleSha256": "6a58f6b9fd8f938777db4fcce55c336f21fa9e8de694c85e155d66c898c0e0a8",
+      "verifiedBundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89"
+    },
+    {
+      "id": "WS-002",
+      "outcome": "PASS",
+      "completeForScenario": true,
+      "testFile": "tests/security/matrix-concurrency.test.ts",
+      "testTitle": "[WS-002 WS-004 WS-005 WS-007 ABUSE-016] eight simultaneous real WebSocket ticket redemptions have exactly one authenticated winner",
+      "scenarioScope": "Eight simultaneous real WebSocket handshakes redeem one ticket bound to Alice despite alternate-account URL selectors.",
+      "assertionDetails": [
+        "Exactly one handshake opens and seven return 401; later replay of the consumed ticket returns 401.",
+        "The winner receives Alice-only private events despite supplied Bob username/accountId selectors; Bob cannot read that channel.",
+        "SQLite has no remaining ticket row and exactly the authorized message with Alice stable sender ID."
+      ],
+      "transports": [
+        "REST",
+        "events/WebSocket",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport"
+      ],
+      "command": "FLARC_TEST_BUNDLE=/tmp/flarc-matrix-run_01d0e4aeb274/server-03/index.mjs bunx vitest run --config /tmp/flarc-matrix-run_01d0e4aeb274/vitest.frozen.config.mts tests/security/matrix-revocation.test.ts tests/security/matrix-concurrency.test.ts tests/security/matrix-persistence.test.ts tests/security/storage.test.ts tests/integration/ircord-edit-fts-webhooks.test.ts --reporter=default --reporter=json --outputFile=/tmp/flarc-matrix-run_01d0e4aeb274/races-final-results.json",
+      "baselineBundleSha256": "6a58f6b9fd8f938777db4fcce55c336f21fa9e8de694c85e155d66c898c0e0a8",
+      "verifiedBundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89"
+    },
+    {
+      "id": "WS-004",
+      "outcome": "PASS",
+      "completeForScenario": true,
+      "testFile": "tests/security/matrix-concurrency.test.ts",
+      "testTitle": "[WS-002 WS-004 WS-005 WS-007 ABUSE-016] eight simultaneous real WebSocket ticket redemptions have exactly one authenticated winner",
+      "scenarioScope": "Eight simultaneous real WebSocket handshakes redeem one ticket bound to Alice despite alternate-account URL selectors.",
+      "assertionDetails": [
+        "Exactly one handshake opens and seven return 401; later replay of the consumed ticket returns 401.",
+        "The winner receives Alice-only private events despite supplied Bob username/accountId selectors; Bob cannot read that channel.",
+        "SQLite has no remaining ticket row and exactly the authorized message with Alice stable sender ID."
+      ],
+      "transports": [
+        "REST",
+        "events/WebSocket",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport"
+      ],
+      "command": "FLARC_TEST_BUNDLE=/tmp/flarc-matrix-run_01d0e4aeb274/server-03/index.mjs bunx vitest run --config /tmp/flarc-matrix-run_01d0e4aeb274/vitest.frozen.config.mts tests/security/matrix-revocation.test.ts tests/security/matrix-concurrency.test.ts tests/security/matrix-persistence.test.ts tests/security/storage.test.ts tests/integration/ircord-edit-fts-webhooks.test.ts --reporter=default --reporter=json --outputFile=/tmp/flarc-matrix-run_01d0e4aeb274/races-final-results.json",
+      "baselineBundleSha256": "6a58f6b9fd8f938777db4fcce55c336f21fa9e8de694c85e155d66c898c0e0a8",
+      "verifiedBundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89"
+    },
+    {
+      "id": "WS-005",
+      "outcome": "PASS",
+      "completeForScenario": true,
+      "testFile": "tests/security/matrix-concurrency.test.ts",
+      "testTitle": "[WS-002 WS-004 WS-005 WS-007 ABUSE-016] eight simultaneous real WebSocket ticket redemptions have exactly one authenticated winner",
+      "scenarioScope": "Eight simultaneous real WebSocket handshakes redeem one ticket bound to Alice despite alternate-account URL selectors.",
+      "assertionDetails": [
+        "Exactly one handshake opens and seven return 401; later replay of the consumed ticket returns 401.",
+        "The winner receives Alice-only private events despite supplied Bob username/accountId selectors; Bob cannot read that channel.",
+        "SQLite has no remaining ticket row and exactly the authorized message with Alice stable sender ID."
+      ],
+      "transports": [
+        "REST",
+        "events/WebSocket",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport"
+      ],
+      "command": "FLARC_TEST_BUNDLE=/tmp/flarc-matrix-run_01d0e4aeb274/server-03/index.mjs bunx vitest run --config /tmp/flarc-matrix-run_01d0e4aeb274/vitest.frozen.config.mts tests/security/matrix-revocation.test.ts tests/security/matrix-concurrency.test.ts tests/security/matrix-persistence.test.ts tests/security/storage.test.ts tests/integration/ircord-edit-fts-webhooks.test.ts --reporter=default --reporter=json --outputFile=/tmp/flarc-matrix-run_01d0e4aeb274/races-final-results.json",
+      "baselineBundleSha256": "6a58f6b9fd8f938777db4fcce55c336f21fa9e8de694c85e155d66c898c0e0a8",
+      "verifiedBundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89"
+    },
+    {
+      "id": "WS-007",
+      "outcome": "PASS",
+      "completeForScenario": true,
+      "testFile": "tests/security/matrix-concurrency.test.ts",
+      "testTitle": "[WS-002 WS-004 WS-005 WS-007 ABUSE-016] eight simultaneous real WebSocket ticket redemptions have exactly one authenticated winner",
+      "scenarioScope": "Eight simultaneous real WebSocket handshakes redeem one ticket bound to Alice despite alternate-account URL selectors.",
+      "assertionDetails": [
+        "Exactly one handshake opens and seven return 401; later replay of the consumed ticket returns 401.",
+        "The winner receives Alice-only private events despite supplied Bob username/accountId selectors; Bob cannot read that channel.",
+        "SQLite has no remaining ticket row and exactly the authorized message with Alice stable sender ID."
+      ],
+      "transports": [
+        "REST",
+        "events/WebSocket",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport"
+      ],
+      "command": "FLARC_TEST_BUNDLE=/tmp/flarc-matrix-run_01d0e4aeb274/server-03/index.mjs bunx vitest run --config /tmp/flarc-matrix-run_01d0e4aeb274/vitest.frozen.config.mts tests/security/matrix-revocation.test.ts tests/security/matrix-concurrency.test.ts tests/security/matrix-persistence.test.ts tests/security/storage.test.ts tests/integration/ircord-edit-fts-webhooks.test.ts --reporter=default --reporter=json --outputFile=/tmp/flarc-matrix-run_01d0e4aeb274/races-final-results.json",
+      "baselineBundleSha256": "6a58f6b9fd8f938777db4fcce55c336f21fa9e8de694c85e155d66c898c0e0a8",
+      "verifiedBundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89"
+    },
+    {
+      "id": "ABUSE-016",
+      "outcome": "PASS",
+      "completeForScenario": true,
+      "testFile": "tests/security/matrix-concurrency.test.ts",
+      "testTitle": "[WS-002 WS-004 WS-005 WS-007 ABUSE-016] eight simultaneous real WebSocket ticket redemptions have exactly one authenticated winner",
+      "scenarioScope": "Eight simultaneous real WebSocket handshakes redeem one ticket bound to Alice despite alternate-account URL selectors.",
+      "assertionDetails": [
+        "Exactly one handshake opens and seven return 401; later replay of the consumed ticket returns 401.",
+        "The winner receives Alice-only private events despite supplied Bob username/accountId selectors; Bob cannot read that channel.",
+        "SQLite has no remaining ticket row and exactly the authorized message with Alice stable sender ID."
+      ],
+      "transports": [
+        "REST",
+        "events/WebSocket",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport"
+      ],
+      "command": "FLARC_TEST_BUNDLE=/tmp/flarc-matrix-run_01d0e4aeb274/server-03/index.mjs bunx vitest run --config /tmp/flarc-matrix-run_01d0e4aeb274/vitest.frozen.config.mts tests/security/matrix-revocation.test.ts tests/security/matrix-concurrency.test.ts tests/security/matrix-persistence.test.ts tests/security/storage.test.ts tests/integration/ircord-edit-fts-webhooks.test.ts --reporter=default --reporter=json --outputFile=/tmp/flarc-matrix-run_01d0e4aeb274/races-final-results.json",
+      "baselineBundleSha256": "6a58f6b9fd8f938777db4fcce55c336f21fa9e8de694c85e155d66c898c0e0a8",
+      "verifiedBundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89"
+    },
+    {
+      "id": "MSG-023",
+      "outcome": "PASS",
+      "completeForScenario": true,
+      "testFile": "tests/security/matrix-concurrency.test.ts",
+      "testTitle": "[MSG-023 DB-017 DB-024] concurrent idempotent retries commit once and duplicate client keys stay scoped to account and channel",
+      "scenarioScope": "Concurrent client idempotency keys scoped to two real accounts and two independent channels.",
+      "assertionDetails": [
+        "Twelve concurrent successful retries produce one canonical message ID, one stored body and exactly one IRC delivery to the permitted recipient.",
+        "The same client key across Alice/Bob and two channels yields four distinct canonical IDs; conflicting content is rejected without overwrite and an outsider write is denied.",
+        "An outsider receives a subsequent public marker without the private bodies; SQLite proves distinct sender IDs, no forbidden bodies and unique per-channel sequences."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "command": "FLARC_TEST_BUNDLE=/tmp/flarc-matrix-run_01d0e4aeb274/server-03/index.mjs bunx vitest run --config /tmp/flarc-matrix-run_01d0e4aeb274/vitest.frozen.config.mts tests/security/matrix-revocation.test.ts tests/security/matrix-concurrency.test.ts tests/security/matrix-persistence.test.ts tests/security/storage.test.ts tests/integration/ircord-edit-fts-webhooks.test.ts --reporter=default --reporter=json --outputFile=/tmp/flarc-matrix-run_01d0e4aeb274/races-final-results.json",
+      "baselineBundleSha256": "6a58f6b9fd8f938777db4fcce55c336f21fa9e8de694c85e155d66c898c0e0a8",
+      "verifiedBundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89"
+    },
+    {
+      "id": "DB-017",
+      "outcome": "PASS",
+      "completeForScenario": true,
+      "testFile": "tests/security/matrix-concurrency.test.ts",
+      "testTitle": "[MSG-023 DB-017 DB-024] concurrent idempotent retries commit once and duplicate client keys stay scoped to account and channel",
+      "scenarioScope": "Concurrent client idempotency keys scoped to two real accounts and two independent channels.",
+      "assertionDetails": [
+        "Twelve concurrent successful retries produce one canonical message ID, one stored body and exactly one IRC delivery to the permitted recipient.",
+        "The same client key across Alice/Bob and two channels yields four distinct canonical IDs; conflicting content is rejected without overwrite and an outsider write is denied.",
+        "An outsider receives a subsequent public marker without the private bodies; SQLite proves distinct sender IDs, no forbidden bodies and unique per-channel sequences."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "command": "FLARC_TEST_BUNDLE=/tmp/flarc-matrix-run_01d0e4aeb274/server-03/index.mjs bunx vitest run --config /tmp/flarc-matrix-run_01d0e4aeb274/vitest.frozen.config.mts tests/security/matrix-revocation.test.ts tests/security/matrix-concurrency.test.ts tests/security/matrix-persistence.test.ts tests/security/storage.test.ts tests/integration/ircord-edit-fts-webhooks.test.ts --reporter=default --reporter=json --outputFile=/tmp/flarc-matrix-run_01d0e4aeb274/races-final-results.json",
+      "baselineBundleSha256": "6a58f6b9fd8f938777db4fcce55c336f21fa9e8de694c85e155d66c898c0e0a8",
+      "verifiedBundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89"
+    },
+    {
+      "id": "DB-024",
+      "outcome": "PASS",
+      "completeForScenario": true,
+      "testFile": "tests/security/matrix-concurrency.test.ts",
+      "testTitle": "[MSG-023 DB-017 DB-024] concurrent idempotent retries commit once and duplicate client keys stay scoped to account and channel",
+      "scenarioScope": "Concurrent client idempotency keys scoped to two real accounts and two independent channels.",
+      "assertionDetails": [
+        "Twelve concurrent successful retries produce one canonical message ID, one stored body and exactly one IRC delivery to the permitted recipient.",
+        "The same client key across Alice/Bob and two channels yields four distinct canonical IDs; conflicting content is rejected without overwrite and an outsider write is denied.",
+        "An outsider receives a subsequent public marker without the private bodies; SQLite proves distinct sender IDs, no forbidden bodies and unique per-channel sequences."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "command": "FLARC_TEST_BUNDLE=/tmp/flarc-matrix-run_01d0e4aeb274/server-03/index.mjs bunx vitest run --config /tmp/flarc-matrix-run_01d0e4aeb274/vitest.frozen.config.mts tests/security/matrix-revocation.test.ts tests/security/matrix-concurrency.test.ts tests/security/matrix-persistence.test.ts tests/security/storage.test.ts tests/integration/ircord-edit-fts-webhooks.test.ts --reporter=default --reporter=json --outputFile=/tmp/flarc-matrix-run_01d0e4aeb274/races-final-results.json",
+      "baselineBundleSha256": "6a58f6b9fd8f938777db4fcce55c336f21fa9e8de694c85e155d66c898c0e0a8",
+      "verifiedBundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89"
+    },
+    {
+      "id": "MSG-024",
+      "outcome": "PASS",
+      "completeForScenario": true,
+      "testFile": "tests/security/matrix-concurrency.test.ts",
+      "testTitle": "[MSG-024 MSG-028] concurrent distinct writes produce one canonical sequence and matching ordered IRC delivery",
+      "scenarioScope": "Twenty simultaneous channel posts with canonical REST/IRC ordering and identities.",
+      "assertionDetails": [
+        "Twenty REST commits produce sequences 1..20; the authorized IRC recipient receives exactly 20 messages in sequence order with the same canonical IDs and exact storage-returned timestamps.",
+        "An outsider receives the public output barrier without private bodies; REST history returns the same IDs in reverse sequence order.",
+        "Stopped SQLite contains exactly those 20 committed bodies and IDs in canonical sequence order."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "command": "FLARC_TEST_BUNDLE=/tmp/flarc-matrix-run_01d0e4aeb274/server-03/index.mjs bunx vitest run --config /tmp/flarc-matrix-run_01d0e4aeb274/vitest.frozen.config.mts tests/security/matrix-revocation.test.ts tests/security/matrix-concurrency.test.ts tests/security/matrix-persistence.test.ts tests/security/storage.test.ts tests/integration/ircord-edit-fts-webhooks.test.ts --reporter=default --reporter=json --outputFile=/tmp/flarc-matrix-run_01d0e4aeb274/races-final-results.json",
+      "baselineBundleSha256": "6a58f6b9fd8f938777db4fcce55c336f21fa9e8de694c85e155d66c898c0e0a8",
+      "verifiedBundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89"
+    },
+    {
+      "id": "MSG-028",
+      "outcome": "PASS",
+      "completeForScenario": true,
+      "testFile": "tests/security/matrix-concurrency.test.ts",
+      "testTitle": "[MSG-024 MSG-028] concurrent distinct writes produce one canonical sequence and matching ordered IRC delivery",
+      "scenarioScope": "Twenty simultaneous channel posts with canonical REST/IRC ordering and identities.",
+      "assertionDetails": [
+        "Twenty REST commits produce sequences 1..20; the authorized IRC recipient receives exactly 20 messages in sequence order with the same canonical IDs and exact storage-returned timestamps.",
+        "An outsider receives the public output barrier without private bodies; REST history returns the same IDs in reverse sequence order.",
+        "Stopped SQLite contains exactly those 20 committed bodies and IDs in canonical sequence order."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "command": "FLARC_TEST_BUNDLE=/tmp/flarc-matrix-run_01d0e4aeb274/server-03/index.mjs bunx vitest run --config /tmp/flarc-matrix-run_01d0e4aeb274/vitest.frozen.config.mts tests/security/matrix-revocation.test.ts tests/security/matrix-concurrency.test.ts tests/security/matrix-persistence.test.ts tests/security/storage.test.ts tests/integration/ircord-edit-fts-webhooks.test.ts --reporter=default --reporter=json --outputFile=/tmp/flarc-matrix-run_01d0e4aeb274/races-final-results.json",
+      "baselineBundleSha256": "6a58f6b9fd8f938777db4fcce55c336f21fa9e8de694c85e155d66c898c0e0a8",
+      "verifiedBundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89"
+    },
+    {
+      "id": "AUTH-011",
+      "outcome": "PASS",
+      "completeForScenario": true,
+      "testFile": "tests/security/matrix-concurrency.test.ts",
+      "testTitle": "[AUTH-011 API-004 DB-025] a revoked real principal cannot mutate through REST or the owning-object session recheck",
+      "scenarioScope": "Authoritative session recheck at both public REST and the owning ChannelDO client facade.",
+      "assertionDetails": [
+        "A genuinely authenticated principal commits and reads its control, then logs out through REST.",
+        "Eight subsequent public writes return 401 and a direct internal clientRequest using the real revoked token rejects rather than trusting the earlier caller identity.",
+        "An independent permitted reader and SQLite find exactly the original authorized body and sequence, with neither attempted forbidden body."
+      ],
+      "transports": [
+        "REST",
+        "internal owning-object RPC with real session token",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport"
+      ],
+      "command": "FLARC_TEST_BUNDLE=/tmp/flarc-matrix-run_01d0e4aeb274/server-03/index.mjs bunx vitest run --config /tmp/flarc-matrix-run_01d0e4aeb274/vitest.frozen.config.mts tests/security/matrix-revocation.test.ts tests/security/matrix-concurrency.test.ts tests/security/matrix-persistence.test.ts tests/security/storage.test.ts tests/integration/ircord-edit-fts-webhooks.test.ts --reporter=default --reporter=json --outputFile=/tmp/flarc-matrix-run_01d0e4aeb274/races-final-results.json",
+      "baselineBundleSha256": "6a58f6b9fd8f938777db4fcce55c336f21fa9e8de694c85e155d66c898c0e0a8",
+      "verifiedBundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89"
+    },
+    {
+      "id": "API-004",
+      "outcome": "PASS",
+      "completeForScenario": true,
+      "testFile": "tests/security/matrix-concurrency.test.ts",
+      "testTitle": "[AUTH-011 API-004 DB-025] a revoked real principal cannot mutate through REST or the owning-object session recheck",
+      "scenarioScope": "Authoritative session recheck at both public REST and the owning ChannelDO client facade.",
+      "assertionDetails": [
+        "A genuinely authenticated principal commits and reads its control, then logs out through REST.",
+        "Eight subsequent public writes return 401 and a direct internal clientRequest using the real revoked token rejects rather than trusting the earlier caller identity.",
+        "An independent permitted reader and SQLite find exactly the original authorized body and sequence, with neither attempted forbidden body."
+      ],
+      "transports": [
+        "REST",
+        "internal owning-object RPC with real session token",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport"
+      ],
+      "command": "FLARC_TEST_BUNDLE=/tmp/flarc-matrix-run_01d0e4aeb274/server-03/index.mjs bunx vitest run --config /tmp/flarc-matrix-run_01d0e4aeb274/vitest.frozen.config.mts tests/security/matrix-revocation.test.ts tests/security/matrix-concurrency.test.ts tests/security/matrix-persistence.test.ts tests/security/storage.test.ts tests/integration/ircord-edit-fts-webhooks.test.ts --reporter=default --reporter=json --outputFile=/tmp/flarc-matrix-run_01d0e4aeb274/races-final-results.json",
+      "baselineBundleSha256": "6a58f6b9fd8f938777db4fcce55c336f21fa9e8de694c85e155d66c898c0e0a8",
+      "verifiedBundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89"
+    },
+    {
+      "id": "DB-025",
+      "outcome": "PASS",
+      "completeForScenario": true,
+      "testFile": "tests/security/matrix-concurrency.test.ts",
+      "testTitle": "[AUTH-011 API-004 DB-025] a revoked real principal cannot mutate through REST or the owning-object session recheck",
+      "scenarioScope": "Authoritative session recheck at both public REST and the owning ChannelDO client facade.",
+      "assertionDetails": [
+        "A genuinely authenticated principal commits and reads its control, then logs out through REST.",
+        "Eight subsequent public writes return 401 and a direct internal clientRequest using the real revoked token rejects rather than trusting the earlier caller identity.",
+        "An independent permitted reader and SQLite find exactly the original authorized body and sequence, with neither attempted forbidden body."
+      ],
+      "transports": [
+        "REST",
+        "internal owning-object RPC with real session token",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport"
+      ],
+      "command": "FLARC_TEST_BUNDLE=/tmp/flarc-matrix-run_01d0e4aeb274/server-03/index.mjs bunx vitest run --config /tmp/flarc-matrix-run_01d0e4aeb274/vitest.frozen.config.mts tests/security/matrix-revocation.test.ts tests/security/matrix-concurrency.test.ts tests/security/matrix-persistence.test.ts tests/security/storage.test.ts tests/integration/ircord-edit-fts-webhooks.test.ts --reporter=default --reporter=json --outputFile=/tmp/flarc-matrix-run_01d0e4aeb274/races-final-results.json",
+      "baselineBundleSha256": "6a58f6b9fd8f938777db4fcce55c336f21fa9e8de694c85e155d66c898c0e0a8",
+      "verifiedBundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89"
+    },
+    {
+      "id": "ROLE-027",
+      "outcome": "PASS",
+      "completeForScenario": true,
+      "testFile": "tests/security/matrix-concurrency.test.ts",
+      "testTitle": "[ROLE-027 ROLE-029 ROLE-033 DB-017] concurrent role deletion, assignment and sends cannot resurrect voice or bypass later authorization",
+      "scenarioScope": "Concurrent founder deletion/assignment and ordinary-member sends in a moderated secret channel.",
+      "assertionDetails": [
+        "A real custom voice/send_messages grant permits Bob to send a control; concurrently racing sends and repeated founder assignments may either linearize before deletion or reject safely.",
+        "Once the deletion completes, REST and IRC writes fail, self-voice MODE fails and ordinary-member role assignment is denied; public output markers prove sockets remain live.",
+        "No outsider receives the private control/racing bodies; SQLite shows no deleted group, no assignments, no persisted derived voice and no post-deletion forbidden message."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "command": "FLARC_TEST_BUNDLE=/tmp/flarc-matrix-run_01d0e4aeb274/server-03/index.mjs bunx vitest run --config /tmp/flarc-matrix-run_01d0e4aeb274/vitest.frozen.config.mts tests/security/matrix-revocation.test.ts tests/security/matrix-concurrency.test.ts tests/security/matrix-persistence.test.ts tests/security/storage.test.ts tests/integration/ircord-edit-fts-webhooks.test.ts --reporter=default --reporter=json --outputFile=/tmp/flarc-matrix-run_01d0e4aeb274/races-final-results.json",
+      "baselineBundleSha256": "6a58f6b9fd8f938777db4fcce55c336f21fa9e8de694c85e155d66c898c0e0a8",
+      "verifiedBundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89"
+    },
+    {
+      "id": "ROLE-029",
+      "outcome": "PASS",
+      "completeForScenario": true,
+      "testFile": "tests/security/matrix-concurrency.test.ts",
+      "testTitle": "[ROLE-027 ROLE-029 ROLE-033 DB-017] concurrent role deletion, assignment and sends cannot resurrect voice or bypass later authorization",
+      "scenarioScope": "Concurrent founder deletion/assignment and ordinary-member sends in a moderated secret channel.",
+      "assertionDetails": [
+        "A real custom voice/send_messages grant permits Bob to send a control; concurrently racing sends and repeated founder assignments may either linearize before deletion or reject safely.",
+        "Once the deletion completes, REST and IRC writes fail, self-voice MODE fails and ordinary-member role assignment is denied; public output markers prove sockets remain live.",
+        "No outsider receives the private control/racing bodies; SQLite shows no deleted group, no assignments, no persisted derived voice and no post-deletion forbidden message."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "command": "FLARC_TEST_BUNDLE=/tmp/flarc-matrix-run_01d0e4aeb274/server-03/index.mjs bunx vitest run --config /tmp/flarc-matrix-run_01d0e4aeb274/vitest.frozen.config.mts tests/security/matrix-revocation.test.ts tests/security/matrix-concurrency.test.ts tests/security/matrix-persistence.test.ts tests/security/storage.test.ts tests/integration/ircord-edit-fts-webhooks.test.ts --reporter=default --reporter=json --outputFile=/tmp/flarc-matrix-run_01d0e4aeb274/races-final-results.json",
+      "baselineBundleSha256": "6a58f6b9fd8f938777db4fcce55c336f21fa9e8de694c85e155d66c898c0e0a8",
+      "verifiedBundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89"
+    },
+    {
+      "id": "ROLE-033",
+      "outcome": "PASS",
+      "completeForScenario": true,
+      "testFile": "tests/security/matrix-concurrency.test.ts",
+      "testTitle": "[ROLE-027 ROLE-029 ROLE-033 DB-017] concurrent role deletion, assignment and sends cannot resurrect voice or bypass later authorization",
+      "scenarioScope": "Concurrent founder deletion/assignment and ordinary-member sends in a moderated secret channel.",
+      "assertionDetails": [
+        "A real custom voice/send_messages grant permits Bob to send a control; concurrently racing sends and repeated founder assignments may either linearize before deletion or reject safely.",
+        "Once the deletion completes, REST and IRC writes fail, self-voice MODE fails and ordinary-member role assignment is denied; public output markers prove sockets remain live.",
+        "No outsider receives the private control/racing bodies; SQLite shows no deleted group, no assignments, no persisted derived voice and no post-deletion forbidden message."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "command": "FLARC_TEST_BUNDLE=/tmp/flarc-matrix-run_01d0e4aeb274/server-03/index.mjs bunx vitest run --config /tmp/flarc-matrix-run_01d0e4aeb274/vitest.frozen.config.mts tests/security/matrix-revocation.test.ts tests/security/matrix-concurrency.test.ts tests/security/matrix-persistence.test.ts tests/security/storage.test.ts tests/integration/ircord-edit-fts-webhooks.test.ts --reporter=default --reporter=json --outputFile=/tmp/flarc-matrix-run_01d0e4aeb274/races-final-results.json",
+      "baselineBundleSha256": "6a58f6b9fd8f938777db4fcce55c336f21fa9e8de694c85e155d66c898c0e0a8",
+      "verifiedBundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89"
+    },
+    {
+      "id": "DB-017",
+      "outcome": "PASS",
+      "completeForScenario": true,
+      "testFile": "tests/security/matrix-concurrency.test.ts",
+      "testTitle": "[ROLE-027 ROLE-029 ROLE-033 DB-017] concurrent role deletion, assignment and sends cannot resurrect voice or bypass later authorization",
+      "scenarioScope": "Concurrent founder deletion/assignment and ordinary-member sends in a moderated secret channel.",
+      "assertionDetails": [
+        "A real custom voice/send_messages grant permits Bob to send a control; concurrently racing sends and repeated founder assignments may either linearize before deletion or reject safely.",
+        "Once the deletion completes, REST and IRC writes fail, self-voice MODE fails and ordinary-member role assignment is denied; public output markers prove sockets remain live.",
+        "No outsider receives the private control/racing bodies; SQLite shows no deleted group, no assignments, no persisted derived voice and no post-deletion forbidden message."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "command": "FLARC_TEST_BUNDLE=/tmp/flarc-matrix-run_01d0e4aeb274/server-03/index.mjs bunx vitest run --config /tmp/flarc-matrix-run_01d0e4aeb274/vitest.frozen.config.mts tests/security/matrix-revocation.test.ts tests/security/matrix-concurrency.test.ts tests/security/matrix-persistence.test.ts tests/security/storage.test.ts tests/integration/ircord-edit-fts-webhooks.test.ts --reporter=default --reporter=json --outputFile=/tmp/flarc-matrix-run_01d0e4aeb274/races-final-results.json",
+      "baselineBundleSha256": "6a58f6b9fd8f938777db4fcce55c336f21fa9e8de694c85e155d66c898c0e0a8",
+      "verifiedBundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89"
+    },
+    {
+      "id": "MSG-025",
+      "outcome": "PASS",
+      "completeForScenario": true,
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[MSG-025 DB-015] failed SQL insertion emits no durable acknowledgement and rolls back the sequence reservation",
+      "scenarioScope": "A real persisted BEFORE INSERT ABORT fault in messages, injected only while workerd is stopped.",
+      "assertionDetails": [
+        "The failed write returns sanitized HTTP 500, produces no private IRC delivery before public output barriers, and an unrelated account cannot overwrite the retained original.",
+        "Stopped SQLite message rows equal their pre-fault snapshot, no failed-body FTS row exists, and next_sequence exactly matches the pre-fault value."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "stopped-runtime SQLite fault trigger"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "command": "FLARC_TEST_BUNDLE=/tmp/flarc-matrix-run_01d0e4aeb274/server-03/index.mjs bunx vitest run --config /tmp/flarc-matrix-run_01d0e4aeb274/vitest.frozen.config.mts tests/security/matrix-revocation.test.ts tests/security/matrix-concurrency.test.ts tests/security/matrix-persistence.test.ts tests/security/storage.test.ts tests/integration/ircord-edit-fts-webhooks.test.ts --reporter=default --reporter=json --outputFile=/tmp/flarc-matrix-run_01d0e4aeb274/races-final-results.json",
+      "baselineBundleSha256": "6a58f6b9fd8f938777db4fcce55c336f21fa9e8de694c85e155d66c898c0e0a8",
+      "verifiedBundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89"
+    },
+    {
+      "id": "DB-015",
+      "outcome": "PASS",
+      "completeForScenario": true,
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[MSG-025 DB-015] failed SQL insertion emits no durable acknowledgement and rolls back the sequence reservation",
+      "scenarioScope": "A real persisted BEFORE INSERT ABORT fault in messages, injected only while workerd is stopped.",
+      "assertionDetails": [
+        "The failed write returns sanitized HTTP 500, produces no private IRC delivery before public output barriers, and an unrelated account cannot overwrite the retained original.",
+        "Stopped SQLite message rows equal their pre-fault snapshot, no failed-body FTS row exists, and next_sequence exactly matches the pre-fault value."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "stopped-runtime SQLite fault trigger"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "command": "FLARC_TEST_BUNDLE=/tmp/flarc-matrix-run_01d0e4aeb274/server-03/index.mjs bunx vitest run --config /tmp/flarc-matrix-run_01d0e4aeb274/vitest.frozen.config.mts tests/security/matrix-revocation.test.ts tests/security/matrix-concurrency.test.ts tests/security/matrix-persistence.test.ts tests/security/storage.test.ts tests/integration/ircord-edit-fts-webhooks.test.ts --reporter=default --reporter=json --outputFile=/tmp/flarc-matrix-run_01d0e4aeb274/races-final-results.json",
+      "baselineBundleSha256": "6a58f6b9fd8f938777db4fcce55c336f21fa9e8de694c85e155d66c898c0e0a8",
+      "verifiedBundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89"
+    },
+    {
+      "id": "MSG-025",
+      "outcome": "PASS",
+      "completeForScenario": true,
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[MSG-025 DB-015] a real SQL edit-lineage fault cannot leave an unacknowledged partial message in history",
+      "scenarioScope": "A real BEFORE INSERT ABORT in message_edits after the append would otherwise have inserted its message row.",
+      "assertionDetails": [
+        "A REST +ircord/edit post returns sanitized HTTP 500; the authorized receiver gets a later output marker without an edit delivery.",
+        "An independent REST read and stopped-runtime SELECT must both equal the original one-message pre-fault state, rejecting an unacknowledged partial edit."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "stopped-runtime SQLite fault trigger"
+      ],
+      "assertions": [
+        "state",
+        "events",
+        "transport",
+        "restart"
+      ],
+      "command": "FLARC_TEST_BUNDLE=/tmp/flarc-matrix-run_01d0e4aeb274/server-03/index.mjs bunx vitest run --config /tmp/flarc-matrix-run_01d0e4aeb274/vitest.frozen.config.mts tests/security/matrix-revocation.test.ts tests/security/matrix-concurrency.test.ts tests/security/matrix-persistence.test.ts tests/security/storage.test.ts tests/integration/ircord-edit-fts-webhooks.test.ts --reporter=default --reporter=json --outputFile=/tmp/flarc-matrix-run_01d0e4aeb274/races-final-results.json",
+      "baselineBundleSha256": "6a58f6b9fd8f938777db4fcce55c336f21fa9e8de694c85e155d66c898c0e0a8",
+      "verifiedBundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89"
+    },
+    {
+      "id": "DB-015",
+      "outcome": "PASS",
+      "completeForScenario": true,
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[MSG-025 DB-015] a real SQL edit-lineage fault cannot leave an unacknowledged partial message in history",
+      "scenarioScope": "A real BEFORE INSERT ABORT in message_edits after the append would otherwise have inserted its message row.",
+      "assertionDetails": [
+        "A REST +ircord/edit post returns sanitized HTTP 500; the authorized receiver gets a later output marker without an edit delivery.",
+        "An independent REST read and stopped-runtime SELECT must both equal the original one-message pre-fault state, rejecting an unacknowledged partial edit."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "stopped-runtime SQLite fault trigger"
+      ],
+      "assertions": [
+        "state",
+        "events",
+        "transport",
+        "restart"
+      ],
+      "command": "FLARC_TEST_BUNDLE=/tmp/flarc-matrix-run_01d0e4aeb274/server-03/index.mjs bunx vitest run --config /tmp/flarc-matrix-run_01d0e4aeb274/vitest.frozen.config.mts tests/security/matrix-revocation.test.ts tests/security/matrix-concurrency.test.ts tests/security/matrix-persistence.test.ts tests/security/storage.test.ts tests/integration/ircord-edit-fts-webhooks.test.ts --reporter=default --reporter=json --outputFile=/tmp/flarc-matrix-run_01d0e4aeb274/races-final-results.json",
+      "baselineBundleSha256": "6a58f6b9fd8f938777db4fcce55c336f21fa9e8de694c85e155d66c898c0e0a8",
+      "verifiedBundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89"
+    },
+    {
+      "id": "MSG-025",
+      "outcome": "PASS",
+      "completeForScenario": true,
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[MSG-025 DB-015] an original-message UPDATE fault rolls back the append, lineage and FTS before publishing any event",
+      "scenarioScope": "A real original-content UPDATE ABORT after sequence, append and edit-lineage writes.",
+      "assertionDetails": [
+        "The faulted REST edit fails; three real event sockets and the IRC receiver receive public markers without message.created or message.updated carrying the failed body.",
+        "Independent history and SQLite retain only the original row; edit lineage is empty, FTS has no failed-body tokens and the sequence reservation is unchanged."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "events/WebSocket",
+        "stopped-runtime SQLite fault trigger"
+      ],
+      "assertions": [
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "command": "FLARC_TEST_BUNDLE=/tmp/flarc-matrix-run_01d0e4aeb274/server-03/index.mjs bunx vitest run --config /tmp/flarc-matrix-run_01d0e4aeb274/vitest.frozen.config.mts tests/security/matrix-revocation.test.ts tests/security/matrix-concurrency.test.ts tests/security/matrix-persistence.test.ts tests/security/storage.test.ts tests/integration/ircord-edit-fts-webhooks.test.ts --reporter=default --reporter=json --outputFile=/tmp/flarc-matrix-run_01d0e4aeb274/races-final-results.json",
+      "baselineBundleSha256": "6a58f6b9fd8f938777db4fcce55c336f21fa9e8de694c85e155d66c898c0e0a8",
+      "verifiedBundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89"
+    },
+    {
+      "id": "DB-015",
+      "outcome": "PASS",
+      "completeForScenario": true,
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[MSG-025 DB-015] an original-message UPDATE fault rolls back the append, lineage and FTS before publishing any event",
+      "scenarioScope": "A real original-content UPDATE ABORT after sequence, append and edit-lineage writes.",
+      "assertionDetails": [
+        "The faulted REST edit fails; three real event sockets and the IRC receiver receive public markers without message.created or message.updated carrying the failed body.",
+        "Independent history and SQLite retain only the original row; edit lineage is empty, FTS has no failed-body tokens and the sequence reservation is unchanged."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "events/WebSocket",
+        "stopped-runtime SQLite fault trigger"
+      ],
+      "assertions": [
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "command": "FLARC_TEST_BUNDLE=/tmp/flarc-matrix-run_01d0e4aeb274/server-03/index.mjs bunx vitest run --config /tmp/flarc-matrix-run_01d0e4aeb274/vitest.frozen.config.mts tests/security/matrix-revocation.test.ts tests/security/matrix-concurrency.test.ts tests/security/matrix-persistence.test.ts tests/security/storage.test.ts tests/integration/ircord-edit-fts-webhooks.test.ts --reporter=default --reporter=json --outputFile=/tmp/flarc-matrix-run_01d0e4aeb274/races-final-results.json",
+      "baselineBundleSha256": "6a58f6b9fd8f938777db4fcce55c336f21fa9e8de694c85e155d66c898c0e0a8",
+      "verifiedBundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89"
+    },
+    {
+      "id": "API-014",
+      "outcome": "PASS",
+      "completeForScenario": true,
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[API-014 CHAN-010 DB-025] literal FTS punctuation, phrases and malformed text remain safe across REST and IRC without changing private history",
+      "scenarioScope": "Literal full-text terms and quoted phrase semantics after the existing structured-filter parser, in a secret channel.",
+      "assertionDetails": [
+        "Hyphens, URLs, apostrophes, quoted contiguous phrases, unquoted AND terms, structured from filters, empty quoted text, punctuation and malformed text produce exact expected REST result IDs and matching IRC result bodies/counts without parser failures.",
+        "An unrelated account is denied through both REST and IRC without private search results; truly empty unfiltered REST queries reject and filter-only searches still select the correct sender.",
+        "History before and after all queries is identical and SQLite still contains exactly six messages."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "unrelatedResources"
+      ],
+      "command": "FLARC_TEST_BUNDLE=/tmp/flarc-matrix-run_01d0e4aeb274/server-03/index.mjs bunx vitest run --config /tmp/flarc-matrix-run_01d0e4aeb274/vitest.frozen.config.mts tests/security/matrix-revocation.test.ts tests/security/matrix-concurrency.test.ts tests/security/matrix-persistence.test.ts tests/security/storage.test.ts tests/integration/ircord-edit-fts-webhooks.test.ts --reporter=default --reporter=json --outputFile=/tmp/flarc-matrix-run_01d0e4aeb274/races-final-results.json",
+      "baselineBundleSha256": "6a58f6b9fd8f938777db4fcce55c336f21fa9e8de694c85e155d66c898c0e0a8",
+      "verifiedBundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89"
+    },
+    {
+      "id": "CHAN-010",
+      "outcome": "PASS",
+      "completeForScenario": true,
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[API-014 CHAN-010 DB-025] literal FTS punctuation, phrases and malformed text remain safe across REST and IRC without changing private history",
+      "scenarioScope": "Literal full-text terms and quoted phrase semantics after the existing structured-filter parser, in a secret channel.",
+      "assertionDetails": [
+        "Hyphens, URLs, apostrophes, quoted contiguous phrases, unquoted AND terms, structured from filters, empty quoted text, punctuation and malformed text produce exact expected REST result IDs and matching IRC result bodies/counts without parser failures.",
+        "An unrelated account is denied through both REST and IRC without private search results; truly empty unfiltered REST queries reject and filter-only searches still select the correct sender.",
+        "History before and after all queries is identical and SQLite still contains exactly six messages."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "unrelatedResources"
+      ],
+      "command": "FLARC_TEST_BUNDLE=/tmp/flarc-matrix-run_01d0e4aeb274/server-03/index.mjs bunx vitest run --config /tmp/flarc-matrix-run_01d0e4aeb274/vitest.frozen.config.mts tests/security/matrix-revocation.test.ts tests/security/matrix-concurrency.test.ts tests/security/matrix-persistence.test.ts tests/security/storage.test.ts tests/integration/ircord-edit-fts-webhooks.test.ts --reporter=default --reporter=json --outputFile=/tmp/flarc-matrix-run_01d0e4aeb274/races-final-results.json",
+      "baselineBundleSha256": "6a58f6b9fd8f938777db4fcce55c336f21fa9e8de694c85e155d66c898c0e0a8",
+      "verifiedBundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89"
+    },
+    {
+      "id": "DB-025",
+      "outcome": "PASS",
+      "completeForScenario": true,
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[API-014 CHAN-010 DB-025] literal FTS punctuation, phrases and malformed text remain safe across REST and IRC without changing private history",
+      "scenarioScope": "Literal full-text terms and quoted phrase semantics after the existing structured-filter parser, in a secret channel.",
+      "assertionDetails": [
+        "Hyphens, URLs, apostrophes, quoted contiguous phrases, unquoted AND terms, structured from filters, empty quoted text, punctuation and malformed text produce exact expected REST result IDs and matching IRC result bodies/counts without parser failures.",
+        "An unrelated account is denied through both REST and IRC without private search results; truly empty unfiltered REST queries reject and filter-only searches still select the correct sender.",
+        "History before and after all queries is identical and SQLite still contains exactly six messages."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "unrelatedResources"
+      ],
+      "command": "FLARC_TEST_BUNDLE=/tmp/flarc-matrix-run_01d0e4aeb274/server-03/index.mjs bunx vitest run --config /tmp/flarc-matrix-run_01d0e4aeb274/vitest.frozen.config.mts tests/security/matrix-revocation.test.ts tests/security/matrix-concurrency.test.ts tests/security/matrix-persistence.test.ts tests/security/storage.test.ts tests/integration/ircord-edit-fts-webhooks.test.ts --reporter=default --reporter=json --outputFile=/tmp/flarc-matrix-run_01d0e4aeb274/races-final-results.json",
+      "baselineBundleSha256": "6a58f6b9fd8f938777db4fcce55c336f21fa9e8de694c85e155d66c898c0e0a8",
+      "verifiedBundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89"
+    },
+    {
+      "id": "MSG-025",
+      "outcome": "PASS",
+      "completeForScenario": true,
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[MSG-025 DB-015] a failed edit commit never reaches the outbound webhook sink while authorized controls do",
+      "scenarioScope": "Real workerd outgoing dispatch to a controlled local outbound service, with public authenticated webhook configuration.",
+      "assertionDetails": [
+        "An unrelated account cannot configure either channel webhook; the founder configures them through the real REST API.",
+        "A successful normal message and a subsequent output barrier reach the configured HTTP sink; the SQL-faulted edit returns 500 and never reaches the webhook sink.",
+        "After workerd disposal drains waitUntil, the sink has exactly its two authorized bodies and SQLite equals the pre-fault message snapshot."
+      ],
+      "transports": [
+        "REST",
+        "workerd outbound HTTP service sink",
+        "stopped-runtime SQLite fault trigger"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "command": "FLARC_TEST_BUNDLE=/tmp/flarc-matrix-run_01d0e4aeb274/server-03/index.mjs bunx vitest run --config /tmp/flarc-matrix-run_01d0e4aeb274/vitest.frozen.config.mts tests/security/matrix-revocation.test.ts tests/security/matrix-concurrency.test.ts tests/security/matrix-persistence.test.ts tests/security/storage.test.ts tests/integration/ircord-edit-fts-webhooks.test.ts --reporter=default --reporter=json --outputFile=/tmp/flarc-matrix-run_01d0e4aeb274/races-final-results.json",
+      "baselineBundleSha256": "6a58f6b9fd8f938777db4fcce55c336f21fa9e8de694c85e155d66c898c0e0a8",
+      "verifiedBundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89"
+    },
+    {
+      "id": "DB-015",
+      "outcome": "PASS",
+      "completeForScenario": true,
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[MSG-025 DB-015] a failed edit commit never reaches the outbound webhook sink while authorized controls do",
+      "scenarioScope": "Real workerd outgoing dispatch to a controlled local outbound service, with public authenticated webhook configuration.",
+      "assertionDetails": [
+        "An unrelated account cannot configure either channel webhook; the founder configures them through the real REST API.",
+        "A successful normal message and a subsequent output barrier reach the configured HTTP sink; the SQL-faulted edit returns 500 and never reaches the webhook sink.",
+        "After workerd disposal drains waitUntil, the sink has exactly its two authorized bodies and SQLite equals the pre-fault message snapshot."
+      ],
+      "transports": [
+        "REST",
+        "workerd outbound HTTP service sink",
+        "stopped-runtime SQLite fault trigger"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "command": "FLARC_TEST_BUNDLE=/tmp/flarc-matrix-run_01d0e4aeb274/server-03/index.mjs bunx vitest run --config /tmp/flarc-matrix-run_01d0e4aeb274/vitest.frozen.config.mts tests/security/matrix-revocation.test.ts tests/security/matrix-concurrency.test.ts tests/security/matrix-persistence.test.ts tests/security/storage.test.ts tests/integration/ircord-edit-fts-webhooks.test.ts --reporter=default --reporter=json --outputFile=/tmp/flarc-matrix-run_01d0e4aeb274/races-final-results.json",
+      "baselineBundleSha256": "6a58f6b9fd8f938777db4fcce55c336f21fa9e8de694c85e155d66c898c0e0a8",
+      "verifiedBundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89"
+    },
+    {
+      "id": "DB-015",
+      "outcome": "PASS",
+      "completeForScenario": true,
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[DB-015 DB-002] SQL credential failure rolls back hashes, SCRAM credentials, credential version and existing sessions",
+      "scenarioScope": "Atomic password/SCRAM/session rollback under an actual credential-table ABORT trigger.",
+      "assertionDetails": [
+        "An ordinary account cannot reset Alice password; the legitimate administrator reset reaches the injected SQLite failure and returns 500.",
+        "Existing API access remains valid and complete users, SCRAM credentials, versions and API session tables equal their pre-fault snapshots, including unrelated accounts.",
+        "After a further full restart the rejected replacement password fails and the original password still authenticates through public login."
+      ],
+      "transports": [
+        "REST",
+        "stopped-runtime SQLite fault trigger"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "command": "FLARC_TEST_BUNDLE=/tmp/flarc-matrix-run_01d0e4aeb274/server-03/index.mjs bunx vitest run --config /tmp/flarc-matrix-run_01d0e4aeb274/vitest.frozen.config.mts tests/security/matrix-revocation.test.ts tests/security/matrix-concurrency.test.ts tests/security/matrix-persistence.test.ts tests/security/storage.test.ts tests/integration/ircord-edit-fts-webhooks.test.ts --reporter=default --reporter=json --outputFile=/tmp/flarc-matrix-run_01d0e4aeb274/races-final-results.json",
+      "baselineBundleSha256": "6a58f6b9fd8f938777db4fcce55c336f21fa9e8de694c85e155d66c898c0e0a8",
+      "verifiedBundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89"
+    },
+    {
+      "id": "DB-002",
+      "outcome": "PASS",
+      "completeForScenario": true,
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[DB-015 DB-002] SQL credential failure rolls back hashes, SCRAM credentials, credential version and existing sessions",
+      "scenarioScope": "Atomic password/SCRAM/session rollback under an actual credential-table ABORT trigger.",
+      "assertionDetails": [
+        "An ordinary account cannot reset Alice password; the legitimate administrator reset reaches the injected SQLite failure and returns 500.",
+        "Existing API access remains valid and complete users, SCRAM credentials, versions and API session tables equal their pre-fault snapshots, including unrelated accounts.",
+        "After a further full restart the rejected replacement password fails and the original password still authenticates through public login."
+      ],
+      "transports": [
+        "REST",
+        "stopped-runtime SQLite fault trigger"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "command": "FLARC_TEST_BUNDLE=/tmp/flarc-matrix-run_01d0e4aeb274/server-03/index.mjs bunx vitest run --config /tmp/flarc-matrix-run_01d0e4aeb274/vitest.frozen.config.mts tests/security/matrix-revocation.test.ts tests/security/matrix-concurrency.test.ts tests/security/matrix-persistence.test.ts tests/security/storage.test.ts tests/integration/ircord-edit-fts-webhooks.test.ts --reporter=default --reporter=json --outputFile=/tmp/flarc-matrix-run_01d0e4aeb274/races-final-results.json",
+      "baselineBundleSha256": "6a58f6b9fd8f938777db4fcce55c336f21fa9e8de694c85e155d66c898c0e0a8",
+      "verifiedBundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89"
+    },
+    {
+      "id": "DB-004",
+      "outcome": "PASS",
+      "completeForScenario": true,
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[DB-004 DB-007 DB-008 ROLE-027 ROLE-029 ROLE-030 CHAN-032] restart preserves retained grants without resurrecting removed roles or kicked private membership",
+      "scenarioScope": "Role deletion, cross-channel retained role and kicked invite-only membership across full Miniflare disposal/recreation.",
+      "assertionDetails": [
+        "Only the founder can delete the group; Bob loses management immediately and is kicked from the private invite-only channel, while a different channel role remains assigned.",
+        "Stopped SQLite has neither removed role/group assignment nor Bob membership; after restart disabled-account tokens/login reject and Bob cannot read or rejoin the private channel.",
+        "The unrelated retained role still authorizes metadata changes and IRC MODE after reconnect; founder history remains intact."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "stopped-runtime SQLite",
+        "full Miniflare restart"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "command": "FLARC_TEST_BUNDLE=/tmp/flarc-matrix-run_01d0e4aeb274/server-03/index.mjs bunx vitest run --config /tmp/flarc-matrix-run_01d0e4aeb274/vitest.frozen.config.mts tests/security/matrix-revocation.test.ts tests/security/matrix-concurrency.test.ts tests/security/matrix-persistence.test.ts tests/security/storage.test.ts tests/integration/ircord-edit-fts-webhooks.test.ts --reporter=default --reporter=json --outputFile=/tmp/flarc-matrix-run_01d0e4aeb274/races-final-results.json",
+      "baselineBundleSha256": "6a58f6b9fd8f938777db4fcce55c336f21fa9e8de694c85e155d66c898c0e0a8",
+      "verifiedBundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89"
+    },
+    {
+      "id": "DB-007",
+      "outcome": "PASS",
+      "completeForScenario": true,
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[DB-004 DB-007 DB-008 ROLE-027 ROLE-029 ROLE-030 CHAN-032] restart preserves retained grants without resurrecting removed roles or kicked private membership",
+      "scenarioScope": "Role deletion, cross-channel retained role and kicked invite-only membership across full Miniflare disposal/recreation.",
+      "assertionDetails": [
+        "Only the founder can delete the group; Bob loses management immediately and is kicked from the private invite-only channel, while a different channel role remains assigned.",
+        "Stopped SQLite has neither removed role/group assignment nor Bob membership; after restart disabled-account tokens/login reject and Bob cannot read or rejoin the private channel.",
+        "The unrelated retained role still authorizes metadata changes and IRC MODE after reconnect; founder history remains intact."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "stopped-runtime SQLite",
+        "full Miniflare restart"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "command": "FLARC_TEST_BUNDLE=/tmp/flarc-matrix-run_01d0e4aeb274/server-03/index.mjs bunx vitest run --config /tmp/flarc-matrix-run_01d0e4aeb274/vitest.frozen.config.mts tests/security/matrix-revocation.test.ts tests/security/matrix-concurrency.test.ts tests/security/matrix-persistence.test.ts tests/security/storage.test.ts tests/integration/ircord-edit-fts-webhooks.test.ts --reporter=default --reporter=json --outputFile=/tmp/flarc-matrix-run_01d0e4aeb274/races-final-results.json",
+      "baselineBundleSha256": "6a58f6b9fd8f938777db4fcce55c336f21fa9e8de694c85e155d66c898c0e0a8",
+      "verifiedBundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89"
+    },
+    {
+      "id": "DB-008",
+      "outcome": "PASS",
+      "completeForScenario": true,
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[DB-004 DB-007 DB-008 ROLE-027 ROLE-029 ROLE-030 CHAN-032] restart preserves retained grants without resurrecting removed roles or kicked private membership",
+      "scenarioScope": "Role deletion, cross-channel retained role and kicked invite-only membership across full Miniflare disposal/recreation.",
+      "assertionDetails": [
+        "Only the founder can delete the group; Bob loses management immediately and is kicked from the private invite-only channel, while a different channel role remains assigned.",
+        "Stopped SQLite has neither removed role/group assignment nor Bob membership; after restart disabled-account tokens/login reject and Bob cannot read or rejoin the private channel.",
+        "The unrelated retained role still authorizes metadata changes and IRC MODE after reconnect; founder history remains intact."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "stopped-runtime SQLite",
+        "full Miniflare restart"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "command": "FLARC_TEST_BUNDLE=/tmp/flarc-matrix-run_01d0e4aeb274/server-03/index.mjs bunx vitest run --config /tmp/flarc-matrix-run_01d0e4aeb274/vitest.frozen.config.mts tests/security/matrix-revocation.test.ts tests/security/matrix-concurrency.test.ts tests/security/matrix-persistence.test.ts tests/security/storage.test.ts tests/integration/ircord-edit-fts-webhooks.test.ts --reporter=default --reporter=json --outputFile=/tmp/flarc-matrix-run_01d0e4aeb274/races-final-results.json",
+      "baselineBundleSha256": "6a58f6b9fd8f938777db4fcce55c336f21fa9e8de694c85e155d66c898c0e0a8",
+      "verifiedBundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89"
+    },
+    {
+      "id": "ROLE-027",
+      "outcome": "PASS",
+      "completeForScenario": true,
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[DB-004 DB-007 DB-008 ROLE-027 ROLE-029 ROLE-030 CHAN-032] restart preserves retained grants without resurrecting removed roles or kicked private membership",
+      "scenarioScope": "Role deletion, cross-channel retained role and kicked invite-only membership across full Miniflare disposal/recreation.",
+      "assertionDetails": [
+        "Only the founder can delete the group; Bob loses management immediately and is kicked from the private invite-only channel, while a different channel role remains assigned.",
+        "Stopped SQLite has neither removed role/group assignment nor Bob membership; after restart disabled-account tokens/login reject and Bob cannot read or rejoin the private channel.",
+        "The unrelated retained role still authorizes metadata changes and IRC MODE after reconnect; founder history remains intact."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "stopped-runtime SQLite",
+        "full Miniflare restart"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "command": "FLARC_TEST_BUNDLE=/tmp/flarc-matrix-run_01d0e4aeb274/server-03/index.mjs bunx vitest run --config /tmp/flarc-matrix-run_01d0e4aeb274/vitest.frozen.config.mts tests/security/matrix-revocation.test.ts tests/security/matrix-concurrency.test.ts tests/security/matrix-persistence.test.ts tests/security/storage.test.ts tests/integration/ircord-edit-fts-webhooks.test.ts --reporter=default --reporter=json --outputFile=/tmp/flarc-matrix-run_01d0e4aeb274/races-final-results.json",
+      "baselineBundleSha256": "6a58f6b9fd8f938777db4fcce55c336f21fa9e8de694c85e155d66c898c0e0a8",
+      "verifiedBundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89"
+    },
+    {
+      "id": "ROLE-029",
+      "outcome": "PASS",
+      "completeForScenario": true,
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[DB-004 DB-007 DB-008 ROLE-027 ROLE-029 ROLE-030 CHAN-032] restart preserves retained grants without resurrecting removed roles or kicked private membership",
+      "scenarioScope": "Role deletion, cross-channel retained role and kicked invite-only membership across full Miniflare disposal/recreation.",
+      "assertionDetails": [
+        "Only the founder can delete the group; Bob loses management immediately and is kicked from the private invite-only channel, while a different channel role remains assigned.",
+        "Stopped SQLite has neither removed role/group assignment nor Bob membership; after restart disabled-account tokens/login reject and Bob cannot read or rejoin the private channel.",
+        "The unrelated retained role still authorizes metadata changes and IRC MODE after reconnect; founder history remains intact."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "stopped-runtime SQLite",
+        "full Miniflare restart"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "command": "FLARC_TEST_BUNDLE=/tmp/flarc-matrix-run_01d0e4aeb274/server-03/index.mjs bunx vitest run --config /tmp/flarc-matrix-run_01d0e4aeb274/vitest.frozen.config.mts tests/security/matrix-revocation.test.ts tests/security/matrix-concurrency.test.ts tests/security/matrix-persistence.test.ts tests/security/storage.test.ts tests/integration/ircord-edit-fts-webhooks.test.ts --reporter=default --reporter=json --outputFile=/tmp/flarc-matrix-run_01d0e4aeb274/races-final-results.json",
+      "baselineBundleSha256": "6a58f6b9fd8f938777db4fcce55c336f21fa9e8de694c85e155d66c898c0e0a8",
+      "verifiedBundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89"
+    },
+    {
+      "id": "ROLE-030",
+      "outcome": "PASS",
+      "completeForScenario": true,
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[DB-004 DB-007 DB-008 ROLE-027 ROLE-029 ROLE-030 CHAN-032] restart preserves retained grants without resurrecting removed roles or kicked private membership",
+      "scenarioScope": "Role deletion, cross-channel retained role and kicked invite-only membership across full Miniflare disposal/recreation.",
+      "assertionDetails": [
+        "Only the founder can delete the group; Bob loses management immediately and is kicked from the private invite-only channel, while a different channel role remains assigned.",
+        "Stopped SQLite has neither removed role/group assignment nor Bob membership; after restart disabled-account tokens/login reject and Bob cannot read or rejoin the private channel.",
+        "The unrelated retained role still authorizes metadata changes and IRC MODE after reconnect; founder history remains intact."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "stopped-runtime SQLite",
+        "full Miniflare restart"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "command": "FLARC_TEST_BUNDLE=/tmp/flarc-matrix-run_01d0e4aeb274/server-03/index.mjs bunx vitest run --config /tmp/flarc-matrix-run_01d0e4aeb274/vitest.frozen.config.mts tests/security/matrix-revocation.test.ts tests/security/matrix-concurrency.test.ts tests/security/matrix-persistence.test.ts tests/security/storage.test.ts tests/integration/ircord-edit-fts-webhooks.test.ts --reporter=default --reporter=json --outputFile=/tmp/flarc-matrix-run_01d0e4aeb274/races-final-results.json",
+      "baselineBundleSha256": "6a58f6b9fd8f938777db4fcce55c336f21fa9e8de694c85e155d66c898c0e0a8",
+      "verifiedBundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89"
+    },
+    {
+      "id": "CHAN-032",
+      "outcome": "PASS",
+      "completeForScenario": true,
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[DB-004 DB-007 DB-008 ROLE-027 ROLE-029 ROLE-030 CHAN-032] restart preserves retained grants without resurrecting removed roles or kicked private membership",
+      "scenarioScope": "Role deletion, cross-channel retained role and kicked invite-only membership across full Miniflare disposal/recreation.",
+      "assertionDetails": [
+        "Only the founder can delete the group; Bob loses management immediately and is kicked from the private invite-only channel, while a different channel role remains assigned.",
+        "Stopped SQLite has neither removed role/group assignment nor Bob membership; after restart disabled-account tokens/login reject and Bob cannot read or rejoin the private channel.",
+        "The unrelated retained role still authorizes metadata changes and IRC MODE after reconnect; founder history remains intact."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "stopped-runtime SQLite",
+        "full Miniflare restart"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "command": "FLARC_TEST_BUNDLE=/tmp/flarc-matrix-run_01d0e4aeb274/server-03/index.mjs bunx vitest run --config /tmp/flarc-matrix-run_01d0e4aeb274/vitest.frozen.config.mts tests/security/matrix-revocation.test.ts tests/security/matrix-concurrency.test.ts tests/security/matrix-persistence.test.ts tests/security/storage.test.ts tests/integration/ircord-edit-fts-webhooks.test.ts --reporter=default --reporter=json --outputFile=/tmp/flarc-matrix-run_01d0e4aeb274/races-final-results.json",
+      "baselineBundleSha256": "6a58f6b9fd8f938777db4fcce55c336f21fa9e8de694c85e155d66c898c0e0a8",
+      "verifiedBundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89"
+    },
+    {
+      "id": "DB-009",
+      "outcome": "PASS",
+      "completeForScenario": true,
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[DB-009 DB-010 DB-011 MSG-026 DM-017 DB-027] independent runtime restart preserves private messages, edits and redactions and rejects foreign cursors",
+      "scenarioScope": "Private channel edit/redaction and participant DM history across full runtime restart, with cross-channel cursors.",
+      "assertionDetails": [
+        "After restart the founder sees the edited message and the redacted body never reappears; Alice/Bob DM history persists and Charlie cannot retrieve it.",
+        "Negative/extreme limits and a foreign-channel before cursor cannot grant secret-channel access; an authorized unrelated-channel around cursor cannot return private rows and remains bounded.",
+        "SQLite confirms the redaction is scrubbed and its FTS row is absent."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket for DM setup",
+        "stopped-runtime SQLite",
+        "full Miniflare restart"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "command": "FLARC_TEST_BUNDLE=/tmp/flarc-matrix-run_01d0e4aeb274/server-03/index.mjs bunx vitest run --config /tmp/flarc-matrix-run_01d0e4aeb274/vitest.frozen.config.mts tests/security/matrix-revocation.test.ts tests/security/matrix-concurrency.test.ts tests/security/matrix-persistence.test.ts tests/security/storage.test.ts tests/integration/ircord-edit-fts-webhooks.test.ts --reporter=default --reporter=json --outputFile=/tmp/flarc-matrix-run_01d0e4aeb274/races-final-results.json",
+      "baselineBundleSha256": "6a58f6b9fd8f938777db4fcce55c336f21fa9e8de694c85e155d66c898c0e0a8",
+      "verifiedBundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89"
+    },
+    {
+      "id": "DB-010",
+      "outcome": "PASS",
+      "completeForScenario": true,
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[DB-009 DB-010 DB-011 MSG-026 DM-017 DB-027] independent runtime restart preserves private messages, edits and redactions and rejects foreign cursors",
+      "scenarioScope": "Private channel edit/redaction and participant DM history across full runtime restart, with cross-channel cursors.",
+      "assertionDetails": [
+        "After restart the founder sees the edited message and the redacted body never reappears; Alice/Bob DM history persists and Charlie cannot retrieve it.",
+        "Negative/extreme limits and a foreign-channel before cursor cannot grant secret-channel access; an authorized unrelated-channel around cursor cannot return private rows and remains bounded.",
+        "SQLite confirms the redaction is scrubbed and its FTS row is absent."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket for DM setup",
+        "stopped-runtime SQLite",
+        "full Miniflare restart"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "command": "FLARC_TEST_BUNDLE=/tmp/flarc-matrix-run_01d0e4aeb274/server-03/index.mjs bunx vitest run --config /tmp/flarc-matrix-run_01d0e4aeb274/vitest.frozen.config.mts tests/security/matrix-revocation.test.ts tests/security/matrix-concurrency.test.ts tests/security/matrix-persistence.test.ts tests/security/storage.test.ts tests/integration/ircord-edit-fts-webhooks.test.ts --reporter=default --reporter=json --outputFile=/tmp/flarc-matrix-run_01d0e4aeb274/races-final-results.json",
+      "baselineBundleSha256": "6a58f6b9fd8f938777db4fcce55c336f21fa9e8de694c85e155d66c898c0e0a8",
+      "verifiedBundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89"
+    },
+    {
+      "id": "DB-011",
+      "outcome": "PASS",
+      "completeForScenario": true,
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[DB-009 DB-010 DB-011 MSG-026 DM-017 DB-027] independent runtime restart preserves private messages, edits and redactions and rejects foreign cursors",
+      "scenarioScope": "Private channel edit/redaction and participant DM history across full runtime restart, with cross-channel cursors.",
+      "assertionDetails": [
+        "After restart the founder sees the edited message and the redacted body never reappears; Alice/Bob DM history persists and Charlie cannot retrieve it.",
+        "Negative/extreme limits and a foreign-channel before cursor cannot grant secret-channel access; an authorized unrelated-channel around cursor cannot return private rows and remains bounded.",
+        "SQLite confirms the redaction is scrubbed and its FTS row is absent."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket for DM setup",
+        "stopped-runtime SQLite",
+        "full Miniflare restart"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "command": "FLARC_TEST_BUNDLE=/tmp/flarc-matrix-run_01d0e4aeb274/server-03/index.mjs bunx vitest run --config /tmp/flarc-matrix-run_01d0e4aeb274/vitest.frozen.config.mts tests/security/matrix-revocation.test.ts tests/security/matrix-concurrency.test.ts tests/security/matrix-persistence.test.ts tests/security/storage.test.ts tests/integration/ircord-edit-fts-webhooks.test.ts --reporter=default --reporter=json --outputFile=/tmp/flarc-matrix-run_01d0e4aeb274/races-final-results.json",
+      "baselineBundleSha256": "6a58f6b9fd8f938777db4fcce55c336f21fa9e8de694c85e155d66c898c0e0a8",
+      "verifiedBundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89"
+    },
+    {
+      "id": "MSG-026",
+      "outcome": "PASS",
+      "completeForScenario": true,
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[DB-009 DB-010 DB-011 MSG-026 DM-017 DB-027] independent runtime restart preserves private messages, edits and redactions and rejects foreign cursors",
+      "scenarioScope": "Private channel edit/redaction and participant DM history across full runtime restart, with cross-channel cursors.",
+      "assertionDetails": [
+        "After restart the founder sees the edited message and the redacted body never reappears; Alice/Bob DM history persists and Charlie cannot retrieve it.",
+        "Negative/extreme limits and a foreign-channel before cursor cannot grant secret-channel access; an authorized unrelated-channel around cursor cannot return private rows and remains bounded.",
+        "SQLite confirms the redaction is scrubbed and its FTS row is absent."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket for DM setup",
+        "stopped-runtime SQLite",
+        "full Miniflare restart"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "command": "FLARC_TEST_BUNDLE=/tmp/flarc-matrix-run_01d0e4aeb274/server-03/index.mjs bunx vitest run --config /tmp/flarc-matrix-run_01d0e4aeb274/vitest.frozen.config.mts tests/security/matrix-revocation.test.ts tests/security/matrix-concurrency.test.ts tests/security/matrix-persistence.test.ts tests/security/storage.test.ts tests/integration/ircord-edit-fts-webhooks.test.ts --reporter=default --reporter=json --outputFile=/tmp/flarc-matrix-run_01d0e4aeb274/races-final-results.json",
+      "baselineBundleSha256": "6a58f6b9fd8f938777db4fcce55c336f21fa9e8de694c85e155d66c898c0e0a8",
+      "verifiedBundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89"
+    },
+    {
+      "id": "DM-017",
+      "outcome": "PASS",
+      "completeForScenario": true,
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[DB-009 DB-010 DB-011 MSG-026 DM-017 DB-027] independent runtime restart preserves private messages, edits and redactions and rejects foreign cursors",
+      "scenarioScope": "Private channel edit/redaction and participant DM history across full runtime restart, with cross-channel cursors.",
+      "assertionDetails": [
+        "After restart the founder sees the edited message and the redacted body never reappears; Alice/Bob DM history persists and Charlie cannot retrieve it.",
+        "Negative/extreme limits and a foreign-channel before cursor cannot grant secret-channel access; an authorized unrelated-channel around cursor cannot return private rows and remains bounded.",
+        "SQLite confirms the redaction is scrubbed and its FTS row is absent."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket for DM setup",
+        "stopped-runtime SQLite",
+        "full Miniflare restart"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "command": "FLARC_TEST_BUNDLE=/tmp/flarc-matrix-run_01d0e4aeb274/server-03/index.mjs bunx vitest run --config /tmp/flarc-matrix-run_01d0e4aeb274/vitest.frozen.config.mts tests/security/matrix-revocation.test.ts tests/security/matrix-concurrency.test.ts tests/security/matrix-persistence.test.ts tests/security/storage.test.ts tests/integration/ircord-edit-fts-webhooks.test.ts --reporter=default --reporter=json --outputFile=/tmp/flarc-matrix-run_01d0e4aeb274/races-final-results.json",
+      "baselineBundleSha256": "6a58f6b9fd8f938777db4fcce55c336f21fa9e8de694c85e155d66c898c0e0a8",
+      "verifiedBundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89"
+    },
+    {
+      "id": "DB-027",
+      "outcome": "PASS",
+      "completeForScenario": false,
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[DB-009 DB-010 DB-011 MSG-026 DM-017 DB-027] independent runtime restart preserves private messages, edits and redactions and rejects foreign cursors",
+      "scenarioScope": "Private channel edit/redaction and participant DM history across full runtime restart, with cross-channel cursors.",
+      "assertionDetails": [
+        "After restart the founder sees the edited message and the redacted body never reappears; Alice/Bob DM history persists and Charlie cannot retrieve it.",
+        "Negative/extreme limits and a foreign-channel before cursor cannot grant secret-channel access; an authorized unrelated-channel around cursor cannot return private rows and remains bounded.",
+        "SQLite confirms the redaction is scrubbed and its FTS row is absent."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket for DM setup",
+        "stopped-runtime SQLite",
+        "full Miniflare restart"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "command": "FLARC_TEST_BUNDLE=/tmp/flarc-matrix-run_01d0e4aeb274/server-03/index.mjs bunx vitest run --config /tmp/flarc-matrix-run_01d0e4aeb274/vitest.frozen.config.mts tests/security/matrix-revocation.test.ts tests/security/matrix-concurrency.test.ts tests/security/matrix-persistence.test.ts tests/security/storage.test.ts tests/integration/ircord-edit-fts-webhooks.test.ts --reporter=default --reporter=json --outputFile=/tmp/flarc-matrix-run_01d0e4aeb274/races-final-results.json",
+      "baselineBundleSha256": "6a58f6b9fd8f938777db4fcce55c336f21fa9e8de694c85e155d66c898c0e0a8",
+      "verifiedBundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89"
+    },
+    {
+      "id": "DB-013",
+      "outcome": "PASS",
+      "completeForScenario": true,
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[DB-013 DB-014 DB-028] actual SQLite foreign keys, unique sequences and indexed bounded history queries enforce integrity",
+      "scenarioScope": "Actual persisted schema constraints plus representative 120-message before-pagination/index plans.",
+      "assertionDetails": [
+        "Real public sends populate 120 rows; an authenticated reader receives 100 then 20 disjoint records using the oldest-ID cursor despite an extreme requested limit.",
+        "The stopped actual database rejects missing-role foreign keys, duplicate role assignments and duplicate message sequences; foreign_key_check is clean and the 120 original rows remain.",
+        "EXPLAIN QUERY PLAN shows indexed sequence-range history and indexed user-role lookup; around/time cursor plans and production-scale load are not established."
+      ],
+      "transports": [
+        "REST",
+        "stopped-runtime SQLite constraints and EXPLAIN"
+      ],
+      "assertions": [
+        "state",
+        "transport",
+        "unrelatedResources"
+      ],
+      "command": "FLARC_TEST_BUNDLE=/tmp/flarc-matrix-run_01d0e4aeb274/server-03/index.mjs bunx vitest run --config /tmp/flarc-matrix-run_01d0e4aeb274/vitest.frozen.config.mts tests/security/matrix-revocation.test.ts tests/security/matrix-concurrency.test.ts tests/security/matrix-persistence.test.ts tests/security/storage.test.ts tests/integration/ircord-edit-fts-webhooks.test.ts --reporter=default --reporter=json --outputFile=/tmp/flarc-matrix-run_01d0e4aeb274/races-final-results.json",
+      "baselineBundleSha256": "6a58f6b9fd8f938777db4fcce55c336f21fa9e8de694c85e155d66c898c0e0a8",
+      "verifiedBundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89"
+    },
+    {
+      "id": "DB-014",
+      "outcome": "PASS",
+      "completeForScenario": true,
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[DB-013 DB-014 DB-028] actual SQLite foreign keys, unique sequences and indexed bounded history queries enforce integrity",
+      "scenarioScope": "Actual persisted schema constraints plus representative 120-message before-pagination/index plans.",
+      "assertionDetails": [
+        "Real public sends populate 120 rows; an authenticated reader receives 100 then 20 disjoint records using the oldest-ID cursor despite an extreme requested limit.",
+        "The stopped actual database rejects missing-role foreign keys, duplicate role assignments and duplicate message sequences; foreign_key_check is clean and the 120 original rows remain.",
+        "EXPLAIN QUERY PLAN shows indexed sequence-range history and indexed user-role lookup; around/time cursor plans and production-scale load are not established."
+      ],
+      "transports": [
+        "REST",
+        "stopped-runtime SQLite constraints and EXPLAIN"
+      ],
+      "assertions": [
+        "state",
+        "transport",
+        "unrelatedResources"
+      ],
+      "command": "FLARC_TEST_BUNDLE=/tmp/flarc-matrix-run_01d0e4aeb274/server-03/index.mjs bunx vitest run --config /tmp/flarc-matrix-run_01d0e4aeb274/vitest.frozen.config.mts tests/security/matrix-revocation.test.ts tests/security/matrix-concurrency.test.ts tests/security/matrix-persistence.test.ts tests/security/storage.test.ts tests/integration/ircord-edit-fts-webhooks.test.ts --reporter=default --reporter=json --outputFile=/tmp/flarc-matrix-run_01d0e4aeb274/races-final-results.json",
+      "baselineBundleSha256": "6a58f6b9fd8f938777db4fcce55c336f21fa9e8de694c85e155d66c898c0e0a8",
+      "verifiedBundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89"
+    },
+    {
+      "id": "DB-028",
+      "outcome": "PASS",
+      "completeForScenario": false,
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[DB-013 DB-014 DB-028] actual SQLite foreign keys, unique sequences and indexed bounded history queries enforce integrity",
+      "scenarioScope": "Actual persisted schema constraints plus representative 120-message before-pagination/index plans.",
+      "assertionDetails": [
+        "Real public sends populate 120 rows; an authenticated reader receives 100 then 20 disjoint records using the oldest-ID cursor despite an extreme requested limit.",
+        "The stopped actual database rejects missing-role foreign keys, duplicate role assignments and duplicate message sequences; foreign_key_check is clean and the 120 original rows remain.",
+        "EXPLAIN QUERY PLAN shows indexed sequence-range history and indexed user-role lookup; around/time cursor plans and production-scale load are not established."
+      ],
+      "transports": [
+        "REST",
+        "stopped-runtime SQLite constraints and EXPLAIN"
+      ],
+      "assertions": [
+        "state",
+        "transport",
+        "unrelatedResources"
+      ],
+      "command": "FLARC_TEST_BUNDLE=/tmp/flarc-matrix-run_01d0e4aeb274/server-03/index.mjs bunx vitest run --config /tmp/flarc-matrix-run_01d0e4aeb274/vitest.frozen.config.mts tests/security/matrix-revocation.test.ts tests/security/matrix-concurrency.test.ts tests/security/matrix-persistence.test.ts tests/security/storage.test.ts tests/integration/ircord-edit-fts-webhooks.test.ts --reporter=default --reporter=json --outputFile=/tmp/flarc-matrix-run_01d0e4aeb274/races-final-results.json",
+      "baselineBundleSha256": "6a58f6b9fd8f938777db4fcce55c336f21fa9e8de694c85e155d66c898c0e0a8",
+      "verifiedBundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89"
+    },
+    {
+      "id": "DB-018",
+      "outcome": "PASS",
+      "completeForScenario": true,
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[DB-018 DB-019] production retention cleanup deletes distinct expired rows and FTS while preserving unexpired rows across restart",
+      "scenarioScope": "Production cleanup RPC with distinct old/new persisted messages, separate from scheduler verification.",
+      "assertionDetails": [
+        "Public sends use the exact ninety-day expiry interval; only one selected row is backdated while the runtime is stopped.",
+        "The production cleanup returns 1 then 0, history contains only the unexpired ID, and SQLite confirms old-row/FTS deletion while preserving the distinct fresh body."
+      ],
+      "transports": [
+        "REST",
+        "internal production retention RPC",
+        "stopped-runtime SQLite",
+        "full Miniflare restart"
+      ],
+      "assertions": [
+        "state",
+        "transport",
+        "restart"
+      ],
+      "command": "FLARC_TEST_BUNDLE=/tmp/flarc-matrix-run_01d0e4aeb274/server-03/index.mjs bunx vitest run --config /tmp/flarc-matrix-run_01d0e4aeb274/vitest.frozen.config.mts tests/security/matrix-revocation.test.ts tests/security/matrix-concurrency.test.ts tests/security/matrix-persistence.test.ts tests/security/storage.test.ts tests/integration/ircord-edit-fts-webhooks.test.ts --reporter=default --reporter=json --outputFile=/tmp/flarc-matrix-run_01d0e4aeb274/races-final-results.json",
+      "baselineBundleSha256": "6a58f6b9fd8f938777db4fcce55c336f21fa9e8de694c85e155d66c898c0e0a8",
+      "verifiedBundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89"
+    },
+    {
+      "id": "DB-019",
+      "outcome": "PASS",
+      "completeForScenario": true,
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[DB-018 DB-019] production retention cleanup deletes distinct expired rows and FTS while preserving unexpired rows across restart",
+      "scenarioScope": "Production cleanup RPC with distinct old/new persisted messages, separate from scheduler verification.",
+      "assertionDetails": [
+        "Public sends use the exact ninety-day expiry interval; only one selected row is backdated while the runtime is stopped.",
+        "The production cleanup returns 1 then 0, history contains only the unexpired ID, and SQLite confirms old-row/FTS deletion while preserving the distinct fresh body."
+      ],
+      "transports": [
+        "REST",
+        "internal production retention RPC",
+        "stopped-runtime SQLite",
+        "full Miniflare restart"
+      ],
+      "assertions": [
+        "state",
+        "transport",
+        "restart"
+      ],
+      "command": "FLARC_TEST_BUNDLE=/tmp/flarc-matrix-run_01d0e4aeb274/server-03/index.mjs bunx vitest run --config /tmp/flarc-matrix-run_01d0e4aeb274/vitest.frozen.config.mts tests/security/matrix-revocation.test.ts tests/security/matrix-concurrency.test.ts tests/security/matrix-persistence.test.ts tests/security/storage.test.ts tests/integration/ircord-edit-fts-webhooks.test.ts --reporter=default --reporter=json --outputFile=/tmp/flarc-matrix-run_01d0e4aeb274/races-final-results.json",
+      "baselineBundleSha256": "6a58f6b9fd8f938777db4fcce55c336f21fa9e8de694c85e155d66c898c0e0a8",
+      "verifiedBundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89"
+    },
+    {
+      "id": "DB-018",
+      "outcome": "PASS",
+      "completeForScenario": true,
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[DB-018 DB-019] actual workerd alarms delete expired rows and reschedule after both deletion and a no-op",
+      "scenarioScope": "Actual scheduled local workerd alarms through a test-only subclass importing an unchanged copied frozen ChannelDO.",
+      "assertionDetails": [
+        "Two distinct retained messages and an unrelated channel control are created through real public accounts; only the expired row is backdated with workerd stopped.",
+        "The wrapper schedules an immediate actual workerd alarm and waits on an observed alarm-completion barrier; the overridden handler invokes production super.alarm and must reschedule about 24 hours ahead.",
+        "A second scheduled alarm runs with no expired rows and must again schedule a future alarm; authenticated history and SQLite confirm exact old-row/FTS deletion, fresh-row retention and unrelated-channel preservation.",
+        "The wrapper exists only in the isolated temporary test runtime and adds no production endpoint or authentication bypass."
+      ],
+      "transports": [
+        "REST",
+        "actual local workerd scheduled alarm",
+        "test-only subclass observer RPC",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "command": "FLARC_TEST_BUNDLE=/tmp/flarc-matrix-run_01d0e4aeb274/server-03/index.mjs bunx vitest run --config /tmp/flarc-matrix-run_01d0e4aeb274/vitest.frozen.config.mts tests/security/matrix-revocation.test.ts tests/security/matrix-concurrency.test.ts tests/security/matrix-persistence.test.ts tests/security/storage.test.ts tests/integration/ircord-edit-fts-webhooks.test.ts --reporter=default --reporter=json --outputFile=/tmp/flarc-matrix-run_01d0e4aeb274/races-final-results.json",
+      "baselineBundleSha256": "6a58f6b9fd8f938777db4fcce55c336f21fa9e8de694c85e155d66c898c0e0a8",
+      "verifiedBundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89"
+    },
+    {
+      "id": "DB-019",
+      "outcome": "PASS",
+      "completeForScenario": true,
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[DB-018 DB-019] actual workerd alarms delete expired rows and reschedule after both deletion and a no-op",
+      "scenarioScope": "Actual scheduled local workerd alarms through a test-only subclass importing an unchanged copied frozen ChannelDO.",
+      "assertionDetails": [
+        "Two distinct retained messages and an unrelated channel control are created through real public accounts; only the expired row is backdated with workerd stopped.",
+        "The wrapper schedules an immediate actual workerd alarm and waits on an observed alarm-completion barrier; the overridden handler invokes production super.alarm and must reschedule about 24 hours ahead.",
+        "A second scheduled alarm runs with no expired rows and must again schedule a future alarm; authenticated history and SQLite confirm exact old-row/FTS deletion, fresh-row retention and unrelated-channel preservation.",
+        "The wrapper exists only in the isolated temporary test runtime and adds no production endpoint or authentication bypass."
+      ],
+      "transports": [
+        "REST",
+        "actual local workerd scheduled alarm",
+        "test-only subclass observer RPC",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "command": "FLARC_TEST_BUNDLE=/tmp/flarc-matrix-run_01d0e4aeb274/server-03/index.mjs bunx vitest run --config /tmp/flarc-matrix-run_01d0e4aeb274/vitest.frozen.config.mts tests/security/matrix-revocation.test.ts tests/security/matrix-concurrency.test.ts tests/security/matrix-persistence.test.ts tests/security/storage.test.ts tests/integration/ircord-edit-fts-webhooks.test.ts --reporter=default --reporter=json --outputFile=/tmp/flarc-matrix-run_01d0e4aeb274/races-final-results.json",
+      "baselineBundleSha256": "6a58f6b9fd8f938777db4fcce55c336f21fa9e8de694c85e155d66c898c0e0a8",
+      "verifiedBundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89"
+    },
+    {
+      "id": "WS-003",
+      "outcome": "PASS",
+      "completeForScenario": true,
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[WS-003] persisted expired ticket cannot authorize an event stream after full runtime restart",
+      "scenarioScope": "Persisted event-ticket or API-parent expiry across full runtime restart.",
+      "assertionDetails": [
+        "Only the ticket expiry or Alice API-session expiry is moved to the past while stopped; its event handshake then returns 401.",
+        "The ticket-only case preserves Alice API access, the parent-expiry case denies it, Bob remains authorized, and a fresh public credential login/ticket receives its real control event.",
+        "SQLite contains exactly the authorized control with the stable Alice sender ID."
+      ],
+      "transports": [
+        "REST",
+        "events/WebSocket",
+        "stopped-runtime SQLite",
+        "full Miniflare restart"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "command": "FLARC_TEST_BUNDLE=/tmp/flarc-matrix-run_01d0e4aeb274/server-03/index.mjs bunx vitest run --config /tmp/flarc-matrix-run_01d0e4aeb274/vitest.frozen.config.mts tests/security/matrix-revocation.test.ts tests/security/matrix-concurrency.test.ts tests/security/matrix-persistence.test.ts tests/security/storage.test.ts tests/integration/ircord-edit-fts-webhooks.test.ts --reporter=default --reporter=json --outputFile=/tmp/flarc-matrix-run_01d0e4aeb274/races-final-results.json",
+      "baselineBundleSha256": "6a58f6b9fd8f938777db4fcce55c336f21fa9e8de694c85e155d66c898c0e0a8",
+      "verifiedBundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89"
+    },
+    {
+      "id": "AUTH-010",
+      "outcome": "PASS",
+      "completeForScenario": true,
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[AUTH-010 API-003] persisted expired parent-session cannot authorize an event stream after full runtime restart",
+      "scenarioScope": "Persisted event-ticket or API-parent expiry across full runtime restart.",
+      "assertionDetails": [
+        "Only the ticket expiry or Alice API-session expiry is moved to the past while stopped; its event handshake then returns 401.",
+        "The ticket-only case preserves Alice API access, the parent-expiry case denies it, Bob remains authorized, and a fresh public credential login/ticket receives its real control event.",
+        "SQLite contains exactly the authorized control with the stable Alice sender ID."
+      ],
+      "transports": [
+        "REST",
+        "events/WebSocket",
+        "stopped-runtime SQLite",
+        "full Miniflare restart"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "command": "FLARC_TEST_BUNDLE=/tmp/flarc-matrix-run_01d0e4aeb274/server-03/index.mjs bunx vitest run --config /tmp/flarc-matrix-run_01d0e4aeb274/vitest.frozen.config.mts tests/security/matrix-revocation.test.ts tests/security/matrix-concurrency.test.ts tests/security/matrix-persistence.test.ts tests/security/storage.test.ts tests/integration/ircord-edit-fts-webhooks.test.ts --reporter=default --reporter=json --outputFile=/tmp/flarc-matrix-run_01d0e4aeb274/races-final-results.json",
+      "baselineBundleSha256": "6a58f6b9fd8f938777db4fcce55c336f21fa9e8de694c85e155d66c898c0e0a8",
+      "verifiedBundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89"
+    },
+    {
+      "id": "API-003",
+      "outcome": "PASS",
+      "completeForScenario": true,
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[AUTH-010 API-003] persisted expired parent-session cannot authorize an event stream after full runtime restart",
+      "scenarioScope": "Persisted event-ticket or API-parent expiry across full runtime restart.",
+      "assertionDetails": [
+        "Only the ticket expiry or Alice API-session expiry is moved to the past while stopped; its event handshake then returns 401.",
+        "The ticket-only case preserves Alice API access, the parent-expiry case denies it, Bob remains authorized, and a fresh public credential login/ticket receives its real control event.",
+        "SQLite contains exactly the authorized control with the stable Alice sender ID."
+      ],
+      "transports": [
+        "REST",
+        "events/WebSocket",
+        "stopped-runtime SQLite",
+        "full Miniflare restart"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "command": "FLARC_TEST_BUNDLE=/tmp/flarc-matrix-run_01d0e4aeb274/server-03/index.mjs bunx vitest run --config /tmp/flarc-matrix-run_01d0e4aeb274/vitest.frozen.config.mts tests/security/matrix-revocation.test.ts tests/security/matrix-concurrency.test.ts tests/security/matrix-persistence.test.ts tests/security/storage.test.ts tests/integration/ircord-edit-fts-webhooks.test.ts --reporter=default --reporter=json --outputFile=/tmp/flarc-matrix-run_01d0e4aeb274/races-final-results.json",
+      "baselineBundleSha256": "6a58f6b9fd8f938777db4fcce55c336f21fa9e8de694c85e155d66c898c0e0a8",
+      "verifiedBundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89"
+    },
+    {
+      "id": "DB-016",
+      "outcome": "PASS",
+      "completeForScenario": false,
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[DB-016 DB-025] destination commit followed by a real Accounts SQL fault keeps both rename generations fail-closed after restart",
+      "scenarioScope": "A genuine destination rename commit followed by a real Accounts media-rebind SQL fault, not a simulated network timeout.",
+      "assertionDetails": [
+        "The private source message/media are created through public authenticated operations; an Accounts UPDATE trigger aborts only after the destination snapshot has committed.",
+        "IRC returns FAIL rather than rename success; both generations reject unrelated history and owner writes, private media conceals existence, and no unauthorized partial write commits.",
+        "Stopped SQLite confirms the original body exists in both protected generations with persisted rename_pending journals; a further restart preserves private access denial."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "cross-Durable-Object RPC",
+        "stopped-runtime SQLite fault trigger",
+        "full Miniflare restart"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "command": "FLARC_TEST_BUNDLE=/tmp/flarc-matrix-run_01d0e4aeb274/server-03/index.mjs bunx vitest run --config /tmp/flarc-matrix-run_01d0e4aeb274/vitest.frozen.config.mts tests/security/matrix-revocation.test.ts tests/security/matrix-concurrency.test.ts tests/security/matrix-persistence.test.ts tests/security/storage.test.ts tests/integration/ircord-edit-fts-webhooks.test.ts --reporter=default --reporter=json --outputFile=/tmp/flarc-matrix-run_01d0e4aeb274/races-final-results.json",
+      "baselineBundleSha256": "6a58f6b9fd8f938777db4fcce55c336f21fa9e8de694c85e155d66c898c0e0a8",
+      "verifiedBundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89"
+    },
+    {
+      "id": "DB-025",
+      "outcome": "PASS",
+      "completeForScenario": true,
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "[DB-016 DB-025] destination commit followed by a real Accounts SQL fault keeps both rename generations fail-closed after restart",
+      "scenarioScope": "A genuine destination rename commit followed by a real Accounts media-rebind SQL fault, not a simulated network timeout.",
+      "assertionDetails": [
+        "The private source message/media are created through public authenticated operations; an Accounts UPDATE trigger aborts only after the destination snapshot has committed.",
+        "IRC returns FAIL rather than rename success; both generations reject unrelated history and owner writes, private media conceals existence, and no unauthorized partial write commits.",
+        "Stopped SQLite confirms the original body exists in both protected generations with persisted rename_pending journals; a further restart preserves private access denial."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "cross-Durable-Object RPC",
+        "stopped-runtime SQLite fault trigger",
+        "full Miniflare restart"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "command": "FLARC_TEST_BUNDLE=/tmp/flarc-matrix-run_01d0e4aeb274/server-03/index.mjs bunx vitest run --config /tmp/flarc-matrix-run_01d0e4aeb274/vitest.frozen.config.mts tests/security/matrix-revocation.test.ts tests/security/matrix-concurrency.test.ts tests/security/matrix-persistence.test.ts tests/security/storage.test.ts tests/integration/ircord-edit-fts-webhooks.test.ts --reporter=default --reporter=json --outputFile=/tmp/flarc-matrix-run_01d0e4aeb274/races-final-results.json",
+      "baselineBundleSha256": "6a58f6b9fd8f938777db4fcce55c336f21fa9e8de694c85e155d66c898c0e0a8",
+      "verifiedBundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89"
+    },
+    {
+      "id": "WS-012",
+      "outcome": "PASS",
+      "completeForScenario": true,
+      "testFile": "tests/security/matrix-revocation.test.ts",
+      "testTitle": "[WS-012 WS-024 CHAN-014 CHAN-032] idle kick revokes private IRC and event delivery while unrelated delivery stays live",
+      "scenarioScope": "Idle private membership revocation, paired with an unauthorized moderation request and continuously live public output barriers.",
+      "assertionDetails": [
+        "Before revocation Bob receives the private IRC message and event; the unrelated account cannot perform the same admin mutation and protected history remains unchanged.",
+        "After the owner KICK or ban has completed, Bob and the outsider receive a later public IRC/event marker on the same sockets but neither receives the intervening private message.",
+        "Bob history and POST are denied, original history is retained, the denied body is absent from stopped-runtime SQLite, and the vault membership or ban record is checked independently."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "events/WebSocket",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "command": "FLARC_TEST_BUNDLE=/tmp/flarc-matrix-run_01d0e4aeb274/server-03/index.mjs bunx vitest run --config /tmp/flarc-matrix-run_01d0e4aeb274/vitest.frozen.config.mts tests/security/matrix-revocation.test.ts tests/security/matrix-concurrency.test.ts tests/security/matrix-persistence.test.ts tests/security/storage.test.ts tests/integration/ircord-edit-fts-webhooks.test.ts --reporter=default --reporter=json --outputFile=/tmp/flarc-matrix-run_01d0e4aeb274/races-final-results.json",
+      "baselineBundleSha256": "6a58f6b9fd8f938777db4fcce55c336f21fa9e8de694c85e155d66c898c0e0a8",
+      "verifiedBundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89"
+    },
+    {
+      "id": "WS-024",
+      "outcome": "PASS",
+      "completeForScenario": true,
+      "testFile": "tests/security/matrix-revocation.test.ts",
+      "testTitle": "[WS-012 WS-024 CHAN-014 CHAN-032] idle kick revokes private IRC and event delivery while unrelated delivery stays live",
+      "scenarioScope": "Idle private membership revocation, paired with an unauthorized moderation request and continuously live public output barriers.",
+      "assertionDetails": [
+        "Before revocation Bob receives the private IRC message and event; the unrelated account cannot perform the same admin mutation and protected history remains unchanged.",
+        "After the owner KICK or ban has completed, Bob and the outsider receive a later public IRC/event marker on the same sockets but neither receives the intervening private message.",
+        "Bob history and POST are denied, original history is retained, the denied body is absent from stopped-runtime SQLite, and the vault membership or ban record is checked independently."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "events/WebSocket",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "command": "FLARC_TEST_BUNDLE=/tmp/flarc-matrix-run_01d0e4aeb274/server-03/index.mjs bunx vitest run --config /tmp/flarc-matrix-run_01d0e4aeb274/vitest.frozen.config.mts tests/security/matrix-revocation.test.ts tests/security/matrix-concurrency.test.ts tests/security/matrix-persistence.test.ts tests/security/storage.test.ts tests/integration/ircord-edit-fts-webhooks.test.ts --reporter=default --reporter=json --outputFile=/tmp/flarc-matrix-run_01d0e4aeb274/races-final-results.json",
+      "baselineBundleSha256": "6a58f6b9fd8f938777db4fcce55c336f21fa9e8de694c85e155d66c898c0e0a8",
+      "verifiedBundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89"
+    },
+    {
+      "id": "CHAN-014",
+      "outcome": "PASS",
+      "completeForScenario": true,
+      "testFile": "tests/security/matrix-revocation.test.ts",
+      "testTitle": "[WS-012 WS-024 CHAN-014 CHAN-032] idle kick revokes private IRC and event delivery while unrelated delivery stays live",
+      "scenarioScope": "Idle private membership revocation, paired with an unauthorized moderation request and continuously live public output barriers.",
+      "assertionDetails": [
+        "Before revocation Bob receives the private IRC message and event; the unrelated account cannot perform the same admin mutation and protected history remains unchanged.",
+        "After the owner KICK or ban has completed, Bob and the outsider receive a later public IRC/event marker on the same sockets but neither receives the intervening private message.",
+        "Bob history and POST are denied, original history is retained, the denied body is absent from stopped-runtime SQLite, and the vault membership or ban record is checked independently."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "events/WebSocket",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "command": "FLARC_TEST_BUNDLE=/tmp/flarc-matrix-run_01d0e4aeb274/server-03/index.mjs bunx vitest run --config /tmp/flarc-matrix-run_01d0e4aeb274/vitest.frozen.config.mts tests/security/matrix-revocation.test.ts tests/security/matrix-concurrency.test.ts tests/security/matrix-persistence.test.ts tests/security/storage.test.ts tests/integration/ircord-edit-fts-webhooks.test.ts --reporter=default --reporter=json --outputFile=/tmp/flarc-matrix-run_01d0e4aeb274/races-final-results.json",
+      "baselineBundleSha256": "6a58f6b9fd8f938777db4fcce55c336f21fa9e8de694c85e155d66c898c0e0a8",
+      "verifiedBundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89"
+    },
+    {
+      "id": "CHAN-032",
+      "outcome": "PASS",
+      "completeForScenario": true,
+      "testFile": "tests/security/matrix-revocation.test.ts",
+      "testTitle": "[WS-012 WS-024 CHAN-014 CHAN-032] idle kick revokes private IRC and event delivery while unrelated delivery stays live",
+      "scenarioScope": "Idle private membership revocation, paired with an unauthorized moderation request and continuously live public output barriers.",
+      "assertionDetails": [
+        "Before revocation Bob receives the private IRC message and event; the unrelated account cannot perform the same admin mutation and protected history remains unchanged.",
+        "After the owner KICK or ban has completed, Bob and the outsider receive a later public IRC/event marker on the same sockets but neither receives the intervening private message.",
+        "Bob history and POST are denied, original history is retained, the denied body is absent from stopped-runtime SQLite, and the vault membership or ban record is checked independently."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "events/WebSocket",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "command": "FLARC_TEST_BUNDLE=/tmp/flarc-matrix-run_01d0e4aeb274/server-03/index.mjs bunx vitest run --config /tmp/flarc-matrix-run_01d0e4aeb274/vitest.frozen.config.mts tests/security/matrix-revocation.test.ts tests/security/matrix-concurrency.test.ts tests/security/matrix-persistence.test.ts tests/security/storage.test.ts tests/integration/ircord-edit-fts-webhooks.test.ts --reporter=default --reporter=json --outputFile=/tmp/flarc-matrix-run_01d0e4aeb274/races-final-results.json",
+      "baselineBundleSha256": "6a58f6b9fd8f938777db4fcce55c336f21fa9e8de694c85e155d66c898c0e0a8",
+      "verifiedBundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89"
+    },
+    {
+      "id": "WS-012",
+      "outcome": "PASS",
+      "completeForScenario": true,
+      "testFile": "tests/security/matrix-revocation.test.ts",
+      "testTitle": "[WS-012 WS-024 CHAN-014 CHAN-028] idle ban revokes private IRC and event delivery while unrelated delivery stays live",
+      "scenarioScope": "Idle private membership revocation, paired with an unauthorized moderation request and continuously live public output barriers.",
+      "assertionDetails": [
+        "Before revocation Bob receives the private IRC message and event; the unrelated account cannot perform the same admin mutation and protected history remains unchanged.",
+        "After the owner KICK or ban has completed, Bob and the outsider receive a later public IRC/event marker on the same sockets but neither receives the intervening private message.",
+        "Bob history and POST are denied, original history is retained, the denied body is absent from stopped-runtime SQLite, and the vault membership or ban record is checked independently."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "events/WebSocket",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "command": "FLARC_TEST_BUNDLE=/tmp/flarc-matrix-run_01d0e4aeb274/server-03/index.mjs bunx vitest run --config /tmp/flarc-matrix-run_01d0e4aeb274/vitest.frozen.config.mts tests/security/matrix-revocation.test.ts tests/security/matrix-concurrency.test.ts tests/security/matrix-persistence.test.ts tests/security/storage.test.ts tests/integration/ircord-edit-fts-webhooks.test.ts --reporter=default --reporter=json --outputFile=/tmp/flarc-matrix-run_01d0e4aeb274/races-final-results.json",
+      "baselineBundleSha256": "6a58f6b9fd8f938777db4fcce55c336f21fa9e8de694c85e155d66c898c0e0a8",
+      "verifiedBundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89"
+    },
+    {
+      "id": "WS-024",
+      "outcome": "PASS",
+      "completeForScenario": true,
+      "testFile": "tests/security/matrix-revocation.test.ts",
+      "testTitle": "[WS-012 WS-024 CHAN-014 CHAN-028] idle ban revokes private IRC and event delivery while unrelated delivery stays live",
+      "scenarioScope": "Idle private membership revocation, paired with an unauthorized moderation request and continuously live public output barriers.",
+      "assertionDetails": [
+        "Before revocation Bob receives the private IRC message and event; the unrelated account cannot perform the same admin mutation and protected history remains unchanged.",
+        "After the owner KICK or ban has completed, Bob and the outsider receive a later public IRC/event marker on the same sockets but neither receives the intervening private message.",
+        "Bob history and POST are denied, original history is retained, the denied body is absent from stopped-runtime SQLite, and the vault membership or ban record is checked independently."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "events/WebSocket",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "command": "FLARC_TEST_BUNDLE=/tmp/flarc-matrix-run_01d0e4aeb274/server-03/index.mjs bunx vitest run --config /tmp/flarc-matrix-run_01d0e4aeb274/vitest.frozen.config.mts tests/security/matrix-revocation.test.ts tests/security/matrix-concurrency.test.ts tests/security/matrix-persistence.test.ts tests/security/storage.test.ts tests/integration/ircord-edit-fts-webhooks.test.ts --reporter=default --reporter=json --outputFile=/tmp/flarc-matrix-run_01d0e4aeb274/races-final-results.json",
+      "baselineBundleSha256": "6a58f6b9fd8f938777db4fcce55c336f21fa9e8de694c85e155d66c898c0e0a8",
+      "verifiedBundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89"
+    },
+    {
+      "id": "CHAN-014",
+      "outcome": "PASS",
+      "completeForScenario": true,
+      "testFile": "tests/security/matrix-revocation.test.ts",
+      "testTitle": "[WS-012 WS-024 CHAN-014 CHAN-028] idle ban revokes private IRC and event delivery while unrelated delivery stays live",
+      "scenarioScope": "Idle private membership revocation, paired with an unauthorized moderation request and continuously live public output barriers.",
+      "assertionDetails": [
+        "Before revocation Bob receives the private IRC message and event; the unrelated account cannot perform the same admin mutation and protected history remains unchanged.",
+        "After the owner KICK or ban has completed, Bob and the outsider receive a later public IRC/event marker on the same sockets but neither receives the intervening private message.",
+        "Bob history and POST are denied, original history is retained, the denied body is absent from stopped-runtime SQLite, and the vault membership or ban record is checked independently."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "events/WebSocket",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "command": "FLARC_TEST_BUNDLE=/tmp/flarc-matrix-run_01d0e4aeb274/server-03/index.mjs bunx vitest run --config /tmp/flarc-matrix-run_01d0e4aeb274/vitest.frozen.config.mts tests/security/matrix-revocation.test.ts tests/security/matrix-concurrency.test.ts tests/security/matrix-persistence.test.ts tests/security/storage.test.ts tests/integration/ircord-edit-fts-webhooks.test.ts --reporter=default --reporter=json --outputFile=/tmp/flarc-matrix-run_01d0e4aeb274/races-final-results.json",
+      "baselineBundleSha256": "6a58f6b9fd8f938777db4fcce55c336f21fa9e8de694c85e155d66c898c0e0a8",
+      "verifiedBundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89"
+    },
+    {
+      "id": "CHAN-028",
+      "outcome": "PASS",
+      "completeForScenario": true,
+      "testFile": "tests/security/matrix-revocation.test.ts",
+      "testTitle": "[WS-012 WS-024 CHAN-014 CHAN-028] idle ban revokes private IRC and event delivery while unrelated delivery stays live",
+      "scenarioScope": "Idle private membership revocation, paired with an unauthorized moderation request and continuously live public output barriers.",
+      "assertionDetails": [
+        "Before revocation Bob receives the private IRC message and event; the unrelated account cannot perform the same admin mutation and protected history remains unchanged.",
+        "After the owner KICK or ban has completed, Bob and the outsider receive a later public IRC/event marker on the same sockets but neither receives the intervening private message.",
+        "Bob history and POST are denied, original history is retained, the denied body is absent from stopped-runtime SQLite, and the vault membership or ban record is checked independently."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "events/WebSocket",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "command": "FLARC_TEST_BUNDLE=/tmp/flarc-matrix-run_01d0e4aeb274/server-03/index.mjs bunx vitest run --config /tmp/flarc-matrix-run_01d0e4aeb274/vitest.frozen.config.mts tests/security/matrix-revocation.test.ts tests/security/matrix-concurrency.test.ts tests/security/matrix-persistence.test.ts tests/security/storage.test.ts tests/integration/ircord-edit-fts-webhooks.test.ts --reporter=default --reporter=json --outputFile=/tmp/flarc-matrix-run_01d0e4aeb274/races-final-results.json",
+      "baselineBundleSha256": "6a58f6b9fd8f938777db4fcce55c336f21fa9e8de694c85e155d66c898c0e0a8",
+      "verifiedBundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89"
+    },
+    {
+      "id": "AUTH-022",
+      "outcome": "PASS",
+      "completeForScenario": true,
+      "testFile": "tests/security/matrix-revocation.test.ts",
+      "testTitle": "[AUTH-022 DM-015 WS-024] logout invalidates an idle receiving event credential and preserves independent authorization",
+      "scenarioScope": "API logout, administrator disable/reenable, or administrator password reset while the receiving clients remain idle.",
+      "assertionDetails": [
+        "Independent credentials authenticate the founder, recipient, outsider and administrator; the recipient receives private IRC/event and DM controls before revocation.",
+        "The selected revocation invalidates the old REST and DM credential and closes its event stream before later private delivery; disable/reset also close the independent IRC login, while API logout deliberately preserves independently authenticated IRC access.",
+        "The legitimate founder still receives the private event, an outsider receives the public output marker without private contents, and unrelated stored messages remain intact.",
+        "Reenable does not reactivate the old token; fresh permitted login works, and SQLite contains exactly one replacement Bob API session and one committed post-revocation message."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "events/WebSocket",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "command": "FLARC_TEST_BUNDLE=/tmp/flarc-matrix-run_01d0e4aeb274/server-03/index.mjs bunx vitest run --config /tmp/flarc-matrix-run_01d0e4aeb274/vitest.frozen.config.mts tests/security/matrix-revocation.test.ts tests/security/matrix-concurrency.test.ts tests/security/matrix-persistence.test.ts tests/security/storage.test.ts tests/integration/ircord-edit-fts-webhooks.test.ts --reporter=default --reporter=json --outputFile=/tmp/flarc-matrix-run_01d0e4aeb274/races-final-results.json",
+      "baselineBundleSha256": "6a58f6b9fd8f938777db4fcce55c336f21fa9e8de694c85e155d66c898c0e0a8",
+      "verifiedBundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89"
+    },
+    {
+      "id": "DM-015",
+      "outcome": "PASS",
+      "completeForScenario": true,
+      "testFile": "tests/security/matrix-revocation.test.ts",
+      "testTitle": "[AUTH-022 DM-015 WS-024] logout invalidates an idle receiving event credential and preserves independent authorization",
+      "scenarioScope": "API logout, administrator disable/reenable, or administrator password reset while the receiving clients remain idle.",
+      "assertionDetails": [
+        "Independent credentials authenticate the founder, recipient, outsider and administrator; the recipient receives private IRC/event and DM controls before revocation.",
+        "The selected revocation invalidates the old REST and DM credential and closes its event stream before later private delivery; disable/reset also close the independent IRC login, while API logout deliberately preserves independently authenticated IRC access.",
+        "The legitimate founder still receives the private event, an outsider receives the public output marker without private contents, and unrelated stored messages remain intact.",
+        "Reenable does not reactivate the old token; fresh permitted login works, and SQLite contains exactly one replacement Bob API session and one committed post-revocation message."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "events/WebSocket",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "command": "FLARC_TEST_BUNDLE=/tmp/flarc-matrix-run_01d0e4aeb274/server-03/index.mjs bunx vitest run --config /tmp/flarc-matrix-run_01d0e4aeb274/vitest.frozen.config.mts tests/security/matrix-revocation.test.ts tests/security/matrix-concurrency.test.ts tests/security/matrix-persistence.test.ts tests/security/storage.test.ts tests/integration/ircord-edit-fts-webhooks.test.ts --reporter=default --reporter=json --outputFile=/tmp/flarc-matrix-run_01d0e4aeb274/races-final-results.json",
+      "baselineBundleSha256": "6a58f6b9fd8f938777db4fcce55c336f21fa9e8de694c85e155d66c898c0e0a8",
+      "verifiedBundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89"
+    },
+    {
+      "id": "WS-024",
+      "outcome": "PASS",
+      "completeForScenario": true,
+      "testFile": "tests/security/matrix-revocation.test.ts",
+      "testTitle": "[AUTH-022 DM-015 WS-024] logout invalidates an idle receiving event credential and preserves independent authorization",
+      "scenarioScope": "API logout, administrator disable/reenable, or administrator password reset while the receiving clients remain idle.",
+      "assertionDetails": [
+        "Independent credentials authenticate the founder, recipient, outsider and administrator; the recipient receives private IRC/event and DM controls before revocation.",
+        "The selected revocation invalidates the old REST and DM credential and closes its event stream before later private delivery; disable/reset also close the independent IRC login, while API logout deliberately preserves independently authenticated IRC access.",
+        "The legitimate founder still receives the private event, an outsider receives the public output marker without private contents, and unrelated stored messages remain intact.",
+        "Reenable does not reactivate the old token; fresh permitted login works, and SQLite contains exactly one replacement Bob API session and one committed post-revocation message."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "events/WebSocket",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "command": "FLARC_TEST_BUNDLE=/tmp/flarc-matrix-run_01d0e4aeb274/server-03/index.mjs bunx vitest run --config /tmp/flarc-matrix-run_01d0e4aeb274/vitest.frozen.config.mts tests/security/matrix-revocation.test.ts tests/security/matrix-concurrency.test.ts tests/security/matrix-persistence.test.ts tests/security/storage.test.ts tests/integration/ircord-edit-fts-webhooks.test.ts --reporter=default --reporter=json --outputFile=/tmp/flarc-matrix-run_01d0e4aeb274/races-final-results.json",
+      "baselineBundleSha256": "6a58f6b9fd8f938777db4fcce55c336f21fa9e8de694c85e155d66c898c0e0a8",
+      "verifiedBundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89"
+    },
+    {
+      "id": "AUTH-024",
+      "outcome": "PASS",
+      "completeForScenario": true,
+      "testFile": "tests/security/matrix-revocation.test.ts",
+      "testTitle": "[AUTH-024 AUTH-025 WS-013 WS-024] disable invalidates an idle receiving event credential and preserves independent authorization",
+      "scenarioScope": "API logout, administrator disable/reenable, or administrator password reset while the receiving clients remain idle.",
+      "assertionDetails": [
+        "Independent credentials authenticate the founder, recipient, outsider and administrator; the recipient receives private IRC/event and DM controls before revocation.",
+        "The selected revocation invalidates the old REST and DM credential and closes its event stream before later private delivery; disable/reset also close the independent IRC login, while API logout deliberately preserves independently authenticated IRC access.",
+        "The legitimate founder still receives the private event, an outsider receives the public output marker without private contents, and unrelated stored messages remain intact.",
+        "Reenable does not reactivate the old token; fresh permitted login works, and SQLite contains exactly one replacement Bob API session and one committed post-revocation message."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "events/WebSocket",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "command": "FLARC_TEST_BUNDLE=/tmp/flarc-matrix-run_01d0e4aeb274/server-03/index.mjs bunx vitest run --config /tmp/flarc-matrix-run_01d0e4aeb274/vitest.frozen.config.mts tests/security/matrix-revocation.test.ts tests/security/matrix-concurrency.test.ts tests/security/matrix-persistence.test.ts tests/security/storage.test.ts tests/integration/ircord-edit-fts-webhooks.test.ts --reporter=default --reporter=json --outputFile=/tmp/flarc-matrix-run_01d0e4aeb274/races-final-results.json",
+      "baselineBundleSha256": "6a58f6b9fd8f938777db4fcce55c336f21fa9e8de694c85e155d66c898c0e0a8",
+      "verifiedBundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89"
+    },
+    {
+      "id": "AUTH-025",
+      "outcome": "PASS",
+      "completeForScenario": true,
+      "testFile": "tests/security/matrix-revocation.test.ts",
+      "testTitle": "[AUTH-024 AUTH-025 WS-013 WS-024] disable invalidates an idle receiving event credential and preserves independent authorization",
+      "scenarioScope": "API logout, administrator disable/reenable, or administrator password reset while the receiving clients remain idle.",
+      "assertionDetails": [
+        "Independent credentials authenticate the founder, recipient, outsider and administrator; the recipient receives private IRC/event and DM controls before revocation.",
+        "The selected revocation invalidates the old REST and DM credential and closes its event stream before later private delivery; disable/reset also close the independent IRC login, while API logout deliberately preserves independently authenticated IRC access.",
+        "The legitimate founder still receives the private event, an outsider receives the public output marker without private contents, and unrelated stored messages remain intact.",
+        "Reenable does not reactivate the old token; fresh permitted login works, and SQLite contains exactly one replacement Bob API session and one committed post-revocation message."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "events/WebSocket",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "command": "FLARC_TEST_BUNDLE=/tmp/flarc-matrix-run_01d0e4aeb274/server-03/index.mjs bunx vitest run --config /tmp/flarc-matrix-run_01d0e4aeb274/vitest.frozen.config.mts tests/security/matrix-revocation.test.ts tests/security/matrix-concurrency.test.ts tests/security/matrix-persistence.test.ts tests/security/storage.test.ts tests/integration/ircord-edit-fts-webhooks.test.ts --reporter=default --reporter=json --outputFile=/tmp/flarc-matrix-run_01d0e4aeb274/races-final-results.json",
+      "baselineBundleSha256": "6a58f6b9fd8f938777db4fcce55c336f21fa9e8de694c85e155d66c898c0e0a8",
+      "verifiedBundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89"
+    },
+    {
+      "id": "WS-013",
+      "outcome": "PASS",
+      "completeForScenario": true,
+      "testFile": "tests/security/matrix-revocation.test.ts",
+      "testTitle": "[AUTH-024 AUTH-025 WS-013 WS-024] disable invalidates an idle receiving event credential and preserves independent authorization",
+      "scenarioScope": "API logout, administrator disable/reenable, or administrator password reset while the receiving clients remain idle.",
+      "assertionDetails": [
+        "Independent credentials authenticate the founder, recipient, outsider and administrator; the recipient receives private IRC/event and DM controls before revocation.",
+        "The selected revocation invalidates the old REST and DM credential and closes its event stream before later private delivery; disable/reset also close the independent IRC login, while API logout deliberately preserves independently authenticated IRC access.",
+        "The legitimate founder still receives the private event, an outsider receives the public output marker without private contents, and unrelated stored messages remain intact.",
+        "Reenable does not reactivate the old token; fresh permitted login works, and SQLite contains exactly one replacement Bob API session and one committed post-revocation message."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "events/WebSocket",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "command": "FLARC_TEST_BUNDLE=/tmp/flarc-matrix-run_01d0e4aeb274/server-03/index.mjs bunx vitest run --config /tmp/flarc-matrix-run_01d0e4aeb274/vitest.frozen.config.mts tests/security/matrix-revocation.test.ts tests/security/matrix-concurrency.test.ts tests/security/matrix-persistence.test.ts tests/security/storage.test.ts tests/integration/ircord-edit-fts-webhooks.test.ts --reporter=default --reporter=json --outputFile=/tmp/flarc-matrix-run_01d0e4aeb274/races-final-results.json",
+      "baselineBundleSha256": "6a58f6b9fd8f938777db4fcce55c336f21fa9e8de694c85e155d66c898c0e0a8",
+      "verifiedBundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89"
+    },
+    {
+      "id": "WS-024",
+      "outcome": "PASS",
+      "completeForScenario": true,
+      "testFile": "tests/security/matrix-revocation.test.ts",
+      "testTitle": "[AUTH-024 AUTH-025 WS-013 WS-024] disable invalidates an idle receiving event credential and preserves independent authorization",
+      "scenarioScope": "API logout, administrator disable/reenable, or administrator password reset while the receiving clients remain idle.",
+      "assertionDetails": [
+        "Independent credentials authenticate the founder, recipient, outsider and administrator; the recipient receives private IRC/event and DM controls before revocation.",
+        "The selected revocation invalidates the old REST and DM credential and closes its event stream before later private delivery; disable/reset also close the independent IRC login, while API logout deliberately preserves independently authenticated IRC access.",
+        "The legitimate founder still receives the private event, an outsider receives the public output marker without private contents, and unrelated stored messages remain intact.",
+        "Reenable does not reactivate the old token; fresh permitted login works, and SQLite contains exactly one replacement Bob API session and one committed post-revocation message."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "events/WebSocket",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "command": "FLARC_TEST_BUNDLE=/tmp/flarc-matrix-run_01d0e4aeb274/server-03/index.mjs bunx vitest run --config /tmp/flarc-matrix-run_01d0e4aeb274/vitest.frozen.config.mts tests/security/matrix-revocation.test.ts tests/security/matrix-concurrency.test.ts tests/security/matrix-persistence.test.ts tests/security/storage.test.ts tests/integration/ircord-edit-fts-webhooks.test.ts --reporter=default --reporter=json --outputFile=/tmp/flarc-matrix-run_01d0e4aeb274/races-final-results.json",
+      "baselineBundleSha256": "6a58f6b9fd8f938777db4fcce55c336f21fa9e8de694c85e155d66c898c0e0a8",
+      "verifiedBundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89"
+    },
+    {
+      "id": "AUTH-023",
+      "outcome": "PASS",
+      "completeForScenario": true,
+      "testFile": "tests/security/matrix-revocation.test.ts",
+      "testTitle": "[AUTH-023 WS-024] reset invalidates an idle receiving event credential and preserves independent authorization",
+      "scenarioScope": "API logout, administrator disable/reenable, or administrator password reset while the receiving clients remain idle.",
+      "assertionDetails": [
+        "Independent credentials authenticate the founder, recipient, outsider and administrator; the recipient receives private IRC/event and DM controls before revocation.",
+        "The selected revocation invalidates the old REST and DM credential and closes its event stream before later private delivery; disable/reset also close the independent IRC login, while API logout deliberately preserves independently authenticated IRC access.",
+        "The legitimate founder still receives the private event, an outsider receives the public output marker without private contents, and unrelated stored messages remain intact.",
+        "Reenable does not reactivate the old token; fresh permitted login works, and SQLite contains exactly one replacement Bob API session and one committed post-revocation message."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "events/WebSocket",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "command": "FLARC_TEST_BUNDLE=/tmp/flarc-matrix-run_01d0e4aeb274/server-03/index.mjs bunx vitest run --config /tmp/flarc-matrix-run_01d0e4aeb274/vitest.frozen.config.mts tests/security/matrix-revocation.test.ts tests/security/matrix-concurrency.test.ts tests/security/matrix-persistence.test.ts tests/security/storage.test.ts tests/integration/ircord-edit-fts-webhooks.test.ts --reporter=default --reporter=json --outputFile=/tmp/flarc-matrix-run_01d0e4aeb274/races-final-results.json",
+      "baselineBundleSha256": "6a58f6b9fd8f938777db4fcce55c336f21fa9e8de694c85e155d66c898c0e0a8",
+      "verifiedBundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89"
+    },
+    {
+      "id": "WS-024",
+      "outcome": "PASS",
+      "completeForScenario": true,
+      "testFile": "tests/security/matrix-revocation.test.ts",
+      "testTitle": "[AUTH-023 WS-024] reset invalidates an idle receiving event credential and preserves independent authorization",
+      "scenarioScope": "API logout, administrator disable/reenable, or administrator password reset while the receiving clients remain idle.",
+      "assertionDetails": [
+        "Independent credentials authenticate the founder, recipient, outsider and administrator; the recipient receives private IRC/event and DM controls before revocation.",
+        "The selected revocation invalidates the old REST and DM credential and closes its event stream before later private delivery; disable/reset also close the independent IRC login, while API logout deliberately preserves independently authenticated IRC access.",
+        "The legitimate founder still receives the private event, an outsider receives the public output marker without private contents, and unrelated stored messages remain intact.",
+        "Reenable does not reactivate the old token; fresh permitted login works, and SQLite contains exactly one replacement Bob API session and one committed post-revocation message."
+      ],
+      "transports": [
+        "REST",
+        "IRC/WebSocket",
+        "events/WebSocket",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "command": "FLARC_TEST_BUNDLE=/tmp/flarc-matrix-run_01d0e4aeb274/server-03/index.mjs bunx vitest run --config /tmp/flarc-matrix-run_01d0e4aeb274/vitest.frozen.config.mts tests/security/matrix-revocation.test.ts tests/security/matrix-concurrency.test.ts tests/security/matrix-persistence.test.ts tests/security/storage.test.ts tests/integration/ircord-edit-fts-webhooks.test.ts --reporter=default --reporter=json --outputFile=/tmp/flarc-matrix-run_01d0e4aeb274/races-final-results.json",
+      "baselineBundleSha256": "6a58f6b9fd8f938777db4fcce55c336f21fa9e8de694c85e155d66c898c0e0a8",
+      "verifiedBundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89"
+    },
+    {
+      "id": "WS-014",
+      "outcome": "PASS",
+      "completeForScenario": true,
+      "testFile": "tests/security/matrix-revocation.test.ts",
+      "testTitle": "[WS-014] local workerd hibernating eviction rechecks logout without a receiving-client reconnect",
+      "scenarioScope": "Actual local workerd hibernating eviction via installed Miniflare unsafeEvictDurableObject, retaining receiving sockets and reconstructing attachments.",
+      "assertionDetails": [
+        "A valid event connection receives a private control using either real membership or an administrator role granted through the public admin interface.",
+        "After parent logout or admin-role revocation, SessionDO is evicted with webSockets=hibernate; its reconstructed sender still delivers authorized events.",
+        "The revoked child stream closes, or the downgraded stream receives a public barrier without the intervening private event; downgraded REST administrator and private-history requests are forbidden.",
+        "The committed private message is checked in persisted SQLite. This is local hibernation, not a deployed Cloudflare verification."
+      ],
+      "transports": [
+        "REST",
+        "events/WebSocket",
+        "Miniflare local hibernating eviction",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart"
+      ],
+      "command": "FLARC_TEST_BUNDLE=/tmp/flarc-matrix-run_01d0e4aeb274/server-03/index.mjs bunx vitest run --config /tmp/flarc-matrix-run_01d0e4aeb274/vitest.frozen.config.mts tests/security/matrix-revocation.test.ts tests/security/matrix-concurrency.test.ts tests/security/matrix-persistence.test.ts tests/security/storage.test.ts tests/integration/ircord-edit-fts-webhooks.test.ts --reporter=default --reporter=json --outputFile=/tmp/flarc-matrix-run_01d0e4aeb274/races-final-results.json",
+      "baselineBundleSha256": "6a58f6b9fd8f938777db4fcce55c336f21fa9e8de694c85e155d66c898c0e0a8",
+      "verifiedBundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89"
+    },
+    {
+      "id": "WS-015",
+      "outcome": "PASS",
+      "completeForScenario": true,
+      "testFile": "tests/security/matrix-revocation.test.ts",
+      "testTitle": "[WS-015] local workerd hibernating eviction rechecks admin-role without a receiving-client reconnect",
+      "scenarioScope": "Actual local workerd hibernating eviction via installed Miniflare unsafeEvictDurableObject, retaining receiving sockets and reconstructing attachments.",
+      "assertionDetails": [
+        "A valid event connection receives a private control using either real membership or an administrator role granted through the public admin interface.",
+        "After parent logout or admin-role revocation, SessionDO is evicted with webSockets=hibernate; its reconstructed sender still delivers authorized events.",
+        "The revoked child stream closes, or the downgraded stream receives a public barrier without the intervening private event; downgraded REST administrator and private-history requests are forbidden.",
+        "The committed private message is checked in persisted SQLite. This is local hibernation, not a deployed Cloudflare verification."
+      ],
+      "transports": [
+        "REST",
+        "events/WebSocket",
+        "Miniflare local hibernating eviction",
+        "stopped-runtime SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart"
+      ],
+      "command": "FLARC_TEST_BUNDLE=/tmp/flarc-matrix-run_01d0e4aeb274/server-03/index.mjs bunx vitest run --config /tmp/flarc-matrix-run_01d0e4aeb274/vitest.frozen.config.mts tests/security/matrix-revocation.test.ts tests/security/matrix-concurrency.test.ts tests/security/matrix-persistence.test.ts tests/security/storage.test.ts tests/integration/ircord-edit-fts-webhooks.test.ts --reporter=default --reporter=json --outputFile=/tmp/flarc-matrix-run_01d0e4aeb274/races-final-results.json",
+      "baselineBundleSha256": "6a58f6b9fd8f938777db4fcce55c336f21fa9e8de694c85e155d66c898c0e0a8",
+      "verifiedBundleSha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89"
+    }
+  ],
+  "bugs": [
+    {
+      "id": "RACE-APPEND-ATOMICITY",
+      "initialOutcome": "FAIL",
+      "currentOutcome": "PASS",
+      "rootCause": "appendMessage allocated sequence, inserted message and edit lineage and updated original/FTS in separate SQLite statements without one local transaction.",
+      "minimalReproductions": [
+        "BEFORE INSERT ON messages RAISE(ABORT): HTTP 500 but next_sequence changed from 2 to 3.",
+        "BEFORE INSERT ON message_edits RAISE(ABORT), POST message with +ircord/edit=<original ID>: HTTP 500 but a second unacknowledged body remains in independent REST history and SQLite.",
+        "BEFORE UPDATE OF content ON messages RAISE(ABORT): append and lineage were retained without original update."
+      ],
+      "fix": "One transactionSync wraps sequence allocation, append, lineage and original/FTS update; all outward event/RPC/webhook work follows commit.",
+      "initialEvidence": "/tmp/flarc-matrix-run_01d0e4aeb274/races-original-final-results.json"
+    },
+    {
+      "id": "RACE-LITERAL-FTS",
+      "initialOutcome": "FAIL",
+      "currentOutcome": "PASS",
+      "rootCause": "Raw user text with stripped quotes was passed to FTS MATCH; hyphens, URLs and malformed grammar caused 500s, empty quotes returned broad results and quote stripping lost phrase semantics.",
+      "minimalReproductions": [
+        "Search private-replay-needle through REST/IRC causes a raw MATCH parse failure on original bundle.",
+        "Search quoted red blue must exclude red distant blue; empty quotes must not return every message."
+      ],
+      "fix": "Literal escaped AND terms with retained double-quoted phrase grouping; existing structured filters unchanged.",
+      "initialEvidence": "/tmp/flarc-matrix-run_01d0e4aeb274/races-original-final-results.json"
+    },
+    {
+      "id": "RACE-WEBHOOK-REDIRECT-MODE",
+      "initialOutcome": "FAIL",
+      "currentOutcome": "PASS",
+      "rootCause": "Real workerd rejects fetch redirect:error before making a request; outgoing dispatch swallowed the error and all legitimate webhook delivery silently failed.",
+      "minimalReproductions": [
+        "Publicly configure an HTTPS exact-host outgoing webhook and post an authorized normal message: the controlled outbound HTTP service receives no request.",
+        "A minimal same-version workerd fetch with redirect:error throws Invalid redirect value, must be follow or manual."
+      ],
+      "fix": "Use redirect:manual, never follow 3xx, retain exact HTTPS host allowlist/timeout and cancel response body; the redirect test observes one configured recipient and zero requests to the Location destination.",
+      "initialEvidence": "/tmp/flarc-matrix-run_01d0e4aeb274/races-webhook-baseline-results.json"
+    }
+  ],
+  "resolvedEnvironmentGaps": [
+    {
+      "initial": "Actual alarm invocation/scheduler control initially skipped because no public Miniflare alarm API was present.",
+      "resolution": "A test-only subclass imports an unchanged copy of the frozen production ChannelDO, observes real scheduled alarm completion and reads/sets actual storage alarms; both scheduled deletion and no-op rescheduling now execute and pass."
+    }
+  ],
+  "coverageGaps": [
+    {
+      "ids": [
+        "DB-028"
+      ],
+      "outcome": "NOT IMPLEMENTED",
+      "scope": "Evidence covers 120-row sequence-before pagination and role lookups; around/time cursor query plans and production-size query cost remain untested."
+    },
+    {
+      "ids": [
+        "DB-027"
+      ],
+      "outcome": "NOT IMPLEMENTED",
+      "scope": "Cross-channel foreign cursors and denied private pagination are covered; exhaustive DM/account cursor substitution is outside this slice."
+    },
+    {
+      "ids": [
+        "DB-016"
+      ],
+      "outcome": "NOT IMPLEMENTED",
+      "scope": "Destination commit followed by actual SQL failure is covered with persisted fail-closed journals; timeout-after-commit uncertainty, automatic recovery and every distributed partial-failure permutation remain untested."
+    },
+    {
+      "ids": [
+        "WS-008",
+        "WS-017",
+        "WS-018",
+        "WS-019",
+        "WS-020",
+        "WS-021",
+        "WS-022"
+      ],
+      "outcome": "NOT IMPLEMENTED",
+      "scope": "This slice does not establish attachment-secret introspection, arbitrary private replay/cursor APIs, multi-shard policy, complete disconnect bookkeeping, sustained slow-consumer limits or event-replay mutation deduplication; absent replay capabilities are not passing tests."
+    },
+    {
+      "ids": [
+        "DB-003",
+        "DB-005",
+        "DB-006",
+        "DB-012",
+        "DB-020",
+        "DB-021",
+        "DB-022",
+        "DB-023",
+        "DB-026"
+      ],
+      "outcome": "NOT IMPLEMENTED",
+      "scope": "No complete new scenario claim for profile/config/marker restart, legacy migration shapes, account-deletion cascades, full Drizzle schema parity/idempotent migrations or unrelated object-identity reconstruction in this slice; related existing storage tests are listed as verification only."
+    }
+  ],
+  "limitations": [
+    "Only the IDs linked to precise executed assertions above are claimed; this slice does not cover all 339 catalog scenarios.",
+    "Actual workerd SQLite, localhost WebSockets and actual local scheduled alarms were exercised. Local hibernating eviction is distinct from full Miniflare disposal/restart; neither establishes deployed Cloudflare edge/hibernation/upgrade behavior.",
+    "Expired records are backdated only while stopped; exact 90-day expiry and actual alarm deletion are asserted, without waiting 90 wall-clock days.",
+    "Outbound HTTP bodies/recipient URLs are observed at a controlled Miniflare outbound service rather than a deployed internet receiver. Authentication, channel authorization and outgoing dispatch remain production code.",
+    "Cross-object rename failure deliberately leaves both generations protected and journaled for operator recovery; availability/automatic completion is not inferred from privacy success.",
+    "No production deployment, independent irctest assertion change, commits, staging or modifications outside explicit ownership were performed."
+  ],
+  "verification": {
+    "biome": "Owned tests and channel.ts passed bunx biome check with no fixes needed at final check.",
+    "diffCheck": "git diff --check passed on owned source/tests.",
+    "typecheck": "Passed bunx tsc --noEmit --pretty false at final delivery; earlier transient errors in other workers files were resolved before this final check.",
+    "typecheckLog": "/tmp/flarc-matrix-run_01d0e4aeb274/races-delivery-typecheck.log"
+  },
+  "additionalRegressions": [
+    {
+      "testFile": "tests/security/matrix-persistence.test.ts",
+      "testTitle": "outgoing webhook 3xx responses never forward the body or secret to a second recipient",
+      "outcome": "PASS",
+      "scenarioIds": [],
+      "assertionDetails": [
+        "A non-owner cannot create the outgoing hook; a legitimate founder configures a real secret-bearing HTTPS hook through REST.",
+        "The actual configured outbound HTTP recipient returns 302 with a different Location; after waitUntil work drains the sink observes exactly one request at the configured URL with its authorized body/secret and zero requests to the redirect destination.",
+        "The legitimate source message persists exactly once in SQLite."
+      ],
+      "transports": [
+        "REST",
+        "workerd outbound HTTP service sink",
+        "stopped-runtime SQLite"
+      ]
+    }
+  ],
+  "sourceSha256": {
+    "server/durable-objects/channel.ts": "de0aa3f4c5d15d603c3481883b0122606945526e45e1531e00635809f801dcef",
+    "tests/security/matrix-revocation.test.ts": "657859d82ed9899cb6c0d54093ae9d5cab0ebff0f0e611f7c7209caa5591594d",
+    "tests/security/matrix-concurrency.test.ts": "bacc78960e2407598daf7c6bc26ef52ee5bc5edc0afadd05f5f5b5494674b790",
+    "tests/security/matrix-persistence.test.ts": "9fcbaa7efddec6a6bcb21149193423b6f7adf3a7f9a05c49a8eab562f6afd66d"
+  }
+}

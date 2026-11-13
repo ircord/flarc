@@ -3,12 +3,13 @@ import {
   defineEventHandler,
   getHeader,
   getRouterParam,
-  readBody,
   setResponseStatus,
 } from "nitro/h3";
 import { SERVER_CONFIG } from "~/core/config";
 import { SendMessageSchema } from "~/schemas/messages";
 import { clientRequest, getEnv, parseChannelParam, requireChannelRead } from "~/utils/auth";
+
+import { readJsonBody } from "~/utils/body";
 
 export default defineEventHandler(async (event) => {
   const rawChan = getRouterParam(event, "channel", { decode: true });
@@ -16,12 +17,7 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 400, statusMessage: "Channel parameter required" });
   }
 
-  let body: any;
-  try {
-    body = await readBody(event);
-  } catch {
-    throw createError({ statusCode: 400, statusMessage: "Invalid JSON body" });
-  }
+  const body = await readJsonBody(event);
 
   const parsed = SendMessageSchema.safeParse(body);
   if (!parsed.success) {
@@ -31,7 +27,7 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  const { name, canon } = parseChannelParam(rawChan);
+  const { canon } = parseChannelParam(rawChan);
   const env = getEnv(event);
   const stub = env.CHANNELS.get(env.CHANNELS.idFromName(`${SERVER_CONFIG.networkId}:${canon}`));
 
@@ -71,11 +67,6 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  await env.SESSION.get(env.SESSION.idFromName(SERVER_CONFIG.networkId)).deliverApiMessage(
-    name,
-    res.message!,
-    res.recipientSessionIds ?? [],
-  );
   setResponseStatus(event, 201);
-  return { ok: true, message: res.message };
+  return { ok: true, message: res.message, generation: res.generation };
 });

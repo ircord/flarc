@@ -1,0 +1,1440 @@
+{
+  "version": 2,
+  "evidence": [
+    {
+      "id": "MEDIA-001",
+      "kind": "test",
+      "executionId": "media-persistence-06",
+      "bundleSha256": "2f7699fc944db7d62a6297952220503010e7da298e8a3fcb5a5780838d613794",
+      "testFile": "tests/security/matrix-media-persistence.test.ts",
+      "testTitle": "matrix media persistence r2 MEDIA-001 MEDIA-002 MEDIA-003 MEDIA-006 MEDIA-013 MEDIA-014 private ownership and deletion persist",
+      "outcome": "PASS",
+      "scenarioScope": "Miniflare R2 and SQLite durable-object persistence with actual public REST and IRC; no deployment, IAM, signed-link or delivery-feature claim.",
+      "rationale": "Executed provider-specific lifecycle assertions with independently inspected persistent state.",
+      "assertionDetails": [
+        "Owner and unrelated account upload; anonymous upload denied; unrelated deletion denied; owner deletion removes R2 object and SQLite row while unrelated bytes remain.",
+        "After dispose and restart with persistent R2 and SQLite, fresh password logins verify deleted URL including legacy query variants stays 404, unrelated bytes survive, and wrong owner is denied.",
+        "Actual SQLite rows and bucket objects inspected independently; upload/delete have no IRC event contract and no media identifiers or bytes appear on connected IRC streams."
+      ],
+      "transports": [
+        "REST",
+        "IRC"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources",
+        "events"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "routeBehavior": [
+        {
+          "route": "/api/v1/media/upload",
+          "method": "POST",
+          "alias": "/api/v1/media/upload",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/media/{id}",
+          "method": "GET",
+          "alias": "/media/7cd5f6ff-4ccb-4bdc-bcef-48130b389d10.txt",
+          "outcome": "negative",
+          "responseKind": "secure-denial"
+        },
+        {
+          "route": "/api/v1/media/{id}",
+          "method": "DELETE",
+          "alias": "/api/v1/media/7cd5f6ff-4ccb-4bdc-bcef-48130b389d10.txt",
+          "outcome": "negative",
+          "responseKind": "secure-denial"
+        },
+        {
+          "route": "/api/v1/media/{id}",
+          "method": "DELETE",
+          "alias": "/api/v1/media/7cd5f6ff-4ccb-4bdc-bcef-48130b389d10.txt",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/media/{id}",
+          "method": "GET",
+          "alias": "/media/922e0e34-ab91-4f0a-8585-2625cb467f36.txt",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        }
+      ]
+    },
+    {
+      "id": "MEDIA-002",
+      "kind": "test",
+      "executionId": "media-persistence-06",
+      "bundleSha256": "2f7699fc944db7d62a6297952220503010e7da298e8a3fcb5a5780838d613794",
+      "testFile": "tests/security/matrix-media-persistence.test.ts",
+      "testTitle": "matrix media persistence r2 MEDIA-001 MEDIA-002 MEDIA-003 MEDIA-006 MEDIA-013 MEDIA-014 private ownership and deletion persist",
+      "outcome": "PASS",
+      "scenarioScope": "Miniflare R2 and SQLite durable-object persistence with actual public REST and IRC; no deployment, IAM, signed-link or delivery-feature claim.",
+      "rationale": "Executed provider-specific lifecycle assertions with independently inspected persistent state.",
+      "assertionDetails": [
+        "Owner and unrelated account upload; anonymous upload denied; unrelated deletion denied; owner deletion removes R2 object and SQLite row while unrelated bytes remain.",
+        "After dispose and restart with persistent R2 and SQLite, fresh password logins verify deleted URL including legacy query variants stays 404, unrelated bytes survive, and wrong owner is denied.",
+        "Actual SQLite rows and bucket objects inspected independently; upload/delete have no IRC event contract and no media identifiers or bytes appear on connected IRC streams."
+      ],
+      "transports": [
+        "REST",
+        "IRC"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources",
+        "events"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "routeBehavior": [
+        {
+          "route": "/api/v1/media/upload",
+          "method": "POST",
+          "alias": "/api/v1/media/upload",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/media/{id}",
+          "method": "GET",
+          "alias": "/media/7cd5f6ff-4ccb-4bdc-bcef-48130b389d10.txt",
+          "outcome": "negative",
+          "responseKind": "secure-denial"
+        },
+        {
+          "route": "/api/v1/media/{id}",
+          "method": "DELETE",
+          "alias": "/api/v1/media/7cd5f6ff-4ccb-4bdc-bcef-48130b389d10.txt",
+          "outcome": "negative",
+          "responseKind": "secure-denial"
+        },
+        {
+          "route": "/api/v1/media/{id}",
+          "method": "DELETE",
+          "alias": "/api/v1/media/7cd5f6ff-4ccb-4bdc-bcef-48130b389d10.txt",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/media/{id}",
+          "method": "GET",
+          "alias": "/media/922e0e34-ab91-4f0a-8585-2625cb467f36.txt",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        }
+      ]
+    },
+    {
+      "id": "MEDIA-003",
+      "kind": "test",
+      "executionId": "media-persistence-06",
+      "bundleSha256": "2f7699fc944db7d62a6297952220503010e7da298e8a3fcb5a5780838d613794",
+      "testFile": "tests/security/matrix-media-persistence.test.ts",
+      "testTitle": "matrix media persistence r2 MEDIA-001 MEDIA-002 MEDIA-003 MEDIA-006 MEDIA-013 MEDIA-014 private ownership and deletion persist",
+      "outcome": "PASS",
+      "scenarioScope": "Miniflare R2 and SQLite durable-object persistence with actual public REST and IRC; no deployment, IAM, signed-link or delivery-feature claim.",
+      "rationale": "Executed provider-specific lifecycle assertions with independently inspected persistent state.",
+      "assertionDetails": [
+        "Owner and unrelated account upload; anonymous upload denied; unrelated deletion denied; owner deletion removes R2 object and SQLite row while unrelated bytes remain.",
+        "After dispose and restart with persistent R2 and SQLite, fresh password logins verify deleted URL including legacy query variants stays 404, unrelated bytes survive, and wrong owner is denied.",
+        "Actual SQLite rows and bucket objects inspected independently; upload/delete have no IRC event contract and no media identifiers or bytes appear on connected IRC streams."
+      ],
+      "transports": [
+        "REST",
+        "IRC"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources",
+        "events"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "routeBehavior": [
+        {
+          "route": "/api/v1/media/upload",
+          "method": "POST",
+          "alias": "/api/v1/media/upload",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/media/{id}",
+          "method": "GET",
+          "alias": "/media/7cd5f6ff-4ccb-4bdc-bcef-48130b389d10.txt",
+          "outcome": "negative",
+          "responseKind": "secure-denial"
+        },
+        {
+          "route": "/api/v1/media/{id}",
+          "method": "DELETE",
+          "alias": "/api/v1/media/7cd5f6ff-4ccb-4bdc-bcef-48130b389d10.txt",
+          "outcome": "negative",
+          "responseKind": "secure-denial"
+        },
+        {
+          "route": "/api/v1/media/{id}",
+          "method": "DELETE",
+          "alias": "/api/v1/media/7cd5f6ff-4ccb-4bdc-bcef-48130b389d10.txt",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/media/{id}",
+          "method": "GET",
+          "alias": "/media/922e0e34-ab91-4f0a-8585-2625cb467f36.txt",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        }
+      ]
+    },
+    {
+      "id": "MEDIA-006",
+      "kind": "test",
+      "executionId": "media-persistence-06",
+      "bundleSha256": "2f7699fc944db7d62a6297952220503010e7da298e8a3fcb5a5780838d613794",
+      "testFile": "tests/security/matrix-media-persistence.test.ts",
+      "testTitle": "matrix media persistence r2 MEDIA-001 MEDIA-002 MEDIA-003 MEDIA-006 MEDIA-013 MEDIA-014 private ownership and deletion persist",
+      "outcome": "PASS",
+      "scenarioScope": "Miniflare R2 and SQLite durable-object persistence with actual public REST and IRC; no deployment, IAM, signed-link or delivery-feature claim.",
+      "rationale": "Executed provider-specific lifecycle assertions with independently inspected persistent state.",
+      "assertionDetails": [
+        "Owner and unrelated account upload; anonymous upload denied; unrelated deletion denied; owner deletion removes R2 object and SQLite row while unrelated bytes remain.",
+        "After dispose and restart with persistent R2 and SQLite, fresh password logins verify deleted URL including legacy query variants stays 404, unrelated bytes survive, and wrong owner is denied.",
+        "Actual SQLite rows and bucket objects inspected independently; upload/delete have no IRC event contract and no media identifiers or bytes appear on connected IRC streams."
+      ],
+      "transports": [
+        "REST",
+        "IRC"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources",
+        "events"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "routeBehavior": [
+        {
+          "route": "/api/v1/media/upload",
+          "method": "POST",
+          "alias": "/api/v1/media/upload",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/media/{id}",
+          "method": "GET",
+          "alias": "/media/7cd5f6ff-4ccb-4bdc-bcef-48130b389d10.txt",
+          "outcome": "negative",
+          "responseKind": "secure-denial"
+        },
+        {
+          "route": "/api/v1/media/{id}",
+          "method": "DELETE",
+          "alias": "/api/v1/media/7cd5f6ff-4ccb-4bdc-bcef-48130b389d10.txt",
+          "outcome": "negative",
+          "responseKind": "secure-denial"
+        },
+        {
+          "route": "/api/v1/media/{id}",
+          "method": "DELETE",
+          "alias": "/api/v1/media/7cd5f6ff-4ccb-4bdc-bcef-48130b389d10.txt",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/media/{id}",
+          "method": "GET",
+          "alias": "/media/922e0e34-ab91-4f0a-8585-2625cb467f36.txt",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        }
+      ]
+    },
+    {
+      "id": "MEDIA-013",
+      "kind": "test",
+      "executionId": "media-persistence-06",
+      "bundleSha256": "2f7699fc944db7d62a6297952220503010e7da298e8a3fcb5a5780838d613794",
+      "testFile": "tests/security/matrix-media-persistence.test.ts",
+      "testTitle": "matrix media persistence r2 MEDIA-001 MEDIA-002 MEDIA-003 MEDIA-006 MEDIA-013 MEDIA-014 private ownership and deletion persist",
+      "outcome": "PASS",
+      "scenarioScope": "Miniflare R2 and SQLite durable-object persistence with actual public REST and IRC; no deployment, IAM, signed-link or delivery-feature claim.",
+      "rationale": "Executed provider-specific lifecycle assertions with independently inspected persistent state.",
+      "assertionDetails": [
+        "Owner and unrelated account upload; anonymous upload denied; unrelated deletion denied; owner deletion removes R2 object and SQLite row while unrelated bytes remain.",
+        "After dispose and restart with persistent R2 and SQLite, fresh password logins verify deleted URL including legacy query variants stays 404, unrelated bytes survive, and wrong owner is denied.",
+        "Actual SQLite rows and bucket objects inspected independently; upload/delete have no IRC event contract and no media identifiers or bytes appear on connected IRC streams."
+      ],
+      "transports": [
+        "REST",
+        "IRC"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources",
+        "events"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "routeBehavior": [
+        {
+          "route": "/api/v1/media/upload",
+          "method": "POST",
+          "alias": "/api/v1/media/upload",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/media/{id}",
+          "method": "GET",
+          "alias": "/media/7cd5f6ff-4ccb-4bdc-bcef-48130b389d10.txt",
+          "outcome": "negative",
+          "responseKind": "secure-denial"
+        },
+        {
+          "route": "/api/v1/media/{id}",
+          "method": "DELETE",
+          "alias": "/api/v1/media/7cd5f6ff-4ccb-4bdc-bcef-48130b389d10.txt",
+          "outcome": "negative",
+          "responseKind": "secure-denial"
+        },
+        {
+          "route": "/api/v1/media/{id}",
+          "method": "DELETE",
+          "alias": "/api/v1/media/7cd5f6ff-4ccb-4bdc-bcef-48130b389d10.txt",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/media/{id}",
+          "method": "GET",
+          "alias": "/media/922e0e34-ab91-4f0a-8585-2625cb467f36.txt",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        }
+      ]
+    },
+    {
+      "id": "MEDIA-014",
+      "kind": "test",
+      "executionId": "media-persistence-06",
+      "bundleSha256": "2f7699fc944db7d62a6297952220503010e7da298e8a3fcb5a5780838d613794",
+      "testFile": "tests/security/matrix-media-persistence.test.ts",
+      "testTitle": "matrix media persistence r2 MEDIA-001 MEDIA-002 MEDIA-003 MEDIA-006 MEDIA-013 MEDIA-014 private ownership and deletion persist",
+      "outcome": "PASS",
+      "scenarioScope": "Miniflare R2 and SQLite durable-object persistence with actual public REST and IRC; no deployment, IAM, signed-link or delivery-feature claim.",
+      "rationale": "Executed provider-specific lifecycle assertions with independently inspected persistent state.",
+      "assertionDetails": [
+        "Owner and unrelated account upload; anonymous upload denied; unrelated deletion denied; owner deletion removes R2 object and SQLite row while unrelated bytes remain.",
+        "After dispose and restart with persistent R2 and SQLite, fresh password logins verify deleted URL including legacy query variants stays 404, unrelated bytes survive, and wrong owner is denied.",
+        "Actual SQLite rows and bucket objects inspected independently; upload/delete have no IRC event contract and no media identifiers or bytes appear on connected IRC streams."
+      ],
+      "transports": [
+        "REST",
+        "IRC"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources",
+        "events"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "routeBehavior": [
+        {
+          "route": "/api/v1/media/upload",
+          "method": "POST",
+          "alias": "/api/v1/media/upload",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/media/{id}",
+          "method": "GET",
+          "alias": "/media/7cd5f6ff-4ccb-4bdc-bcef-48130b389d10.txt",
+          "outcome": "negative",
+          "responseKind": "secure-denial"
+        },
+        {
+          "route": "/api/v1/media/{id}",
+          "method": "DELETE",
+          "alias": "/api/v1/media/7cd5f6ff-4ccb-4bdc-bcef-48130b389d10.txt",
+          "outcome": "negative",
+          "responseKind": "secure-denial"
+        },
+        {
+          "route": "/api/v1/media/{id}",
+          "method": "DELETE",
+          "alias": "/api/v1/media/7cd5f6ff-4ccb-4bdc-bcef-48130b389d10.txt",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/media/{id}",
+          "method": "GET",
+          "alias": "/media/922e0e34-ab91-4f0a-8585-2625cb467f36.txt",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        }
+      ]
+    },
+    {
+      "id": "MEDIA-015",
+      "kind": "test",
+      "executionId": "media-persistence-06",
+      "bundleSha256": "2f7699fc944db7d62a6297952220503010e7da298e8a3fcb5a5780838d613794",
+      "testFile": "tests/security/matrix-media-persistence.test.ts",
+      "testTitle": "matrix media persistence r2 MEDIA-001 MEDIA-002 MEDIA-003 MEDIA-006 MEDIA-013 MEDIA-014 private ownership and deletion persist",
+      "outcome": "PASS",
+      "scenarioScope": "Miniflare R2 and SQLite durable-object persistence with actual public REST and IRC; no deployment, IAM, signed-link or delivery-feature claim.",
+      "rationale": "Executed provider-specific lifecycle assertions with independently inspected persistent state.",
+      "assertionDetails": [
+        "Owner and unrelated account upload; anonymous upload denied; unrelated deletion denied; owner deletion removes R2 object and SQLite row while unrelated bytes remain.",
+        "After dispose and restart with persistent R2 and SQLite, fresh password logins verify deleted URL including legacy query variants stays 404, unrelated bytes survive, and wrong owner is denied.",
+        "Actual SQLite rows and bucket objects inspected independently; upload/delete have no IRC event contract and no media identifiers or bytes appear on connected IRC streams."
+      ],
+      "transports": [
+        "REST",
+        "IRC"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources",
+        "events"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "routeBehavior": [
+        {
+          "route": "/api/v1/media/upload",
+          "method": "POST",
+          "alias": "/api/v1/media/upload",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/media/{id}",
+          "method": "GET",
+          "alias": "/media/7cd5f6ff-4ccb-4bdc-bcef-48130b389d10.txt",
+          "outcome": "negative",
+          "responseKind": "secure-denial"
+        },
+        {
+          "route": "/api/v1/media/{id}",
+          "method": "DELETE",
+          "alias": "/api/v1/media/7cd5f6ff-4ccb-4bdc-bcef-48130b389d10.txt",
+          "outcome": "negative",
+          "responseKind": "secure-denial"
+        },
+        {
+          "route": "/api/v1/media/{id}",
+          "method": "DELETE",
+          "alias": "/api/v1/media/7cd5f6ff-4ccb-4bdc-bcef-48130b389d10.txt",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/media/{id}",
+          "method": "GET",
+          "alias": "/media/922e0e34-ab91-4f0a-8585-2625cb467f36.txt",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        }
+      ]
+    },
+    {
+      "id": "MEDIA-004",
+      "kind": "test",
+      "executionId": "media-persistence-06",
+      "bundleSha256": "2f7699fc944db7d62a6297952220503010e7da298e8a3fcb5a5780838d613794",
+      "testFile": "tests/security/matrix-media-persistence.test.ts",
+      "testTitle": "matrix media persistence r2 MEDIA-004 MEDIA-005 MEDIA-008 MEDIA-010 MEDIA-011 channel and DM scopes protect bytes and headers",
+      "outcome": "PASS",
+      "scenarioScope": "Miniflare R2 and SQLite durable-object persistence with actual public REST and IRC; no deployment, IAM, signed-link or delivery-feature claim.",
+      "rationale": "Executed provider-specific lifecycle assertions with independently inspected persistent state.",
+      "assertionDetails": [
+        "Private #private and public #public plus Alice/Bob DM created through authenticated REST and IRC; third principal denied secret and DM bytes and private response metadata, including forged query identity.",
+        "HTML filename, attachment disposition, CSP sandbox, nosniff and private no-store checked; exact bytes and MIME metadata independently read from R2 and scopes and filename from SQLite.",
+        "PART revokes Bob private-channel access before and after complete recreation, while Alice and DM participant Bob retain access; public channel remains accessible to authenticated Charlie.",
+        "IRC PRIVMSG live-control reaches private member Bob and not Charlie; upload IDs and bytes do not appear on monitored streams, with no claimed upload event contract."
+      ],
+      "transports": [
+        "REST",
+        "IRC"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources",
+        "events"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "routeBehavior": [
+        {
+          "route": "/api/media/upload",
+          "method": "POST",
+          "alias": "/api/media/upload?channel=%23private",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/api/v1/media/upload",
+          "method": "POST",
+          "alias": "/api/v1/media/upload?dm=bob",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/api/v1/media/upload",
+          "method": "POST",
+          "alias": "/api/v1/media/upload?channel=%23public",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/media/{id}",
+          "method": "GET",
+          "alias": "/media/412527a3-5e49-49b6-8187-89d641048e6f.html",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/media/{id}",
+          "method": "GET",
+          "alias": "/media/412527a3-5e49-49b6-8187-89d641048e6f.html",
+          "outcome": "negative",
+          "responseKind": "secure-denial"
+        },
+        {
+          "route": "/media/{id}",
+          "method": "GET",
+          "alias": "/media/564d6f84-7214-4773-8744-d0143c026524.txt",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        }
+      ],
+      "commandBehavior": [
+        {
+          "command": "JOIN",
+          "outcome": "positive"
+        },
+        {
+          "command": "MODE",
+          "outcome": "positive"
+        },
+        {
+          "command": "PART",
+          "outcome": "positive"
+        },
+        {
+          "command": "PRIVMSG",
+          "outcome": "positive"
+        }
+      ]
+    },
+    {
+      "id": "MEDIA-005",
+      "kind": "test",
+      "executionId": "media-persistence-06",
+      "bundleSha256": "2f7699fc944db7d62a6297952220503010e7da298e8a3fcb5a5780838d613794",
+      "testFile": "tests/security/matrix-media-persistence.test.ts",
+      "testTitle": "matrix media persistence r2 MEDIA-004 MEDIA-005 MEDIA-008 MEDIA-010 MEDIA-011 channel and DM scopes protect bytes and headers",
+      "outcome": "PASS",
+      "scenarioScope": "Miniflare R2 and SQLite durable-object persistence with actual public REST and IRC; no deployment, IAM, signed-link or delivery-feature claim.",
+      "rationale": "Executed provider-specific lifecycle assertions with independently inspected persistent state.",
+      "assertionDetails": [
+        "Private #private and public #public plus Alice/Bob DM created through authenticated REST and IRC; third principal denied secret and DM bytes and private response metadata, including forged query identity.",
+        "HTML filename, attachment disposition, CSP sandbox, nosniff and private no-store checked; exact bytes and MIME metadata independently read from R2 and scopes and filename from SQLite.",
+        "PART revokes Bob private-channel access before and after complete recreation, while Alice and DM participant Bob retain access; public channel remains accessible to authenticated Charlie.",
+        "IRC PRIVMSG live-control reaches private member Bob and not Charlie; upload IDs and bytes do not appear on monitored streams, with no claimed upload event contract."
+      ],
+      "transports": [
+        "REST",
+        "IRC"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources",
+        "events"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "routeBehavior": [
+        {
+          "route": "/api/media/upload",
+          "method": "POST",
+          "alias": "/api/media/upload?channel=%23private",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/api/v1/media/upload",
+          "method": "POST",
+          "alias": "/api/v1/media/upload?dm=bob",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/api/v1/media/upload",
+          "method": "POST",
+          "alias": "/api/v1/media/upload?channel=%23public",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/media/{id}",
+          "method": "GET",
+          "alias": "/media/412527a3-5e49-49b6-8187-89d641048e6f.html",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/media/{id}",
+          "method": "GET",
+          "alias": "/media/412527a3-5e49-49b6-8187-89d641048e6f.html",
+          "outcome": "negative",
+          "responseKind": "secure-denial"
+        },
+        {
+          "route": "/media/{id}",
+          "method": "GET",
+          "alias": "/media/564d6f84-7214-4773-8744-d0143c026524.txt",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        }
+      ],
+      "commandBehavior": [
+        {
+          "command": "JOIN",
+          "outcome": "positive"
+        },
+        {
+          "command": "MODE",
+          "outcome": "positive"
+        },
+        {
+          "command": "PART",
+          "outcome": "positive"
+        },
+        {
+          "command": "PRIVMSG",
+          "outcome": "positive"
+        }
+      ]
+    },
+    {
+      "id": "MEDIA-008",
+      "kind": "test",
+      "executionId": "media-persistence-06",
+      "bundleSha256": "2f7699fc944db7d62a6297952220503010e7da298e8a3fcb5a5780838d613794",
+      "testFile": "tests/security/matrix-media-persistence.test.ts",
+      "testTitle": "matrix media persistence r2 MEDIA-004 MEDIA-005 MEDIA-008 MEDIA-010 MEDIA-011 channel and DM scopes protect bytes and headers",
+      "outcome": "PASS",
+      "scenarioScope": "Miniflare R2 and SQLite durable-object persistence with actual public REST and IRC; no deployment, IAM, signed-link or delivery-feature claim.",
+      "rationale": "Executed provider-specific lifecycle assertions with independently inspected persistent state.",
+      "assertionDetails": [
+        "Private #private and public #public plus Alice/Bob DM created through authenticated REST and IRC; third principal denied secret and DM bytes and private response metadata, including forged query identity.",
+        "HTML filename, attachment disposition, CSP sandbox, nosniff and private no-store checked; exact bytes and MIME metadata independently read from R2 and scopes and filename from SQLite.",
+        "PART revokes Bob private-channel access before and after complete recreation, while Alice and DM participant Bob retain access; public channel remains accessible to authenticated Charlie.",
+        "IRC PRIVMSG live-control reaches private member Bob and not Charlie; upload IDs and bytes do not appear on monitored streams, with no claimed upload event contract."
+      ],
+      "transports": [
+        "REST",
+        "IRC"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources",
+        "events"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "routeBehavior": [
+        {
+          "route": "/api/media/upload",
+          "method": "POST",
+          "alias": "/api/media/upload?channel=%23private",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/api/v1/media/upload",
+          "method": "POST",
+          "alias": "/api/v1/media/upload?dm=bob",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/api/v1/media/upload",
+          "method": "POST",
+          "alias": "/api/v1/media/upload?channel=%23public",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/media/{id}",
+          "method": "GET",
+          "alias": "/media/412527a3-5e49-49b6-8187-89d641048e6f.html",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/media/{id}",
+          "method": "GET",
+          "alias": "/media/412527a3-5e49-49b6-8187-89d641048e6f.html",
+          "outcome": "negative",
+          "responseKind": "secure-denial"
+        },
+        {
+          "route": "/media/{id}",
+          "method": "GET",
+          "alias": "/media/564d6f84-7214-4773-8744-d0143c026524.txt",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        }
+      ],
+      "commandBehavior": [
+        {
+          "command": "JOIN",
+          "outcome": "positive"
+        },
+        {
+          "command": "MODE",
+          "outcome": "positive"
+        },
+        {
+          "command": "PART",
+          "outcome": "positive"
+        },
+        {
+          "command": "PRIVMSG",
+          "outcome": "positive"
+        }
+      ]
+    },
+    {
+      "id": "MEDIA-010",
+      "kind": "test",
+      "executionId": "media-persistence-06",
+      "bundleSha256": "2f7699fc944db7d62a6297952220503010e7da298e8a3fcb5a5780838d613794",
+      "testFile": "tests/security/matrix-media-persistence.test.ts",
+      "testTitle": "matrix media persistence r2 MEDIA-004 MEDIA-005 MEDIA-008 MEDIA-010 MEDIA-011 channel and DM scopes protect bytes and headers",
+      "outcome": "PASS",
+      "scenarioScope": "Miniflare R2 and SQLite durable-object persistence with actual public REST and IRC; no deployment, IAM, signed-link or delivery-feature claim.",
+      "rationale": "Executed provider-specific lifecycle assertions with independently inspected persistent state.",
+      "assertionDetails": [
+        "Private #private and public #public plus Alice/Bob DM created through authenticated REST and IRC; third principal denied secret and DM bytes and private response metadata, including forged query identity.",
+        "HTML filename, attachment disposition, CSP sandbox, nosniff and private no-store checked; exact bytes and MIME metadata independently read from R2 and scopes and filename from SQLite.",
+        "PART revokes Bob private-channel access before and after complete recreation, while Alice and DM participant Bob retain access; public channel remains accessible to authenticated Charlie.",
+        "IRC PRIVMSG live-control reaches private member Bob and not Charlie; upload IDs and bytes do not appear on monitored streams, with no claimed upload event contract."
+      ],
+      "transports": [
+        "REST",
+        "IRC"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources",
+        "events"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "routeBehavior": [
+        {
+          "route": "/api/media/upload",
+          "method": "POST",
+          "alias": "/api/media/upload?channel=%23private",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/api/v1/media/upload",
+          "method": "POST",
+          "alias": "/api/v1/media/upload?dm=bob",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/api/v1/media/upload",
+          "method": "POST",
+          "alias": "/api/v1/media/upload?channel=%23public",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/media/{id}",
+          "method": "GET",
+          "alias": "/media/412527a3-5e49-49b6-8187-89d641048e6f.html",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/media/{id}",
+          "method": "GET",
+          "alias": "/media/412527a3-5e49-49b6-8187-89d641048e6f.html",
+          "outcome": "negative",
+          "responseKind": "secure-denial"
+        },
+        {
+          "route": "/media/{id}",
+          "method": "GET",
+          "alias": "/media/564d6f84-7214-4773-8744-d0143c026524.txt",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        }
+      ],
+      "commandBehavior": [
+        {
+          "command": "JOIN",
+          "outcome": "positive"
+        },
+        {
+          "command": "MODE",
+          "outcome": "positive"
+        },
+        {
+          "command": "PART",
+          "outcome": "positive"
+        },
+        {
+          "command": "PRIVMSG",
+          "outcome": "positive"
+        }
+      ]
+    },
+    {
+      "id": "MEDIA-011",
+      "kind": "test",
+      "executionId": "media-persistence-06",
+      "bundleSha256": "2f7699fc944db7d62a6297952220503010e7da298e8a3fcb5a5780838d613794",
+      "testFile": "tests/security/matrix-media-persistence.test.ts",
+      "testTitle": "matrix media persistence r2 MEDIA-004 MEDIA-005 MEDIA-008 MEDIA-010 MEDIA-011 channel and DM scopes protect bytes and headers",
+      "outcome": "PASS",
+      "scenarioScope": "Miniflare R2 and SQLite durable-object persistence with actual public REST and IRC; no deployment, IAM, signed-link or delivery-feature claim.",
+      "rationale": "Executed provider-specific lifecycle assertions with independently inspected persistent state.",
+      "assertionDetails": [
+        "Private #private and public #public plus Alice/Bob DM created through authenticated REST and IRC; third principal denied secret and DM bytes and private response metadata, including forged query identity.",
+        "HTML filename, attachment disposition, CSP sandbox, nosniff and private no-store checked; exact bytes and MIME metadata independently read from R2 and scopes and filename from SQLite.",
+        "PART revokes Bob private-channel access before and after complete recreation, while Alice and DM participant Bob retain access; public channel remains accessible to authenticated Charlie.",
+        "IRC PRIVMSG live-control reaches private member Bob and not Charlie; upload IDs and bytes do not appear on monitored streams, with no claimed upload event contract."
+      ],
+      "transports": [
+        "REST",
+        "IRC"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources",
+        "events"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "routeBehavior": [
+        {
+          "route": "/api/media/upload",
+          "method": "POST",
+          "alias": "/api/media/upload?channel=%23private",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/api/v1/media/upload",
+          "method": "POST",
+          "alias": "/api/v1/media/upload?dm=bob",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/api/v1/media/upload",
+          "method": "POST",
+          "alias": "/api/v1/media/upload?channel=%23public",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/media/{id}",
+          "method": "GET",
+          "alias": "/media/412527a3-5e49-49b6-8187-89d641048e6f.html",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/media/{id}",
+          "method": "GET",
+          "alias": "/media/412527a3-5e49-49b6-8187-89d641048e6f.html",
+          "outcome": "negative",
+          "responseKind": "secure-denial"
+        },
+        {
+          "route": "/media/{id}",
+          "method": "GET",
+          "alias": "/media/564d6f84-7214-4773-8744-d0143c026524.txt",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        }
+      ],
+      "commandBehavior": [
+        {
+          "command": "JOIN",
+          "outcome": "positive"
+        },
+        {
+          "command": "MODE",
+          "outcome": "positive"
+        },
+        {
+          "command": "PART",
+          "outcome": "positive"
+        },
+        {
+          "command": "PRIVMSG",
+          "outcome": "positive"
+        }
+      ]
+    },
+    {
+      "id": "MEDIA-015",
+      "kind": "test",
+      "executionId": "media-persistence-06",
+      "bundleSha256": "2f7699fc944db7d62a6297952220503010e7da298e8a3fcb5a5780838d613794",
+      "testFile": "tests/security/matrix-media-persistence.test.ts",
+      "testTitle": "matrix media persistence r2 MEDIA-004 MEDIA-005 MEDIA-008 MEDIA-010 MEDIA-011 channel and DM scopes protect bytes and headers",
+      "outcome": "PASS",
+      "scenarioScope": "Miniflare R2 and SQLite durable-object persistence with actual public REST and IRC; no deployment, IAM, signed-link or delivery-feature claim.",
+      "rationale": "Executed provider-specific lifecycle assertions with independently inspected persistent state.",
+      "assertionDetails": [
+        "Private #private and public #public plus Alice/Bob DM created through authenticated REST and IRC; third principal denied secret and DM bytes and private response metadata, including forged query identity.",
+        "HTML filename, attachment disposition, CSP sandbox, nosniff and private no-store checked; exact bytes and MIME metadata independently read from R2 and scopes and filename from SQLite.",
+        "PART revokes Bob private-channel access before and after complete recreation, while Alice and DM participant Bob retain access; public channel remains accessible to authenticated Charlie.",
+        "IRC PRIVMSG live-control reaches private member Bob and not Charlie; upload IDs and bytes do not appear on monitored streams, with no claimed upload event contract."
+      ],
+      "transports": [
+        "REST",
+        "IRC"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources",
+        "events"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "routeBehavior": [
+        {
+          "route": "/api/media/upload",
+          "method": "POST",
+          "alias": "/api/media/upload?channel=%23private",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/api/v1/media/upload",
+          "method": "POST",
+          "alias": "/api/v1/media/upload?dm=bob",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/api/v1/media/upload",
+          "method": "POST",
+          "alias": "/api/v1/media/upload?channel=%23public",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/media/{id}",
+          "method": "GET",
+          "alias": "/media/412527a3-5e49-49b6-8187-89d641048e6f.html",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/media/{id}",
+          "method": "GET",
+          "alias": "/media/412527a3-5e49-49b6-8187-89d641048e6f.html",
+          "outcome": "negative",
+          "responseKind": "secure-denial"
+        },
+        {
+          "route": "/media/{id}",
+          "method": "GET",
+          "alias": "/media/564d6f84-7214-4773-8744-d0143c026524.txt",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        }
+      ],
+      "commandBehavior": [
+        {
+          "command": "JOIN",
+          "outcome": "positive"
+        },
+        {
+          "command": "MODE",
+          "outcome": "positive"
+        },
+        {
+          "command": "PART",
+          "outcome": "positive"
+        },
+        {
+          "command": "PRIVMSG",
+          "outcome": "positive"
+        }
+      ]
+    },
+    {
+      "id": "CHAN-012",
+      "kind": "test",
+      "executionId": "media-persistence-06",
+      "bundleSha256": "2f7699fc944db7d62a6297952220503010e7da298e8a3fcb5a5780838d613794",
+      "testFile": "tests/security/matrix-media-persistence.test.ts",
+      "testTitle": "matrix media persistence r2 MEDIA-004 MEDIA-005 MEDIA-008 MEDIA-010 MEDIA-011 channel and DM scopes protect bytes and headers",
+      "outcome": "PASS",
+      "scenarioScope": "Miniflare R2 and SQLite durable-object persistence with actual public REST and IRC; no deployment, IAM, signed-link or delivery-feature claim.",
+      "rationale": "Executed provider-specific lifecycle assertions with independently inspected persistent state.",
+      "assertionDetails": [
+        "Private #private and public #public plus Alice/Bob DM created through authenticated REST and IRC; third principal denied secret and DM bytes and private response metadata, including forged query identity.",
+        "HTML filename, attachment disposition, CSP sandbox, nosniff and private no-store checked; exact bytes and MIME metadata independently read from R2 and scopes and filename from SQLite.",
+        "PART revokes Bob private-channel access before and after complete recreation, while Alice and DM participant Bob retain access; public channel remains accessible to authenticated Charlie.",
+        "IRC PRIVMSG live-control reaches private member Bob and not Charlie; upload IDs and bytes do not appear on monitored streams, with no claimed upload event contract."
+      ],
+      "transports": [
+        "REST",
+        "IRC"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources",
+        "events"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "routeBehavior": [
+        {
+          "route": "/api/media/upload",
+          "method": "POST",
+          "alias": "/api/media/upload?channel=%23private",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/api/v1/media/upload",
+          "method": "POST",
+          "alias": "/api/v1/media/upload?dm=bob",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/api/v1/media/upload",
+          "method": "POST",
+          "alias": "/api/v1/media/upload?channel=%23public",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/media/{id}",
+          "method": "GET",
+          "alias": "/media/412527a3-5e49-49b6-8187-89d641048e6f.html",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/media/{id}",
+          "method": "GET",
+          "alias": "/media/412527a3-5e49-49b6-8187-89d641048e6f.html",
+          "outcome": "negative",
+          "responseKind": "secure-denial"
+        },
+        {
+          "route": "/media/{id}",
+          "method": "GET",
+          "alias": "/media/564d6f84-7214-4773-8744-d0143c026524.txt",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        }
+      ],
+      "commandBehavior": [
+        {
+          "command": "JOIN",
+          "outcome": "positive"
+        },
+        {
+          "command": "MODE",
+          "outcome": "positive"
+        },
+        {
+          "command": "PART",
+          "outcome": "positive"
+        },
+        {
+          "command": "PRIVMSG",
+          "outcome": "positive"
+        }
+      ]
+    },
+    {
+      "id": "DM-010",
+      "kind": "test",
+      "executionId": "media-persistence-06",
+      "bundleSha256": "2f7699fc944db7d62a6297952220503010e7da298e8a3fcb5a5780838d613794",
+      "testFile": "tests/security/matrix-media-persistence.test.ts",
+      "testTitle": "matrix media persistence r2 MEDIA-004 MEDIA-005 MEDIA-008 MEDIA-010 MEDIA-011 channel and DM scopes protect bytes and headers",
+      "outcome": "PASS",
+      "scenarioScope": "Miniflare R2 and SQLite durable-object persistence with actual public REST and IRC; no deployment, IAM, signed-link or delivery-feature claim.",
+      "rationale": "Executed provider-specific lifecycle assertions with independently inspected persistent state.",
+      "assertionDetails": [
+        "Private #private and public #public plus Alice/Bob DM created through authenticated REST and IRC; third principal denied secret and DM bytes and private response metadata, including forged query identity.",
+        "HTML filename, attachment disposition, CSP sandbox, nosniff and private no-store checked; exact bytes and MIME metadata independently read from R2 and scopes and filename from SQLite.",
+        "PART revokes Bob private-channel access before and after complete recreation, while Alice and DM participant Bob retain access; public channel remains accessible to authenticated Charlie.",
+        "IRC PRIVMSG live-control reaches private member Bob and not Charlie; upload IDs and bytes do not appear on monitored streams, with no claimed upload event contract."
+      ],
+      "transports": [
+        "REST",
+        "IRC"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources",
+        "events"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "routeBehavior": [
+        {
+          "route": "/api/media/upload",
+          "method": "POST",
+          "alias": "/api/media/upload?channel=%23private",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/api/v1/media/upload",
+          "method": "POST",
+          "alias": "/api/v1/media/upload?dm=bob",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/api/v1/media/upload",
+          "method": "POST",
+          "alias": "/api/v1/media/upload?channel=%23public",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/media/{id}",
+          "method": "GET",
+          "alias": "/media/412527a3-5e49-49b6-8187-89d641048e6f.html",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/media/{id}",
+          "method": "GET",
+          "alias": "/media/412527a3-5e49-49b6-8187-89d641048e6f.html",
+          "outcome": "negative",
+          "responseKind": "secure-denial"
+        },
+        {
+          "route": "/media/{id}",
+          "method": "GET",
+          "alias": "/media/564d6f84-7214-4773-8744-d0143c026524.txt",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        }
+      ],
+      "commandBehavior": [
+        {
+          "command": "JOIN",
+          "outcome": "positive"
+        },
+        {
+          "command": "MODE",
+          "outcome": "positive"
+        },
+        {
+          "command": "PART",
+          "outcome": "positive"
+        },
+        {
+          "command": "PRIVMSG",
+          "outcome": "positive"
+        }
+      ]
+    },
+    {
+      "id": "MEDIA-009",
+      "kind": "test",
+      "executionId": "media-persistence-06",
+      "bundleSha256": "2f7699fc944db7d62a6297952220503010e7da298e8a3fcb5a5780838d613794",
+      "testFile": "tests/security/matrix-media-persistence.test.ts",
+      "testTitle": "matrix media persistence r2 MEDIA-009 MEDIA-012 ABUSE-007 enforces byte limit and cumulative quota without harming another owner",
+      "outcome": "PASS",
+      "scenarioScope": "Miniflare R2 and SQLite durable-object persistence with actual public REST and IRC; no deployment, IAM, signed-link or delivery-feature claim.",
+      "rationale": "Executed provider-specific lifecycle assertions with independently inspected persistent state.",
+      "assertionDetails": [
+        "10 MiB plus one byte rejected; ten 10 MiB R2 uploads reach 100 MiB owner quota and another byte is denied; deletion permits replacement while Bob upload survives.",
+        "SQLite owner totals and R2 object counts checked independently, then runtime recreated and fresh logins confirm quota persists, deleted object remains absent and unrelated Bob bytes persist."
+      ],
+      "transports": [
+        "REST"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": {
+          "status": "not-applicable",
+          "rationale": "Upload size and quota controls have no public event contract; no event delivery is claimed."
+        },
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "routeBehavior": [
+        {
+          "route": "/api/v1/media/upload",
+          "method": "POST",
+          "alias": "/api/v1/media/upload",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/api/v1/media/upload",
+          "method": "POST",
+          "alias": "/api/v1/media/upload",
+          "outcome": "negative",
+          "responseKind": "secure-denial"
+        },
+        {
+          "route": "/api/v1/media/{id}",
+          "method": "DELETE",
+          "alias": "/api/v1/media/553ad38e-dbe0-410a-aebb-2e7cd99ca619.txt",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/media/{id}",
+          "method": "GET",
+          "alias": "/media/efad51c2-7c83-4e65-89b7-4c092ccf589d.txt",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        }
+      ]
+    },
+    {
+      "id": "MEDIA-012",
+      "kind": "test",
+      "executionId": "media-persistence-06",
+      "bundleSha256": "2f7699fc944db7d62a6297952220503010e7da298e8a3fcb5a5780838d613794",
+      "testFile": "tests/security/matrix-media-persistence.test.ts",
+      "testTitle": "matrix media persistence r2 MEDIA-009 MEDIA-012 ABUSE-007 enforces byte limit and cumulative quota without harming another owner",
+      "outcome": "PASS",
+      "scenarioScope": "Miniflare R2 and SQLite durable-object persistence with actual public REST and IRC; no deployment, IAM, signed-link or delivery-feature claim.",
+      "rationale": "Executed provider-specific lifecycle assertions with independently inspected persistent state.",
+      "assertionDetails": [
+        "10 MiB plus one byte rejected; ten 10 MiB R2 uploads reach 100 MiB owner quota and another byte is denied; deletion permits replacement while Bob upload survives.",
+        "SQLite owner totals and R2 object counts checked independently, then runtime recreated and fresh logins confirm quota persists, deleted object remains absent and unrelated Bob bytes persist."
+      ],
+      "transports": [
+        "REST"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": {
+          "status": "not-applicable",
+          "rationale": "Upload size and quota controls have no public event contract; no event delivery is claimed."
+        },
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "routeBehavior": [
+        {
+          "route": "/api/v1/media/upload",
+          "method": "POST",
+          "alias": "/api/v1/media/upload",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/api/v1/media/upload",
+          "method": "POST",
+          "alias": "/api/v1/media/upload",
+          "outcome": "negative",
+          "responseKind": "secure-denial"
+        },
+        {
+          "route": "/api/v1/media/{id}",
+          "method": "DELETE",
+          "alias": "/api/v1/media/553ad38e-dbe0-410a-aebb-2e7cd99ca619.txt",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/media/{id}",
+          "method": "GET",
+          "alias": "/media/efad51c2-7c83-4e65-89b7-4c092ccf589d.txt",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        }
+      ]
+    }
+  ]
+}

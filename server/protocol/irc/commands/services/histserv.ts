@@ -4,6 +4,7 @@ import { encodeIRCMessage } from "~/protocol/irc/encoder";
 import { canonicalizeIRCName } from "~/protocol/irc/parser";
 import { handleChathistory } from "../extensions";
 import type { ISessionDO } from "../types";
+import { serviceAudit, serviceAuditActor, serviceAudited } from "./audit";
 import { sendServiceResponse } from "./helpers";
 
 export async function handleHistServ(
@@ -15,6 +16,7 @@ export async function handleHistServ(
 ): Promise<void> {
   const parts = rawText.trim().split(/\s+/).filter(Boolean);
   const sub = (parts[0] ?? "HELP").toUpperCase();
+  const actor = await serviceAuditActor(session, attachment);
 
   if (sub === "PLAY") {
     const target = parts[1] ?? "";
@@ -61,15 +63,27 @@ export async function handleHistServ(
     }
     if (target.startsWith("#") || target.startsWith("&")) {
       const stub = session.getChannelStub(target);
-      const res = await stub.redactMessage({
-        channelName: target,
-        actorSessionId: attachment.sessionId,
-        actorUserId: attachment.userId,
-        actorAccount: attachment.accountName,
-        actorNick: attachment.nickname!,
-        targetMsgId: msgid,
-        isOper: attachment.isOper,
-      });
+      const res = await serviceAudited(
+        session,
+        actor,
+        "service.histserv.delete",
+        "channel",
+        target,
+        () =>
+          stub.redactMessage({
+            channelName: target,
+            expectedGeneration: session
+              .getSessionChannels(attachment.sessionId)
+              .find((c) => c.canonicalChannel === canonicalizeIRCName(target))?.generation,
+            actorSessionId: attachment.sessionId,
+            actorUserId: attachment.userId,
+            actorAccount: attachment.accountName,
+            actorNick: attachment.nickname!,
+            targetMsgId: msgid,
+            isOper: attachment.isOper,
+          }),
+        (result) => result.ok,
+      );
       if (!res.ok) {
         sendServiceResponse(
           session,
@@ -91,7 +105,17 @@ export async function handleHistServ(
         if (sess) session.sendLine(sess.ws, sess.attachment, redactLine);
       }
     } else {
-      if (!session.redactDirectMessage(msgid, attachment.userId)) {
+      if (
+        !(await serviceAudited(
+          session,
+          actor,
+          "service.histserv.delete",
+          "message",
+          msgid,
+          () => session.redactDirectMessage(msgid, attachment.userId, attachment.sessionId),
+          (result) => result,
+        ))
+      ) {
         sendServiceResponse(
           session,
           ws,
@@ -131,6 +155,14 @@ export async function handleHistServ(
       !attachment.isOper &&
       canonicalizeIRCName(accountOrNick) !== canonicalizeIRCName(attachment.accountName ?? "")
     ) {
+      await serviceAudit(
+        session,
+        actor,
+        "service.histserv.forget",
+        "account",
+        accountOrNick,
+        "denied",
+      );
       sendServiceResponse(
         session,
         ws,
@@ -142,17 +174,40 @@ export async function handleHistServ(
       return;
     }
     const targetAccount = await session.getAccountsStub().getAccountByUsername(accountOrNick);
-    if (!targetAccount) return;
-    let total = 0;
-    const rows = session.sql
-      .exec<{ channel_name: string }>("SELECT DISTINCT channel_name FROM session_channels")
-      .toArray();
-    for (const r of rows) {
-      const res = await session
-        .getChannelStub(r.channel_name)
-        .histServForget(r.channel_name, targetAccount.id);
-      total += res.count;
+    if (!targetAccount) {
+      await serviceAudit(
+        session,
+        actor,
+        "service.histserv.forget",
+        "account",
+        accountOrNick,
+        "denied",
+      );
+      return;
     }
+    const total = await serviceAudited(
+      session,
+      actor,
+      "service.histserv.forget",
+      "account",
+      accountOrNick,
+      async () => {
+        let count = 0;
+        const rows = session.sql
+          .exec<{ channel_name: string; generation: string }>(
+            "SELECT DISTINCT channel_name,generation FROM session_channels WHERE generation IS NOT NULL",
+          )
+          .toArray();
+        for (const row of rows) {
+          const result = await session
+            .getChannelStub(row.channel_name)
+            .histServForget(row.channel_name, targetAccount.id, row.generation);
+          count += result.count;
+        }
+        return count;
+      },
+      () => true,
+    );
     sendServiceResponse(
       session,
       ws,

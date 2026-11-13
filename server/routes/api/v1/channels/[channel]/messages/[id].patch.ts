@@ -1,7 +1,9 @@
-import { createError, defineEventHandler, getRouterParam, readBody } from "nitro/h3";
+import { createError, defineEventHandler, getRouterParam } from "nitro/h3";
 import { SERVER_CONFIG } from "~/core/config";
 import { EditMessageSchema } from "~/schemas/messages";
 import { clientRequest, getEnv, parseChannelParam, requireChannelRead } from "~/utils/auth";
+
+import { readJsonBody } from "~/utils/body";
 
 export default defineEventHandler(async (event): Promise<any> => {
   const rawChan = getRouterParam(event, "channel", { decode: true });
@@ -10,12 +12,7 @@ export default defineEventHandler(async (event): Promise<any> => {
     throw createError({ statusCode: 400, statusMessage: "Channel and message ID required" });
   }
 
-  let body: any;
-  try {
-    body = await readBody(event);
-  } catch {
-    throw createError({ statusCode: 400, statusMessage: "Invalid JSON body" });
-  }
+  const body = await readJsonBody(event);
 
   const parsed = EditMessageSchema.safeParse(body);
   if (!parsed.success) {
@@ -37,11 +34,12 @@ export default defineEventHandler(async (event): Promise<any> => {
     ok: boolean;
     error?: string;
     message?: Record<string, any>;
+    generation: string;
   };
 
   if (!res.ok) {
     throw createError({ statusCode: 403, statusMessage: res.error || "Cannot edit message" });
   }
 
-  return { ok: true, message: res.message };
+  return { ok: true, message: res.message, generation: res.generation };
 });

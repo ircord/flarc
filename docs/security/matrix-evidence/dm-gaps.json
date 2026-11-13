@@ -1,0 +1,1078 @@
+{
+  "version": 2,
+  "capabilityGaps": [
+    "No direct REST DM message-by-ID retrieval, DM mutation or DM directory route was found in the current file-route inventory; absent endpoints are not counted as security denials.",
+    "The REST history peer selector resolves account usernames; account UUID, message UUID and arbitrary live nickname are not supported peer lookups, and no standalone conversation ID or sender/recipient selector is provided. before/after message IDs are scoped pagination references.",
+    "Group DM and group membership changes are unsupported. The tested ordinary event stream has no demonstrated private-DM subscription or replay surface; the tests do not claim to verify an unimplemented DM event replay/subscription. IRC CHATHISTORY/HISTSERV participant replay exists and is covered separately in matrix-dm.test.ts.",
+    "Local hibernation succeeded in the privacy test, including unauthorized edit/redaction after reconstruction. A separate mutation-fixture eviction immediately following fixture restart timed out on active workerd references (dm-gaps-results-03.json); the mutation test instead uses complete before/after stopped SQLite snapshots and independent runtime restarts, and the timed-out attempt remains preserved as infrastructure evidence.",
+    "An early search assertion mistakenly searched the server echo of the query string rather than result items and was corrected (dm-gaps-results-01.json); no production failure is inferred from that test defect.",
+    "Search correction requires actual returned public message rows and matching counts, tests unfiltered and correct-author searches, and repeats controls after restart; unsupported account UUID and conversation-ID selectors remain gaps, not successful secure-denial evidence."
+  ],
+  "evidence": [
+    {
+      "kind": "test",
+      "executionId": "dm-gaps-source09-search-corrected",
+      "bundleSha256": "5894497f55587e0e691458a6db9dad9472d93b36756e0bec50cdded299bf6446",
+      "testFile": "tests/security/matrix-dm-gaps.test.ts",
+      "outcome": "PASS",
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "id": "DM-001",
+      "testTitle": "direct-message privacy gaps DM selectors, public event streams, search and revoked sessions remain confined to real participants",
+      "scenarioScope": "Alice sends actual IRC DMs to Bob and Charlie; authorized delivery and persistence are observed.",
+      "rationale": "The claim is limited to the enumerated supported selectors, observers and lifecycle actually exercised.",
+      "assertionDetails": [
+        "Four independently registered principals authenticate through real REST login and IRC PASS; Alice, Bob and Charlie exchange three uniquely marked conversations, while independently authenticated rootadmin is an outsider.",
+        "REST reads exercise both participants, forged user/sender/recipient parameters, account UUID and live nickname as target, foreign message-ID before/after cursors, and rootadmin; only account-name peer history is a supported lookup, and empty 200 responses for unrecognized selectors are not counted as secure-denial status.",
+        "All four live event streams and IRC outsiders are observed with positive shared-channel message barriers; real local SessionDO eviction with WebSockets hibernated precedes successful Alice/Bob DM and rejected outsider edit/redaction.",
+        "After logout the old Bob token is rejected; fresh Bob and Alice sessions retain their authorized reads, stopped workerd SQLite independently verifies the actual sender and target IDs and contents for all three conversations, and a fresh workerd over the same storage repeats permitted reads and rootadmin denial.",
+        "Both search aliases require actual matching channel message ID, body and channel in items and messages with consistent counts, while unfiltered searches and searches filtered to each DM actual author exclude both DM IDs and contents; the positive and negative checks repeat after workerd restart."
+      ],
+      "transports": [
+        "IRC WebSocket",
+        "REST",
+        "ticket event WebSocket",
+        "workerd SQLite and restart"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "routeBehavior": [
+        {
+          "route": "/api/v1/dms/{target}/messages",
+          "method": "GET",
+          "alias": "/api/v1/dms/bob/messages",
+          "outcome": "positive",
+          "responseKind": "feature-response",
+          "status": 200
+        },
+        {
+          "route": "/api/v1/dms/{target}/messages",
+          "method": "GET",
+          "alias": "/api/v1/dms/bob/messages?user=alice",
+          "outcome": "negative",
+          "responseKind": "secure-denial",
+          "status": 403
+        },
+        {
+          "route": "/api/v1/search",
+          "method": "GET",
+          "alias": "/api/v1/search?q=dmsearch-public-positive",
+          "outcome": "positive",
+          "responseKind": "feature-response",
+          "status": 200
+        },
+        {
+          "route": "/api/v1/messages/search",
+          "method": "GET",
+          "alias": "/api/v1/messages/search?q=dmsearch-public-positive",
+          "outcome": "positive",
+          "responseKind": "feature-response",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "kind": "test",
+      "executionId": "dm-gaps-source09-search-corrected",
+      "bundleSha256": "5894497f55587e0e691458a6db9dad9472d93b36756e0bec50cdded299bf6446",
+      "testFile": "tests/security/matrix-dm-gaps.test.ts",
+      "outcome": "PASS",
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "id": "DM-002",
+      "testTitle": "direct-message privacy gaps DM selectors, public event streams, search and revoked sessions remain confined to real participants",
+      "scenarioScope": "Bob reads his Alice/Bob history by peer account name before and after runtime restart.",
+      "rationale": "The claim is limited to the enumerated supported selectors, observers and lifecycle actually exercised.",
+      "assertionDetails": [
+        "Four independently registered principals authenticate through real REST login and IRC PASS; Alice, Bob and Charlie exchange three uniquely marked conversations, while independently authenticated rootadmin is an outsider.",
+        "REST reads exercise both participants, forged user/sender/recipient parameters, account UUID and live nickname as target, foreign message-ID before/after cursors, and rootadmin; only account-name peer history is a supported lookup, and empty 200 responses for unrecognized selectors are not counted as secure-denial status.",
+        "All four live event streams and IRC outsiders are observed with positive shared-channel message barriers; real local SessionDO eviction with WebSockets hibernated precedes successful Alice/Bob DM and rejected outsider edit/redaction.",
+        "After logout the old Bob token is rejected; fresh Bob and Alice sessions retain their authorized reads, stopped workerd SQLite independently verifies the actual sender and target IDs and contents for all three conversations, and a fresh workerd over the same storage repeats permitted reads and rootadmin denial.",
+        "Both search aliases require actual matching channel message ID, body and channel in items and messages with consistent counts, while unfiltered searches and searches filtered to each DM actual author exclude both DM IDs and contents; the positive and negative checks repeat after workerd restart."
+      ],
+      "transports": [
+        "IRC WebSocket",
+        "REST",
+        "ticket event WebSocket",
+        "workerd SQLite and restart"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "routeBehavior": [
+        {
+          "route": "/api/v1/dms/{target}/messages",
+          "method": "GET",
+          "alias": "/api/v1/dms/bob/messages",
+          "outcome": "positive",
+          "responseKind": "feature-response",
+          "status": 200
+        },
+        {
+          "route": "/api/v1/dms/{target}/messages",
+          "method": "GET",
+          "alias": "/api/v1/dms/bob/messages?user=alice",
+          "outcome": "negative",
+          "responseKind": "secure-denial",
+          "status": 403
+        },
+        {
+          "route": "/api/v1/search",
+          "method": "GET",
+          "alias": "/api/v1/search?q=dmsearch-public-positive",
+          "outcome": "positive",
+          "responseKind": "feature-response",
+          "status": 200
+        },
+        {
+          "route": "/api/v1/messages/search",
+          "method": "GET",
+          "alias": "/api/v1/messages/search?q=dmsearch-public-positive",
+          "outcome": "positive",
+          "responseKind": "feature-response",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "kind": "test",
+      "executionId": "dm-gaps-source09-search-corrected",
+      "bundleSha256": "5894497f55587e0e691458a6db9dad9472d93b36756e0bec50cdded299bf6446",
+      "testFile": "tests/security/matrix-dm-gaps.test.ts",
+      "outcome": "PASS",
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "id": "DM-003",
+      "testTitle": "direct-message privacy gaps DM selectors, public event streams, search and revoked sessions remain confined to real participants",
+      "scenarioScope": "Alice reads her Alice/Bob history by peer account name before and after runtime restart.",
+      "rationale": "The claim is limited to the enumerated supported selectors, observers and lifecycle actually exercised.",
+      "assertionDetails": [
+        "Four independently registered principals authenticate through real REST login and IRC PASS; Alice, Bob and Charlie exchange three uniquely marked conversations, while independently authenticated rootadmin is an outsider.",
+        "REST reads exercise both participants, forged user/sender/recipient parameters, account UUID and live nickname as target, foreign message-ID before/after cursors, and rootadmin; only account-name peer history is a supported lookup, and empty 200 responses for unrecognized selectors are not counted as secure-denial status.",
+        "All four live event streams and IRC outsiders are observed with positive shared-channel message barriers; real local SessionDO eviction with WebSockets hibernated precedes successful Alice/Bob DM and rejected outsider edit/redaction.",
+        "After logout the old Bob token is rejected; fresh Bob and Alice sessions retain their authorized reads, stopped workerd SQLite independently verifies the actual sender and target IDs and contents for all three conversations, and a fresh workerd over the same storage repeats permitted reads and rootadmin denial.",
+        "Both search aliases require actual matching channel message ID, body and channel in items and messages with consistent counts, while unfiltered searches and searches filtered to each DM actual author exclude both DM IDs and contents; the positive and negative checks repeat after workerd restart."
+      ],
+      "transports": [
+        "IRC WebSocket",
+        "REST",
+        "ticket event WebSocket",
+        "workerd SQLite and restart"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "routeBehavior": [
+        {
+          "route": "/api/v1/dms/{target}/messages",
+          "method": "GET",
+          "alias": "/api/v1/dms/bob/messages",
+          "outcome": "positive",
+          "responseKind": "feature-response",
+          "status": 200
+        },
+        {
+          "route": "/api/v1/dms/{target}/messages",
+          "method": "GET",
+          "alias": "/api/v1/dms/bob/messages?user=alice",
+          "outcome": "negative",
+          "responseKind": "secure-denial",
+          "status": 403
+        },
+        {
+          "route": "/api/v1/search",
+          "method": "GET",
+          "alias": "/api/v1/search?q=dmsearch-public-positive",
+          "outcome": "positive",
+          "responseKind": "feature-response",
+          "status": 200
+        },
+        {
+          "route": "/api/v1/messages/search",
+          "method": "GET",
+          "alias": "/api/v1/messages/search?q=dmsearch-public-positive",
+          "outcome": "positive",
+          "responseKind": "feature-response",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "kind": "test",
+      "executionId": "dm-gaps-source09-search-corrected",
+      "bundleSha256": "5894497f55587e0e691458a6db9dad9472d93b36756e0bec50cdded299bf6446",
+      "testFile": "tests/security/matrix-dm-gaps.test.ts",
+      "outcome": "PASS",
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "id": "DM-004",
+      "testTitle": "direct-message privacy gaps DM selectors, public event streams, search and revoked sessions remain confined to real participants",
+      "scenarioScope": "Charlie cannot retrieve Alice/Bob history by forged account selectors and does not receive its IRC or public event content.",
+      "rationale": "The claim is limited to the enumerated supported selectors, observers and lifecycle actually exercised.",
+      "assertionDetails": [
+        "Four independently registered principals authenticate through real REST login and IRC PASS; Alice, Bob and Charlie exchange three uniquely marked conversations, while independently authenticated rootadmin is an outsider.",
+        "REST reads exercise both participants, forged user/sender/recipient parameters, account UUID and live nickname as target, foreign message-ID before/after cursors, and rootadmin; only account-name peer history is a supported lookup, and empty 200 responses for unrecognized selectors are not counted as secure-denial status.",
+        "All four live event streams and IRC outsiders are observed with positive shared-channel message barriers; real local SessionDO eviction with WebSockets hibernated precedes successful Alice/Bob DM and rejected outsider edit/redaction.",
+        "After logout the old Bob token is rejected; fresh Bob and Alice sessions retain their authorized reads, stopped workerd SQLite independently verifies the actual sender and target IDs and contents for all three conversations, and a fresh workerd over the same storage repeats permitted reads and rootadmin denial.",
+        "Both search aliases require actual matching channel message ID, body and channel in items and messages with consistent counts, while unfiltered searches and searches filtered to each DM actual author exclude both DM IDs and contents; the positive and negative checks repeat after workerd restart."
+      ],
+      "transports": [
+        "IRC WebSocket",
+        "REST",
+        "ticket event WebSocket",
+        "workerd SQLite and restart"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "routeBehavior": [
+        {
+          "route": "/api/v1/dms/{target}/messages",
+          "method": "GET",
+          "alias": "/api/v1/dms/bob/messages",
+          "outcome": "positive",
+          "responseKind": "feature-response",
+          "status": 200
+        },
+        {
+          "route": "/api/v1/dms/{target}/messages",
+          "method": "GET",
+          "alias": "/api/v1/dms/bob/messages?user=alice",
+          "outcome": "negative",
+          "responseKind": "secure-denial",
+          "status": 403
+        },
+        {
+          "route": "/api/v1/search",
+          "method": "GET",
+          "alias": "/api/v1/search?q=dmsearch-public-positive",
+          "outcome": "positive",
+          "responseKind": "feature-response",
+          "status": 200
+        },
+        {
+          "route": "/api/v1/messages/search",
+          "method": "GET",
+          "alias": "/api/v1/messages/search?q=dmsearch-public-positive",
+          "outcome": "positive",
+          "responseKind": "feature-response",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "kind": "test",
+      "executionId": "dm-gaps-source09-search-corrected",
+      "bundleSha256": "5894497f55587e0e691458a6db9dad9472d93b36756e0bec50cdded299bf6446",
+      "testFile": "tests/security/matrix-dm-gaps.test.ts",
+      "outcome": "PASS",
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "id": "DM-011",
+      "testTitle": "direct-message privacy gaps DM selectors, public event streams, search and revoked sessions remain confined to real participants",
+      "scenarioScope": "Alice cannot retrieve Bob/Charlie history by forged user selector, and her own Alice/Charlie history remains distinct.",
+      "rationale": "The claim is limited to the enumerated supported selectors, observers and lifecycle actually exercised.",
+      "assertionDetails": [
+        "Four independently registered principals authenticate through real REST login and IRC PASS; Alice, Bob and Charlie exchange three uniquely marked conversations, while independently authenticated rootadmin is an outsider.",
+        "REST reads exercise both participants, forged user/sender/recipient parameters, account UUID and live nickname as target, foreign message-ID before/after cursors, and rootadmin; only account-name peer history is a supported lookup, and empty 200 responses for unrecognized selectors are not counted as secure-denial status.",
+        "All four live event streams and IRC outsiders are observed with positive shared-channel message barriers; real local SessionDO eviction with WebSockets hibernated precedes successful Alice/Bob DM and rejected outsider edit/redaction.",
+        "After logout the old Bob token is rejected; fresh Bob and Alice sessions retain their authorized reads, stopped workerd SQLite independently verifies the actual sender and target IDs and contents for all three conversations, and a fresh workerd over the same storage repeats permitted reads and rootadmin denial.",
+        "Both search aliases require actual matching channel message ID, body and channel in items and messages with consistent counts, while unfiltered searches and searches filtered to each DM actual author exclude both DM IDs and contents; the positive and negative checks repeat after workerd restart."
+      ],
+      "transports": [
+        "IRC WebSocket",
+        "REST",
+        "ticket event WebSocket",
+        "workerd SQLite and restart"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "routeBehavior": [
+        {
+          "route": "/api/v1/dms/{target}/messages",
+          "method": "GET",
+          "alias": "/api/v1/dms/bob/messages",
+          "outcome": "positive",
+          "responseKind": "feature-response",
+          "status": 200
+        },
+        {
+          "route": "/api/v1/dms/{target}/messages",
+          "method": "GET",
+          "alias": "/api/v1/dms/bob/messages?user=alice",
+          "outcome": "negative",
+          "responseKind": "secure-denial",
+          "status": 403
+        },
+        {
+          "route": "/api/v1/search",
+          "method": "GET",
+          "alias": "/api/v1/search?q=dmsearch-public-positive",
+          "outcome": "positive",
+          "responseKind": "feature-response",
+          "status": 200
+        },
+        {
+          "route": "/api/v1/messages/search",
+          "method": "GET",
+          "alias": "/api/v1/messages/search?q=dmsearch-public-positive",
+          "outcome": "positive",
+          "responseKind": "feature-response",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "kind": "test",
+      "executionId": "dm-gaps-source09-search-corrected",
+      "bundleSha256": "5894497f55587e0e691458a6db9dad9472d93b36756e0bec50cdded299bf6446",
+      "testFile": "tests/security/matrix-dm-gaps.test.ts",
+      "outcome": "PASS",
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "id": "DM-012",
+      "testTitle": "direct-message privacy gaps DM selectors, public event streams, search and revoked sessions remain confined to real participants",
+      "scenarioScope": "A foreign account UUID substituted into the tested user/target inputs does not return private history; UUID is not a supported peer lookup, so full account-ID substitution coverage remains open.",
+      "rationale": "UUID as a peer selector is unsupported; empty responses do not prove a general account-ID authorization boundary.",
+      "assertionDetails": [
+        "Four independently registered principals authenticate through real REST login and IRC PASS; Alice, Bob and Charlie exchange three uniquely marked conversations, while independently authenticated rootadmin is an outsider.",
+        "REST reads exercise both participants, forged user/sender/recipient parameters, account UUID and live nickname as target, foreign message-ID before/after cursors, and rootadmin; only account-name peer history is a supported lookup, and empty 200 responses for unrecognized selectors are not counted as secure-denial status.",
+        "All four live event streams and IRC outsiders are observed with positive shared-channel message barriers; real local SessionDO eviction with WebSockets hibernated precedes successful Alice/Bob DM and rejected outsider edit/redaction.",
+        "After logout the old Bob token is rejected; fresh Bob and Alice sessions retain their authorized reads, stopped workerd SQLite independently verifies the actual sender and target IDs and contents for all three conversations, and a fresh workerd over the same storage repeats permitted reads and rootadmin denial.",
+        "Both search aliases require actual matching channel message ID, body and channel in items and messages with consistent counts, while unfiltered searches and searches filtered to each DM actual author exclude both DM IDs and contents; the positive and negative checks repeat after workerd restart."
+      ],
+      "transports": [
+        "IRC WebSocket",
+        "REST",
+        "ticket event WebSocket",
+        "workerd SQLite and restart"
+      ],
+      "assertions": [
+        "authorization",
+        "transport"
+      ],
+      "routeBehavior": [
+        {
+          "route": "/api/v1/dms/{target}/messages",
+          "method": "GET",
+          "alias": "/api/v1/dms/bob/messages",
+          "outcome": "positive",
+          "responseKind": "feature-response",
+          "status": 200
+        },
+        {
+          "route": "/api/v1/dms/{target}/messages",
+          "method": "GET",
+          "alias": "/api/v1/dms/bob/messages?user=alice",
+          "outcome": "negative",
+          "responseKind": "secure-denial",
+          "status": 403
+        },
+        {
+          "route": "/api/v1/search",
+          "method": "GET",
+          "alias": "/api/v1/search?q=dmsearch-public-positive",
+          "outcome": "positive",
+          "responseKind": "feature-response",
+          "status": 200
+        },
+        {
+          "route": "/api/v1/messages/search",
+          "method": "GET",
+          "alias": "/api/v1/messages/search?q=dmsearch-public-positive",
+          "outcome": "positive",
+          "responseKind": "feature-response",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "kind": "test",
+      "executionId": "dm-gaps-source09-search-corrected",
+      "bundleSha256": "5894497f55587e0e691458a6db9dad9472d93b36756e0bec50cdded299bf6446",
+      "testFile": "tests/security/matrix-dm-gaps.test.ts",
+      "outcome": "PASS",
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "id": "DM-014",
+      "testTitle": "direct-message privacy gaps DM selectors, public event streams, search and revoked sessions remain confined to real participants",
+      "scenarioScope": "Authenticated identity binds real peer account-name history even under user, sender and recipient substitutions.",
+      "rationale": "The claim is limited to the enumerated supported selectors, observers and lifecycle actually exercised.",
+      "assertionDetails": [
+        "Four independently registered principals authenticate through real REST login and IRC PASS; Alice, Bob and Charlie exchange three uniquely marked conversations, while independently authenticated rootadmin is an outsider.",
+        "REST reads exercise both participants, forged user/sender/recipient parameters, account UUID and live nickname as target, foreign message-ID before/after cursors, and rootadmin; only account-name peer history is a supported lookup, and empty 200 responses for unrecognized selectors are not counted as secure-denial status.",
+        "All four live event streams and IRC outsiders are observed with positive shared-channel message barriers; real local SessionDO eviction with WebSockets hibernated precedes successful Alice/Bob DM and rejected outsider edit/redaction.",
+        "After logout the old Bob token is rejected; fresh Bob and Alice sessions retain their authorized reads, stopped workerd SQLite independently verifies the actual sender and target IDs and contents for all three conversations, and a fresh workerd over the same storage repeats permitted reads and rootadmin denial.",
+        "Both search aliases require actual matching channel message ID, body and channel in items and messages with consistent counts, while unfiltered searches and searches filtered to each DM actual author exclude both DM IDs and contents; the positive and negative checks repeat after workerd restart."
+      ],
+      "transports": [
+        "IRC WebSocket",
+        "REST",
+        "ticket event WebSocket",
+        "workerd SQLite and restart"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "routeBehavior": [
+        {
+          "route": "/api/v1/dms/{target}/messages",
+          "method": "GET",
+          "alias": "/api/v1/dms/bob/messages",
+          "outcome": "positive",
+          "responseKind": "feature-response",
+          "status": 200
+        },
+        {
+          "route": "/api/v1/dms/{target}/messages",
+          "method": "GET",
+          "alias": "/api/v1/dms/bob/messages?user=alice",
+          "outcome": "negative",
+          "responseKind": "secure-denial",
+          "status": 403
+        },
+        {
+          "route": "/api/v1/search",
+          "method": "GET",
+          "alias": "/api/v1/search?q=dmsearch-public-positive",
+          "outcome": "positive",
+          "responseKind": "feature-response",
+          "status": 200
+        },
+        {
+          "route": "/api/v1/messages/search",
+          "method": "GET",
+          "alias": "/api/v1/messages/search?q=dmsearch-public-positive",
+          "outcome": "positive",
+          "responseKind": "feature-response",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "kind": "test",
+      "executionId": "dm-gaps-source09-search-corrected",
+      "bundleSha256": "5894497f55587e0e691458a6db9dad9472d93b36756e0bec50cdded299bf6446",
+      "testFile": "tests/security/matrix-dm-gaps.test.ts",
+      "outcome": "PASS",
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "id": "DM-015",
+      "testTitle": "direct-message privacy gaps DM selectors, public event streams, search and revoked sessions remain confined to real participants",
+      "scenarioScope": "A logged-out Bob bearer token cannot access history before or after restart; a newly authenticated Bob can.",
+      "rationale": "The claim is limited to the enumerated supported selectors, observers and lifecycle actually exercised.",
+      "assertionDetails": [
+        "Four independently registered principals authenticate through real REST login and IRC PASS; Alice, Bob and Charlie exchange three uniquely marked conversations, while independently authenticated rootadmin is an outsider.",
+        "REST reads exercise both participants, forged user/sender/recipient parameters, account UUID and live nickname as target, foreign message-ID before/after cursors, and rootadmin; only account-name peer history is a supported lookup, and empty 200 responses for unrecognized selectors are not counted as secure-denial status.",
+        "All four live event streams and IRC outsiders are observed with positive shared-channel message barriers; real local SessionDO eviction with WebSockets hibernated precedes successful Alice/Bob DM and rejected outsider edit/redaction.",
+        "After logout the old Bob token is rejected; fresh Bob and Alice sessions retain their authorized reads, stopped workerd SQLite independently verifies the actual sender and target IDs and contents for all three conversations, and a fresh workerd over the same storage repeats permitted reads and rootadmin denial.",
+        "Both search aliases require actual matching channel message ID, body and channel in items and messages with consistent counts, while unfiltered searches and searches filtered to each DM actual author exclude both DM IDs and contents; the positive and negative checks repeat after workerd restart."
+      ],
+      "transports": [
+        "IRC WebSocket",
+        "REST",
+        "ticket event WebSocket",
+        "workerd SQLite and restart"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "routeBehavior": [
+        {
+          "route": "/api/v1/dms/{target}/messages",
+          "method": "GET",
+          "alias": "/api/v1/dms/bob/messages",
+          "outcome": "positive",
+          "responseKind": "feature-response",
+          "status": 200
+        },
+        {
+          "route": "/api/v1/dms/{target}/messages",
+          "method": "GET",
+          "alias": "/api/v1/dms/bob/messages?user=alice",
+          "outcome": "negative",
+          "responseKind": "secure-denial",
+          "status": 403
+        },
+        {
+          "route": "/api/v1/search",
+          "method": "GET",
+          "alias": "/api/v1/search?q=dmsearch-public-positive",
+          "outcome": "positive",
+          "responseKind": "feature-response",
+          "status": 200
+        },
+        {
+          "route": "/api/v1/messages/search",
+          "method": "GET",
+          "alias": "/api/v1/messages/search?q=dmsearch-public-positive",
+          "outcome": "positive",
+          "responseKind": "feature-response",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "kind": "test",
+      "executionId": "dm-gaps-source09-search-corrected",
+      "bundleSha256": "5894497f55587e0e691458a6db9dad9472d93b36756e0bec50cdded299bf6446",
+      "testFile": "tests/security/matrix-dm-gaps.test.ts",
+      "outcome": "PASS",
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "id": "DM-017",
+      "testTitle": "direct-message privacy gaps DM selectors, public event streams, search and revoked sessions remain confined to real participants",
+      "scenarioScope": "All three real conversations persist in SQLite and remain independently accessible only to the checked participants after a runtime recreation.",
+      "rationale": "The claim is limited to the enumerated supported selectors, observers and lifecycle actually exercised.",
+      "assertionDetails": [
+        "Four independently registered principals authenticate through real REST login and IRC PASS; Alice, Bob and Charlie exchange three uniquely marked conversations, while independently authenticated rootadmin is an outsider.",
+        "REST reads exercise both participants, forged user/sender/recipient parameters, account UUID and live nickname as target, foreign message-ID before/after cursors, and rootadmin; only account-name peer history is a supported lookup, and empty 200 responses for unrecognized selectors are not counted as secure-denial status.",
+        "All four live event streams and IRC outsiders are observed with positive shared-channel message barriers; real local SessionDO eviction with WebSockets hibernated precedes successful Alice/Bob DM and rejected outsider edit/redaction.",
+        "After logout the old Bob token is rejected; fresh Bob and Alice sessions retain their authorized reads, stopped workerd SQLite independently verifies the actual sender and target IDs and contents for all three conversations, and a fresh workerd over the same storage repeats permitted reads and rootadmin denial.",
+        "Both search aliases require actual matching channel message ID, body and channel in items and messages with consistent counts, while unfiltered searches and searches filtered to each DM actual author exclude both DM IDs and contents; the positive and negative checks repeat after workerd restart."
+      ],
+      "transports": [
+        "IRC WebSocket",
+        "REST",
+        "ticket event WebSocket",
+        "workerd SQLite and restart"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "routeBehavior": [
+        {
+          "route": "/api/v1/dms/{target}/messages",
+          "method": "GET",
+          "alias": "/api/v1/dms/bob/messages",
+          "outcome": "positive",
+          "responseKind": "feature-response",
+          "status": 200
+        },
+        {
+          "route": "/api/v1/dms/{target}/messages",
+          "method": "GET",
+          "alias": "/api/v1/dms/bob/messages?user=alice",
+          "outcome": "negative",
+          "responseKind": "secure-denial",
+          "status": 403
+        },
+        {
+          "route": "/api/v1/search",
+          "method": "GET",
+          "alias": "/api/v1/search?q=dmsearch-public-positive",
+          "outcome": "positive",
+          "responseKind": "feature-response",
+          "status": 200
+        },
+        {
+          "route": "/api/v1/messages/search",
+          "method": "GET",
+          "alias": "/api/v1/messages/search?q=dmsearch-public-positive",
+          "outcome": "positive",
+          "responseKind": "feature-response",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "kind": "test",
+      "executionId": "dm-gaps-source09-search-corrected",
+      "bundleSha256": "5894497f55587e0e691458a6db9dad9472d93b36756e0bec50cdded299bf6446",
+      "testFile": "tests/security/matrix-dm-gaps.test.ts",
+      "outcome": "PASS",
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "id": "DM-020",
+      "testTitle": "direct-message privacy gaps DM selectors, public event streams, search and revoked sessions remain confined to real participants",
+      "scenarioScope": "All four public event streams exclude private DM bodies across a live positive channel barrier and after local hibernation.",
+      "rationale": "The claim is limited to the enumerated supported selectors, observers and lifecycle actually exercised.",
+      "assertionDetails": [
+        "Four independently registered principals authenticate through real REST login and IRC PASS; Alice, Bob and Charlie exchange three uniquely marked conversations, while independently authenticated rootadmin is an outsider.",
+        "REST reads exercise both participants, forged user/sender/recipient parameters, account UUID and live nickname as target, foreign message-ID before/after cursors, and rootadmin; only account-name peer history is a supported lookup, and empty 200 responses for unrecognized selectors are not counted as secure-denial status.",
+        "All four live event streams and IRC outsiders are observed with positive shared-channel message barriers; real local SessionDO eviction with WebSockets hibernated precedes successful Alice/Bob DM and rejected outsider edit/redaction.",
+        "After logout the old Bob token is rejected; fresh Bob and Alice sessions retain their authorized reads, stopped workerd SQLite independently verifies the actual sender and target IDs and contents for all three conversations, and a fresh workerd over the same storage repeats permitted reads and rootadmin denial.",
+        "Both search aliases require actual matching channel message ID, body and channel in items and messages with consistent counts, while unfiltered searches and searches filtered to each DM actual author exclude both DM IDs and contents; the positive and negative checks repeat after workerd restart."
+      ],
+      "transports": [
+        "IRC WebSocket",
+        "REST",
+        "ticket event WebSocket",
+        "workerd SQLite and restart"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "routeBehavior": [
+        {
+          "route": "/api/v1/dms/{target}/messages",
+          "method": "GET",
+          "alias": "/api/v1/dms/bob/messages",
+          "outcome": "positive",
+          "responseKind": "feature-response",
+          "status": 200
+        },
+        {
+          "route": "/api/v1/dms/{target}/messages",
+          "method": "GET",
+          "alias": "/api/v1/dms/bob/messages?user=alice",
+          "outcome": "negative",
+          "responseKind": "secure-denial",
+          "status": 403
+        },
+        {
+          "route": "/api/v1/search",
+          "method": "GET",
+          "alias": "/api/v1/search?q=dmsearch-public-positive",
+          "outcome": "positive",
+          "responseKind": "feature-response",
+          "status": 200
+        },
+        {
+          "route": "/api/v1/messages/search",
+          "method": "GET",
+          "alias": "/api/v1/messages/search?q=dmsearch-public-positive",
+          "outcome": "positive",
+          "responseKind": "feature-response",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "kind": "test",
+      "executionId": "dm-gaps-source09-search-corrected",
+      "bundleSha256": "5894497f55587e0e691458a6db9dad9472d93b36756e0bec50cdded299bf6446",
+      "testFile": "tests/security/matrix-dm-gaps.test.ts",
+      "outcome": "PASS",
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "id": "DM-021",
+      "testTitle": "direct-message privacy gaps DM selectors, public event streams, search and revoked sessions remain confined to real participants",
+      "scenarioScope": "An authenticated network administrator cannot read Alice/Bob via a forged user selector and receives no Alice/Bob IRC content.",
+      "rationale": "The claim is limited to the enumerated supported selectors, observers and lifecycle actually exercised.",
+      "assertionDetails": [
+        "Four independently registered principals authenticate through real REST login and IRC PASS; Alice, Bob and Charlie exchange three uniquely marked conversations, while independently authenticated rootadmin is an outsider.",
+        "REST reads exercise both participants, forged user/sender/recipient parameters, account UUID and live nickname as target, foreign message-ID before/after cursors, and rootadmin; only account-name peer history is a supported lookup, and empty 200 responses for unrecognized selectors are not counted as secure-denial status.",
+        "All four live event streams and IRC outsiders are observed with positive shared-channel message barriers; real local SessionDO eviction with WebSockets hibernated precedes successful Alice/Bob DM and rejected outsider edit/redaction.",
+        "After logout the old Bob token is rejected; fresh Bob and Alice sessions retain their authorized reads, stopped workerd SQLite independently verifies the actual sender and target IDs and contents for all three conversations, and a fresh workerd over the same storage repeats permitted reads and rootadmin denial.",
+        "Both search aliases require actual matching channel message ID, body and channel in items and messages with consistent counts, while unfiltered searches and searches filtered to each DM actual author exclude both DM IDs and contents; the positive and negative checks repeat after workerd restart."
+      ],
+      "transports": [
+        "IRC WebSocket",
+        "REST",
+        "ticket event WebSocket",
+        "workerd SQLite and restart"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "routeBehavior": [
+        {
+          "route": "/api/v1/dms/{target}/messages",
+          "method": "GET",
+          "alias": "/api/v1/dms/bob/messages",
+          "outcome": "positive",
+          "responseKind": "feature-response",
+          "status": 200
+        },
+        {
+          "route": "/api/v1/dms/{target}/messages",
+          "method": "GET",
+          "alias": "/api/v1/dms/bob/messages?user=alice",
+          "outcome": "negative",
+          "responseKind": "secure-denial",
+          "status": 403
+        },
+        {
+          "route": "/api/v1/search",
+          "method": "GET",
+          "alias": "/api/v1/search?q=dmsearch-public-positive",
+          "outcome": "positive",
+          "responseKind": "feature-response",
+          "status": 200
+        },
+        {
+          "route": "/api/v1/messages/search",
+          "method": "GET",
+          "alias": "/api/v1/messages/search?q=dmsearch-public-positive",
+          "outcome": "positive",
+          "responseKind": "feature-response",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "kind": "test",
+      "executionId": "dm-gaps-source09-search-corrected",
+      "bundleSha256": "5894497f55587e0e691458a6db9dad9472d93b36756e0bec50cdded299bf6446",
+      "testFile": "tests/security/matrix-dm-gaps.test.ts",
+      "outcome": "PASS",
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "id": "DM-024",
+      "testTitle": "direct-message privacy gaps DM selectors, public event streams, search and revoked sessions remain confined to real participants",
+      "scenarioScope": "Both actual channel search aliases return a positive public-channel search control and no DM items for the tested actors and DM markers.",
+      "rationale": "The claim is limited to the enumerated supported selectors, observers and lifecycle actually exercised.",
+      "assertionDetails": [
+        "Four independently registered principals authenticate through real REST login and IRC PASS; Alice, Bob and Charlie exchange three uniquely marked conversations, while independently authenticated rootadmin is an outsider.",
+        "REST reads exercise both participants, forged user/sender/recipient parameters, account UUID and live nickname as target, foreign message-ID before/after cursors, and rootadmin; only account-name peer history is a supported lookup, and empty 200 responses for unrecognized selectors are not counted as secure-denial status.",
+        "All four live event streams and IRC outsiders are observed with positive shared-channel message barriers; real local SessionDO eviction with WebSockets hibernated precedes successful Alice/Bob DM and rejected outsider edit/redaction.",
+        "After logout the old Bob token is rejected; fresh Bob and Alice sessions retain their authorized reads, stopped workerd SQLite independently verifies the actual sender and target IDs and contents for all three conversations, and a fresh workerd over the same storage repeats permitted reads and rootadmin denial.",
+        "Both search aliases require actual matching channel message ID, body and channel in items and messages with consistent counts, while unfiltered searches and searches filtered to each DM actual author exclude both DM IDs and contents; the positive and negative checks repeat after workerd restart."
+      ],
+      "transports": [
+        "IRC WebSocket",
+        "REST",
+        "ticket event WebSocket",
+        "workerd SQLite and restart"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "routeBehavior": [
+        {
+          "route": "/api/v1/dms/{target}/messages",
+          "method": "GET",
+          "alias": "/api/v1/dms/bob/messages",
+          "outcome": "positive",
+          "responseKind": "feature-response",
+          "status": 200
+        },
+        {
+          "route": "/api/v1/dms/{target}/messages",
+          "method": "GET",
+          "alias": "/api/v1/dms/bob/messages?user=alice",
+          "outcome": "negative",
+          "responseKind": "secure-denial",
+          "status": 403
+        },
+        {
+          "route": "/api/v1/search",
+          "method": "GET",
+          "alias": "/api/v1/search?q=dmsearch-public-positive",
+          "outcome": "positive",
+          "responseKind": "feature-response",
+          "status": 200
+        },
+        {
+          "route": "/api/v1/messages/search",
+          "method": "GET",
+          "alias": "/api/v1/messages/search?q=dmsearch-public-positive",
+          "outcome": "positive",
+          "responseKind": "feature-response",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "kind": "test",
+      "executionId": "dm-gaps-source09-search-corrected",
+      "bundleSha256": "5894497f55587e0e691458a6db9dad9472d93b36756e0bec50cdded299bf6446",
+      "testFile": "tests/security/matrix-dm-gaps.test.ts",
+      "outcome": "PASS",
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "id": "DM-006",
+      "testTitle": "direct-message mutation ownership recipient outsider and administrator cannot edit or redact across conversations; author changes persist",
+      "scenarioScope": "Recipient, outsider, administrator and wrong-peer author cannot edit an Alice/Bob message using the exercised IRC tags, while the author can.",
+      "rationale": "Actual supported IRC mutation commands, independent event observers and stopped SQLite verify the named ownership boundary.",
+      "assertionDetails": [
+        "Recipient Bob, outsider Charlie and rootadmin each try three supported IRC edit tags and REDACT against Alice\u2019s message; Alice also attempts edit/redaction with an incorrect peer, and each request gets 404 or REDACT_FORBIDDEN as applicable.",
+        "Public-channel barriers prove four IRC and four event observers remain live; attempted edit text and unauthorized REDACT delivery stay absent, and event streams contain neither the private bodies nor the target message ID.",
+        "Stopped workerd SQLite direct_messages and direct_message_edits snapshots are identical before and after all rejected mutations; both other conversations remain unchanged.",
+        "Alice\u2019s valid edit reaches Bob and persists across runtime recreation; valid redaction reaches Bob, clears/redacts stored content, survives a second recreation and leaves the unrelated Bob/Charlie and Alice/Charlie records intact."
+      ],
+      "transports": [
+        "IRC WebSocket",
+        "REST history",
+        "ticket event WebSocket",
+        "workerd SQLite and restart"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "commandBehavior": [
+        {
+          "command": "PRIVMSG",
+          "outcome": "negative"
+        },
+        {
+          "command": "PRIVMSG",
+          "outcome": "positive"
+        },
+        {
+          "command": "REDACT",
+          "outcome": "negative"
+        },
+        {
+          "command": "REDACT",
+          "outcome": "positive"
+        }
+      ]
+    },
+    {
+      "kind": "test",
+      "executionId": "dm-gaps-source09-search-corrected",
+      "bundleSha256": "5894497f55587e0e691458a6db9dad9472d93b36756e0bec50cdded299bf6446",
+      "testFile": "tests/security/matrix-dm-gaps.test.ts",
+      "outcome": "PASS",
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "id": "DM-007",
+      "testTitle": "direct-message mutation ownership recipient outsider and administrator cannot edit or redact across conversations; author changes persist",
+      "scenarioScope": "Recipient, outsider, administrator and wrong-peer author cannot redact an Alice/Bob message, while the author can.",
+      "rationale": "Actual supported IRC mutation commands, independent event observers and stopped SQLite verify the named ownership boundary.",
+      "assertionDetails": [
+        "Recipient Bob, outsider Charlie and rootadmin each try three supported IRC edit tags and REDACT against Alice\u2019s message; Alice also attempts edit/redaction with an incorrect peer, and each request gets 404 or REDACT_FORBIDDEN as applicable.",
+        "Public-channel barriers prove four IRC and four event observers remain live; attempted edit text and unauthorized REDACT delivery stay absent, and event streams contain neither the private bodies nor the target message ID.",
+        "Stopped workerd SQLite direct_messages and direct_message_edits snapshots are identical before and after all rejected mutations; both other conversations remain unchanged.",
+        "Alice\u2019s valid edit reaches Bob and persists across runtime recreation; valid redaction reaches Bob, clears/redacts stored content, survives a second recreation and leaves the unrelated Bob/Charlie and Alice/Charlie records intact."
+      ],
+      "transports": [
+        "IRC WebSocket",
+        "REST history",
+        "ticket event WebSocket",
+        "workerd SQLite and restart"
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "commandBehavior": [
+        {
+          "command": "PRIVMSG",
+          "outcome": "negative"
+        },
+        {
+          "command": "PRIVMSG",
+          "outcome": "positive"
+        },
+        {
+          "command": "REDACT",
+          "outcome": "negative"
+        },
+        {
+          "command": "REDACT",
+          "outcome": "positive"
+        }
+      ]
+    },
+    {
+      "kind": "test",
+      "executionId": "dm-gaps-source09-search-corrected",
+      "bundleSha256": "5894497f55587e0e691458a6db9dad9472d93b36756e0bec50cdded299bf6446",
+      "testFile": "tests/security/matrix-dm-gaps.test.ts",
+      "outcome": "PASS",
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "id": "DM-005",
+      "testTitle": "direct-message privacy gaps DM selectors, public event streams, search and revoked sessions remain confined to real participants",
+      "scenarioScope": "Foreign message IDs do not select another pair when supplied as before/after history cursors; this does not test direct message-by-ID retrieval.",
+      "rationale": "A cursor-scoping observation alone does not establish the missing direct message-by-ID endpoint requirement.",
+      "assertionDetails": [
+        "Four independently registered principals authenticate through real REST login and IRC PASS; Alice, Bob and Charlie exchange three uniquely marked conversations, while independently authenticated rootadmin is an outsider.",
+        "REST reads exercise both participants, forged user/sender/recipient parameters, account UUID and live nickname as target, foreign message-ID before/after cursors, and rootadmin; only account-name peer history is a supported lookup, and empty 200 responses for unrecognized selectors are not counted as secure-denial status.",
+        "All four live event streams and IRC outsiders are observed with positive shared-channel message barriers; real local SessionDO eviction with WebSockets hibernated precedes successful Alice/Bob DM and rejected outsider edit/redaction.",
+        "After logout the old Bob token is rejected; fresh Bob and Alice sessions retain their authorized reads, stopped workerd SQLite independently verifies the actual sender and target IDs and contents for all three conversations, and a fresh workerd over the same storage repeats permitted reads and rootadmin denial.",
+        "Both search aliases require actual matching channel message ID, body and channel in items and messages with consistent counts, while unfiltered searches and searches filtered to each DM actual author exclude both DM IDs and contents; the positive and negative checks repeat after workerd restart."
+      ],
+      "transports": [
+        "REST"
+      ],
+      "assertions": [
+        "authorization",
+        "transport"
+      ],
+      "routeBehavior": [
+        {
+          "route": "/api/v1/dms/{target}/messages",
+          "method": "GET",
+          "alias": "/api/v1/dms/bob/messages",
+          "outcome": "positive",
+          "responseKind": "feature-response",
+          "status": 200
+        },
+        {
+          "route": "/api/v1/dms/{target}/messages",
+          "method": "GET",
+          "alias": "/api/v1/dms/bob/messages?user=alice",
+          "outcome": "negative",
+          "responseKind": "secure-denial",
+          "status": 403
+        },
+        {
+          "route": "/api/v1/search",
+          "method": "GET",
+          "alias": "/api/v1/search?q=dmsearch-public-positive",
+          "outcome": "positive",
+          "responseKind": "feature-response",
+          "status": 200
+        },
+        {
+          "route": "/api/v1/messages/search",
+          "method": "GET",
+          "alias": "/api/v1/messages/search?q=dmsearch-public-positive",
+          "outcome": "positive",
+          "responseKind": "feature-response",
+          "status": 200
+        }
+      ]
+    }
+  ]
+}

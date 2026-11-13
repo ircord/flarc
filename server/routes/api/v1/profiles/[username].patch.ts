@@ -1,7 +1,8 @@
-import { createError, defineEventHandler, getRouterParam, readBody } from "nitro/h3";
-import { SERVER_CONFIG } from "~/core/config";
+import { createError, defineEventHandler, getRouterParam } from "nitro/h3";
+import { sessionFeature } from "~/features/session/http";
 import { UserProfileInputSchema } from "~/schemas/profiles";
-import { clientRequest, getEnv, requireSelf } from "~/utils/auth";
+import { requireSelf } from "~/utils/auth";
+import { readJsonBody } from "~/utils/body";
 
 export default defineEventHandler(async (event) => {
   const rawUser = getRouterParam(event, "username", { decode: true });
@@ -10,14 +11,17 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 400, statusMessage: "Username required" });
   }
 
-  let body: any;
-  try {
-    body = await readBody(event);
-  } catch {
-    throw createError({ statusCode: 400, statusMessage: "Invalid JSON body" });
-  }
+  const body = await readJsonBody(event);
 
-  const parsed = UserProfileInputSchema.safeParse(body);
+  if (!body || typeof body !== "object" || Array.isArray(body))
+    throw createError({ statusCode: 400, statusMessage: "Invalid profile request" });
+  const { expectedRevision, clientOperationId, ...updates } = body as Record<string, unknown>;
+  if (
+    expectedRevision !== undefined &&
+    (!Number.isInteger(expectedRevision) || Number(expectedRevision) < 0)
+  )
+    throw createError({ statusCode: 400, statusMessage: "Invalid revision" });
+  const parsed = UserProfileInputSchema.strict().safeParse(updates);
   if (!parsed.success) {
     throw createError({
       statusCode: 400,
@@ -26,16 +30,17 @@ export default defineEventHandler(async (event) => {
   }
 
   await requireSelf(event, username);
-  const env = getEnv(event);
-  const accountsStub = env.ACCOUNTS.get(env.ACCOUNTS.idFromName(SERVER_CONFIG.networkId));
 
-  const profile = await clientRequest(event, accountsStub, "profile.update", {
+  const profile = await sessionFeature(event, "profile.update", {
     username,
     updates: parsed.data,
+    expectedRevision,
+    clientOperationId,
   });
   if (!profile) {
     throw createError({ statusCode: 404, statusMessage: "User not found" });
   }
 
-  return { ok: true, profile };
+  const { ok, ...canonical } = profile;
+  return { ok: true, profile: canonical };
 });

@@ -1,0 +1,605 @@
+{
+  "version": 2,
+  "capabilityGaps": [
+    "API-019: documented authentication accepts bearer or X-Session-ID credentials and sets no auth cookies; rejected cookie-only requests do not prove a cookie-CSRF defense.",
+    "API-016: no bulk endpoint is exercised or treated as an implemented secure denial.",
+    "API-017/018: the tests do not establish complete route/spec security parity and inventory alone is not behavior evidence.",
+    "HTTP CORS and WebSocket Origin are distinct: ALLOWED_ORIGINS controls WebSocket handshake in this fixture; these HTTP routes do not emit Access-Control-Allow-Origin or Allow-Credentials for either tested origin.",
+    "API-023 is a preserved real source11 failing regression; the earlier run misidentified the literal documentation word SQLite as a secret, corrected by comparing actual secret values and sensitive fields rather than banning a product technology name.",
+    "The source11 API-023 missing-header failure is retained as historical evidence; source12 final-response-hook tests pass, including actual 413 and 429 checks. The post-restart 429 test reconnects unthrottled IRC witnesses and does not assert rate-limiter persistence.",
+    "The original source12 unfiltered run remains 472 passed / 1 failed from an Undici read ECONNRESET on an unauthenticated oversized PATCH; exact request tracing and two independent public-HTTP diagnostics captured complete 413 responses before adopting a response-aware test client. No production source changed."
+  ],
+  "evidence": [
+    {
+      "kind": "test",
+      "executionId": "api-boundary-gaps-source11",
+      "bundleSha256": "4040f1888e6c2e98016ca7d00a6dd9b27b6f5cc9be7ab6d73edebaa1173fc2ed",
+      "testFile": "tests/security/matrix-api-boundary-gaps.test.ts",
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "id": "API-013",
+      "testTitle": "API-013 API-014: runtime validation and foreign writes fail safely without state or events",
+      "outcome": "PASS",
+      "scenarioScope": "Runtime malformed JSON, invalid typed and oversized values, NUL content, invalid search limits and foreign mutations on exercised current and legacy routes return safe errors.",
+      "rationale": "Actual invalid values and the foreign-identity denial are checked against real credentials, protected state, live observers and a fresh runtime.",
+      "assertionDetails": [
+        "Real rootadmin, Alice, Bob and Charlie register and authenticate independently, with Bob/Alice in a secret channel, Charlie in an unrelated secret channel, a real Alice/Bob private DM, Bob\u2019s private media, Bob\u2019s administrator-set private metadata and Charlie\u2019s independent public profile.",
+        "Three authenticated IRC sockets and three event streams receive explicit positive shared-channel marker barriers before and after each test window; no other IRC or event payload is accepted.",
+        "Stopped SQLite snapshots preserve users, SCRAM credentials, sessions, channel membership/metadata/messages, direct messages, user metadata, private media and media chunks, excluding ordinary request-budget counters; checks repeat after independent runtime recreation.",
+        "Positive controls verify Bob\u2019s actual private channel and DM contents as Alice, Charlie\u2019s unrelated profile value, Bob\u2019s actual private media bytes and rootadmin account read containing Bob\u2019s stable ID.",
+        "Current and legacy profile aliases reject non-string and overlong fields and malformed JSON with 400; current and legacy channel-info aliases reject an overlong topic and foreign actor receives 403; invalid channel message and search inputs return 400.",
+        "Every error body excludes the actual per-account passwords, bearer tokens, bootstrap/signup credentials, database password hashes, SCRAM salts and keys, private metadata and channel/DM/media sentinels, plus SQL/stack-like strings."
+      ],
+      "transports": [
+        "REST",
+        "IRC WebSocket",
+        "ticket event WebSocket",
+        "workerd SQLite restart"
+      ],
+      "routeBehavior": [
+        {
+          "route": "/api/v1/profiles/{username}",
+          "method": "PATCH",
+          "alias": "/api/v1/profiles/alice",
+          "outcome": "negative",
+          "responseKind": "secure-denial",
+          "status": 400
+        },
+        {
+          "route": "/api/profile/{username}",
+          "method": "PATCH",
+          "alias": "/api/profile/alice",
+          "outcome": "negative",
+          "responseKind": "secure-denial",
+          "status": 400
+        },
+        {
+          "route": "/api/v1/channels/{channel}/info",
+          "method": "PATCH",
+          "alias": "/api/v1/channels/%23boundary/info",
+          "outcome": "negative",
+          "responseKind": "secure-denial",
+          "status": 403
+        }
+      ]
+    },
+    {
+      "kind": "test",
+      "executionId": "api-boundary-gaps-source11",
+      "bundleSha256": "4040f1888e6c2e98016ca7d00a6dd9b27b6f5cc9be7ab6d73edebaa1173fc2ed",
+      "testFile": "tests/security/matrix-api-boundary-gaps.test.ts",
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "id": "API-014",
+      "testTitle": "API-013 API-014: runtime validation and foreign writes fail safely without state or events",
+      "outcome": "PASS",
+      "scenarioScope": "Runtime malformed JSON, invalid typed and oversized values, NUL content, invalid search limits and foreign mutations on exercised current and legacy routes return safe errors.",
+      "rationale": "Actual invalid values and the foreign-identity denial are checked against real credentials, protected state, live observers and a fresh runtime.",
+      "assertionDetails": [
+        "Real rootadmin, Alice, Bob and Charlie register and authenticate independently, with Bob/Alice in a secret channel, Charlie in an unrelated secret channel, a real Alice/Bob private DM, Bob\u2019s private media, Bob\u2019s administrator-set private metadata and Charlie\u2019s independent public profile.",
+        "Three authenticated IRC sockets and three event streams receive explicit positive shared-channel marker barriers before and after each test window; no other IRC or event payload is accepted.",
+        "Stopped SQLite snapshots preserve users, SCRAM credentials, sessions, channel membership/metadata/messages, direct messages, user metadata, private media and media chunks, excluding ordinary request-budget counters; checks repeat after independent runtime recreation.",
+        "Positive controls verify Bob\u2019s actual private channel and DM contents as Alice, Charlie\u2019s unrelated profile value, Bob\u2019s actual private media bytes and rootadmin account read containing Bob\u2019s stable ID.",
+        "Current and legacy profile aliases reject non-string and overlong fields and malformed JSON with 400; current and legacy channel-info aliases reject an overlong topic and foreign actor receives 403; invalid channel message and search inputs return 400.",
+        "Every error body excludes the actual per-account passwords, bearer tokens, bootstrap/signup credentials, database password hashes, SCRAM salts and keys, private metadata and channel/DM/media sentinels, plus SQL/stack-like strings."
+      ],
+      "transports": [
+        "REST",
+        "IRC WebSocket",
+        "ticket event WebSocket",
+        "workerd SQLite restart"
+      ],
+      "routeBehavior": [
+        {
+          "route": "/api/v1/profiles/{username}",
+          "method": "PATCH",
+          "alias": "/api/v1/profiles/alice",
+          "outcome": "negative",
+          "responseKind": "secure-denial",
+          "status": 400
+        },
+        {
+          "route": "/api/profile/{username}",
+          "method": "PATCH",
+          "alias": "/api/profile/alice",
+          "outcome": "negative",
+          "responseKind": "secure-denial",
+          "status": 400
+        },
+        {
+          "route": "/api/v1/channels/{channel}/info",
+          "method": "PATCH",
+          "alias": "/api/v1/channels/%23boundary/info",
+          "outcome": "negative",
+          "responseKind": "secure-denial",
+          "status": 403
+        }
+      ]
+    },
+    {
+      "kind": "test",
+      "executionId": "api-boundary-gaps-source11",
+      "bundleSha256": "4040f1888e6c2e98016ca7d00a6dd9b27b6f5cc9be7ab6d73edebaa1173fc2ed",
+      "testFile": "tests/security/matrix-api-boundary-gaps.test.ts",
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "id": "API-020",
+      "testTitle": "API-020: configured WebSocket origins and HTTP cross-origin preflights follow the actual separate policies",
+      "outcome": "PASS",
+      "scenarioScope": "Configured ALLOWED_ORIGINS distinguishes actual WebSocket handshake origins; tested HTTP endpoints expose no CORS opt-in headers and reject unauthenticated preflights and cookie-only mutations.",
+      "rationale": "HTTP and WebSocket behaviors are observed separately; this does not claim a configured HTTP CORS allowlist exists.",
+      "assertionDetails": [
+        "Real rootadmin, Alice, Bob and Charlie register and authenticate independently, with Bob/Alice in a secret channel, Charlie in an unrelated secret channel, a real Alice/Bob private DM, Bob\u2019s private media, Bob\u2019s administrator-set private metadata and Charlie\u2019s independent public profile.",
+        "Three authenticated IRC sockets and three event streams receive explicit positive shared-channel marker barriers before and after each test window; no other IRC or event payload is accepted.",
+        "Stopped SQLite snapshots preserve users, SCRAM credentials, sessions, channel membership/metadata/messages, direct messages, user metadata, private media and media chunks, excluding ordinary request-budget counters; checks repeat after independent runtime recreation.",
+        "Positive controls verify Bob\u2019s actual private channel and DM contents as Alice, Charlie\u2019s unrelated profile value, Bob\u2019s actual private media bytes and rootadmin account read containing Bob\u2019s stable ID.",
+        "With ALLOWED_ORIGINS set to https://trusted.example, a real trusted-origin ticket WebSocket opens and an untrusted-origin handshake gets 403; the denied ticket is then successfully used from the trusted origin.",
+        "Both current and legacy profile aliases return authenticated cross-origin GET bodies with the actual Bob identity but no Access-Control-Allow-Origin or Allow-Credentials header for trusted or attacker origins; unauthenticated browser-style OPTIONS preflights and cookie-only PATCH requests return 401 with no CORS opt-in and leave state/events unchanged."
+      ],
+      "transports": [
+        "REST",
+        "WebSocket origin handshake",
+        "ticket event WebSocket",
+        "IRC WebSocket",
+        "workerd SQLite restart"
+      ]
+    },
+    {
+      "kind": "test",
+      "executionId": "api-boundary-gaps-source11",
+      "bundleSha256": "4040f1888e6c2e98016ca7d00a6dd9b27b6f5cc9be7ab6d73edebaa1173fc2ed",
+      "testFile": "tests/security/matrix-api-boundary-gaps.test.ts",
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "id": "API-023",
+      "testTitle": "API-023: restricted successes and denials use private no-store cache policy",
+      "outcome": "FAIL",
+      "scenarioScope": "Cache-control on actual protected 200, 400, 401, 403 and 404 responses across profile, channel history, admin and private media routes.",
+      "rationale": "The frozen source11 test observes missing Cache-Control on authenticated validation and authorization errors and private-media not-found responses; expected policy is private, no-store.",
+      "assertionDetails": [
+        "Real rootadmin, Alice, Bob and Charlie register and authenticate independently, with Bob/Alice in a secret channel, Charlie in an unrelated secret channel, a real Alice/Bob private DM, Bob\u2019s private media, Bob\u2019s administrator-set private metadata and Charlie\u2019s independent public profile.",
+        "Three authenticated IRC sockets and three event streams receive explicit positive shared-channel marker barriers before and after each test window; no other IRC or event payload is accepted.",
+        "Stopped SQLite snapshots preserve users, SCRAM credentials, sessions, channel membership/metadata/messages, direct messages, user metadata, private media and media chunks, excluding ordinary request-budget counters; checks repeat after independent runtime recreation.",
+        "Positive controls verify Bob\u2019s actual private channel and DM contents as Alice, Charlie\u2019s unrelated profile value, Bob\u2019s actual private media bytes and rootadmin account read containing Bob\u2019s stable ID.",
+        "Protected 200 responses and unauthenticated 401 return private, no-store, while profile validation 400, secret channel history 403, administrator 403 and wrong-owner private media 404 omit Cache-Control before and after runtime recreation.",
+        "Soft assertions preserve every actual failure while completing observer silence and independent state comparisons; no response body or identity leak is inferred solely from the header failure."
+      ],
+      "transports": [
+        "REST",
+        "IRC WebSocket",
+        "ticket event WebSocket",
+        "workerd SQLite restart"
+      ]
+    },
+    {
+      "kind": "test",
+      "executionId": "api-boundary-gaps-source11",
+      "bundleSha256": "4040f1888e6c2e98016ca7d00a6dd9b27b6f5cc9be7ab6d73edebaa1173fc2ed",
+      "testFile": "tests/security/matrix-api-boundary-gaps.test.ts",
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "id": "API-024",
+      "testTitle": "API-024: public health status docs and OpenAPI omit actual operational and private values",
+      "outcome": "PASS",
+      "scenarioScope": "Public health/status aliases, documentation, OpenAPI and root responses exclude the actual seeded operational and private values.",
+      "rationale": "Actual secret values and meaningful health/specification fields are checked before and after workerd recreation with independent state and observers.",
+      "assertionDetails": [
+        "Real rootadmin, Alice, Bob and Charlie register and authenticate independently, with Bob/Alice in a secret channel, Charlie in an unrelated secret channel, a real Alice/Bob private DM, Bob\u2019s private media, Bob\u2019s administrator-set private metadata and Charlie\u2019s independent public profile.",
+        "Three authenticated IRC sockets and three event streams receive explicit positive shared-channel marker barriers before and after each test window; no other IRC or event payload is accepted.",
+        "Stopped SQLite snapshots preserve users, SCRAM credentials, sessions, channel membership/metadata/messages, direct messages, user metadata, private media and media chunks, excluding ordinary request-budget counters; checks repeat after independent runtime recreation.",
+        "Positive controls verify Bob\u2019s actual private channel and DM contents as Alice, Charlie\u2019s unrelated profile value, Bob\u2019s actual private media bytes and rootadmin account read containing Bob\u2019s stable ID.",
+        "All seven public responses return 200 and exclude actual passwords, bearer tokens, bootstrap/signup secrets, password hashes, SCRAM material and private metadata, channel, DM and media sentinel content.",
+        "Health/status responses contain the expected service and network values, documentation links to /openapi.json, and OpenAPI parses as 3.x with an actual documented profile path; public output is not treated as complete OpenAPI security parity proof."
+      ],
+      "transports": [
+        "REST",
+        "IRC WebSocket",
+        "ticket event WebSocket",
+        "workerd SQLite restart"
+      ]
+    },
+    {
+      "kind": "test",
+      "executionId": "api-boundary-reset-source12-settled",
+      "bundleSha256": "12961025bd48ab4017d349ce273c6ffa515bf2f90c1a9560297b42c7f2ae124b",
+      "testFile": "tests/security/matrix-api-boundary-gaps.test.ts",
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "id": "API-013",
+      "testTitle": "API-013 API-014: runtime validation and foreign writes fail safely without state or events",
+      "outcome": "PASS",
+      "scenarioScope": "Runtime malformed JSON, invalid typed and oversized values, NUL content, invalid search limits and foreign mutations on exercised current and legacy routes return safe errors.",
+      "rationale": "Actual invalid values and the foreign-identity denial are checked against real credentials, protected state, live observers and a fresh runtime.",
+      "assertionDetails": [
+        "Real rootadmin, Alice, Bob and Charlie register and authenticate independently, with Bob/Alice in a secret channel, Charlie in an unrelated secret channel, a real Alice/Bob private DM, Bob\u2019s private media, Bob\u2019s administrator-set private metadata and Charlie\u2019s independent public profile.",
+        "Three authenticated IRC sockets and three event streams receive explicit positive shared-channel marker barriers before and after each test window; no other IRC or event payload is accepted.",
+        "Stopped SQLite snapshots preserve users, SCRAM credentials, sessions, channel membership/metadata/messages, direct messages, user metadata, private media and media chunks, excluding ordinary request-budget counters; checks repeat after independent runtime recreation.",
+        "Positive controls verify Bob\u2019s actual private channel and DM contents as Alice, Charlie\u2019s unrelated profile value, Bob\u2019s actual private media bytes and rootadmin account read containing Bob\u2019s stable ID.",
+        "Current and legacy profile aliases reject non-string and overlong fields and malformed JSON with 400; current and legacy channel-info aliases reject an overlong topic and foreign actor receives 403; invalid channel message and search inputs return 400.",
+        "Every error body excludes the actual per-account passwords, bearer tokens, bootstrap/signup credentials, database password hashes, SCRAM salts and keys, private metadata and channel/DM/media sentinels, plus SQL/stack-like strings."
+      ],
+      "transports": [
+        "REST",
+        "IRC WebSocket",
+        "ticket event WebSocket",
+        "workerd SQLite restart"
+      ],
+      "routeBehavior": [
+        {
+          "route": "/api/v1/profiles/{username}",
+          "method": "PATCH",
+          "alias": "/api/v1/profiles/alice",
+          "outcome": "negative",
+          "responseKind": "secure-denial",
+          "status": 400
+        },
+        {
+          "route": "/api/profile/{username}",
+          "method": "PATCH",
+          "alias": "/api/profile/alice",
+          "outcome": "negative",
+          "responseKind": "secure-denial",
+          "status": 400
+        },
+        {
+          "route": "/api/v1/channels/{channel}/info",
+          "method": "PATCH",
+          "alias": "/api/v1/channels/%23boundary/info",
+          "outcome": "negative",
+          "responseKind": "secure-denial",
+          "status": 403
+        }
+      ]
+    },
+    {
+      "kind": "test",
+      "executionId": "api-boundary-reset-source12-settled",
+      "bundleSha256": "12961025bd48ab4017d349ce273c6ffa515bf2f90c1a9560297b42c7f2ae124b",
+      "testFile": "tests/security/matrix-api-boundary-gaps.test.ts",
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "id": "API-014",
+      "testTitle": "API-013 API-014: runtime validation and foreign writes fail safely without state or events",
+      "outcome": "PASS",
+      "scenarioScope": "Runtime malformed JSON, invalid typed and oversized values, NUL content, invalid search limits and foreign mutations on exercised current and legacy routes return safe errors.",
+      "rationale": "Actual invalid values and the foreign-identity denial are checked against real credentials, protected state, live observers and a fresh runtime.",
+      "assertionDetails": [
+        "Real rootadmin, Alice, Bob and Charlie register and authenticate independently, with Bob/Alice in a secret channel, Charlie in an unrelated secret channel, a real Alice/Bob private DM, Bob\u2019s private media, Bob\u2019s administrator-set private metadata and Charlie\u2019s independent public profile.",
+        "Three authenticated IRC sockets and three event streams receive explicit positive shared-channel marker barriers before and after each test window; no other IRC or event payload is accepted.",
+        "Stopped SQLite snapshots preserve users, SCRAM credentials, sessions, channel membership/metadata/messages, direct messages, user metadata, private media and media chunks, excluding ordinary request-budget counters; checks repeat after independent runtime recreation.",
+        "Positive controls verify Bob\u2019s actual private channel and DM contents as Alice, Charlie\u2019s unrelated profile value, Bob\u2019s actual private media bytes and rootadmin account read containing Bob\u2019s stable ID.",
+        "Current and legacy profile aliases reject non-string and overlong fields and malformed JSON with 400; current and legacy channel-info aliases reject an overlong topic and foreign actor receives 403; invalid channel message and search inputs return 400.",
+        "Every error body excludes the actual per-account passwords, bearer tokens, bootstrap/signup credentials, database password hashes, SCRAM salts and keys, private metadata and channel/DM/media sentinels, plus SQL/stack-like strings."
+      ],
+      "transports": [
+        "REST",
+        "IRC WebSocket",
+        "ticket event WebSocket",
+        "workerd SQLite restart"
+      ],
+      "routeBehavior": [
+        {
+          "route": "/api/v1/profiles/{username}",
+          "method": "PATCH",
+          "alias": "/api/v1/profiles/alice",
+          "outcome": "negative",
+          "responseKind": "secure-denial",
+          "status": 400
+        },
+        {
+          "route": "/api/profile/{username}",
+          "method": "PATCH",
+          "alias": "/api/profile/alice",
+          "outcome": "negative",
+          "responseKind": "secure-denial",
+          "status": 400
+        },
+        {
+          "route": "/api/v1/channels/{channel}/info",
+          "method": "PATCH",
+          "alias": "/api/v1/channels/%23boundary/info",
+          "outcome": "negative",
+          "responseKind": "secure-denial",
+          "status": 403
+        }
+      ]
+    },
+    {
+      "kind": "test",
+      "executionId": "api-boundary-reset-source12-settled",
+      "bundleSha256": "12961025bd48ab4017d349ce273c6ffa515bf2f90c1a9560297b42c7f2ae124b",
+      "testFile": "tests/security/matrix-api-boundary-gaps.test.ts",
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "id": "API-020",
+      "testTitle": "API-020: configured WebSocket origins and HTTP cross-origin preflights follow the actual separate policies",
+      "outcome": "PASS",
+      "scenarioScope": "Configured ALLOWED_ORIGINS distinguishes actual WebSocket handshake origins; tested HTTP endpoints expose no CORS opt-in headers and reject unauthenticated preflights and cookie-only mutations.",
+      "rationale": "HTTP and WebSocket behaviors are observed separately; this does not claim a configured HTTP CORS allowlist exists.",
+      "assertionDetails": [
+        "Real rootadmin, Alice, Bob and Charlie register and authenticate independently, with Bob/Alice in a secret channel, Charlie in an unrelated secret channel, a real Alice/Bob private DM, Bob\u2019s private media, Bob\u2019s administrator-set private metadata and Charlie\u2019s independent public profile.",
+        "Three authenticated IRC sockets and three event streams receive explicit positive shared-channel marker barriers before and after each test window; no other IRC or event payload is accepted.",
+        "Stopped SQLite snapshots preserve users, SCRAM credentials, sessions, channel membership/metadata/messages, direct messages, user metadata, private media and media chunks, excluding ordinary request-budget counters; checks repeat after independent runtime recreation.",
+        "Positive controls verify Bob\u2019s actual private channel and DM contents as Alice, Charlie\u2019s unrelated profile value, Bob\u2019s actual private media bytes and rootadmin account read containing Bob\u2019s stable ID.",
+        "With ALLOWED_ORIGINS set to https://trusted.example, a real trusted-origin ticket WebSocket opens and an untrusted-origin handshake gets 403; the denied ticket is then successfully used from the trusted origin.",
+        "Both current and legacy profile aliases return authenticated cross-origin GET bodies with the actual Bob identity but no Access-Control-Allow-Origin or Allow-Credentials header for trusted or attacker origins; unauthenticated browser-style OPTIONS preflights and cookie-only PATCH requests return 401 with no CORS opt-in and leave state/events unchanged."
+      ],
+      "transports": [
+        "REST",
+        "WebSocket origin handshake",
+        "ticket event WebSocket",
+        "IRC WebSocket",
+        "workerd SQLite restart"
+      ]
+    },
+    {
+      "kind": "test",
+      "executionId": "api-boundary-reset-source12-settled",
+      "bundleSha256": "12961025bd48ab4017d349ce273c6ffa515bf2f90c1a9560297b42c7f2ae124b",
+      "testFile": "tests/security/matrix-api-boundary-gaps.test.ts",
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "id": "API-023",
+      "testTitle": "API-023: restricted successes and denials use private no-store cache policy",
+      "outcome": "PASS",
+      "scenarioScope": "Cache-control on actual protected 200, 400, 401, 403 and 404 responses across profile, channel history, admin and private media routes.",
+      "rationale": "The final-response hook fixes the source11 missing-cache-header regression across the exercised success and error paths without changing status or body.",
+      "assertionDetails": [
+        "Real rootadmin, Alice, Bob and Charlie register and authenticate independently, with Bob/Alice in a secret channel, Charlie in an unrelated secret channel, a real Alice/Bob private DM, Bob\u2019s private media, Bob\u2019s administrator-set private metadata and Charlie\u2019s independent public profile.",
+        "Three authenticated IRC sockets and three event streams receive explicit positive shared-channel marker barriers before and after each test window; no other IRC or event payload is accepted.",
+        "Stopped SQLite snapshots preserve users, SCRAM credentials, sessions, channel membership/metadata/messages, direct messages, user metadata, private media and media chunks, excluding ordinary request-budget counters; checks repeat after independent runtime recreation.",
+        "Positive controls verify Bob\u2019s actual private channel and DM contents as Alice, Charlie\u2019s unrelated profile value, Bob\u2019s actual private media bytes and rootadmin account read containing Bob\u2019s stable ID.",
+        "Protected profile, channel history, DM, administrator and private media 200 responses and authenticated 400/403/404, unauthenticated 401 and before-authentication oversized 413 responses now all return private, no-store before and after recreation.",
+        "Actual response statuses and safe bodies, live IRC and event windows, independent private media bytes and stopped SQLite snapshots are checked; the source11 missing-header failure remains preserved as the earlier evidence row.",
+        "The oversized 413 requests use a response-aware real HTTP writer with the original PATCH method, JSON body, Content-Length and optional bearer; full response status, headers and body are required, and resets without a complete response fail. Two wire diagnostics observed actual complete 413 private-no-store responses on both aliases with and without authentication."
+      ],
+      "transports": [
+        "REST",
+        "IRC WebSocket",
+        "ticket event WebSocket",
+        "workerd SQLite restart"
+      ],
+      "routeBehavior": [
+        {
+          "route": "/api/v1/channels/{channel}/messages",
+          "method": "GET",
+          "alias": "/api/v1/channels/%23boundary/messages",
+          "outcome": "negative",
+          "responseKind": "secure-denial",
+          "status": 403
+        },
+        {
+          "route": "/api/v1/profiles/{username}",
+          "method": "PATCH",
+          "alias": "/api/v1/profiles/alice",
+          "outcome": "negative",
+          "responseKind": "secure-denial",
+          "status": 400
+        },
+        {
+          "route": "/api/profile/{username}",
+          "method": "PATCH",
+          "alias": "/api/profile/alice",
+          "outcome": "negative",
+          "responseKind": "secure-denial",
+          "status": 413
+        }
+      ]
+    },
+    {
+      "kind": "test",
+      "executionId": "api-boundary-reset-source12-settled",
+      "bundleSha256": "12961025bd48ab4017d349ce273c6ffa515bf2f90c1a9560297b42c7f2ae124b",
+      "testFile": "tests/security/matrix-api-boundary-gaps.test.ts",
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "id": "API-024",
+      "testTitle": "API-024: public health status docs and OpenAPI omit actual operational and private values",
+      "outcome": "PASS",
+      "scenarioScope": "Public health/status aliases, documentation, OpenAPI and root responses exclude the actual seeded operational and private values.",
+      "rationale": "Actual secret values and meaningful health/specification fields are checked before and after workerd recreation with independent state and observers.",
+      "assertionDetails": [
+        "Real rootadmin, Alice, Bob and Charlie register and authenticate independently, with Bob/Alice in a secret channel, Charlie in an unrelated secret channel, a real Alice/Bob private DM, Bob\u2019s private media, Bob\u2019s administrator-set private metadata and Charlie\u2019s independent public profile.",
+        "Three authenticated IRC sockets and three event streams receive explicit positive shared-channel marker barriers before and after each test window; no other IRC or event payload is accepted.",
+        "Stopped SQLite snapshots preserve users, SCRAM credentials, sessions, channel membership/metadata/messages, direct messages, user metadata, private media and media chunks, excluding ordinary request-budget counters; checks repeat after independent runtime recreation.",
+        "Positive controls verify Bob\u2019s actual private channel and DM contents as Alice, Charlie\u2019s unrelated profile value, Bob\u2019s actual private media bytes and rootadmin account read containing Bob\u2019s stable ID.",
+        "All seven public responses return 200 and exclude actual passwords, bearer tokens, bootstrap/signup secrets, password hashes, SCRAM material and private metadata, channel, DM and media sentinel content.",
+        "Health/status responses contain the expected service and network values, documentation links to /openapi.json, and OpenAPI parses as 3.x with an actual documented profile path; public output is not treated as complete OpenAPI security parity proof."
+      ],
+      "transports": [
+        "REST",
+        "IRC WebSocket",
+        "ticket event WebSocket",
+        "workerd SQLite restart"
+      ]
+    },
+    {
+      "kind": "test",
+      "executionId": "api-boundary-reset-source12-settled",
+      "bundleSha256": "12961025bd48ab4017d349ce273c6ffa515bf2f90c1a9560297b42c7f2ae124b",
+      "testFile": "tests/security/matrix-api-boundary-gaps.test.ts",
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "id": "API-023",
+      "testTitle": "API-023: actual authenticated request-budget denial carries private no-store",
+      "outcome": "PASS",
+      "scenarioScope": "A real authenticated API request budget reaches 429 with private no-store, without protected state changes or additional IRC/event deliveries.",
+      "rationale": "The actual limiter outcome is reached by a genuinely authenticated account, and its headers, safe response, live observer window and independent persistence are checked.",
+      "assertionDetails": [
+        "A real Charlie session performs successful profile reads until the durable API budget returns an actual 429; the 429 contains private, no-store and excludes actual stored and session secrets.",
+        "Before and after the request window, Alice, Bob and Charlie IRC and event observers receive shared-channel markers and no additional events; stopped SQLite protected and unrelated rows remain unchanged.",
+        "After independent runtime recreation, only unthrottled IRC witnesses are reconnected for protected-state controls; the test does not claim a post-restart 429 check or limiter persistence."
+      ],
+      "transports": [
+        "REST",
+        "IRC WebSocket",
+        "ticket event WebSocket",
+        "workerd SQLite restart"
+      ],
+      "routeBehavior": [
+        {
+          "route": "/api/v1/profiles/{username}",
+          "method": "GET",
+          "alias": "/api/v1/profiles/bob",
+          "outcome": "negative",
+          "responseKind": "secure-denial",
+          "status": 429
+        }
+      ]
+    }
+  ]
+}

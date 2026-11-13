@@ -8,7 +8,12 @@ export default defineEventHandler(async (event) => {
   if (!id) throw createError({ statusCode: 400, statusMessage: "File ID required" });
   const env = getEnv(event);
   const accounts = env.ACCOUNTS.get(env.ACCOUNTS.idFromName(SERVER_CONFIG.networkId));
-  const media = await accounts.getPrivateMedia(getSessionToken(event)!, id);
+  let media: Awaited<ReturnType<typeof accounts.getPrivateMedia>>;
+  try {
+    media = await accounts.getPrivateMedia(getSessionToken(event)!, id);
+  } catch {
+    throw createError({ statusCode: 503, statusMessage: "Media storage unavailable" });
+  }
   if (!media) throw createError({ statusCode: 404, statusMessage: "File not found" });
   setResponseHeader(event, "Content-Type", media.mimeType || "application/octet-stream");
   setResponseHeader(event, "X-Content-Type-Options", "nosniff");
@@ -26,7 +31,7 @@ export default defineEventHandler(async (event) => {
   if (media.storageKind === "r2") {
     if (!env.MEDIA_BUCKET)
       throw createError({ statusCode: 503, statusMessage: "Media storage unavailable" });
-    const object = await env.MEDIA_BUCKET.get(id);
+    const object = await env.MEDIA_BUCKET.get(media.objectKey);
     if (!object) throw createError({ statusCode: 404, statusMessage: "File not found" });
     return object.body;
   }

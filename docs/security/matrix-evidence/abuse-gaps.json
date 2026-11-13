@@ -1,0 +1,1172 @@
+{
+  "version": 2,
+  "runId": "run_01d0e4aeb274",
+  "scope": "Six distinct focused resource-abuse tests rerun against unchanged frozen source11 after removing the executable helper bundle pin; previous evidence/portable execution preserved separately, no build/production/test-body/global-report changes, and acceptance remains incomplete.",
+  "auditComplete": false,
+  "executionManifest": "/tmp/flarc-matrix-run_01d0e4aeb274/abuse-gaps-unpinned-manifest.json",
+  "portableExecutionManifest": {
+    "version": 1,
+    "id": "abuse-gaps-source11-unpinned-final",
+    "bundleSha256": "4040f1888e6c2e98016ca7d00a6dd9b27b6f5cc9be7ab6d73edebaa1173fc2ed",
+    "vitestJson": "./abuse-gaps-unpinned-manifest.json",
+    "scope": "One new six-test focused no-build frozen11 run after removing the executable helper bundle pin; prior final and diagnostic executions are preserved separately and never added.",
+    "counts": {
+      "pass": 6,
+      "fail": 0,
+      "skip": 0,
+      "todo": 0,
+      "total": 6,
+      "testFiles": 1,
+      "repositoryDeselection": "Not counted; explicit test file selection is not an unfiltered suite."
+    },
+    "testResults": [
+      {
+        "name": "tests/security/matrix-abuse-gaps.test.ts",
+        "assertionResults": [
+          {
+            "fullName": "ABUSE-005: actual JOIN/PART or channel-creation command burst closes only the hostile socket and preserves persistent unrelated state",
+            "title": "ABUSE-005: actual JOIN/PART or channel-creation command burst closes only the hostile socket and preserves persistent unrelated state",
+            "status": "passed",
+            "failureMessages": []
+          },
+          {
+            "fullName": "ABUSE-006: actual JOIN/PART or channel-creation command burst closes only the hostile socket and preserves persistent unrelated state",
+            "title": "ABUSE-006: actual JOIN/PART or channel-creation command burst closes only the hostile socket and preserves persistent unrelated state",
+            "status": "passed",
+            "failureMessages": []
+          },
+          {
+            "fullName": "WS-020: real IRC disconnect and event close release actual socket state and event slots across reconstruction",
+            "title": "WS-020: real IRC disconnect and event close release actual socket state and event slots across reconstruction",
+            "status": "passed",
+            "failureMessages": []
+          },
+          {
+            "fullName": "WS-021 ABUSE-012: actual IRC output bytes are bounded while one real authorization RPC is pending and healthy recipients progress",
+            "title": "WS-021 ABUSE-012: actual IRC output bytes are bounded while one real authorization RPC is pending and healthy recipients progress",
+            "status": "passed",
+            "failureMessages": []
+          },
+          {
+            "fullName": "WS-021 ABUSE-012: a real paused event TCP reader resumes measured private frames while independent recipients progress without proving a provider buffer ceiling",
+            "title": "WS-021 ABUSE-012: a real paused event TCP reader resumes measured private frames while independent recipients progress without proving a provider buffer ceiling",
+            "status": "passed",
+            "failureMessages": []
+          },
+          {
+            "fullName": "ABUSE-013: repeated real failing account RPCs close the affected recipient with bounded attempts while healthy deliveries persist",
+            "title": "ABUSE-013: repeated real failing account RPCs close the affected recipient with bounded attempts while healthy deliveries persist",
+            "status": "passed",
+            "failureMessages": []
+          }
+        ]
+      }
+    ],
+    "compactTestResultsSha256": "1d1eb899be3f830c12c7d5000dff64dd89af37bfb295bbac648aff2ea5c22e49",
+    "rawVitestJsonSha256": "8f9a1fa791380fcbec9997342f6226bbf78d2371ad45785e24047e37975819f1",
+    "sourceAndTestFilesSha256": {
+      "tests/security/matrix-abuse-gaps.test.ts": "9edd3ec5805748d3c65038e53eb8031754ad55559d7423884e0f7d98c6465d7b",
+      "tests/helpers/abuse-gap-fixture.ts": "d6178d3bada8153e1b43fb2d49e5ea12845ca7b76f3c822edd4ee63838426cca",
+      "tests/helpers/miniflare-harness.ts": "babe60c01e1de9f6874d7563de653be18319067b21f34c8a7c956467a9b95745",
+      "tests/helpers/matrix-fixture.ts": "3ae3d83d6b20db96011c5ea03ddcf985dc14a03d382d0a1489471729357c900c",
+      "vitest.config.ts": "191fbb164a0fb053fb654b4a8a65313ed7791953eca8782b01827ba3de238eca",
+      "/tmp/flarc-matrix-run_01d0e4aeb274/vitest.frozen.config.mts": "9d59ed6a4f2427ca6be80c4f476998d84f8c73cb7fea47371d7a47fb49970e88"
+    },
+    "verification": {
+      "productionSourceMatchesSource11Files": 161,
+      "productionSourceDiffSha256": "c4ec26026031f9aa8e55850b7136e285aae37f0cf63a1f4b11fc25d73935b280",
+      "frozenModuleFileCount": 85,
+      "frozenModuleFilesSha256": {
+        "_...slug_.mjs": "f733c2411025d16292d09fdc1c07be78bfce8c22eaf387f72d9f82beac4c1f78",
+        "_2...slug_.mjs": "8e84b1941fdff6d3c1fcecdc9bd56d4c0429a08fc0db9e5ca286b2f5d122fd82",
+        "_channel_.put.mjs": "66762dfdf8d3d90246c0af0405cd5297c4d99e03aa370909a8d77d90f7df40dd",
+        "_chunks/admin.mjs": "132c9fe644167ae82404de0c1cb124ec80689b27f05bc8dc41b4ea89021a4cba",
+        "_chunks/admin2.mjs": "73a91855a120ae8586df73c5392caeab93f3e567dd8770d0e475182dc19af025",
+        "_chunks/auth.mjs": "58876982f365a81da79fbc400dcad8936d735654e03f44b5060a293f82435e7c",
+        "_chunks/auth2.mjs": "a2664cdf74cd3d115391ec69b757a57da7b2da64361df45c1e07443ff72f3998",
+        "_chunks/body.mjs": "8043c4a5722e7fb5089f488e9c55347f2eadd4657f467bde6e4cd57c03fa94d5",
+        "_chunks/channels.mjs": "dbe9d0b854d709c1c4e58d66015e45b817c9e0e62675b42846f0810ea61282ed",
+        "_chunks/config.mjs": "1f0cbc69f5e811a51b7dd56a2fc3fbd6d3e591cfb6967366c01107bb4f29b11f",
+        "_chunks/messages.mjs": "c3012550d80fc07cf15d46001a7e0a49e6e9d719fc5d032ca4efa6d4aabc4f86",
+        "_chunks/notifications.mjs": "3a68c74a5c7200cb6c89a23d915949985987f543e40cb9f1a5be63f75faa05a9",
+        "_chunks/outbound.mjs": "2b5a964352ed6b9ee16016a03e90663a120993494c00b47d252ba6daca27c7d8",
+        "_chunks/profiles.mjs": "42162653fb246fb030d57da1f19cb733c997dca55e8ea8a0d0c30ccbdd82fd7d",
+        "_chunks/search.mjs": "4ea249821e6186c56307d6f993971bfa52900ae6a404c43a31302400e5dcaeab",
+        "_id_.delete.mjs": "28ab06f091e00d4a1cbd20eb36e194b2bd5221aa842942f811231e1742357908",
+        "_id_.get.mjs": "e8b1b70242dad185cc9da42e9e9656423c6b3b5375576d25ebfc0bd7cc68dfaa",
+        "_id_.patch.mjs": "a6f03c41c40d372b63dcda0a4eb00653ebdd1c3dadb64ddd527e0383c7d1f530",
+        "_id_2.delete.mjs": "fb7d31a242b7da3d81c79dc02382e0f0e59251553875b5b6fcc8a717fcde1a5b",
+        "_id_2.patch.mjs": "a6146ff60cbdee2d0696ab30a5019f52796f7e62c61393a5d5fe8b9f1ddb9508",
+        "_id_3.delete.mjs": "789915acaf47ca17170fd5d1133454f3bd4e2349aa8c09eb9c19590e4d9895cb",
+        "_id_4.delete.mjs": "6acf2a3ebdadb819fa0d204d79f342a90eccc1f36ec8c932ae004f1d66691d43",
+        "_id_5.delete.mjs": "d15693cfe1e284be9027205c09a267276c2a12334ae70a457b57e9d3603ec9d5",
+        "_libs/drizzle-orm.mjs": "50e081daa76fa6b0c01fecc49b966eebd214cada3ef667f6fabbec0252b5b024",
+        "_libs/h3+rou3+srvx.mjs": "5dedb2ae818162a3752f5a996007a24c7cd30b0569086d239e7d924e60265002",
+        "_libs/zod.mjs": "0fef7822fb55b3746b4670d5a802a63df63d13470231f230f673f2433100a563",
+        "_libs/zod2.mjs": "3ca43c7a5a18eb3331e0b08a1be0b437ec22f35e66cbaf1823672352d1ef2711",
+        "_routes/api/accounts/register.mjs": "2e1be258de51d457778898f50f0e84772989dee283de2ce4c563e700b2a1226a",
+        "_routes/api/channels/[channel]/info.mjs": "ef3abeecfb0cac5fb151a079bc0bb6a9ea122b20766d85fd0cd11ccbe42c88fc",
+        "_routes/api/channels/[channel]/info2.mjs": "e78455f2d018d650237aec2a0f41bcf1d1224550e2731812e5840bb2db7de74d",
+        "_routes/api/channels/[channel]/unread.mjs": "7fc31572f61c305fedbd38ec34cdc6857d657e4bb998680b1145b6070de6bb7f",
+        "_routes/api/health.mjs": "4cb2c9ef8c53578400b65207066e1d27d6beb9b0959c275b2090893fe162a6d5",
+        "_routes/api/media/upload.mjs": "8128a12713083716715067e725288bc10326c36cdbc83f86c927950d20fe9ba7",
+        "_routes/api/status.mjs": "e92400bf088d0a61816e12e97cb62d2b1a72eba9546faffe68c1b7e6c0ce2e4c",
+        "_routes/api/users/[username]/unread.mjs": "7cb69e077bb37f90d107f0d1fc781896c0c2b126fb6249d3c2e4ecf7f889f343",
+        "_routes/api/v1/auth/events_ticket.mjs": "d10d2d85a657b8b0fbc4fd91e98185b9f73e6bf225a2d642a637b42ea29c3eee",
+        "_routes/api/v1/auth/login.mjs": "871ccdab82d33dffacf16212af6ff0eace96201ff8ddc57c0c8234acbf29e401",
+        "_routes/api/v1/auth/logout.mjs": "25a684bb0435b97c69e004b025a46cf70116bf1ec9f0cedb3978b1740fbb0ada",
+        "_routes/api/v1/auth/register.mjs": "18d2c00c6c8c951e6c941040ff9e66dcb9bfabec1d83613a2aafbe9d7a750712",
+        "_routes/api/v1/channels/[channel]/info.mjs": "11cdee443b34bb12ff3a47134c0e746a4cea5a9d8a10ce1ec14d1a79288ddc17",
+        "_routes/api/v1/channels/[channel]/info2.mjs": "3dc78a8121fdfa4698c36c52777fc7bd8c4c2a71b9519d3e055176717717e87c",
+        "_routes/api/v1/channels/[channel]/messages/search.mjs": "959d18126e72c5684e66b463c54cc0686593f43d86f2a336e1baac97e5443d6f",
+        "_routes/api/v1/channels/[channel]/messages.mjs": "c12ce065e22fd563cc349b987cdfc31dff75b569b83988c2d31e62dd5572de49",
+        "_routes/api/v1/channels/[channel]/messages2.mjs": "b11c6f53964bc9157226da84a9316c3925ec55eda162c2b1331b33858225c50f",
+        "_routes/api/v1/channels/[channel]/outgoing_webhooks.mjs": "2b30d54c336834f8456ee12ada0a12550c58a48e095121a0a062b6792fb01270",
+        "_routes/api/v1/channels/[channel]/outgoing_webhooks2.mjs": "006d9d75db82f6bed928df86771717e1d8c5c91ff5a1da503035a63d04bd1488",
+        "_routes/api/v1/channels/[channel]/roles/assign.mjs": "0f698d5d3d4eb4b7897b73596afa2563bbe4dc27730fee42236a4646873f6312",
+        "_routes/api/v1/channels/[channel]/roles.mjs": "bc6a04d1635bd5fd540618467774ebd6ceca9135a124ab56d782698458be1609",
+        "_routes/api/v1/channels/[channel]/roles2.mjs": "d1eab033006473556fbebbe3329ac5a8b105b843c596aa17fa8371d15b639098",
+        "_routes/api/v1/channels/[channel]/unread.mjs": "e4ce74f8df1d95bc31691ac6b3f6b48ad0be6f877a6595b2781f8dc9d6530db2",
+        "_routes/api/v1/channels/[channel]/webhooks.mjs": "6dfae00580fba321592202f941518cf4a492812ebec69370c003f686ad8c9803",
+        "_routes/api/v1/channels/[channel]/webhooks2.mjs": "f5fc60aa9b6e532c36903f7c818cc46d84c21b37132679c308e6d56c03f4478b",
+        "_routes/api/v1/channels.mjs": "71ea2b54434930527402a76017d983616e0e721b73188405c75b1dda4047ae04",
+        "_routes/api/v1/dms/[target]/messages.mjs": "77a0f2b4a05384404d328bd97aa69e8327a57d44efeb0a0e1814c06ae1fac985",
+        "_routes/api/v1/embeds.mjs": "8b1d07d68d12a9bf63d8ef7104cff4795acdac78c9b9634e6b864affd1e83f29",
+        "_routes/api/v1/events.mjs": "e44973ccb3ebf6b3a41adc73c9a5f421249b76fe5153995ed3f17cf6404b933b",
+        "_routes/api/v1/media/upload.mjs": "22ce0a676712aa59d8a17d470dea8aa69f48e461af2576d1f26117f63773ac93",
+        "_routes/api/v1/messages/search.mjs": "267f07639978f427fb4979c042927dd6d608f1a598e9f648b6f01b61936aba65",
+        "_routes/api/v1/notifications/subscribe.mjs": "53f518d4cb9375df3e1bebdb8db3a3d7aa3dd7a9afffcfd9bfd3cbd8c0e9a2e9",
+        "_routes/api/v1/notifications/subscribe2.mjs": "22e927b544b39e8091002b1a2888bccae2f2ca838112343ea2e1e107153d5788",
+        "_routes/api/v1/notifications/subscriptions.mjs": "354d54652aa789b656ae0ca05ef06b040721fa059751af2a56cfa91ebd0ef2ce",
+        "_routes/api/v1/search.mjs": "a9bb71422e69abc1cb61ebc51b920c2d4fb47fcc6629c66853963d2f52771728",
+        "_routes/api/v1/users/[username]/notifications.mjs": "19e28a49f1a9cf555403e7004f40c82ca04094ccb5949c99f3be00f1a731c6b3",
+        "_routes/api/v1/users/[username]/unread.mjs": "86ac4c15b2f2c8f3c0dd864767b9341b634328b316bc1abdb74b8d3cb096a6e6",
+        "_routes/api/webpush/subscribe.mjs": "0291ba0b584aba9b03d68e13b46e4daef8d1b602864e98aeb23a992c22de194e",
+        "_routes/api/webpush/subscribe2.mjs": "8fb7934bedc59ab123b4882c6f3258dbe1520332276c506e3a8b236b201a6764",
+        "_routes/api/webpush/subscriptions.mjs": "ea284091e8ba4e06ed818dddb064cf2aae87931365ba19fea8376a67956c322b",
+        "_routes/docs.mjs": "78e8b98eceb5cb2bac709b0ca3ea1d10969aa8c1ebfd60f65a18212bc3b46ab6",
+        "_routes/health.mjs": "5edba6dbae0eea78845f75b5c33f018956140efe436bd24d4e76f3e7bc945562",
+        "_routes/icon.svg.mjs": "a66b97bdb9d691fe67504ea5d6d7ffc1d1f8756ce6717559c3f94223ba632c39",
+        "_routes/index.mjs": "1be78eb05355041780090bd150e9ebc9ffb7525249777267011e388f489f677b",
+        "_routes/irc.mjs": "9938b40a83282060d387462bce3e1430de11db8eac4edc7612961f956a6bcc76",
+        "_routes/metrics.mjs": "8c57858a6a5a9ca0fec16156c8aca7795dc0a42720d3754bbed15ab8f10f4d3d",
+        "_routes/openapi.json.mjs": "5fb4af8d728fc58c751b9fcbc592dcc005602bd6aae9ee298e71b804b9b60d34",
+        "_routes/status.mjs": "ba59a45774781af14e1c24611123e8caa68de7e6135171757a514db571fe876e",
+        "_runtime.mjs": "079f9f3c36aa5189e9743a2717490376c36474fcfd07a025e97a9d7881d655f6",
+        "_token_.post.mjs": "b8d07aed75c1089ae66e257bc240736c77e44466fde967bf4abb0cda27d9b1f2",
+        "_token_2.post.mjs": "8f97d81b6b40018d3b1c01b018b0c70711b7b23e6bce0160349b0ba789fe2004",
+        "_token_3.post.mjs": "1d7dbe9a9ba5fab8b30342d7dd470e7ecabdd99f44d7d8264559882a9f876879",
+        "_username_.get.mjs": "5ad3aebb9800c16a552a6251d427eb20dd3c8b7b2f3b7b96f8e01872a7d0cde1",
+        "_username_.patch.mjs": "773c1c80e1e44e0c5c3950d6b391c913b4487840cf3a1303f1b52ae81d3913e9",
+        "_username_2.get.mjs": "b3221cc9da4ce5d4afd7a34bbd013e49acbb14694c960cf6b5ca812ddb8566d1",
+        "_username_2.patch.mjs": "0974ed6977cc600259ca7b699fc106744115166d4b9d02808019790dbfa09520",
+        "index.mjs": "4040f1888e6c2e98016ca7d00a6dd9b27b6f5cc9be7ab6d73edebaa1173fc2ed",
+        "wrangler.json": "90ef0f7dddfcaa5c85b6b58be5f67864d17b7f6540a4fcc823f6cab3f07f31d4"
+      },
+      "beforeAfterOwnedSourceAndDependenciesStable": true,
+      "rawLogSha256": "8118e4cab6e950e040f231a786eba3923c32db122cbede6b807a46f5069deeca",
+      "bundleVerifiedExternallyBeforeAndAfter": true,
+      "executableHelperBundlePinRemoved": true
+    }
+  },
+  "sourceReview": {
+    "productionSourceDiffSha256": "c4ec26026031f9aa8e55850b7136e285aae37f0cf63a1f4b11fc25d73935b280",
+    "productionFilesMatchedExistingSource11Inventory": 161,
+    "filesSha256": {
+      "server/core/config.ts": "13e946ce15158c83e4534d2e08185218bd9a2413ed60a1291bc9f9078c81c103",
+      "server/durable-objects/session.ts": "ef3a4589b8956c505af85e72d5d2cb54c7bd31c4c558d44103a7e97702cf18ab",
+      "server/durable-objects/channel.ts": "70e868aaae8e6e55215e490ff0f686bc957625bba6c0ec2ff5c48a3ac2cba217",
+      "server/protocol/irc/commands/channel.ts": "b0c8f3ae91463f1cbc5507a11051f5dbd9942e0a0b9eba8316f15d057ea63cf2",
+      "server/protocol/irc/parser/index.ts": "009f824c74bd1f7be6881aa4744ff1e14d0868d1fcb4621aea59b41cf3b6f6a6",
+      "server/middleware/auth.ts": "d76f84eb9d0e819b124920e3a83aa94a4312f24b4035c0cf7497f1f6ded7b821"
+    },
+    "testOnlyInstrumentation": "Subclasses delegate to real AccountsDO query and production sendLine; only actual RPC wait/error injection, peak sampling and read-only actual state access are added in temporary copied bundle wrapper. No queue replacement, fabricated RPC success, changed rate policy or public diagnostic endpoint.",
+    "implementedPolicies": [
+      "150 raw IRC commands per session per10s; comma-separated JOIN targets are expanded after raw command charging.",
+      "Actual account event-stream cap5, handshake budget30/IP, actual total socket limit2000; this test saturates only the5-account-event cap.",
+      "Actual IRC output caps4096 pending frames,8MiB per socket,16MiB global. Only8MiB branch is independently saturated.",
+      "Event broadcast sends authorized payloads directly to actual transport; no native buffer allocation ceiling is observable from these tests."
+    ],
+    "noStandardExpectedFailureOrSelectionDeclarationsFound": {
+      "pattern": "\\b(?:it|test|describe)\\s*\\.\\s*(?:fails|skip|todo|only)\\b",
+      "matches": 0,
+      "scope": "All current tests/**/*.ts source at final review; focused selection is explicit and not reported as global zero deselection."
+    }
+  },
+  "measurements": {
+    "join-part": {
+      "close": {
+        "code": 1000,
+        "reason": "Excess Flood"
+      },
+      "elapsedMs": 186,
+      "acceptedJoinFrames": 74,
+      "createdChannels": 0,
+      "persistedCreatedChannels": 0,
+      "submittedCommands": 220,
+      "bobMembershipRowsAfterClose": 0
+    },
+    "create": {
+      "close": {
+        "code": 1000,
+        "reason": "Excess Flood"
+      },
+      "elapsedMs": 793,
+      "acceptedJoinFrames": 147,
+      "createdChannels": 146,
+      "persistedCreatedChannels": 146,
+      "submittedCommands": 220,
+      "bobMembershipRowsAfterClose": 0
+    },
+    "disconnect": {
+      "eventSlotsBefore": 5,
+      "eventSlotsAfterClose": 4,
+      "replacementAccepted": 101,
+      "closedIrcSessionRemoved": true,
+      "monitorRowsAfterClose": 0,
+      "ircLiveTransportSlotsBefore": 8,
+      "ircLiveTransportSlotsAfter": 7,
+      "closedSessionChannelRowsAfter": 0
+    },
+    "output": {
+      "result": {
+        "code": 1008,
+        "reason": "Output queue limit reached"
+      },
+      "sent": 1919,
+      "payloadBytes": 8117370,
+      "peak": {
+        "bytes": 8384250,
+        "frames": 1917
+      },
+      "attempts": 1,
+      "scope": "actual application queue, not native event/TCP transport buffering"
+    },
+    "pausedNativeReader": {
+      "acceptedMessages": 128,
+      "requestContentBytes": 1048448,
+      "resumedEventFrames": 130,
+      "resumedPrivateMessageFrames": 128,
+      "resumedEventBytes": 1102896,
+      "closedOrThrottled": false,
+      "scope": "finite paused Node TCP reader workload; server/provider buffer allocation and an upper bound are not observable or proved"
+    },
+    "rpc": {
+      "actualFailingRpcAttemptsPerCycle": [
+        1,
+        1,
+        1
+      ],
+      "errorSource": "real Worker SQLite SELECT of deliberately missing table inside account RPC",
+      "retriesAfterActualClose": 0,
+      "minimumQuietObservationMsPerCycle": 250
+    }
+  },
+  "integrationReview": {
+    "ABUSE-005": {
+      "credit": "Actual alternating JOIN/PART per-session flood control, cleanup, persisted state and healthy delivery.",
+      "remainingScope": [
+        "Comma-target fanout and concurrent/reconnected-account aggregate limits are not established."
+      ]
+    },
+    "ABUSE-006": {
+      "credit": "Actual one-target creation burst control plus exact146 accepted/persisted identities.",
+      "remainingScope": [
+        "Per-account/global/long-term created-object budget and reclamation policy need an explicit decision. Do not translate the146 observed bound to a global ceiling."
+      ]
+    },
+    "WS-020": {
+      "credit": "Abrupt closed IRC/event sockets free actual transport/account-event slots and actual membership/monitor/session-channel state; replacement/reconstruction progress.",
+      "remainingScope": [
+        "Graceful close handshake coverage and provider behavior are not established; no client-selected event subscriptions exist to invent."
+      ]
+    },
+    "WS-021": {
+      "retainIncomplete": true,
+      "credit": "Measured actual application queue bound and real finite paused event-reader workload.",
+      "remainingScope": [
+        "Native IRC/event/provider transport-buffer ceiling and actual slow-transport throttle/close remain unproved."
+      ]
+    },
+    "ABUSE-012": {
+      "retainIncomplete": true,
+      "credit": "1008 closure under actual application queue pressure plus healthy delivery.",
+      "remainingScope": [
+        "RPC-delayed application queue is distinct from genuine slow-reading IRC transport; paused event reader did not throttle/close or establish native bounds."
+      ]
+    },
+    "ABUSE-013": {
+      "credit": "Three repeated real outbound-authorization RPC failures, one attempt each and finite quiet windows.",
+      "remainingScope": [
+        "Other RPC call paths, genuine provider outages and indefinite retry behavior remain outside this evidence."
+      ]
+    }
+  },
+  "policyQuestions": [
+    "Should JOIN charge each comma-separated target or only the raw command under the documented flood policy?",
+    "Should channel creation have a per-account/aggregate reconnect budget or retention/cleanup ceiling beyond the existing per-session command budget?",
+    "What native/provider outbound-buffer guarantee is required for IRC and event sockets, and how should it be observable in a provider integration test?"
+  ],
+  "diagnosticExecutionHistory": [
+    {
+      "executionId": "abuse-gaps-source11-observed-01",
+      "manifest": "/tmp/flarc-matrix-run_01d0e4aeb274/abuse-gaps-01-manifest.json",
+      "rawVitestJsonSha256": "c5723f91b7f778a46e5abe9de5c690463a07e279ce0b4af5b37adf1a33e5020a",
+      "pass": 1,
+      "fail": 4,
+      "skip": 0,
+      "todo": 0,
+      "total": 5,
+      "sourceAndTestFilesSha256": {
+        "tests/security/matrix-abuse-gaps.test.ts": "1cd959e38c2f468363b8d095535c2a424ac486764697ec6552107eaab9800cbf",
+        "tests/helpers/abuse-gap-fixture.ts": "22ea4ab3c94b60b4c285dbde63e21360e23e86f5531451e8d8a2ce9c76bfcf40"
+      },
+      "note": "Fixture failures: redundant Miniflare disposal after restart, unresolved graceful-close wait, and legitimate API 300/min throttle before output queue stress; not production failures."
+    },
+    {
+      "executionId": "abuse-gaps-source11-observed-02",
+      "manifest": "/tmp/flarc-matrix-run_01d0e4aeb274/abuse-gaps-02-manifest.json",
+      "rawVitestJsonSha256": "b7dd5149e6dfc582848763f63beef1892d3bb623cb742c5b760fd1844c16fc26",
+      "pass": 4,
+      "fail": 1,
+      "skip": 0,
+      "todo": 0,
+      "total": 5,
+      "sourceAndTestFilesSha256": {
+        "tests/security/matrix-abuse-gaps.test.ts": "2a102a8414f7d749ae64cea147b646ce510a8b17898f0230d0dae1014e2800ea",
+        "tests/helpers/abuse-gap-fixture.ts": "fe37072c9c8a158ac80c2e6bc2de18231808f1b4f1798d81ff30efd08c7cf81b"
+      },
+      "note": "Invalid untagged 8000-character PRIVMSG fixture exceeded parser limit; healthy delivery correctly absent; four other focused tests passed."
+    },
+    {
+      "executionId": "abuse-gaps-source11-observed-03",
+      "manifest": "/tmp/flarc-matrix-run_01d0e4aeb274/abuse-gaps-03-manifest.json",
+      "rawVitestJsonSha256": "75fa36eab75037fa1198fcf83b58b5340e3d16115da31fb7e345290bd8661735",
+      "pass": 4,
+      "fail": 1,
+      "skip": 0,
+      "todo": 0,
+      "total": 5,
+      "sourceAndTestFilesSha256": {
+        "tests/security/matrix-abuse-gaps.test.ts": "466d93eb8e75b4cbcc1b660db9945e5b4032f69ccd4cfccbe75b2de6e307833e",
+        "tests/helpers/abuse-gap-fixture.ts": "bd41a24ff14b4b649ece0ea749ef07ed3563934017b2708f2bbbb7247b21e6b8"
+      },
+      "note": "Application byte cap reached, but teardown invoked a poisoned pre-restart RPC stub; not a passing queue test execution."
+    },
+    {
+      "executionId": "abuse-gaps-source11-observed-04",
+      "manifest": "/tmp/flarc-matrix-run_01d0e4aeb274/abuse-gaps-04-manifest.json",
+      "rawVitestJsonSha256": "1f503baac789fbe3868125c17a03f9c3bdd7b5c81f885ed108f16e37fed24370",
+      "pass": 6,
+      "fail": 0,
+      "skip": 0,
+      "todo": 0,
+      "total": 6,
+      "sourceAndTestFilesSha256": {
+        "tests/security/matrix-abuse-gaps.test.ts": "c0653608655c12ea0828f3a2f3190200a2ec4f3445b8b4e36794bbac5409f241",
+        "tests/helpers/abuse-gap-fixture.ts": "bd41a24ff14b4b649ece0ea749ef07ed3563934017b2708f2bbbb7247b21e6b8"
+      },
+      "note": "Six tests passed before additional RPC recipient-window/state and persistent-created-channel assertions."
+    },
+    {
+      "executionId": "abuse-gaps-source11-observed-05",
+      "manifest": "/tmp/flarc-matrix-run_01d0e4aeb274/abuse-gaps-05-manifest.json",
+      "rawVitestJsonSha256": "140f7962e956a67ecd0881f9832b3658ef428fc9b0958db08bfab30bbc86a864",
+      "pass": 6,
+      "fail": 0,
+      "skip": 0,
+      "todo": 0,
+      "total": 6,
+      "sourceAndTestFilesSha256": {
+        "tests/security/matrix-abuse-gaps.test.ts": "f759bb10fb330eea8982b4a1be220d9c4d790f7bb967ad03a61d7c9d8799924f",
+        "tests/helpers/abuse-gap-fixture.ts": "bd41a24ff14b4b649ece0ea749ef07ed3563934017b2708f2bbbb7247b21e6b8"
+      },
+      "note": "Six tests passed before explicit persisted channel metadata count assertions."
+    },
+    {
+      "executionId": "abuse-gaps-source11-observed-06",
+      "manifest": "/tmp/flarc-matrix-run_01d0e4aeb274/abuse-gaps-06-manifest.json",
+      "rawVitestJsonSha256": "dcc023da7fb785f61df3526aa5edf715cc0fa47e743e7ad4b77dcb6577efacb5",
+      "pass": 6,
+      "fail": 0,
+      "skip": 0,
+      "todo": 0,
+      "total": 6,
+      "sourceAndTestFilesSha256": {
+        "tests/security/matrix-abuse-gaps.test.ts": "d0206b0135a5f943c54bd9d40884b7c73e215a284f61776f01d0d5678d1d9198",
+        "tests/helpers/abuse-gap-fixture.ts": "bd41a24ff14b4b649ece0ea749ef07ed3563934017b2708f2bbbb7247b21e6b8"
+      },
+      "note": "Six tests passed before explicit actual IRC transport-slot release assertion."
+    },
+    {
+      "executionId": "abuse-gaps-source11-final",
+      "manifest": "/tmp/flarc-matrix-run_01d0e4aeb274/abuse-gaps-final-manifest.json",
+      "pass": 6,
+      "fail": 0,
+      "skip": 0,
+      "todo": 0,
+      "total": 6,
+      "rawVitestJsonSha256": "2d050ace47fb149ccbcfdb38d1ed2ca2a83d2ec605e93907e86e82dff29c3a3a",
+      "sourceAndTestFilesSha256": {
+        "tests/security/matrix-abuse-gaps.test.ts": "9edd3ec5805748d3c65038e53eb8031754ad55559d7423884e0f7d98c6465d7b",
+        "tests/helpers/abuse-gap-fixture.ts": "bd41a24ff14b4b649ece0ea749ef07ed3563934017b2708f2bbbb7247b21e6b8",
+        "tests/helpers/miniflare-harness.ts": "babe60c01e1de9f6874d7563de653be18319067b21f34c8a7c956467a9b95745",
+        "tests/helpers/matrix-fixture.ts": "3ae3d83d6b20db96011c5ea03ddcf985dc14a03d382d0a1489471729357c900c",
+        "vitest.config.ts": "191fbb164a0fb053fb654b4a8a65313ed7791953eca8782b01827ba3de238eca",
+        "/tmp/flarc-matrix-run_01d0e4aeb274/vitest.frozen.config.mts": "9d59ed6a4f2427ca6be80c4f476998d84f8c73cb7fea47371d7a47fb49970e88"
+      },
+      "note": "Previously settled six-test proof before the helper pin correction; preserved execution and source snapshots, not added to the new six tests."
+    }
+  ],
+  "evidence": [
+    {
+      "kind": "test",
+      "executionId": "abuse-gaps-source11-unpinned-final",
+      "bundleSha256": "4040f1888e6c2e98016ca7d00a6dd9b27b6f5cc9be7ab6d73edebaa1173fc2ed",
+      "testFile": "tests/security/matrix-abuse-gaps.test.ts",
+      "outcome": "PASS",
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "transports": [
+        "IRC WebSocket",
+        "REST",
+        "event WebSocket",
+        "actual Worker SQLite",
+        "process reconstruction with persisted SQLite"
+      ],
+      "id": "ABUSE-005",
+      "testTitle": "ABUSE-005: actual JOIN/PART or channel-creation command burst closes only the hostile socket and preserves persistent unrelated state",
+      "scenarioScope": "One authenticated hostile IRC socket submits 220 actual alternating PART/JOIN commands for an existing secret channel; the configured per-session raw-command budget closes it.",
+      "rationale": "Exact passed focused test against immutable source11, genuine public-registration credentials and real sockets; test-only controls expose actual state or gate/raise inside an actual RPC without replacing queue behavior.",
+      "assertionDetails": [
+        "Accepted JOIN and PART frames precede actual close1000 Excess Flood; 74 JOIN frames include the initial JOIN and the remainder is bounded by the configured150 raw commands/10s.",
+        "Closed hostile session disappears; stopped SQLite has zero Bob channel_members rows; no created-channel metadata exists. Healthy independent Alice IRC/event and outsider Charlie event sockets remain live through a shared barrier.",
+        "After secret-channel history403, both live event observers contain only the subsequent authorized barrier and no denial-induced publication. Closed Bob receives no further frames; unrelated channel members, grants and messages exactly match the seeded snapshot.",
+        "Runtime is stopped AFTER flooding, persisted state is independently read, then reconstructed; fresh Bob/Alice JOIN and real private delivery work, unrelated persistent content remains."
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "coverageLimitations": [
+        "Only one target per raw command and one hostile session are measured; comma-target expansion, sustained windows and concurrent/reconnected-account aggregate budgets are not proved."
+      ],
+      "commandBehavior": [
+        {
+          "command": "JOIN",
+          "outcome": "positive"
+        },
+        {
+          "command": "PART",
+          "outcome": "positive"
+        }
+      ],
+      "routeBehavior": [
+        {
+          "route": "/api/v1/channels/{channel}/messages",
+          "method": "post",
+          "alias": "/api/v1/channels/%23protected/messages",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/api/v1/channels/{channel}/messages",
+          "method": "get",
+          "alias": "/api/v1/channels/%23protected/messages",
+          "outcome": "negative",
+          "responseKind": "secure-denial"
+        }
+      ]
+    },
+    {
+      "kind": "test",
+      "executionId": "abuse-gaps-source11-unpinned-final",
+      "bundleSha256": "4040f1888e6c2e98016ca7d00a6dd9b27b6f5cc9be7ab6d73edebaa1173fc2ed",
+      "testFile": "tests/security/matrix-abuse-gaps.test.ts",
+      "outcome": "PASS",
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "transports": [
+        "IRC WebSocket",
+        "REST",
+        "event WebSocket",
+        "actual Worker SQLite",
+        "process reconstruction with persisted SQLite"
+      ],
+      "id": "ABUSE-006",
+      "testTitle": "ABUSE-006: actual JOIN/PART or channel-creation command burst closes only the hostile socket and preserves persistent unrelated state",
+      "scenarioScope": "One authenticated hostile IRC socket submits220 one-target JOIN commands creating real channels, followed by actual Excess Flood closure and persisted channel accounting.",
+      "rationale": "Exact passed focused test against immutable source11, genuine public-registration credentials and real sockets; test-only controls expose actual state or gate/raise inside an actual RPC without replacing queue behavior.",
+      "assertionDetails": [
+        "146 new channels are accepted, plus the initial protected-channel JOIN; observed JOIN frames147 and actual created-object metadata count146 remain below150. Actual close1000 Excess Flood occurs after793ms in the final trace.",
+        "Actual known_channels and independently opened stopped SQLite channel_metadata canonical_name rows match the same146 identities; no Bob membership survives. Reconstructed runtime still knows exactly those146 created identities.",
+        "Healthy independent private delivery succeeds after closure; forbidden Bob history returns403, bracketed live Alice/Charlie event observers remain silent except authorized barriers, and closed hostile socket receives nothing.",
+        "Unrelated channel members, founder grants and messages exactly match its seeded snapshot before teardown; unrelated saved content and new authorized private delivery remain valid after process reconstruction."
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "coverageLimitations": [
+        "146 channels persist by design of the observed implementation; this run does not establish a per-account/global/long-term storage ceiling, cleanup policy, multi-target JOIN charging or aggregate reconnect/concurrent-session creation budget. Existing generic per-session command throttle is the proved control."
+      ],
+      "commandBehavior": [
+        {
+          "command": "JOIN",
+          "outcome": "positive"
+        }
+      ],
+      "routeBehavior": [
+        {
+          "route": "/api/v1/channels/{channel}/messages",
+          "method": "post",
+          "alias": "/api/v1/channels/%23protected/messages",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/api/v1/channels/{channel}/messages",
+          "method": "get",
+          "alias": "/api/v1/channels/%23protected/messages",
+          "outcome": "negative",
+          "responseKind": "secure-denial"
+        }
+      ]
+    },
+    {
+      "kind": "test",
+      "executionId": "abuse-gaps-source11-unpinned-final",
+      "bundleSha256": "4040f1888e6c2e98016ca7d00a6dd9b27b6f5cc9be7ab6d73edebaa1173fc2ed",
+      "testFile": "tests/security/matrix-abuse-gaps.test.ts",
+      "outcome": "PASS",
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "transports": [
+        "IRC WebSocket",
+        "REST",
+        "event WebSocket",
+        "actual Worker SQLite",
+        "process reconstruction with persisted SQLite"
+      ],
+      "id": "WS-020",
+      "testTitle": "WS-020: real IRC disconnect and event close release actual socket state and event slots across reconstruction",
+      "scenarioScope": "Actual abrupt TCP termination of one authenticated IRC and one event socket releases real runtime state/transport slots; replacement event/IRC connections and reconstruction work.",
+      "rationale": "Exact passed focused test against immutable source11, genuine public-registration credentials and real sockets; test-only controls expose actual state or gate/raise inside an actual RPC without replacing queue behavior.",
+      "assertionDetails": [
+        "Five real Bob event sockets upgrade101 and the sixth is429; terminating one lowers actual ctx event count5to4 and a fresh authorized event connection upgrades101 and restores5.",
+        "Terminating Bob IRC produces actual peer QUIT, removes its actual session, session_channels and monitor rows, removes ChannelDO membership, and lowers actual ctx.getWebSockets live transport slots8to7.",
+        "Closed IRC/event frame counts do not increase through subsequent private publication. A still-live replacement event socket receives no private message while Bob lacks membership, then receives the allowed message after fresh Bob JOIN; fresh IRC receives it too.",
+        "Unrelated channel members/grants/messages remain identical. After process reconstruction event socket count is0, fresh authenticated IRC/events deliver private content, and outsider history403 is bracketed by live authorized/outsider event barrier silence."
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "coverageLimitations": [
+        "Abrupt Node TCP termination and process reconstruction are proved; the earlier graceful close handshake wait was unresolved fixture diagnostics, not accepted graceful-handshake coverage. Event API has account-authorized streams rather than client-selected channel subscription requests; no such feature is invented. No2000-connection saturation run is claimed."
+      ],
+      "commandBehavior": [
+        {
+          "command": "JOIN",
+          "outcome": "positive"
+        },
+        {
+          "command": "MONITOR",
+          "outcome": "positive"
+        }
+      ],
+      "routeBehavior": [
+        {
+          "route": "/api/v1/channels/{channel}/messages",
+          "method": "post",
+          "alias": "/api/v1/channels/%23private/messages",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/api/v1/channels/{channel}/messages",
+          "method": "get",
+          "alias": "/api/v1/channels/%23private/messages",
+          "outcome": "negative",
+          "responseKind": "secure-denial"
+        }
+      ]
+    },
+    {
+      "kind": "test",
+      "executionId": "abuse-gaps-source11-unpinned-final",
+      "bundleSha256": "4040f1888e6c2e98016ca7d00a6dd9b27b6f5cc9be7ab6d73edebaa1173fc2ed",
+      "testFile": "tests/security/matrix-abuse-gaps.test.ts",
+      "outcome": "PASS",
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "transports": [
+        "IRC WebSocket",
+        "REST",
+        "event WebSocket",
+        "actual Worker SQLite",
+        "process reconstruction with persisted SQLite"
+      ],
+      "id": "WS-021",
+      "testTitle": "WS-021 ABUSE-012: actual IRC output bytes are bounded while one real authorization RPC is pending and healthy recipients progress",
+      "scenarioScope": "Bound actual production IRC application output queue bytes under a held real authorization RPC, with1008 closure and independent healthy delivery; native transport bounds remain incomplete.",
+      "rationale": "Exact passed focused test against immutable source11, genuine public-registration credentials and real sockets; test-only controls expose actual state or gate/raise inside an actual RPC without replacing queue behavior.",
+      "assertionDetails": [
+        "Two real producer accounts use16 separately authenticated IRC devices, each below its configured raw-command budget. Valid message-tags padding and400-byte bodies produce actual forwarded private frames; each producer message is independently received on healthy Charlie IRC.",
+        "Only actual Bob AccountsDO.getAccountByUsername is held after the real account lookup; original production sendLine/flushOutbound are unchanged. Actual queue sampling observes8,384,250 pending bytes and1917 queued frames, including the in-flight batch byte accounting; the next frame closes Bob1008 Output queue limit reached.",
+        "1919 accepted producer messages carry8,117,370 input bytes; one real authorization RPC reaches the test gate. This producer-byte number is distinct from actual queue bytes. Healthy Charlie event delivery continues, outsider Dave gets no pressure contents, and403 secret-history denial has live healthy/outside event silence barriers.",
+        "Releasing the held real RPC drains actual global pending-byte count to0; unrelated channel members/grants/messages exactly match the sentinel. A fresh reconstructed runtime has0 queued bytes and new real Bob private delivery works."
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "restart",
+        "unrelatedResources"
+      ],
+      "coverageLimitations": [
+        "This is actual application queue pressure while an authorization RPC is pending, not a non-reading IRC transport. The separate4096-frame and16MiB-global branches are not independently saturated. Provider/native IRC and event transport buffer memory ceilings and production-provider behavior remain unverified."
+      ],
+      "commandBehavior": [
+        {
+          "command": "JOIN",
+          "outcome": "positive"
+        },
+        {
+          "command": "CAP",
+          "outcome": "positive"
+        },
+        {
+          "command": "PRIVMSG",
+          "outcome": "positive"
+        }
+      ],
+      "routeBehavior": [
+        {
+          "route": "/api/v1/channels/{channel}/messages",
+          "method": "post",
+          "alias": "/api/v1/channels/%23pressure/messages",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/api/v1/channels/{channel}/messages",
+          "method": "get",
+          "alias": "/api/v1/channels/%23pressure/messages",
+          "outcome": "negative",
+          "responseKind": "secure-denial"
+        }
+      ],
+      "dimensionCoverageNotes": {
+        "transport": "Real sockets and application queue pressure are exercised, but the complete IRC/event native/provider slow-consumer ceiling remains required and uncredited. This omission is a coverage gap, never N/A."
+      }
+    },
+    {
+      "kind": "test",
+      "executionId": "abuse-gaps-source11-unpinned-final",
+      "bundleSha256": "4040f1888e6c2e98016ca7d00a6dd9b27b6f5cc9be7ab6d73edebaa1173fc2ed",
+      "testFile": "tests/security/matrix-abuse-gaps.test.ts",
+      "outcome": "PASS",
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "transports": [
+        "IRC WebSocket",
+        "REST",
+        "event WebSocket",
+        "actual Worker SQLite",
+        "process reconstruction with persisted SQLite"
+      ],
+      "id": "ABUSE-012",
+      "testTitle": "WS-021 ABUSE-012: actual IRC output bytes are bounded while one real authorization RPC is pending and healthy recipients progress",
+      "scenarioScope": "Bound actual production IRC application output queue bytes under a held real authorization RPC, with1008 closure and independent healthy delivery; native transport bounds remain incomplete.",
+      "rationale": "Exact passed focused test against immutable source11, genuine public-registration credentials and real sockets; test-only controls expose actual state or gate/raise inside an actual RPC without replacing queue behavior.",
+      "assertionDetails": [
+        "Two real producer accounts use16 separately authenticated IRC devices, each below its configured raw-command budget. Valid message-tags padding and400-byte bodies produce actual forwarded private frames; each producer message is independently received on healthy Charlie IRC.",
+        "Only actual Bob AccountsDO.getAccountByUsername is held after the real account lookup; original production sendLine/flushOutbound are unchanged. Actual queue sampling observes8,384,250 pending bytes and1917 queued frames, including the in-flight batch byte accounting; the next frame closes Bob1008 Output queue limit reached.",
+        "1919 accepted producer messages carry8,117,370 input bytes; one real authorization RPC reaches the test gate. This producer-byte number is distinct from actual queue bytes. Healthy Charlie event delivery continues, outsider Dave gets no pressure contents, and403 secret-history denial has live healthy/outside event silence barriers.",
+        "Releasing the held real RPC drains actual global pending-byte count to0; unrelated channel members/grants/messages exactly match the sentinel. A fresh reconstructed runtime has0 queued bytes and new real Bob private delivery works."
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "restart",
+        "unrelatedResources"
+      ],
+      "coverageLimitations": [
+        "This is actual application queue pressure while an authorization RPC is pending, not a non-reading IRC transport. The separate4096-frame and16MiB-global branches are not independently saturated. Provider/native IRC and event transport buffer memory ceilings and production-provider behavior remain unverified."
+      ],
+      "commandBehavior": [
+        {
+          "command": "JOIN",
+          "outcome": "positive"
+        },
+        {
+          "command": "CAP",
+          "outcome": "positive"
+        },
+        {
+          "command": "PRIVMSG",
+          "outcome": "positive"
+        }
+      ],
+      "routeBehavior": [
+        {
+          "route": "/api/v1/channels/{channel}/messages",
+          "method": "post",
+          "alias": "/api/v1/channels/%23pressure/messages",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/api/v1/channels/{channel}/messages",
+          "method": "get",
+          "alias": "/api/v1/channels/%23pressure/messages",
+          "outcome": "negative",
+          "responseKind": "secure-denial"
+        }
+      ],
+      "dimensionCoverageNotes": {
+        "transport": "Real sockets and application queue pressure are exercised, but the complete IRC/event native/provider slow-consumer ceiling remains required and uncredited. This omission is a coverage gap, never N/A."
+      }
+    },
+    {
+      "kind": "test",
+      "executionId": "abuse-gaps-source11-unpinned-final",
+      "bundleSha256": "4040f1888e6c2e98016ca7d00a6dd9b27b6f5cc9be7ab6d73edebaa1173fc2ed",
+      "testFile": "tests/security/matrix-abuse-gaps.test.ts",
+      "outcome": "PASS",
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "transports": [
+        "IRC WebSocket",
+        "REST",
+        "event WebSocket",
+        "actual Worker SQLite",
+        "process reconstruction with persisted SQLite"
+      ],
+      "id": "WS-021",
+      "testTitle": "WS-021 ABUSE-012: a real paused event TCP reader resumes measured private frames while independent recipients progress without proving a provider buffer ceiling",
+      "scenarioScope": "Characterize a real paused event TCP reader with128 accepted private messages, healthy recipient progress and measured resumed frames/bytes; no native buffer ceiling or throttling is established.",
+      "rationale": "Exact passed focused test against immutable source11, genuine public-registration credentials and real sockets; test-only controls expose actual state or gate/raise inside an actual RPC without replacing queue behavior.",
+      "assertionDetails": [
+        "A live actual Bob event WebSocket first receives an authorized private marker, then its actual Node TCP reader is paused.128 genuine private REST messages are accepted and persist by matching saved ID/content;1,048,448 request content bytes are delivered to independent healthy IRC/event recipients.",
+        "While paused, Bob application frame/byte counters do not advance and the socket remains OPEN; after resume exactly128 private message frames arrive. Total post-pause received event frames130 and decoded event payload bytes1,102,896 include subsequent observer barriers and are not server memory or TCP allocation measurements.",
+        "Independent outsider Dave receives no private message; actual forbidden history403 is bracketed by live healthy/outside event barriers with no denial-generated events. Unrelated members/grants/messages match exactly.",
+        "After process reconstruction a new authorized event reader receives new private output; saved private message IDs/content and unrelated sentinel remain intact."
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "restart",
+        "unrelatedResources"
+      ],
+      "coverageLimitations": [
+        "Finite accepted workload is a characterization, not evidence of bounded native buffering; no closure/throttle occurred. Server/provider allocation and an upper ceiling were not measurable through this public transport. Retain required transport-bound coverage gap for both broad scenarios."
+      ],
+      "commandBehavior": [
+        {
+          "command": "JOIN",
+          "outcome": "positive"
+        }
+      ],
+      "routeBehavior": [
+        {
+          "route": "/api/v1/channels/{channel}/messages",
+          "method": "post",
+          "alias": "/api/v1/channels/%23paused/messages",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/api/v1/channels/{channel}/messages",
+          "method": "get",
+          "alias": "/api/v1/channels/%23paused/messages",
+          "outcome": "negative",
+          "responseKind": "secure-denial"
+        }
+      ],
+      "dimensionCoverageNotes": {
+        "transport": "Real sockets and application queue pressure are exercised, but the complete IRC/event native/provider slow-consumer ceiling remains required and uncredited. This omission is a coverage gap, never N/A."
+      }
+    },
+    {
+      "kind": "test",
+      "executionId": "abuse-gaps-source11-unpinned-final",
+      "bundleSha256": "4040f1888e6c2e98016ca7d00a6dd9b27b6f5cc9be7ab6d73edebaa1173fc2ed",
+      "testFile": "tests/security/matrix-abuse-gaps.test.ts",
+      "outcome": "PASS",
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "transports": [
+        "IRC WebSocket",
+        "REST",
+        "event WebSocket",
+        "actual Worker SQLite",
+        "process reconstruction with persisted SQLite"
+      ],
+      "id": "ABUSE-012",
+      "testTitle": "WS-021 ABUSE-012: a real paused event TCP reader resumes measured private frames while independent recipients progress without proving a provider buffer ceiling",
+      "scenarioScope": "Characterize a real paused event TCP reader with128 accepted private messages, healthy recipient progress and measured resumed frames/bytes; no native buffer ceiling or throttling is established.",
+      "rationale": "Exact passed focused test against immutable source11, genuine public-registration credentials and real sockets; test-only controls expose actual state or gate/raise inside an actual RPC without replacing queue behavior.",
+      "assertionDetails": [
+        "A live actual Bob event WebSocket first receives an authorized private marker, then its actual Node TCP reader is paused.128 genuine private REST messages are accepted and persist by matching saved ID/content;1,048,448 request content bytes are delivered to independent healthy IRC/event recipients.",
+        "While paused, Bob application frame/byte counters do not advance and the socket remains OPEN; after resume exactly128 private message frames arrive. Total post-pause received event frames130 and decoded event payload bytes1,102,896 include subsequent observer barriers and are not server memory or TCP allocation measurements.",
+        "Independent outsider Dave receives no private message; actual forbidden history403 is bracketed by live healthy/outside event barriers with no denial-generated events. Unrelated members/grants/messages match exactly.",
+        "After process reconstruction a new authorized event reader receives new private output; saved private message IDs/content and unrelated sentinel remain intact."
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "restart",
+        "unrelatedResources"
+      ],
+      "coverageLimitations": [
+        "Finite accepted workload is a characterization, not evidence of bounded native buffering; no closure/throttle occurred. Server/provider allocation and an upper ceiling were not measurable through this public transport. Retain required transport-bound coverage gap for both broad scenarios."
+      ],
+      "commandBehavior": [
+        {
+          "command": "JOIN",
+          "outcome": "positive"
+        }
+      ],
+      "routeBehavior": [
+        {
+          "route": "/api/v1/channels/{channel}/messages",
+          "method": "post",
+          "alias": "/api/v1/channels/%23paused/messages",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/api/v1/channels/{channel}/messages",
+          "method": "get",
+          "alias": "/api/v1/channels/%23paused/messages",
+          "outcome": "negative",
+          "responseKind": "secure-denial"
+        }
+      ],
+      "dimensionCoverageNotes": {
+        "transport": "Real sockets and application queue pressure are exercised, but the complete IRC/event native/provider slow-consumer ceiling remains required and uncredited. This omission is a coverage gap, never N/A."
+      }
+    },
+    {
+      "kind": "test",
+      "executionId": "abuse-gaps-source11-unpinned-final",
+      "bundleSha256": "4040f1888e6c2e98016ca7d00a6dd9b27b6f5cc9be7ab6d73edebaa1173fc2ed",
+      "testFile": "tests/security/matrix-abuse-gaps.test.ts",
+      "outcome": "PASS",
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "transports": [
+        "IRC WebSocket",
+        "REST",
+        "event WebSocket",
+        "actual Worker SQLite",
+        "process reconstruction with persisted SQLite"
+      ],
+      "id": "ABUSE-013",
+      "testTitle": "ABUSE-013: repeated real failing account RPCs close the affected recipient with bounded attempts while healthy deliveries persist",
+      "scenarioScope": "Three separate real account-authorization RPC failures on outbound IRC delivery close only the affected recipient with one observed attempt per cycle and no observed retries.",
+      "rationale": "Exact passed focused test against immutable source11, genuine public-registration credentials and real sockets; test-only controls expose actual state or gate/raise inside an actual RPC without replacing queue behavior.",
+      "assertionDetails": [
+        "Each cycle begins with genuine fresh Bob authentication/JOIN and an actual positive private delivery. The test then executes a real Worker SQL SELECT against a deliberately missing table inside the actual AccountsDO RPC AFTER its normal account lookup, causing a real workerd RPC exception.",
+        "Faulting publication persists but reaches no affected Bob IRC frame; actual close reason is Session delivery could not be authorized and Bob ChannelDO membership disappears. Independent Alice IRC/event delivery and outside Charlie barrier controls progress.",
+        "Three measured per-cycle fault call counts are1,1,1 with minimum250ms quiet observation after actual close and live recipient/denial event barriers; no extra attempt appears during these finite windows. Outsider secret-history403 emits no event beyond the subsequent allowed barrier.",
+        "Unrelated channel members, grants and messages remain identical. Saved fault-message IDs/content are independently read from actual Worker state and again after process reconstruction; fresh Bob authentication/private delivery succeeds."
+      ],
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "coverageLimitations": [
+        "Fault injection covers only outbound account-authorization RPC. It is not exhaustive coverage of all RPC call sites, provider outages, backoff policies or indefinite time; minimum quiet observation is250ms per cycle."
+      ],
+      "commandBehavior": [
+        {
+          "command": "JOIN",
+          "outcome": "positive"
+        }
+      ],
+      "routeBehavior": [
+        {
+          "route": "/api/v1/channels/{channel}/messages",
+          "method": "post",
+          "alias": "/api/v1/channels/%23rpc/messages",
+          "outcome": "positive",
+          "responseKind": "feature-response"
+        },
+        {
+          "route": "/api/v1/channels/{channel}/messages",
+          "method": "get",
+          "alias": "/api/v1/channels/%23rpc/messages",
+          "outcome": "negative",
+          "responseKind": "secure-denial"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "typecheck": {
+      "exitCode": 0,
+      "log": "/tmp/flarc-matrix-run_01d0e4aeb274/abuse-gaps-unpinned-typecheck.log"
+    },
+    "focusedBiome": {
+      "exitCode": 0,
+      "log": "/tmp/flarc-matrix-run_01d0e4aeb274/abuse-gaps-unpinned-biome.log"
+    },
+    "noProductionChanges": true,
+    "noTestBodyChanges": true,
+    "noPriorReportWrites": true,
+    "noBuildRun": true,
+    "noFullSuiteRun": true,
+    "noIrctestRerun": true
+  },
+  "reproduction": {
+    "focusedCommand": "FLARC_TEST_BUNDLE=/tmp/flarc-matrix-run_01d0e4aeb274/server-11/index.mjs FLARC_ABUSE_TRACE=/tmp/flarc-matrix-run_01d0e4aeb274/abuse-gaps-unpinned-trace.json bunx vitest run --config /tmp/flarc-matrix-run_01d0e4aeb274/vitest.frozen.config.mts tests/security/matrix-abuse-gaps.test.ts --reporter=default --reporter=json --outputFile=/tmp/flarc-matrix-run_01d0e4aeb274/abuse-gaps-unpinned-results.json",
+    "evidenceScript": "/tmp/flarc-matrix-run_01d0e4aeb274/update-abuse-evidence-unpinned.py",
+    "scriptSha256": "e1eb5a966871f4251cc4bb7da3a2fcb80da6ff1970edf2d53c59d422e0f8b84c",
+    "portableReplay": "Extract portableExecutionManifest to a file named abuse-gaps-unpinned-manifest.json; its self-referencing vitestJson and embedded exact testResults support aggregate replay without raw /tmp files."
+  },
+  "maintainabilityCorrection": {
+    "change": "Removed only createHash import and dynamic readFile/SHA equality assertion from createAbuseFixture; retained needed randomUUID and Vitest expect imports, all six test bodies and the complete wrapper/fault gates unchanged.",
+    "defaultBuildPath": "ensureNitroBuilt selects FLARC_TEST_BUNDLE when provided, otherwise .output/server/index.mjs prepared by repository Vitest globalSetup; executable helper no longer rejects a legitimate future production bundle solely for a different SHA.",
+    "verificationLimit": "Default production build was not run because builds are prohibited for this task; normal-path compatibility follows from removal of the only hardcoded equality guard and unchanged existing bundle selection.",
+    "previousEvidencePath": "/tmp/flarc-matrix-run_01d0e4aeb274/abuse-gaps-source11-final-evidence.json",
+    "previousEvidenceSha256": "2ca8b4a9ed4424f7fbb8d2bc5b8d36ef6d051a340329447f1c73aabf64b6e61d",
+    "previousPortableExecutionManifest": {
+      "version": 1,
+      "id": "abuse-gaps-source11-final",
+      "bundleSha256": "4040f1888e6c2e98016ca7d00a6dd9b27b6f5cc9be7ab6d73edebaa1173fc2ed",
+      "vitestJson": "./abuse-gaps-final-manifest.json",
+      "scope": "One file-filtered six-test source11 no-build run, separate from historical 441-test unfiltered source11; overlapping diagnostic runs are never added.",
+      "counts": {
+        "pass": 6,
+        "fail": 0,
+        "skip": 0,
+        "todo": 0,
+        "total": 6,
+        "testFiles": 1,
+        "repositoryDeselection": "Not counted; explicit test file selection is not an unfiltered suite."
+      },
+      "testResults": [
+        {
+          "name": "tests/security/matrix-abuse-gaps.test.ts",
+          "assertionResults": [
+            {
+              "fullName": "ABUSE-005: actual JOIN/PART or channel-creation command burst closes only the hostile socket and preserves persistent unrelated state",
+              "title": "ABUSE-005: actual JOIN/PART or channel-creation command burst closes only the hostile socket and preserves persistent unrelated state",
+              "status": "passed",
+              "failureMessages": []
+            },
+            {
+              "fullName": "ABUSE-006: actual JOIN/PART or channel-creation command burst closes only the hostile socket and preserves persistent unrelated state",
+              "title": "ABUSE-006: actual JOIN/PART or channel-creation command burst closes only the hostile socket and preserves persistent unrelated state",
+              "status": "passed",
+              "failureMessages": []
+            },
+            {
+              "fullName": "WS-020: real IRC disconnect and event close release actual socket state and event slots across reconstruction",
+              "title": "WS-020: real IRC disconnect and event close release actual socket state and event slots across reconstruction",
+              "status": "passed",
+              "failureMessages": []
+            },
+            {
+              "fullName": "WS-021 ABUSE-012: actual IRC output bytes are bounded while one real authorization RPC is pending and healthy recipients progress",
+              "title": "WS-021 ABUSE-012: actual IRC output bytes are bounded while one real authorization RPC is pending and healthy recipients progress",
+              "status": "passed",
+              "failureMessages": []
+            },
+            {
+              "fullName": "WS-021 ABUSE-012: a real paused event TCP reader resumes measured private frames while independent recipients progress without proving a provider buffer ceiling",
+              "title": "WS-021 ABUSE-012: a real paused event TCP reader resumes measured private frames while independent recipients progress without proving a provider buffer ceiling",
+              "status": "passed",
+              "failureMessages": []
+            },
+            {
+              "fullName": "ABUSE-013: repeated real failing account RPCs close the affected recipient with bounded attempts while healthy deliveries persist",
+              "title": "ABUSE-013: repeated real failing account RPCs close the affected recipient with bounded attempts while healthy deliveries persist",
+              "status": "passed",
+              "failureMessages": []
+            }
+          ]
+        }
+      ],
+      "compactTestResultsSha256": "1d1eb899be3f830c12c7d5000dff64dd89af37bfb295bbac648aff2ea5c22e49",
+      "rawVitestJsonSha256": "2d050ace47fb149ccbcfdb38d1ed2ca2a83d2ec605e93907e86e82dff29c3a3a",
+      "sourceAndTestFilesSha256": {
+        "tests/security/matrix-abuse-gaps.test.ts": "9edd3ec5805748d3c65038e53eb8031754ad55559d7423884e0f7d98c6465d7b",
+        "tests/helpers/abuse-gap-fixture.ts": "bd41a24ff14b4b649ece0ea749ef07ed3563934017b2708f2bbbb7247b21e6b8",
+        "tests/helpers/miniflare-harness.ts": "babe60c01e1de9f6874d7563de653be18319067b21f34c8a7c956467a9b95745",
+        "tests/helpers/matrix-fixture.ts": "3ae3d83d6b20db96011c5ea03ddcf985dc14a03d382d0a1489471729357c900c",
+        "vitest.config.ts": "191fbb164a0fb053fb654b4a8a65313ed7791953eca8782b01827ba3de238eca",
+        "/tmp/flarc-matrix-run_01d0e4aeb274/vitest.frozen.config.mts": "9d59ed6a4f2427ca6be80c4f476998d84f8c73cb7fea47371d7a47fb49970e88"
+      },
+      "verification": {
+        "productionSourceMatchesSource11Files": 161,
+        "productionSourceDiffSha256": "c4ec26026031f9aa8e55850b7136e285aae37f0cf63a1f4b11fc25d73935b280",
+        "frozenModuleFileCount": 85,
+        "frozenModuleFilesSha256": {
+          "_...slug_.mjs": "f733c2411025d16292d09fdc1c07be78bfce8c22eaf387f72d9f82beac4c1f78",
+          "_2...slug_.mjs": "8e84b1941fdff6d3c1fcecdc9bd56d4c0429a08fc0db9e5ca286b2f5d122fd82",
+          "_channel_.put.mjs": "66762dfdf8d3d90246c0af0405cd5297c4d99e03aa370909a8d77d90f7df40dd",
+          "_chunks/admin.mjs": "132c9fe644167ae82404de0c1cb124ec80689b27f05bc8dc41b4ea89021a4cba",
+          "_chunks/admin2.mjs": "73a91855a120ae8586df73c5392caeab93f3e567dd8770d0e475182dc19af025",
+          "_chunks/auth.mjs": "58876982f365a81da79fbc400dcad8936d735654e03f44b5060a293f82435e7c",
+          "_chunks/auth2.mjs": "a2664cdf74cd3d115391ec69b757a57da7b2da64361df45c1e07443ff72f3998",
+          "_chunks/body.mjs": "8043c4a5722e7fb5089f488e9c55347f2eadd4657f467bde6e4cd57c03fa94d5",
+          "_chunks/channels.mjs": "dbe9d0b854d709c1c4e58d66015e45b817c9e0e62675b42846f0810ea61282ed",
+          "_chunks/config.mjs": "1f0cbc69f5e811a51b7dd56a2fc3fbd6d3e591cfb6967366c01107bb4f29b11f",
+          "_chunks/messages.mjs": "c3012550d80fc07cf15d46001a7e0a49e6e9d719fc5d032ca4efa6d4aabc4f86",
+          "_chunks/notifications.mjs": "3a68c74a5c7200cb6c89a23d915949985987f543e40cb9f1a5be63f75faa05a9",
+          "_chunks/outbound.mjs": "2b5a964352ed6b9ee16016a03e90663a120993494c00b47d252ba6daca27c7d8",
+          "_chunks/profiles.mjs": "42162653fb246fb030d57da1f19cb733c997dca55e8ea8a0d0c30ccbdd82fd7d",
+          "_chunks/search.mjs": "4ea249821e6186c56307d6f993971bfa52900ae6a404c43a31302400e5dcaeab",
+          "_id_.delete.mjs": "28ab06f091e00d4a1cbd20eb36e194b2bd5221aa842942f811231e1742357908",
+          "_id_.get.mjs": "e8b1b70242dad185cc9da42e9e9656423c6b3b5375576d25ebfc0bd7cc68dfaa",
+          "_id_.patch.mjs": "a6f03c41c40d372b63dcda0a4eb00653ebdd1c3dadb64ddd527e0383c7d1f530",
+          "_id_2.delete.mjs": "fb7d31a242b7da3d81c79dc02382e0f0e59251553875b5b6fcc8a717fcde1a5b",
+          "_id_2.patch.mjs": "a6146ff60cbdee2d0696ab30a5019f52796f7e62c61393a5d5fe8b9f1ddb9508",
+          "_id_3.delete.mjs": "789915acaf47ca17170fd5d1133454f3bd4e2349aa8c09eb9c19590e4d9895cb",
+          "_id_4.delete.mjs": "6acf2a3ebdadb819fa0d204d79f342a90eccc1f36ec8c932ae004f1d66691d43",
+          "_id_5.delete.mjs": "d15693cfe1e284be9027205c09a267276c2a12334ae70a457b57e9d3603ec9d5",
+          "_libs/drizzle-orm.mjs": "50e081daa76fa6b0c01fecc49b966eebd214cada3ef667f6fabbec0252b5b024",
+          "_libs/h3+rou3+srvx.mjs": "5dedb2ae818162a3752f5a996007a24c7cd30b0569086d239e7d924e60265002",
+          "_libs/zod.mjs": "0fef7822fb55b3746b4670d5a802a63df63d13470231f230f673f2433100a563",
+          "_libs/zod2.mjs": "3ca43c7a5a18eb3331e0b08a1be0b437ec22f35e66cbaf1823672352d1ef2711",
+          "_routes/api/accounts/register.mjs": "2e1be258de51d457778898f50f0e84772989dee283de2ce4c563e700b2a1226a",
+          "_routes/api/channels/[channel]/info.mjs": "ef3abeecfb0cac5fb151a079bc0bb6a9ea122b20766d85fd0cd11ccbe42c88fc",
+          "_routes/api/channels/[channel]/info2.mjs": "e78455f2d018d650237aec2a0f41bcf1d1224550e2731812e5840bb2db7de74d",
+          "_routes/api/channels/[channel]/unread.mjs": "7fc31572f61c305fedbd38ec34cdc6857d657e4bb998680b1145b6070de6bb7f",
+          "_routes/api/health.mjs": "4cb2c9ef8c53578400b65207066e1d27d6beb9b0959c275b2090893fe162a6d5",
+          "_routes/api/media/upload.mjs": "8128a12713083716715067e725288bc10326c36cdbc83f86c927950d20fe9ba7",
+          "_routes/api/status.mjs": "e92400bf088d0a61816e12e97cb62d2b1a72eba9546faffe68c1b7e6c0ce2e4c",
+          "_routes/api/users/[username]/unread.mjs": "7cb69e077bb37f90d107f0d1fc781896c0c2b126fb6249d3c2e4ecf7f889f343",
+          "_routes/api/v1/auth/events_ticket.mjs": "d10d2d85a657b8b0fbc4fd91e98185b9f73e6bf225a2d642a637b42ea29c3eee",
+          "_routes/api/v1/auth/login.mjs": "871ccdab82d33dffacf16212af6ff0eace96201ff8ddc57c0c8234acbf29e401",
+          "_routes/api/v1/auth/logout.mjs": "25a684bb0435b97c69e004b025a46cf70116bf1ec9f0cedb3978b1740fbb0ada",
+          "_routes/api/v1/auth/register.mjs": "18d2c00c6c8c951e6c941040ff9e66dcb9bfabec1d83613a2aafbe9d7a750712",
+          "_routes/api/v1/channels/[channel]/info.mjs": "11cdee443b34bb12ff3a47134c0e746a4cea5a9d8a10ce1ec14d1a79288ddc17",
+          "_routes/api/v1/channels/[channel]/info2.mjs": "3dc78a8121fdfa4698c36c52777fc7bd8c4c2a71b9519d3e055176717717e87c",
+          "_routes/api/v1/channels/[channel]/messages/search.mjs": "959d18126e72c5684e66b463c54cc0686593f43d86f2a336e1baac97e5443d6f",
+          "_routes/api/v1/channels/[channel]/messages.mjs": "c12ce065e22fd563cc349b987cdfc31dff75b569b83988c2d31e62dd5572de49",
+          "_routes/api/v1/channels/[channel]/messages2.mjs": "b11c6f53964bc9157226da84a9316c3925ec55eda162c2b1331b33858225c50f",
+          "_routes/api/v1/channels/[channel]/outgoing_webhooks.mjs": "2b30d54c336834f8456ee12ada0a12550c58a48e095121a0a062b6792fb01270",
+          "_routes/api/v1/channels/[channel]/outgoing_webhooks2.mjs": "006d9d75db82f6bed928df86771717e1d8c5c91ff5a1da503035a63d04bd1488",
+          "_routes/api/v1/channels/[channel]/roles/assign.mjs": "0f698d5d3d4eb4b7897b73596afa2563bbe4dc27730fee42236a4646873f6312",
+          "_routes/api/v1/channels/[channel]/roles.mjs": "bc6a04d1635bd5fd540618467774ebd6ceca9135a124ab56d782698458be1609",
+          "_routes/api/v1/channels/[channel]/roles2.mjs": "d1eab033006473556fbebbe3329ac5a8b105b843c596aa17fa8371d15b639098",
+          "_routes/api/v1/channels/[channel]/unread.mjs": "e4ce74f8df1d95bc31691ac6b3f6b48ad0be6f877a6595b2781f8dc9d6530db2",
+          "_routes/api/v1/channels/[channel]/webhooks.mjs": "6dfae00580fba321592202f941518cf4a492812ebec69370c003f686ad8c9803",
+          "_routes/api/v1/channels/[channel]/webhooks2.mjs": "f5fc60aa9b6e532c36903f7c818cc46d84c21b37132679c308e6d56c03f4478b",
+          "_routes/api/v1/channels.mjs": "71ea2b54434930527402a76017d983616e0e721b73188405c75b1dda4047ae04",
+          "_routes/api/v1/dms/[target]/messages.mjs": "77a0f2b4a05384404d328bd97aa69e8327a57d44efeb0a0e1814c06ae1fac985",
+          "_routes/api/v1/embeds.mjs": "8b1d07d68d12a9bf63d8ef7104cff4795acdac78c9b9634e6b864affd1e83f29",
+          "_routes/api/v1/events.mjs": "e44973ccb3ebf6b3a41adc73c9a5f421249b76fe5153995ed3f17cf6404b933b",
+          "_routes/api/v1/media/upload.mjs": "22ce0a676712aa59d8a17d470dea8aa69f48e461af2576d1f26117f63773ac93",
+          "_routes/api/v1/messages/search.mjs": "267f07639978f427fb4979c042927dd6d608f1a598e9f648b6f01b61936aba65",
+          "_routes/api/v1/notifications/subscribe.mjs": "53f518d4cb9375df3e1bebdb8db3a3d7aa3dd7a9afffcfd9bfd3cbd8c0e9a2e9",
+          "_routes/api/v1/notifications/subscribe2.mjs": "22e927b544b39e8091002b1a2888bccae2f2ca838112343ea2e1e107153d5788",
+          "_routes/api/v1/notifications/subscriptions.mjs": "354d54652aa789b656ae0ca05ef06b040721fa059751af2a56cfa91ebd0ef2ce",
+          "_routes/api/v1/search.mjs": "a9bb71422e69abc1cb61ebc51b920c2d4fb47fcc6629c66853963d2f52771728",
+          "_routes/api/v1/users/[username]/notifications.mjs": "19e28a49f1a9cf555403e7004f40c82ca04094ccb5949c99f3be00f1a731c6b3",
+          "_routes/api/v1/users/[username]/unread.mjs": "86ac4c15b2f2c8f3c0dd864767b9341b634328b316bc1abdb74b8d3cb096a6e6",
+          "_routes/api/webpush/subscribe.mjs": "0291ba0b584aba9b03d68e13b46e4daef8d1b602864e98aeb23a992c22de194e",
+          "_routes/api/webpush/subscribe2.mjs": "8fb7934bedc59ab123b4882c6f3258dbe1520332276c506e3a8b236b201a6764",
+          "_routes/api/webpush/subscriptions.mjs": "ea284091e8ba4e06ed818dddb064cf2aae87931365ba19fea8376a67956c322b",
+          "_routes/docs.mjs": "78e8b98eceb5cb2bac709b0ca3ea1d10969aa8c1ebfd60f65a18212bc3b46ab6",
+          "_routes/health.mjs": "5edba6dbae0eea78845f75b5c33f018956140efe436bd24d4e76f3e7bc945562",
+          "_routes/icon.svg.mjs": "a66b97bdb9d691fe67504ea5d6d7ffc1d1f8756ce6717559c3f94223ba632c39",
+          "_routes/index.mjs": "1be78eb05355041780090bd150e9ebc9ffb7525249777267011e388f489f677b",
+          "_routes/irc.mjs": "9938b40a83282060d387462bce3e1430de11db8eac4edc7612961f956a6bcc76",
+          "_routes/metrics.mjs": "8c57858a6a5a9ca0fec16156c8aca7795dc0a42720d3754bbed15ab8f10f4d3d",
+          "_routes/openapi.json.mjs": "5fb4af8d728fc58c751b9fcbc592dcc005602bd6aae9ee298e71b804b9b60d34",
+          "_routes/status.mjs": "ba59a45774781af14e1c24611123e8caa68de7e6135171757a514db571fe876e",
+          "_runtime.mjs": "079f9f3c36aa5189e9743a2717490376c36474fcfd07a025e97a9d7881d655f6",
+          "_token_.post.mjs": "b8d07aed75c1089ae66e257bc240736c77e44466fde967bf4abb0cda27d9b1f2",
+          "_token_2.post.mjs": "8f97d81b6b40018d3b1c01b018b0c70711b7b23e6bce0160349b0ba789fe2004",
+          "_token_3.post.mjs": "1d7dbe9a9ba5fab8b30342d7dd470e7ecabdd99f44d7d8264559882a9f876879",
+          "_username_.get.mjs": "5ad3aebb9800c16a552a6251d427eb20dd3c8b7b2f3b7b96f8e01872a7d0cde1",
+          "_username_.patch.mjs": "773c1c80e1e44e0c5c3950d6b391c913b4487840cf3a1303f1b52ae81d3913e9",
+          "_username_2.get.mjs": "b3221cc9da4ce5d4afd7a34bbd013e49acbb14694c960cf6b5ca812ddb8566d1",
+          "_username_2.patch.mjs": "0974ed6977cc600259ca7b699fc106744115166d4b9d02808019790dbfa09520",
+          "index.mjs": "4040f1888e6c2e98016ca7d00a6dd9b27b6f5cc9be7ab6d73edebaa1173fc2ed",
+          "wrangler.json": "90ef0f7dddfcaa5c85b6b58be5f67864d17b7f6540a4fcc823f6cab3f07f31d4"
+        },
+        "beforeAfterOwnedSourceAndDependenciesStable": true,
+        "rawLogSha256": "928c823d85cc202c48baa0c0858bef0977d97afbfb71118b933ff97b44ff17ea"
+      }
+    },
+    "testBodiesUnchanged": true,
+    "wrapperAndFaultGatesUnchanged": true,
+    "oldHelperSha256": "bd41a24ff14b4b649ece0ea749ef07ed3563934017b2708f2bbbb7247b21e6b8",
+    "newHelperSha256": "d6178d3bada8153e1b43fb2d49e5ea12845ca7b76f3c822edd4ee63838426cca",
+    "frozenBundleProvenance": "Exact SHA, module hashes, source inventories, and before/after verification live in execution/evidence artifacts and this external verification script; no immutable source11 pin remains in the executable helper."
+  }
+}

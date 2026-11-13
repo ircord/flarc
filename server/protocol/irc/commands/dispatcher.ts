@@ -39,6 +39,7 @@ import {
   handleSearch,
   handleWebpush,
 } from "./extensions";
+import { handleConversation } from "./extensions/conversations";
 import {
   handleClientBatch,
   handlePrivmsgOrNotice,
@@ -116,7 +117,12 @@ export async function dispatchIRCCommand(
     if (
       !current ||
       current.id !== attachment.userId ||
-      current.credentialVersion !== attachment.credentialVersion
+      current.credentialVersion !== attachment.credentialVersion ||
+      (await session
+        .getAccountsStub()
+        .isNetworkBanned(current.id, session.getSourceHostmask(attachment))) ||
+      (attachment.credentialSessionHash &&
+        !(await session.getAccountsStub().verifySessionHash(attachment.credentialSessionHash)))
     ) {
       await session.disconnectSession(ws, attachment, "Account no longer available");
       return;
@@ -130,6 +136,22 @@ export async function dispatchIRCCommand(
   if (SERVER_CONFIG.requireAccounts && attachment.registered && !attachment.authenticated) {
     await session.disconnectSession(ws, attachment, "Account login required");
     return;
+  }
+
+  if (attachment.credentialSessionHash && !["QUIT", "PING", "PONG", "CAP"].includes(cmd)) {
+    const resource = msg.params[0]?.replace(/^[~@%+]+(?=[#&])/, "") ?? "*";
+    if (
+      !(await session
+        .getAccountsStub()
+        .authorizeSessionHash(
+          attachment.credentialSessionHash,
+          `irc.${cmd.toLowerCase()}`,
+          resource,
+        ))
+    ) {
+      session.sendNumeric(ws, attachment, Numerics.ERR_NOPRIVILEGES, ["Credential scope denied"]);
+      return;
+    }
   }
 
   const clientLabel =
@@ -323,6 +345,9 @@ export async function dispatchIRCCommand(
       break;
     case "METADATA":
       await handleMetadata(session, ws, attachment, msg, labelTags);
+      break;
+    case "CONVERSATION":
+      await handleConversation(session, ws, attachment, msg, labelTags);
       break;
     case "MARKREAD":
       await handleMarkread(session, ws, attachment, msg, labelTags);

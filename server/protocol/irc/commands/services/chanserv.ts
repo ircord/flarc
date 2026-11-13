@@ -3,6 +3,7 @@ import type { SessionAttachment } from "~/core/types";
 import { encodeIRCMessage } from "~/protocol/irc/encoder";
 import { canonicalizeIRCName } from "~/protocol/irc/parser";
 import type { ISessionDO } from "../types";
+import { serviceAudit, serviceAuditActor, serviceAudited } from "./audit";
 import { sendServiceResponse } from "./helpers";
 
 export async function handleChanServ(
@@ -15,8 +16,57 @@ export async function handleChanServ(
   const parts = rawText.trim().split(/\s+/).filter(Boolean);
   const sub = (parts[0] ?? "HELP").toUpperCase();
   const accountsStub = session.getAccountsStub();
+  const actor = await serviceAuditActor(session, attachment);
+  const mutating =
+    [
+      "REGISTER",
+      "OP",
+      "DEOP",
+      "AMODE",
+      "UNREGISTER",
+      "DROP",
+      "PURGE",
+      "CLEAR",
+      "SET",
+      "TRANSFER",
+    ].includes(sub) &&
+    (sub !== "AMODE" || Boolean(parts[2]));
   const requestedChannel =
     sub === "TRANSFER" && parts[1]?.toLowerCase() === "accept" ? parts[2] : parts[1];
+  const bound = requestedChannel
+    ? session
+        .getSessionChannels(attachment.sessionId)
+        .find((row) => row.canonicalChannel === canonicalizeIRCName(requestedChannel))
+    : undefined;
+  const expectedGeneration =
+    requestedChannel && /^[#&]/.test(requestedChannel)
+      ? ((bound as { generation?: string } | undefined)?.generation ??
+        (await session.getChannelStub(requestedChannel).getExistingChannelGeneration()) ??
+        undefined)
+      : undefined;
+  if (
+    requestedChannel &&
+    /^[#&]/.test(requestedChannel) &&
+    attachment.authenticated &&
+    !(await accountsStub.authorizeAccountActor(
+      attachment.userId,
+      attachment.credentialVersion ?? 0,
+      sub === "INFO" ? "channel.read" : "channel.manage",
+      canonicalizeIRCName(requestedChannel),
+    ))
+  ) {
+    if (mutating)
+      await serviceAudit(
+        session,
+        actor,
+        `service.chanserv.${sub.toLowerCase()}` as any,
+        "channel",
+        requestedChannel,
+        "denied",
+      );
+    sendServiceResponse(session, ws, attachment, "ChanServ", ["Channel access denied"], labelTags);
+    return;
+  }
   if (
     requestedChannel &&
     /^[#&]/.test(requestedChannel) &&
@@ -26,6 +76,15 @@ export async function handleChanServ(
       isAdmin: attachment.isOper,
     }))
   ) {
+    if (mutating)
+      await serviceAudit(
+        session,
+        actor,
+        `service.chanserv.${sub.toLowerCase()}` as any,
+        "channel",
+        requestedChannel,
+        "denied",
+      );
     sendServiceResponse(session, ws, attachment, "ChanServ", ["Channel access denied"], labelTags);
     return;
   }
@@ -97,13 +156,23 @@ export async function handleChanServ(
       return;
     }
     const stub = session.getChannelStub(channelName);
-    const res = await stub.csRegister({
+    const res = await serviceAudited(
+      session,
+      actor,
+      "service.chanserv.register",
+      "channel",
       channelName,
-      actorSessionId: attachment.sessionId,
-      actorUserId: attachment.userId,
-      actorAccount: attachment.accountName,
-      isOper: attachment.isOper,
-    });
+      () =>
+        stub.csRegister({
+          channelName,
+          expectedGeneration,
+          actorSessionId: attachment.sessionId,
+          actorUserId: attachment.userId,
+          actorAccount: attachment.accountName!,
+          isOper: attachment.isOper,
+        }),
+      (result) => result.ok,
+    );
     sendServiceResponse(session, ws, attachment, "ChanServ", [res.message], labelTags);
 
     if (res.ok && res.appliedModes && res.appliedNick) {
@@ -135,14 +204,24 @@ export async function handleChanServ(
       return;
     }
     const stub = session.getChannelStub(channelName);
-    const res = await stub.csOpDeop({
+    const res = await serviceAudited(
+      session,
+      actor,
+      sub === "OP" ? "service.chanserv.op" : "service.chanserv.deop",
+      "channel",
       channelName,
-      actorSessionId: attachment.sessionId,
-      actorAccount: attachment.accountName,
-      targetNick,
-      adding: sub === "OP",
-      isOper: attachment.isOper,
-    });
+      () =>
+        stub.csOpDeop({
+          channelName,
+          expectedGeneration,
+          actorSessionId: attachment.sessionId,
+          actorAccount: attachment.accountName,
+          targetNick,
+          adding: sub === "OP",
+          isOper: attachment.isOper,
+        }),
+      (result) => result.ok,
+    );
     sendServiceResponse(session, ws, attachment, "ChanServ", res.lines, labelTags);
     if (res.ok && res.appliedModeString && res.appliedModeNick) {
       const modeLine = encodeIRCMessage({
@@ -192,16 +271,38 @@ export async function handleChanServ(
     }
 
     const stub = session.getChannelStub(channelName);
-    const res = await stub.csAmode({
-      channelName,
-      actorSessionId: attachment.sessionId,
-      actorUserId: attachment.userId,
-      actorAccount: attachment.accountName,
-      modeChange,
-      targetAccount: resolvedAccount,
-      targetUserId,
-      isOper: attachment.isOper,
-    });
+    const res = modeChange
+      ? await serviceAudited(
+          session,
+          actor,
+          "service.chanserv.amode",
+          "channel",
+          channelName,
+          () =>
+            stub.csAmode({
+              channelName,
+              expectedGeneration,
+              actorSessionId: attachment.sessionId,
+              actorUserId: attachment.userId,
+              actorAccount: attachment.accountName,
+              modeChange,
+              targetAccount: resolvedAccount,
+              targetUserId,
+              isOper: attachment.isOper,
+            }),
+          (result) => result.ok,
+        )
+      : await stub.csAmode({
+          channelName,
+          expectedGeneration,
+          actorSessionId: attachment.sessionId,
+          actorUserId: attachment.userId,
+          actorAccount: attachment.accountName,
+          modeChange,
+          targetAccount: resolvedAccount,
+          targetUserId,
+          isOper: attachment.isOper,
+        });
     sendServiceResponse(session, ws, attachment, "ChanServ", res.lines, labelTags);
 
     if (res.ok && res.appliedModeString && res.appliedModeNick) {
@@ -233,13 +334,26 @@ export async function handleChanServ(
       return;
     }
     const stub = session.getChannelStub(channelName);
-    const res = await stub.csUnregister({
+    const res = await serviceAudited(
+      session,
+      actor,
+      `service.chanserv.${sub.toLowerCase()}` as
+        | "service.chanserv.unregister"
+        | "service.chanserv.drop"
+        | "service.chanserv.purge",
+      "channel",
       channelName,
-      actorSessionId: attachment.sessionId,
-      actorAccount: attachment.accountName,
-      code,
-      isOper: attachment.isOper,
-    });
+      () =>
+        stub.csUnregister({
+          channelName,
+          expectedGeneration,
+          actorSessionId: attachment.sessionId,
+          actorAccount: attachment.accountName,
+          code,
+          isOper: attachment.isOper,
+        }),
+      (result) => result.ok,
+    );
     sendServiceResponse(session, ws, attachment, "ChanServ", res.lines, labelTags);
     return;
   }
@@ -259,13 +373,23 @@ export async function handleChanServ(
       return;
     }
     const stub = session.getChannelStub(channelName);
-    const res = await stub.csClear({
+    const res = await serviceAudited(
+      session,
+      actor,
+      "service.chanserv.clear",
+      "channel",
       channelName,
-      actorSessionId: attachment.sessionId,
-      actorAccount: attachment.accountName,
-      target: clearTarget,
-      isOper: attachment.isOper,
-    });
+      () =>
+        stub.csClear({
+          channelName,
+          expectedGeneration,
+          actorSessionId: attachment.sessionId,
+          actorAccount: attachment.accountName,
+          target: clearTarget,
+          isOper: attachment.isOper,
+        }),
+      (result) => result.ok,
+    );
     sendServiceResponse(session, ws, attachment, "ChanServ", res.lines, labelTags);
     if (res.ok && res.kickedMembers && res.kickedMembers.length > 0) {
       for (const k of res.kickedMembers) {
@@ -304,15 +428,37 @@ export async function handleChanServ(
       return;
     }
     const stub = session.getChannelStub(channelName);
-    const res = await stub.csGetSet({
-      channelName,
-      actorSessionId: attachment.sessionId,
-      actorAccount: attachment.accountName,
-      subcmd: sub,
-      setting,
-      value,
-      isOper: attachment.isOper,
-    });
+    const res =
+      sub === "SET"
+        ? await serviceAudited(
+            session,
+            actor,
+            "service.chanserv.set",
+            "channel",
+            channelName,
+            () =>
+              stub.csGetSet({
+                channelName,
+                expectedGeneration,
+                actorSessionId: attachment.sessionId,
+                actorAccount: attachment.accountName,
+                subcmd: sub,
+                setting,
+                value,
+                isOper: attachment.isOper,
+              }),
+            (result) => result.ok,
+          )
+        : await stub.csGetSet({
+            channelName,
+            expectedGeneration,
+            actorSessionId: attachment.sessionId,
+            actorAccount: attachment.accountName,
+            subcmd: sub,
+            setting,
+            value,
+            isOper: attachment.isOper,
+          });
     sendServiceResponse(session, ws, attachment, "ChanServ", res.lines, labelTags);
     return;
   }
@@ -404,15 +550,25 @@ export async function handleChanServ(
     }
 
     const stub = session.getChannelStub(channelName);
-    const res = await stub.csTransfer({
+    const res = await serviceAudited(
+      session,
+      actor,
+      "service.chanserv.transfer",
+      "channel",
       channelName,
-      actorAccount: attachment.accountName,
-      targetAccount: acctInfo.username,
-      targetUserId: acctInfo.id,
-      code,
-      isAccept,
-      isOper: attachment.isOper,
-    });
+      () =>
+        stub.csTransfer({
+          channelName,
+          expectedGeneration,
+          actorAccount: attachment.accountName,
+          targetAccount: acctInfo.username,
+          targetUserId: acctInfo.id,
+          code,
+          isAccept,
+          isOper: attachment.isOper,
+        }),
+      (result) => result.ok,
+    );
     sendServiceResponse(session, ws, attachment, "ChanServ", res.lines, labelTags);
     return;
   }

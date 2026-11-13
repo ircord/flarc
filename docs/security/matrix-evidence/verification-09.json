@@ -1,0 +1,122 @@
+{
+  "version": 1,
+  "id": "verification-09",
+  "purpose": "Independent execution provenance and aggregate results for frozen audit snapshot09; no per-scenario acceptance claims.",
+  "bundle": {
+    "path": "/tmp/flarc-matrix-run_01d0e4aeb274/server-09/index.mjs",
+    "sha256": "5894497f55587e0e691458a6db9dad9472d93b36756e0bec50cdded299bf6446",
+    "metadata": "/tmp/flarc-matrix-run_01d0e4aeb274/bundle-09.json",
+    "sourceDiffSha256Expected": "c33350cd698ebc26dac0d84962ab935ef5803fa6eae519dd438d2bf5ebcd8f69",
+    "sourceDiffSha256BeforeAndAfter": "c33350cd698ebc26dac0d84962ab935ef5803fa6eae519dd438d2bf5ebcd8f69"
+  },
+  "workingTree": {
+    "baseCommit": "361ee8c5ff44551b1d8740eaea695191c211d134",
+    "sourceAndTestFiles": 199,
+    "sourceAndTestFileHashesUnchanged": true,
+    "hashManifests": [
+      "/tmp/flarc-matrix-run_01d0e4aeb274/verification-09-source-before.json",
+      "/tmp/flarc-matrix-run_01d0e4aeb274/verification-09-source-after.json"
+    ],
+    "untrackedAndTrackedInputsIncluded": [
+      "server/**",
+      "tests/**"
+    ]
+  },
+  "vitest": {
+    "command": "FLARC_TEST_BUNDLE=/tmp/flarc-matrix-run_01d0e4aeb274/server-09/index.mjs bunx vitest run --config /tmp/flarc-matrix-run_01d0e4aeb274/vitest.frozen.config.mts --reporter=default --reporter=json --outputFile=/tmp/flarc-matrix-run_01d0e4aeb274/verification-09-vitest-results.json",
+    "exitCode": 0,
+    "files": 33,
+    "tests": {
+      "total": 400,
+      "passed": 400,
+      "failed": 0,
+      "skippedOrPending": 0,
+      "todo": 0,
+      "statusCounts": {
+        "passed": 400,
+        "failed": 0,
+        "skipped": 0,
+        "pending": 0,
+        "todo": 0,
+        "other": 0
+      }
+    },
+    "resultJson": "/tmp/flarc-matrix-run_01d0e4aeb274/verification-09-vitest-results.json",
+    "fullTestNamesAndStatusesInResultJson": true
+  },
+  "checks": {
+    "typecheck": {
+      "command": "bun run typecheck",
+      "exitCode": 0,
+      "log": "/tmp/flarc-matrix-run_01d0e4aeb274/verification-09-typecheck.log"
+    },
+    "lint": {
+      "command": "bun run lint",
+      "exitCode": 0,
+      "log": "/tmp/flarc-matrix-run_01d0e4aeb274/verification-09-lint.log"
+    },
+    "gitDiffCheck": {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "log": "/tmp/flarc-matrix-run_01d0e4aeb274/verification-09-diff-check.log"
+    }
+  },
+  "irctest": {
+    "command": "CFCORD_BUNDLE=/tmp/flarc-matrix-run_01d0e4aeb274/server-09/index.mjs CFCORD_SKIP_BUNDLE=1 PYTHONPATH=/Users/karbowiak/Projects/CFCord/compliance /Users/karbowiak/Projects/CFCord/.compliance/venv/bin/python -m pytest --controller cfcord_controller -m '(Ergo or not implementation-specific) and not deprecated' -p no:cacheprovider --timeout=30 irctest/server_tests -n 8 -rA --junitxml=/tmp/flarc-matrix-run_01d0e4aeb274/verification-09-irctest.xml",
+    "exitCode": 0,
+    "upstreamRevision": "7d5d761b7b67f9031daf7784e743d630def22a96",
+    "upstreamCleanBeforeAndAfter": true,
+    "collected": 538,
+    "selected": 491,
+    "deselected": 47,
+    "results": {
+      "passed": 470,
+      "failed": 0,
+      "skipped": 18,
+      "xfail": 0,
+      "xpass": 3,
+      "errors": 0,
+      "warnings": 16
+    },
+    "collectionProof": "491/538 tests collected (47 deselected)",
+    "collectionCommandExitCode": 0,
+    "openNetworkProtocolFixture": true,
+    "accountRequiredSecurityAcceptance": false,
+    "junitXml": "/tmp/flarc-matrix-run_01d0e4aeb274/verification-09-irctest.xml"
+  },
+  "scenarioAcceptance": "Not evaluated or inferred from test totals. See docs/security/matrix-results.md for the distinction between executed test counts and 339-scenario acceptance.",
+  "logs": {
+    "verification-09-vitest.log": {
+      "path": "/tmp/flarc-matrix-run_01d0e4aeb274/verification-09-vitest.log",
+      "sha256": "932cc814a2fe9f6ec3318d8cd3b13852cd0b4b53afe722db11cb82af3a26cea7"
+    },
+    "verification-09-typecheck.log": {
+      "path": "/tmp/flarc-matrix-run_01d0e4aeb274/verification-09-typecheck.log",
+      "sha256": "8366207267355d3e3d5bf3bf6e8c94c5f93f6078c34f08973fa2b38cdda6cc92"
+    },
+    "verification-09-lint.log": {
+      "path": "/tmp/flarc-matrix-run_01d0e4aeb274/verification-09-lint.log",
+      "sha256": "7d1783e6118f89b0609ed88f2d19029553f23f33bf387d13fd04359a95a096dc"
+    },
+    "verification-09-diff-check.log": {
+      "path": "/tmp/flarc-matrix-run_01d0e4aeb274/verification-09-diff-check.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "verification-09-irctest.log": {
+      "path": "/tmp/flarc-matrix-run_01d0e4aeb274/verification-09-irctest.log",
+      "sha256": "b26990c11df06ba5e88aec0c66a8ec32509c16108ba5d38583ca1e4e69795864"
+    },
+    "verification-09-irctest-collect.log": {
+      "path": "/tmp/flarc-matrix-run_01d0e4aeb274/verification-09-irctest-collect.log",
+      "sha256": "c99d17a09f3fd33b62ae24e4f80ceade3788d743cf7bb65beb0e5141a797a808"
+    },
+    "verification-09-irctest.xml": {
+      "path": "/tmp/flarc-matrix-run_01d0e4aeb274/verification-09-irctest.xml",
+      "sha256": "7e0f1f5f3920d00c0159f132cbeb2e0cfa6408543d5afdc188f6e6714a4d9be3"
+    },
+    "verification-09-vitest-results.json": {
+      "path": "/tmp/flarc-matrix-run_01d0e4aeb274/verification-09-vitest-results.json",
+      "sha256": "b25c74094f04ea1b08b2c600cc335f6fe55e60c633bc29130f2b9314812a5cce"
+    }
+  }
+}

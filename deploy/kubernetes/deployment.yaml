@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flarc
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: flarc
+  template:
+    metadata:
+      labels:
+        app: flarc
+    spec:
+      terminationGracePeriodSeconds: 30
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+      containers:
+        - name: flarc
+          image: ghcr.io/ircord/flarc:v0.0.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8788
+            - name: irc
+              containerPort: 6667
+          envFrom:
+            - configMapRef:
+                name: flarc-config
+            - secretRef:
+                name: flarc-secrets
+          volumeMounts:
+            - name: data
+              mountPath: /data
+            - name: allowlist
+              mountPath: /etc/flarc
+              readOnly: true
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 10
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: [ALL]
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: flarc-data
+        - name: allowlist
+          configMap:
+            name: flarc-allowlist

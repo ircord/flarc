@@ -7,6 +7,12 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 export default defineConfig({
   preset: "cloudflare_module",
   compatibilityDate: "2025-02-04",
+  cloudflare: {
+    wrangler: {
+      compatibility_flags: ["nodejs_compat", "global_fetch_strictly_public"],
+      vars: { REQUEST_SOURCE: "cloudflare" },
+    },
+  },
   serverDir: "server",
   serverEntry: "server.ts",
   alias: {

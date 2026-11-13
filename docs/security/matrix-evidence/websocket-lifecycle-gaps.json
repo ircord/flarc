@@ -1,0 +1,737 @@
+{
+  "version": 2,
+  "capabilityGaps": [
+    "WS-019 remains partial: the fixture exercises separate Channel Durable Objects with one network SessionDO, not multiple session shards.",
+    "DM event subscription, replay and cursor APIs are not invented or claimed; unrelated direct-message persistence is checked through actual IRC/REST.",
+    "API logout revokes only the API session and its event ticket; the independent password-authenticated IRC session remains valid, as documented."
+  ],
+  "evidence": [
+    {
+      "kind": "test",
+      "executionId": "websocket-lifecycle-gaps-source11",
+      "bundleSha256": "4040f1888e6c2e98016ca7d00a6dd9b27b6f5cc9be7ab6d73edebaa1173fc2ed",
+      "testFile": "tests/security/matrix-websocket-lifecycle-gaps.test.ts",
+      "outcome": "PASS",
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "id": "WS-024",
+      "testTitle": "idle kick takes effect on reconstructed recipients with scoped delivery and persistent state",
+      "scenarioScope": "Owner KICK removes Bob from #vault; Bob\u2019s still-live barrier IRC and event recipients receive no later #vault payload, history/read and write are denied, and stopped SQLite has no Bob vault membership. After restart Bob may rejoin and receives restored traffic.",
+      "rationale": "The named transition is exercised on real passive recipients across local hibernation and independent durable reconstruction; scope is limited to this transition and actual event contract.",
+      "assertionDetails": [
+        "Real independent rootadmin, Alice, Bob and Charlie register and authenticate through REST and IRC PASS; Alice/Bob share secret #vault, Charlie owns independent secret #unrelated, and all three share #barrier with real ticket-authenticated event streams.",
+        "A real protected message and event reach Bob before local workerd SessionDO eviction; afterward a separate shared-channel marker reaches Bob\u2019s still-idle IRC and event sockets before another actor changes authorization.",
+        "A forbidden Charlie channel-info mutation returns 403 and leaves the independently read channel info unchanged; live IRC and event observers receive only the explicit shared-channel barrier.",
+        "A second local hibernating eviction occurs after the transition; Alice posts a fresh protected message unconditionally, receives its event, and the unrelated Charlie socket and stream remain live via a separate marker without receiving the private message.",
+        "Post-transition denied operations are followed by another barrier and produce no extra event or IRC payload, except Bob\u2019s expected role-denial numeric; stopped SQLite confirms the authorized message and independent Charlie channel and Alice/Charlie DM remain, and rejected content is absent.",
+        "A fresh runtime checks independent Charlie channel and DM reads and the specified persisted revocation, then legitimate reauthorization or credential recovery restores Bob\u2019s IRC and event delivery. These are local workerd hibernation/recreation checks, not deployed Cloudflare observations.",
+        "Owner KICK removes Bob from #vault; Bob\u2019s still-live barrier IRC and event recipients receive no later #vault payload, history/read and write are denied, and stopped SQLite has no Bob vault membership. After restart Bob may rejoin and receives restored traffic."
+      ],
+      "transports": [
+        "IRC WebSocket",
+        "ticket event WebSocket",
+        "REST",
+        "local workerd hibernation",
+        "SQLite independent restart"
+      ]
+    },
+    {
+      "kind": "test",
+      "executionId": "websocket-lifecycle-gaps-source11",
+      "bundleSha256": "4040f1888e6c2e98016ca7d00a6dd9b27b6f5cc9be7ab6d73edebaa1173fc2ed",
+      "testFile": "tests/security/matrix-websocket-lifecycle-gaps.test.ts",
+      "outcome": "PASS",
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "id": "WS-012",
+      "testTitle": "idle kick takes effect on reconstructed recipients with scoped delivery and persistent state",
+      "scenarioScope": "Owner KICK removes Bob from #vault; Bob\u2019s still-live barrier IRC and event recipients receive no later #vault payload, history/read and write are denied, and stopped SQLite has no Bob vault membership. After restart Bob may rejoin and receives restored traffic.",
+      "rationale": "The named transition is exercised on real passive recipients across local hibernation and independent durable reconstruction; scope is limited to this transition and actual event contract.",
+      "assertionDetails": [
+        "Real independent rootadmin, Alice, Bob and Charlie register and authenticate through REST and IRC PASS; Alice/Bob share secret #vault, Charlie owns independent secret #unrelated, and all three share #barrier with real ticket-authenticated event streams.",
+        "A real protected message and event reach Bob before local workerd SessionDO eviction; afterward a separate shared-channel marker reaches Bob\u2019s still-idle IRC and event sockets before another actor changes authorization.",
+        "A forbidden Charlie channel-info mutation returns 403 and leaves the independently read channel info unchanged; live IRC and event observers receive only the explicit shared-channel barrier.",
+        "A second local hibernating eviction occurs after the transition; Alice posts a fresh protected message unconditionally, receives its event, and the unrelated Charlie socket and stream remain live via a separate marker without receiving the private message.",
+        "Post-transition denied operations are followed by another barrier and produce no extra event or IRC payload, except Bob\u2019s expected role-denial numeric; stopped SQLite confirms the authorized message and independent Charlie channel and Alice/Charlie DM remain, and rejected content is absent.",
+        "A fresh runtime checks independent Charlie channel and DM reads and the specified persisted revocation, then legitimate reauthorization or credential recovery restores Bob\u2019s IRC and event delivery. These are local workerd hibernation/recreation checks, not deployed Cloudflare observations.",
+        "Owner KICK removes Bob from #vault; Bob\u2019s still-live barrier IRC and event recipients receive no later #vault payload, history/read and write are denied, and stopped SQLite has no Bob vault membership. After restart Bob may rejoin and receives restored traffic."
+      ],
+      "transports": [
+        "IRC WebSocket",
+        "ticket event WebSocket",
+        "REST",
+        "local workerd hibernation",
+        "SQLite independent restart"
+      ]
+    },
+    {
+      "kind": "test",
+      "executionId": "websocket-lifecycle-gaps-source11",
+      "bundleSha256": "4040f1888e6c2e98016ca7d00a6dd9b27b6f5cc9be7ab6d73edebaa1173fc2ed",
+      "testFile": "tests/security/matrix-websocket-lifecycle-gaps.test.ts",
+      "outcome": "PASS",
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "id": "CHAN-014",
+      "testTitle": "idle kick takes effect on reconstructed recipients with scoped delivery and persistent state",
+      "scenarioScope": "Owner KICK removes Bob from #vault; Bob\u2019s still-live barrier IRC and event recipients receive no later #vault payload, history/read and write are denied, and stopped SQLite has no Bob vault membership. After restart Bob may rejoin and receives restored traffic.",
+      "rationale": "The named transition is exercised on real passive recipients across local hibernation and independent durable reconstruction; scope is limited to this transition and actual event contract.",
+      "assertionDetails": [
+        "Real independent rootadmin, Alice, Bob and Charlie register and authenticate through REST and IRC PASS; Alice/Bob share secret #vault, Charlie owns independent secret #unrelated, and all three share #barrier with real ticket-authenticated event streams.",
+        "A real protected message and event reach Bob before local workerd SessionDO eviction; afterward a separate shared-channel marker reaches Bob\u2019s still-idle IRC and event sockets before another actor changes authorization.",
+        "A forbidden Charlie channel-info mutation returns 403 and leaves the independently read channel info unchanged; live IRC and event observers receive only the explicit shared-channel barrier.",
+        "A second local hibernating eviction occurs after the transition; Alice posts a fresh protected message unconditionally, receives its event, and the unrelated Charlie socket and stream remain live via a separate marker without receiving the private message.",
+        "Post-transition denied operations are followed by another barrier and produce no extra event or IRC payload, except Bob\u2019s expected role-denial numeric; stopped SQLite confirms the authorized message and independent Charlie channel and Alice/Charlie DM remain, and rejected content is absent.",
+        "A fresh runtime checks independent Charlie channel and DM reads and the specified persisted revocation, then legitimate reauthorization or credential recovery restores Bob\u2019s IRC and event delivery. These are local workerd hibernation/recreation checks, not deployed Cloudflare observations.",
+        "Owner KICK removes Bob from #vault; Bob\u2019s still-live barrier IRC and event recipients receive no later #vault payload, history/read and write are denied, and stopped SQLite has no Bob vault membership. After restart Bob may rejoin and receives restored traffic."
+      ],
+      "transports": [
+        "IRC WebSocket",
+        "ticket event WebSocket",
+        "REST",
+        "local workerd hibernation",
+        "SQLite independent restart"
+      ]
+    },
+    {
+      "kind": "test",
+      "executionId": "websocket-lifecycle-gaps-source11",
+      "bundleSha256": "4040f1888e6c2e98016ca7d00a6dd9b27b6f5cc9be7ab6d73edebaa1173fc2ed",
+      "testFile": "tests/security/matrix-websocket-lifecycle-gaps.test.ts",
+      "outcome": "PASS",
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "id": "WS-024",
+      "testTitle": "idle ban takes effect on reconstructed recipients with scoped delivery and persistent state",
+      "scenarioScope": "Owner applies bob!*@*; Bob stays alive on #barrier but receives no #vault IRC/event payload and cannot read or write it, while the stopped channel_bans row persists. After restart his JOIN gets 474 until the owner removes the ban, then delivery is restored.",
+      "rationale": "The named transition is exercised on real passive recipients across local hibernation and independent durable reconstruction; scope is limited to this transition and actual event contract.",
+      "assertionDetails": [
+        "Real independent rootadmin, Alice, Bob and Charlie register and authenticate through REST and IRC PASS; Alice/Bob share secret #vault, Charlie owns independent secret #unrelated, and all three share #barrier with real ticket-authenticated event streams.",
+        "A real protected message and event reach Bob before local workerd SessionDO eviction; afterward a separate shared-channel marker reaches Bob\u2019s still-idle IRC and event sockets before another actor changes authorization.",
+        "A forbidden Charlie channel-info mutation returns 403 and leaves the independently read channel info unchanged; live IRC and event observers receive only the explicit shared-channel barrier.",
+        "A second local hibernating eviction occurs after the transition; Alice posts a fresh protected message unconditionally, receives its event, and the unrelated Charlie socket and stream remain live via a separate marker without receiving the private message.",
+        "Post-transition denied operations are followed by another barrier and produce no extra event or IRC payload, except Bob\u2019s expected role-denial numeric; stopped SQLite confirms the authorized message and independent Charlie channel and Alice/Charlie DM remain, and rejected content is absent.",
+        "A fresh runtime checks independent Charlie channel and DM reads and the specified persisted revocation, then legitimate reauthorization or credential recovery restores Bob\u2019s IRC and event delivery. These are local workerd hibernation/recreation checks, not deployed Cloudflare observations.",
+        "Owner applies bob!*@*; Bob stays alive on #barrier but receives no #vault IRC/event payload and cannot read or write it, while the stopped channel_bans row persists. After restart his JOIN gets 474 until the owner removes the ban, then delivery is restored."
+      ],
+      "transports": [
+        "IRC WebSocket",
+        "ticket event WebSocket",
+        "REST",
+        "local workerd hibernation",
+        "SQLite independent restart"
+      ]
+    },
+    {
+      "kind": "test",
+      "executionId": "websocket-lifecycle-gaps-source11",
+      "bundleSha256": "4040f1888e6c2e98016ca7d00a6dd9b27b6f5cc9be7ab6d73edebaa1173fc2ed",
+      "testFile": "tests/security/matrix-websocket-lifecycle-gaps.test.ts",
+      "outcome": "PASS",
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "id": "WS-012",
+      "testTitle": "idle ban takes effect on reconstructed recipients with scoped delivery and persistent state",
+      "scenarioScope": "Owner applies bob!*@*; Bob stays alive on #barrier but receives no #vault IRC/event payload and cannot read or write it, while the stopped channel_bans row persists. After restart his JOIN gets 474 until the owner removes the ban, then delivery is restored.",
+      "rationale": "The named transition is exercised on real passive recipients across local hibernation and independent durable reconstruction; scope is limited to this transition and actual event contract.",
+      "assertionDetails": [
+        "Real independent rootadmin, Alice, Bob and Charlie register and authenticate through REST and IRC PASS; Alice/Bob share secret #vault, Charlie owns independent secret #unrelated, and all three share #barrier with real ticket-authenticated event streams.",
+        "A real protected message and event reach Bob before local workerd SessionDO eviction; afterward a separate shared-channel marker reaches Bob\u2019s still-idle IRC and event sockets before another actor changes authorization.",
+        "A forbidden Charlie channel-info mutation returns 403 and leaves the independently read channel info unchanged; live IRC and event observers receive only the explicit shared-channel barrier.",
+        "A second local hibernating eviction occurs after the transition; Alice posts a fresh protected message unconditionally, receives its event, and the unrelated Charlie socket and stream remain live via a separate marker without receiving the private message.",
+        "Post-transition denied operations are followed by another barrier and produce no extra event or IRC payload, except Bob\u2019s expected role-denial numeric; stopped SQLite confirms the authorized message and independent Charlie channel and Alice/Charlie DM remain, and rejected content is absent.",
+        "A fresh runtime checks independent Charlie channel and DM reads and the specified persisted revocation, then legitimate reauthorization or credential recovery restores Bob\u2019s IRC and event delivery. These are local workerd hibernation/recreation checks, not deployed Cloudflare observations.",
+        "Owner applies bob!*@*; Bob stays alive on #barrier but receives no #vault IRC/event payload and cannot read or write it, while the stopped channel_bans row persists. After restart his JOIN gets 474 until the owner removes the ban, then delivery is restored."
+      ],
+      "transports": [
+        "IRC WebSocket",
+        "ticket event WebSocket",
+        "REST",
+        "local workerd hibernation",
+        "SQLite independent restart"
+      ]
+    },
+    {
+      "kind": "test",
+      "executionId": "websocket-lifecycle-gaps-source11",
+      "bundleSha256": "4040f1888e6c2e98016ca7d00a6dd9b27b6f5cc9be7ab6d73edebaa1173fc2ed",
+      "testFile": "tests/security/matrix-websocket-lifecycle-gaps.test.ts",
+      "outcome": "PASS",
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "id": "CHAN-014",
+      "testTitle": "idle ban takes effect on reconstructed recipients with scoped delivery and persistent state",
+      "scenarioScope": "Owner applies bob!*@*; Bob stays alive on #barrier but receives no #vault IRC/event payload and cannot read or write it, while the stopped channel_bans row persists. After restart his JOIN gets 474 until the owner removes the ban, then delivery is restored.",
+      "rationale": "The named transition is exercised on real passive recipients across local hibernation and independent durable reconstruction; scope is limited to this transition and actual event contract.",
+      "assertionDetails": [
+        "Real independent rootadmin, Alice, Bob and Charlie register and authenticate through REST and IRC PASS; Alice/Bob share secret #vault, Charlie owns independent secret #unrelated, and all three share #barrier with real ticket-authenticated event streams.",
+        "A real protected message and event reach Bob before local workerd SessionDO eviction; afterward a separate shared-channel marker reaches Bob\u2019s still-idle IRC and event sockets before another actor changes authorization.",
+        "A forbidden Charlie channel-info mutation returns 403 and leaves the independently read channel info unchanged; live IRC and event observers receive only the explicit shared-channel barrier.",
+        "A second local hibernating eviction occurs after the transition; Alice posts a fresh protected message unconditionally, receives its event, and the unrelated Charlie socket and stream remain live via a separate marker without receiving the private message.",
+        "Post-transition denied operations are followed by another barrier and produce no extra event or IRC payload, except Bob\u2019s expected role-denial numeric; stopped SQLite confirms the authorized message and independent Charlie channel and Alice/Charlie DM remain, and rejected content is absent.",
+        "A fresh runtime checks independent Charlie channel and DM reads and the specified persisted revocation, then legitimate reauthorization or credential recovery restores Bob\u2019s IRC and event delivery. These are local workerd hibernation/recreation checks, not deployed Cloudflare observations.",
+        "Owner applies bob!*@*; Bob stays alive on #barrier but receives no #vault IRC/event payload and cannot read or write it, while the stopped channel_bans row persists. After restart his JOIN gets 474 until the owner removes the ban, then delivery is restored."
+      ],
+      "transports": [
+        "IRC WebSocket",
+        "ticket event WebSocket",
+        "REST",
+        "local workerd hibernation",
+        "SQLite independent restart"
+      ]
+    },
+    {
+      "kind": "test",
+      "executionId": "websocket-lifecycle-gaps-source11",
+      "bundleSha256": "4040f1888e6c2e98016ca7d00a6dd9b27b6f5cc9be7ab6d73edebaa1173fc2ed",
+      "testFile": "tests/security/matrix-websocket-lifecycle-gaps.test.ts",
+      "outcome": "PASS",
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "id": "CHAN-028",
+      "testTitle": "idle ban takes effect on reconstructed recipients with scoped delivery and persistent state",
+      "scenarioScope": "Owner applies bob!*@*; Bob stays alive on #barrier but receives no #vault IRC/event payload and cannot read or write it, while the stopped channel_bans row persists. After restart his JOIN gets 474 until the owner removes the ban, then delivery is restored.",
+      "rationale": "The named transition is exercised on real passive recipients across local hibernation and independent durable reconstruction; scope is limited to this transition and actual event contract.",
+      "assertionDetails": [
+        "Real independent rootadmin, Alice, Bob and Charlie register and authenticate through REST and IRC PASS; Alice/Bob share secret #vault, Charlie owns independent secret #unrelated, and all three share #barrier with real ticket-authenticated event streams.",
+        "A real protected message and event reach Bob before local workerd SessionDO eviction; afterward a separate shared-channel marker reaches Bob\u2019s still-idle IRC and event sockets before another actor changes authorization.",
+        "A forbidden Charlie channel-info mutation returns 403 and leaves the independently read channel info unchanged; live IRC and event observers receive only the explicit shared-channel barrier.",
+        "A second local hibernating eviction occurs after the transition; Alice posts a fresh protected message unconditionally, receives its event, and the unrelated Charlie socket and stream remain live via a separate marker without receiving the private message.",
+        "Post-transition denied operations are followed by another barrier and produce no extra event or IRC payload, except Bob\u2019s expected role-denial numeric; stopped SQLite confirms the authorized message and independent Charlie channel and Alice/Charlie DM remain, and rejected content is absent.",
+        "A fresh runtime checks independent Charlie channel and DM reads and the specified persisted revocation, then legitimate reauthorization or credential recovery restores Bob\u2019s IRC and event delivery. These are local workerd hibernation/recreation checks, not deployed Cloudflare observations.",
+        "Owner applies bob!*@*; Bob stays alive on #barrier but receives no #vault IRC/event payload and cannot read or write it, while the stopped channel_bans row persists. After restart his JOIN gets 474 until the owner removes the ban, then delivery is restored."
+      ],
+      "transports": [
+        "IRC WebSocket",
+        "ticket event WebSocket",
+        "REST",
+        "local workerd hibernation",
+        "SQLite independent restart"
+      ]
+    },
+    {
+      "kind": "test",
+      "executionId": "websocket-lifecycle-gaps-source11",
+      "bundleSha256": "4040f1888e6c2e98016ca7d00a6dd9b27b6f5cc9be7ab6d73edebaa1173fc2ed",
+      "testFile": "tests/security/matrix-websocket-lifecycle-gaps.test.ts",
+      "outcome": "PASS",
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "id": "WS-024",
+      "testTitle": "idle role takes effect on reconstructed recipients with scoped delivery and persistent state",
+      "scenarioScope": "A real custom +o assignment first permits Bob to set and clear +i; owner removes the assignment while Bob is idle. Bob remains a legitimate member and continues receiving #vault IRC/events, but his mode change gets 482 before and after recreation, stopped channel_user_roles has no assignment, and reassigning the grant restores the mode operation.",
+      "rationale": "The named transition is exercised on real passive recipients across local hibernation and independent durable reconstruction; scope is limited to this transition and actual event contract.",
+      "assertionDetails": [
+        "Real independent rootadmin, Alice, Bob and Charlie register and authenticate through REST and IRC PASS; Alice/Bob share secret #vault, Charlie owns independent secret #unrelated, and all three share #barrier with real ticket-authenticated event streams.",
+        "A real protected message and event reach Bob before local workerd SessionDO eviction; afterward a separate shared-channel marker reaches Bob\u2019s still-idle IRC and event sockets before another actor changes authorization.",
+        "A forbidden Charlie channel-info mutation returns 403 and leaves the independently read channel info unchanged; live IRC and event observers receive only the explicit shared-channel barrier.",
+        "A second local hibernating eviction occurs after the transition; Alice posts a fresh protected message unconditionally, receives its event, and the unrelated Charlie socket and stream remain live via a separate marker without receiving the private message.",
+        "Post-transition denied operations are followed by another barrier and produce no extra event or IRC payload, except Bob\u2019s expected role-denial numeric; stopped SQLite confirms the authorized message and independent Charlie channel and Alice/Charlie DM remain, and rejected content is absent.",
+        "A fresh runtime checks independent Charlie channel and DM reads and the specified persisted revocation, then legitimate reauthorization or credential recovery restores Bob\u2019s IRC and event delivery. These are local workerd hibernation/recreation checks, not deployed Cloudflare observations.",
+        "A real custom +o assignment first permits Bob to set and clear +i; owner removes the assignment while Bob is idle. Bob remains a legitimate member and continues receiving #vault IRC/events, but his mode change gets 482 before and after recreation, stopped channel_user_roles has no assignment, and reassigning the grant restores the mode operation."
+      ],
+      "transports": [
+        "IRC WebSocket",
+        "ticket event WebSocket",
+        "REST",
+        "local workerd hibernation",
+        "SQLite independent restart"
+      ]
+    },
+    {
+      "kind": "test",
+      "executionId": "websocket-lifecycle-gaps-source11",
+      "bundleSha256": "4040f1888e6c2e98016ca7d00a6dd9b27b6f5cc9be7ab6d73edebaa1173fc2ed",
+      "testFile": "tests/security/matrix-websocket-lifecycle-gaps.test.ts",
+      "outcome": "PASS",
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "id": "WS-024",
+      "testTitle": "idle logout takes effect on reconstructed recipients with scoped delivery and persistent state",
+      "scenarioScope": "Bob\u2019s API logout closes its dependent event stream and denies its DM REST token, but the separately PASS-authenticated IRC socket remains connected and receives the protected message as documented. Stopped api_sessions excludes the old token hash and a fresh login restores the event stream after recreation.",
+      "rationale": "The named transition is exercised on real passive recipients across local hibernation and independent durable reconstruction; scope is limited to this transition and actual event contract.",
+      "assertionDetails": [
+        "Real independent rootadmin, Alice, Bob and Charlie register and authenticate through REST and IRC PASS; Alice/Bob share secret #vault, Charlie owns independent secret #unrelated, and all three share #barrier with real ticket-authenticated event streams.",
+        "A real protected message and event reach Bob before local workerd SessionDO eviction; afterward a separate shared-channel marker reaches Bob\u2019s still-idle IRC and event sockets before another actor changes authorization.",
+        "A forbidden Charlie channel-info mutation returns 403 and leaves the independently read channel info unchanged; live IRC and event observers receive only the explicit shared-channel barrier.",
+        "A second local hibernating eviction occurs after the transition; Alice posts a fresh protected message unconditionally, receives its event, and the unrelated Charlie socket and stream remain live via a separate marker without receiving the private message.",
+        "Post-transition denied operations are followed by another barrier and produce no extra event or IRC payload, except Bob\u2019s expected role-denial numeric; stopped SQLite confirms the authorized message and independent Charlie channel and Alice/Charlie DM remain, and rejected content is absent.",
+        "A fresh runtime checks independent Charlie channel and DM reads and the specified persisted revocation, then legitimate reauthorization or credential recovery restores Bob\u2019s IRC and event delivery. These are local workerd hibernation/recreation checks, not deployed Cloudflare observations.",
+        "Bob\u2019s API logout closes its dependent event stream and denies its DM REST token, but the separately PASS-authenticated IRC socket remains connected and receives the protected message as documented. Stopped api_sessions excludes the old token hash and a fresh login restores the event stream after recreation."
+      ],
+      "transports": [
+        "IRC WebSocket",
+        "ticket event WebSocket",
+        "REST",
+        "local workerd hibernation",
+        "SQLite independent restart"
+      ]
+    },
+    {
+      "kind": "test",
+      "executionId": "websocket-lifecycle-gaps-source11",
+      "bundleSha256": "4040f1888e6c2e98016ca7d00a6dd9b27b6f5cc9be7ab6d73edebaa1173fc2ed",
+      "testFile": "tests/security/matrix-websocket-lifecycle-gaps.test.ts",
+      "outcome": "PASS",
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "id": "AUTH-022",
+      "testTitle": "idle logout takes effect on reconstructed recipients with scoped delivery and persistent state",
+      "scenarioScope": "Bob\u2019s API logout closes its dependent event stream and denies its DM REST token, but the separately PASS-authenticated IRC socket remains connected and receives the protected message as documented. Stopped api_sessions excludes the old token hash and a fresh login restores the event stream after recreation.",
+      "rationale": "The named transition is exercised on real passive recipients across local hibernation and independent durable reconstruction; scope is limited to this transition and actual event contract.",
+      "assertionDetails": [
+        "Real independent rootadmin, Alice, Bob and Charlie register and authenticate through REST and IRC PASS; Alice/Bob share secret #vault, Charlie owns independent secret #unrelated, and all three share #barrier with real ticket-authenticated event streams.",
+        "A real protected message and event reach Bob before local workerd SessionDO eviction; afterward a separate shared-channel marker reaches Bob\u2019s still-idle IRC and event sockets before another actor changes authorization.",
+        "A forbidden Charlie channel-info mutation returns 403 and leaves the independently read channel info unchanged; live IRC and event observers receive only the explicit shared-channel barrier.",
+        "A second local hibernating eviction occurs after the transition; Alice posts a fresh protected message unconditionally, receives its event, and the unrelated Charlie socket and stream remain live via a separate marker without receiving the private message.",
+        "Post-transition denied operations are followed by another barrier and produce no extra event or IRC payload, except Bob\u2019s expected role-denial numeric; stopped SQLite confirms the authorized message and independent Charlie channel and Alice/Charlie DM remain, and rejected content is absent.",
+        "A fresh runtime checks independent Charlie channel and DM reads and the specified persisted revocation, then legitimate reauthorization or credential recovery restores Bob\u2019s IRC and event delivery. These are local workerd hibernation/recreation checks, not deployed Cloudflare observations.",
+        "Bob\u2019s API logout closes its dependent event stream and denies its DM REST token, but the separately PASS-authenticated IRC socket remains connected and receives the protected message as documented. Stopped api_sessions excludes the old token hash and a fresh login restores the event stream after recreation."
+      ],
+      "transports": [
+        "IRC WebSocket",
+        "ticket event WebSocket",
+        "REST",
+        "local workerd hibernation",
+        "SQLite independent restart"
+      ]
+    },
+    {
+      "kind": "test",
+      "executionId": "websocket-lifecycle-gaps-source11",
+      "bundleSha256": "4040f1888e6c2e98016ca7d00a6dd9b27b6f5cc9be7ab6d73edebaa1173fc2ed",
+      "testFile": "tests/security/matrix-websocket-lifecycle-gaps.test.ts",
+      "outcome": "PASS",
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "id": "WS-024",
+      "testTitle": "idle disable takes effect on reconstructed recipients with scoped delivery and persistent state",
+      "scenarioScope": "Root disables Bob after hibernation; Bob\u2019s event and IRC sockets close and receive no subsequent secret, old REST credential is 401, and stopped users records a disabled timestamp and incremented credential version with old session absent. After restart old password login remains denied until root re-enables; old token stays revoked and fresh login restores delivery.",
+      "rationale": "The named transition is exercised on real passive recipients across local hibernation and independent durable reconstruction; scope is limited to this transition and actual event contract.",
+      "assertionDetails": [
+        "Real independent rootadmin, Alice, Bob and Charlie register and authenticate through REST and IRC PASS; Alice/Bob share secret #vault, Charlie owns independent secret #unrelated, and all three share #barrier with real ticket-authenticated event streams.",
+        "A real protected message and event reach Bob before local workerd SessionDO eviction; afterward a separate shared-channel marker reaches Bob\u2019s still-idle IRC and event sockets before another actor changes authorization.",
+        "A forbidden Charlie channel-info mutation returns 403 and leaves the independently read channel info unchanged; live IRC and event observers receive only the explicit shared-channel barrier.",
+        "A second local hibernating eviction occurs after the transition; Alice posts a fresh protected message unconditionally, receives its event, and the unrelated Charlie socket and stream remain live via a separate marker without receiving the private message.",
+        "Post-transition denied operations are followed by another barrier and produce no extra event or IRC payload, except Bob\u2019s expected role-denial numeric; stopped SQLite confirms the authorized message and independent Charlie channel and Alice/Charlie DM remain, and rejected content is absent.",
+        "A fresh runtime checks independent Charlie channel and DM reads and the specified persisted revocation, then legitimate reauthorization or credential recovery restores Bob\u2019s IRC and event delivery. These are local workerd hibernation/recreation checks, not deployed Cloudflare observations.",
+        "Root disables Bob after hibernation; Bob\u2019s event and IRC sockets close and receive no subsequent secret, old REST credential is 401, and stopped users records a disabled timestamp and incremented credential version with old session absent. After restart old password login remains denied until root re-enables; old token stays revoked and fresh login restores delivery."
+      ],
+      "transports": [
+        "IRC WebSocket",
+        "ticket event WebSocket",
+        "REST",
+        "local workerd hibernation",
+        "SQLite independent restart"
+      ]
+    },
+    {
+      "kind": "test",
+      "executionId": "websocket-lifecycle-gaps-source11",
+      "bundleSha256": "4040f1888e6c2e98016ca7d00a6dd9b27b6f5cc9be7ab6d73edebaa1173fc2ed",
+      "testFile": "tests/security/matrix-websocket-lifecycle-gaps.test.ts",
+      "outcome": "PASS",
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "id": "WS-013",
+      "testTitle": "idle disable takes effect on reconstructed recipients with scoped delivery and persistent state",
+      "scenarioScope": "Root disables Bob after hibernation; Bob\u2019s event and IRC sockets close and receive no subsequent secret, old REST credential is 401, and stopped users records a disabled timestamp and incremented credential version with old session absent. After restart old password login remains denied until root re-enables; old token stays revoked and fresh login restores delivery.",
+      "rationale": "The named transition is exercised on real passive recipients across local hibernation and independent durable reconstruction; scope is limited to this transition and actual event contract.",
+      "assertionDetails": [
+        "Real independent rootadmin, Alice, Bob and Charlie register and authenticate through REST and IRC PASS; Alice/Bob share secret #vault, Charlie owns independent secret #unrelated, and all three share #barrier with real ticket-authenticated event streams.",
+        "A real protected message and event reach Bob before local workerd SessionDO eviction; afterward a separate shared-channel marker reaches Bob\u2019s still-idle IRC and event sockets before another actor changes authorization.",
+        "A forbidden Charlie channel-info mutation returns 403 and leaves the independently read channel info unchanged; live IRC and event observers receive only the explicit shared-channel barrier.",
+        "A second local hibernating eviction occurs after the transition; Alice posts a fresh protected message unconditionally, receives its event, and the unrelated Charlie socket and stream remain live via a separate marker without receiving the private message.",
+        "Post-transition denied operations are followed by another barrier and produce no extra event or IRC payload, except Bob\u2019s expected role-denial numeric; stopped SQLite confirms the authorized message and independent Charlie channel and Alice/Charlie DM remain, and rejected content is absent.",
+        "A fresh runtime checks independent Charlie channel and DM reads and the specified persisted revocation, then legitimate reauthorization or credential recovery restores Bob\u2019s IRC and event delivery. These are local workerd hibernation/recreation checks, not deployed Cloudflare observations.",
+        "Root disables Bob after hibernation; Bob\u2019s event and IRC sockets close and receive no subsequent secret, old REST credential is 401, and stopped users records a disabled timestamp and incremented credential version with old session absent. After restart old password login remains denied until root re-enables; old token stays revoked and fresh login restores delivery."
+      ],
+      "transports": [
+        "IRC WebSocket",
+        "ticket event WebSocket",
+        "REST",
+        "local workerd hibernation",
+        "SQLite independent restart"
+      ]
+    },
+    {
+      "kind": "test",
+      "executionId": "websocket-lifecycle-gaps-source11",
+      "bundleSha256": "4040f1888e6c2e98016ca7d00a6dd9b27b6f5cc9be7ab6d73edebaa1173fc2ed",
+      "testFile": "tests/security/matrix-websocket-lifecycle-gaps.test.ts",
+      "outcome": "PASS",
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "id": "AUTH-024",
+      "testTitle": "idle disable takes effect on reconstructed recipients with scoped delivery and persistent state",
+      "scenarioScope": "Root disables Bob after hibernation; Bob\u2019s event and IRC sockets close and receive no subsequent secret, old REST credential is 401, and stopped users records a disabled timestamp and incremented credential version with old session absent. After restart old password login remains denied until root re-enables; old token stays revoked and fresh login restores delivery.",
+      "rationale": "The named transition is exercised on real passive recipients across local hibernation and independent durable reconstruction; scope is limited to this transition and actual event contract.",
+      "assertionDetails": [
+        "Real independent rootadmin, Alice, Bob and Charlie register and authenticate through REST and IRC PASS; Alice/Bob share secret #vault, Charlie owns independent secret #unrelated, and all three share #barrier with real ticket-authenticated event streams.",
+        "A real protected message and event reach Bob before local workerd SessionDO eviction; afterward a separate shared-channel marker reaches Bob\u2019s still-idle IRC and event sockets before another actor changes authorization.",
+        "A forbidden Charlie channel-info mutation returns 403 and leaves the independently read channel info unchanged; live IRC and event observers receive only the explicit shared-channel barrier.",
+        "A second local hibernating eviction occurs after the transition; Alice posts a fresh protected message unconditionally, receives its event, and the unrelated Charlie socket and stream remain live via a separate marker without receiving the private message.",
+        "Post-transition denied operations are followed by another barrier and produce no extra event or IRC payload, except Bob\u2019s expected role-denial numeric; stopped SQLite confirms the authorized message and independent Charlie channel and Alice/Charlie DM remain, and rejected content is absent.",
+        "A fresh runtime checks independent Charlie channel and DM reads and the specified persisted revocation, then legitimate reauthorization or credential recovery restores Bob\u2019s IRC and event delivery. These are local workerd hibernation/recreation checks, not deployed Cloudflare observations.",
+        "Root disables Bob after hibernation; Bob\u2019s event and IRC sockets close and receive no subsequent secret, old REST credential is 401, and stopped users records a disabled timestamp and incremented credential version with old session absent. After restart old password login remains denied until root re-enables; old token stays revoked and fresh login restores delivery."
+      ],
+      "transports": [
+        "IRC WebSocket",
+        "ticket event WebSocket",
+        "REST",
+        "local workerd hibernation",
+        "SQLite independent restart"
+      ]
+    },
+    {
+      "kind": "test",
+      "executionId": "websocket-lifecycle-gaps-source11",
+      "bundleSha256": "4040f1888e6c2e98016ca7d00a6dd9b27b6f5cc9be7ab6d73edebaa1173fc2ed",
+      "testFile": "tests/security/matrix-websocket-lifecycle-gaps.test.ts",
+      "outcome": "PASS",
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "id": "WS-024",
+      "testTitle": "idle reset takes effect on reconstructed recipients with scoped delivery and persistent state",
+      "scenarioScope": "Root resets Bob\u2019s password after hibernation; Bob\u2019s event and IRC sockets close and receive no subsequent secret and old REST credentials fail. Stopped SQL confirms incremented credential version and absent old session while Charlie stays enabled and unchanged; after restart old password fails and the new password restores delivery.",
+      "rationale": "The named transition is exercised on real passive recipients across local hibernation and independent durable reconstruction; scope is limited to this transition and actual event contract.",
+      "assertionDetails": [
+        "Real independent rootadmin, Alice, Bob and Charlie register and authenticate through REST and IRC PASS; Alice/Bob share secret #vault, Charlie owns independent secret #unrelated, and all three share #barrier with real ticket-authenticated event streams.",
+        "A real protected message and event reach Bob before local workerd SessionDO eviction; afterward a separate shared-channel marker reaches Bob\u2019s still-idle IRC and event sockets before another actor changes authorization.",
+        "A forbidden Charlie channel-info mutation returns 403 and leaves the independently read channel info unchanged; live IRC and event observers receive only the explicit shared-channel barrier.",
+        "A second local hibernating eviction occurs after the transition; Alice posts a fresh protected message unconditionally, receives its event, and the unrelated Charlie socket and stream remain live via a separate marker without receiving the private message.",
+        "Post-transition denied operations are followed by another barrier and produce no extra event or IRC payload, except Bob\u2019s expected role-denial numeric; stopped SQLite confirms the authorized message and independent Charlie channel and Alice/Charlie DM remain, and rejected content is absent.",
+        "A fresh runtime checks independent Charlie channel and DM reads and the specified persisted revocation, then legitimate reauthorization or credential recovery restores Bob\u2019s IRC and event delivery. These are local workerd hibernation/recreation checks, not deployed Cloudflare observations.",
+        "Root resets Bob\u2019s password after hibernation; Bob\u2019s event and IRC sockets close and receive no subsequent secret and old REST credentials fail. Stopped SQL confirms incremented credential version and absent old session while Charlie stays enabled and unchanged; after restart old password fails and the new password restores delivery."
+      ],
+      "transports": [
+        "IRC WebSocket",
+        "ticket event WebSocket",
+        "REST",
+        "local workerd hibernation",
+        "SQLite independent restart"
+      ]
+    },
+    {
+      "kind": "test",
+      "executionId": "websocket-lifecycle-gaps-source11",
+      "bundleSha256": "4040f1888e6c2e98016ca7d00a6dd9b27b6f5cc9be7ab6d73edebaa1173fc2ed",
+      "testFile": "tests/security/matrix-websocket-lifecycle-gaps.test.ts",
+      "outcome": "PASS",
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "assertions": [
+        "authorization",
+        "state",
+        "events",
+        "transport",
+        "restart",
+        "unrelatedResources"
+      ],
+      "id": "AUTH-023",
+      "testTitle": "idle reset takes effect on reconstructed recipients with scoped delivery and persistent state",
+      "scenarioScope": "Root resets Bob\u2019s password after hibernation; Bob\u2019s event and IRC sockets close and receive no subsequent secret and old REST credentials fail. Stopped SQL confirms incremented credential version and absent old session while Charlie stays enabled and unchanged; after restart old password fails and the new password restores delivery.",
+      "rationale": "The named transition is exercised on real passive recipients across local hibernation and independent durable reconstruction; scope is limited to this transition and actual event contract.",
+      "assertionDetails": [
+        "Real independent rootadmin, Alice, Bob and Charlie register and authenticate through REST and IRC PASS; Alice/Bob share secret #vault, Charlie owns independent secret #unrelated, and all three share #barrier with real ticket-authenticated event streams.",
+        "A real protected message and event reach Bob before local workerd SessionDO eviction; afterward a separate shared-channel marker reaches Bob\u2019s still-idle IRC and event sockets before another actor changes authorization.",
+        "A forbidden Charlie channel-info mutation returns 403 and leaves the independently read channel info unchanged; live IRC and event observers receive only the explicit shared-channel barrier.",
+        "A second local hibernating eviction occurs after the transition; Alice posts a fresh protected message unconditionally, receives its event, and the unrelated Charlie socket and stream remain live via a separate marker without receiving the private message.",
+        "Post-transition denied operations are followed by another barrier and produce no extra event or IRC payload, except Bob\u2019s expected role-denial numeric; stopped SQLite confirms the authorized message and independent Charlie channel and Alice/Charlie DM remain, and rejected content is absent.",
+        "A fresh runtime checks independent Charlie channel and DM reads and the specified persisted revocation, then legitimate reauthorization or credential recovery restores Bob\u2019s IRC and event delivery. These are local workerd hibernation/recreation checks, not deployed Cloudflare observations.",
+        "Root resets Bob\u2019s password after hibernation; Bob\u2019s event and IRC sockets close and receive no subsequent secret and old REST credentials fail. Stopped SQL confirms incremented credential version and absent old session while Charlie stays enabled and unchanged; after restart old password fails and the new password restores delivery."
+      ],
+      "transports": [
+        "IRC WebSocket",
+        "ticket event WebSocket",
+        "REST",
+        "local workerd hibernation",
+        "SQLite independent restart"
+      ]
+    },
+    {
+      "kind": "test",
+      "executionId": "websocket-lifecycle-gaps-source11",
+      "bundleSha256": "4040f1888e6c2e98016ca7d00a6dd9b27b6f5cc9be7ab6d73edebaa1173fc2ed",
+      "testFile": "tests/security/matrix-websocket-lifecycle-gaps.test.ts",
+      "outcome": "PASS",
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "assertions": [
+        "authorization",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "id": "WS-019",
+      "testTitle": "idle kick takes effect on reconstructed recipients with scoped delivery and persistent state",
+      "scenarioScope": "Distinct #vault, #barrier and #unrelated Channel Durable Objects deliver through one SessionDO; the named membership transition preserves this observed channel-shard boundary.",
+      "rationale": "This does not exercise multiple independent SessionDO shards or an event subscription API, so full cross-session-shard coverage remains open.",
+      "assertionDetails": [
+        "Real independent rootadmin, Alice, Bob and Charlie register and authenticate through REST and IRC PASS; Alice/Bob share secret #vault, Charlie owns independent secret #unrelated, and all three share #barrier with real ticket-authenticated event streams.",
+        "A real protected message and event reach Bob before local workerd SessionDO eviction; afterward a separate shared-channel marker reaches Bob\u2019s still-idle IRC and event sockets before another actor changes authorization.",
+        "A forbidden Charlie channel-info mutation returns 403 and leaves the independently read channel info unchanged; live IRC and event observers receive only the explicit shared-channel barrier.",
+        "A second local hibernating eviction occurs after the transition; Alice posts a fresh protected message unconditionally, receives its event, and the unrelated Charlie socket and stream remain live via a separate marker without receiving the private message.",
+        "Post-transition denied operations are followed by another barrier and produce no extra event or IRC payload, except Bob\u2019s expected role-denial numeric; stopped SQLite confirms the authorized message and independent Charlie channel and Alice/Charlie DM remain, and rejected content is absent.",
+        "A fresh runtime checks independent Charlie channel and DM reads and the specified persisted revocation, then legitimate reauthorization or credential recovery restores Bob\u2019s IRC and event delivery. These are local workerd hibernation/recreation checks, not deployed Cloudflare observations.",
+        "Owner KICK removes Bob from #vault; Bob\u2019s still-live barrier IRC and event recipients receive no later #vault payload, history/read and write are denied, and stopped SQLite has no Bob vault membership. After restart Bob may rejoin and receives restored traffic.",
+        "The fixture uses three real channel objects under one network SessionDO; no multi-session-shard topology is created."
+      ],
+      "transports": [
+        "IRC WebSocket",
+        "ticket event WebSocket",
+        "REST",
+        "three Channel Durable Objects and one SessionDO"
+      ]
+    },
+    {
+      "kind": "test",
+      "executionId": "websocket-lifecycle-gaps-source11",
+      "bundleSha256": "4040f1888e6c2e98016ca7d00a6dd9b27b6f5cc9be7ab6d73edebaa1173fc2ed",
+      "testFile": "tests/security/matrix-websocket-lifecycle-gaps.test.ts",
+      "outcome": "PASS",
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "assertions": [
+        "authorization",
+        "events",
+        "transport",
+        "unrelatedResources"
+      ],
+      "id": "WS-019",
+      "testTitle": "idle ban takes effect on reconstructed recipients with scoped delivery and persistent state",
+      "scenarioScope": "Distinct #vault, #barrier and #unrelated Channel Durable Objects deliver through one SessionDO; the named membership transition preserves this observed channel-shard boundary.",
+      "rationale": "This does not exercise multiple independent SessionDO shards or an event subscription API, so full cross-session-shard coverage remains open.",
+      "assertionDetails": [
+        "Real independent rootadmin, Alice, Bob and Charlie register and authenticate through REST and IRC PASS; Alice/Bob share secret #vault, Charlie owns independent secret #unrelated, and all three share #barrier with real ticket-authenticated event streams.",
+        "A real protected message and event reach Bob before local workerd SessionDO eviction; afterward a separate shared-channel marker reaches Bob\u2019s still-idle IRC and event sockets before another actor changes authorization.",
+        "A forbidden Charlie channel-info mutation returns 403 and leaves the independently read channel info unchanged; live IRC and event observers receive only the explicit shared-channel barrier.",
+        "A second local hibernating eviction occurs after the transition; Alice posts a fresh protected message unconditionally, receives its event, and the unrelated Charlie socket and stream remain live via a separate marker without receiving the private message.",
+        "Post-transition denied operations are followed by another barrier and produce no extra event or IRC payload, except Bob\u2019s expected role-denial numeric; stopped SQLite confirms the authorized message and independent Charlie channel and Alice/Charlie DM remain, and rejected content is absent.",
+        "A fresh runtime checks independent Charlie channel and DM reads and the specified persisted revocation, then legitimate reauthorization or credential recovery restores Bob\u2019s IRC and event delivery. These are local workerd hibernation/recreation checks, not deployed Cloudflare observations.",
+        "Owner applies bob!*@*; Bob stays alive on #barrier but receives no #vault IRC/event payload and cannot read or write it, while the stopped channel_bans row persists. After restart his JOIN gets 474 until the owner removes the ban, then delivery is restored.",
+        "The fixture uses three real channel objects under one network SessionDO; no multi-session-shard topology is created."
+      ],
+      "transports": [
+        "IRC WebSocket",
+        "ticket event WebSocket",
+        "REST",
+        "three Channel Durable Objects and one SessionDO"
+      ]
+    }
+  ]
+}

@@ -7,12 +7,14 @@
     "dev": "node scripts/start-miniflare.mjs",
     "start": "node scripts/start-miniflare.mjs",
     "build": "nitro build",
+    "build:tools": "bun build scripts/verify-schema.ts --target=node --outfile=.output/tools/verify-schema.mjs",
+    "verify:schema": "node .output/tools/verify-schema.mjs",
     "generate:client": "bun scripts/generate-client.ts",
     "deploy": "bun run build && wrangler deploy --config .output/server/wrangler.json",
     "test": "vitest run",
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit",
-    "lint": "biome check server/ tests/ scripts/",
+    "lint": "biome check server/ tests/ scripts/ shared/",
     "test:security": "vitest run tests/security",
     "test:conformance": "bash scripts/run-irctest.sh"
   },
@@ -22,19 +24,20 @@
     "@types/node": "^26.6.6",
     "@types/ws": "^8.18.2",
     "drizzle-kit": "^0.31.11",
-    "miniflare": "^4.20260730.0",
     "openapi-typescript": "^7.13.0",
     "rolldown": "^1.3.2",
     "typescript": "^5.9.3",
     "vitest": "^5.1.0",
-    "wrangler": "^4.160.1",
-    "ws": "^8.22.2"
+    "wrangler": "^4.160.1"
   },
   "dependencies": {
     "@scalar/api-reference": "^1.78.0",
     "drizzle-orm": "^0.45.4",
+    "miniflare": "^4.20260730.0",
     "nitro": "^3.0.261103-rc",
-    "zod": "^4.6.7"
+    "ws": "^8.22.2",
+    "zod": "^4.6.7",
+    "yaml": "^2.9.1"
   },
   "packageManager": "bun@1.4.4",
   "engines": {

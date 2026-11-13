@@ -1,0 +1,1573 @@
+{
+  "command": "FLARC_TEST_BUNDLE=/tmp/flarc-matrix-run_01d0e4aeb274/server-03/index.mjs bunx vitest run --config /tmp/flarc-matrix-run_01d0e4aeb274/vitest.frozen.config.mts tests/security/matrix-identity.test.ts tests/security/matrix-admin.test.ts tests/security/matrix-dm.test.ts tests/integration/admin-api.test.ts --reporter=default --reporter=json --outputFile=/tmp/flarc-matrix-run_01d0e4aeb274/identity-03-results.json",
+  "counts": {
+    "pass": 35,
+    "fail": 0,
+    "skip": 0,
+    "xfail": 0,
+    "xpass": 0,
+    "deselected": 0
+  },
+  "transports": [
+    "REST over real Miniflare/workerd",
+    "IRC over real WebSocket",
+    "SQLite inspection after workerd disposal"
+  ],
+  "tests": [
+    {
+      "file": "tests/integration/admin-api.test.ts",
+      "title": "FlaRC Administration REST API & F Bot Integration enforces authentication and provides full account lifecycle management",
+      "scenarios": [],
+      "outcome": "passed",
+      "assertions": "FlaRC Administration REST API & F Bot Integration enforces authentication and provides full account lifecycle management",
+      "failure": []
+    },
+    {
+      "file": "tests/integration/admin-api.test.ts",
+      "title": "FlaRC Administration REST API & F Bot Integration manages channels, bot F settings, and delivers welcome greeting upon user join",
+      "scenarios": [],
+      "outcome": "passed",
+      "assertions": "FlaRC Administration REST API & F Bot Integration manages channels, bot F settings, and delivers welcome greeting upon user join",
+      "failure": []
+    },
+    {
+      "file": "tests/integration/admin-api.test.ts",
+      "title": "FlaRC Administration REST API & F Bot Integration broadcasts live metadata 3 updates to clients when set via REST API",
+      "scenarios": [],
+      "outcome": "passed",
+      "assertions": "FlaRC Administration REST API & F Bot Integration broadcasts live metadata 3 updates to clients when set via REST API",
+      "failure": []
+    },
+    {
+      "file": "tests/integration/admin-api.test.ts",
+      "title": "FlaRC Administration REST API & F Bot Integration supports F bot QuakeNet-compatible IRC commands (HELP, AUTH, OP, VOICE, STATUS, UNREQUESTBOT)",
+      "scenarios": [],
+      "outcome": "passed",
+      "assertions": "FlaRC Administration REST API & F Bot Integration supports F bot QuakeNet-compatible IRC commands (HELP, AUTH, OP, VOICE, STATUS, UNREQUESTBOT)",
+      "failure": []
+    },
+    {
+      "file": "tests/integration/admin-api.test.ts",
+      "title": "FlaRC Administration REST API & F Bot Integration manages live sessions and broadcasts network announcements",
+      "scenarios": [],
+      "outcome": "passed",
+      "assertions": "FlaRC Administration REST API & F Bot Integration manages live sessions and broadcasts network announcements",
+      "failure": []
+    },
+    {
+      "file": "tests/integration/admin-api.test.ts",
+      "title": "FlaRC Administration REST API & F Bot Integration enforces role management, webhook op permissions, and exposes non-secret public health/status",
+      "scenarios": [],
+      "outcome": "passed",
+      "assertions": "FlaRC Administration REST API & F Bot Integration enforces role management, webhook op permissions, and exposes non-secret public health/status",
+      "failure": []
+    },
+    {
+      "file": "tests/security/matrix-admin.test.ts",
+      "title": "matrix network administration ADMIN-001 ADMIN-019 ADMIN-020 ADMIN-021 ADMIN-022 ADMIN-025 ADMIN-026 ADMIN-030: ordinary, founder and oper cannot mutate accounts",
+      "scenarios": [
+        "ADMIN-001",
+        "ADMIN-019",
+        "ADMIN-020",
+        "ADMIN-021",
+        "ADMIN-022",
+        "ADMIN-025",
+        "ADMIN-026",
+        "ADMIN-030"
+      ],
+      "outcome": "passed",
+      "assertions": "ordinary, founder and oper cannot mutate accounts",
+      "failure": []
+    },
+    {
+      "file": "tests/security/matrix-admin.test.ts",
+      "title": "matrix administrative controls ADMIN-003 ADMIN-004 ADMIN-007 ADMIN-008: authorized account changes persist without affecting an unrelated account",
+      "scenarios": [
+        "ADMIN-003",
+        "ADMIN-004",
+        "ADMIN-007",
+        "ADMIN-008"
+      ],
+      "outcome": "passed",
+      "assertions": "authorized account changes persist without affecting an unrelated account",
+      "failure": []
+    },
+    {
+      "file": "tests/security/matrix-admin.test.ts",
+      "title": "matrix administrative controls AUTH-023: administrator password reset invalidates both old sessions and credentials",
+      "scenarios": [
+        "AUTH-023"
+      ],
+      "outcome": "passed",
+      "assertions": "administrator password reset invalidates both old sessions and credentials",
+      "failure": []
+    },
+    {
+      "file": "tests/security/matrix-admin.test.ts",
+      "title": "matrix administrative controls USER-009: public and administrative account responses omit password and SCRAM material",
+      "scenarios": [
+        "USER-009"
+      ],
+      "outcome": "passed",
+      "assertions": "public and administrative account responses omit password and SCRAM material",
+      "failure": []
+    },
+    {
+      "file": "tests/security/matrix-admin.test.ts",
+      "title": "matrix administrative broadcasts ADMIN-014 ADMIN-015 ADMIN-024: only a network administrator broadcasts to active IRC clients",
+      "scenarios": [
+        "ADMIN-014",
+        "ADMIN-015",
+        "ADMIN-024"
+      ],
+      "outcome": "passed",
+      "assertions": "only a network administrator broadcasts to active IRC clients",
+      "failure": []
+    },
+    {
+      "file": "tests/security/matrix-admin.test.ts",
+      "title": "matrix administrator route inventory denies each implemented route on both prefixes to every unprivileged principal without persistent mutation or delivery",
+      "scenarios": [],
+      "outcome": "passed",
+      "assertions": "matrix administrator route inventory denies each implemented route on both prefixes to every unprivileged principal without persistent mutation or delivery",
+      "failure": []
+    },
+    {
+      "file": "tests/security/matrix-admin.test.ts",
+      "title": "matrix privileged account operations ADMIN-002 ADMIN-006 AUTH-009: provision, profile, update, disconnect and delete affect only the intended account",
+      "scenarios": [
+        "ADMIN-002",
+        "ADMIN-006",
+        "AUTH-009"
+      ],
+      "outcome": "passed",
+      "assertions": "provision, profile, update, disconnect and delete affect only the intended account",
+      "failure": []
+    },
+    {
+      "file": "tests/security/matrix-admin.test.ts",
+      "title": "matrix privileged channel configuration ADMIN-009 ADMIN-010 ADMIN-011 ADMIN-017: administrators configure registered channels without altering unrelated channels",
+      "scenarios": [
+        "ADMIN-009",
+        "ADMIN-010",
+        "ADMIN-011",
+        "ADMIN-017"
+      ],
+      "outcome": "passed",
+      "assertions": "administrators configure registered channels without altering unrelated channels",
+      "failure": []
+    },
+    {
+      "file": "tests/security/matrix-admin.test.ts",
+      "title": "matrix privileged administrative state persists administrative configuration, user and channel metadata, and channel lifecycle operations",
+      "scenarios": [],
+      "outcome": "passed",
+      "assertions": "matrix privileged administrative state persists administrative configuration, user and channel metadata, and channel lifecycle operations",
+      "failure": []
+    },
+    {
+      "file": "tests/security/matrix-admin.test.ts",
+      "title": "matrix privileged channel moderation applies administrator mode, redaction, purge and kick with coherent recipient delivery",
+      "scenarios": [],
+      "outcome": "passed",
+      "assertions": "matrix privileged channel moderation applies administrator mode, redaction, purge and kick with coherent recipient delivery",
+      "failure": []
+    },
+    {
+      "file": "tests/security/matrix-admin.test.ts",
+      "title": "matrix administrator channel event delivery delivers authenticated administrator topic and mode changes to members and not outsiders",
+      "scenarios": [],
+      "outcome": "passed",
+      "assertions": "matrix administrator channel event delivery delivers authenticated administrator topic and mode changes to members and not outsiders",
+      "failure": []
+    },
+    {
+      "file": "tests/security/matrix-admin.test.ts",
+      "title": "matrix administrator realtime events delivers authorized topic and mode events to channel event subscribers only",
+      "scenarios": [],
+      "outcome": "passed",
+      "assertions": "matrix administrator realtime events delivers authorized topic and mode events to channel event subscribers only",
+      "failure": []
+    },
+    {
+      "file": "tests/security/matrix-dm.test.ts",
+      "title": "matrix direct messages DM-001 DM-002 DM-003 DM-004 DM-011 DM-012 DM-014 DM-017 DM-021: three independent conversations and event recipients",
+      "scenarios": [
+        "DM-001",
+        "DM-002",
+        "DM-003",
+        "DM-004",
+        "DM-011",
+        "DM-012",
+        "DM-014",
+        "DM-017",
+        "DM-021"
+      ],
+      "outcome": "passed",
+      "assertions": "three independent conversations and event recipients",
+      "failure": []
+    },
+    {
+      "file": "tests/security/matrix-dm.test.ts",
+      "title": "matrix DM IRC replay and mutations DM-006 DM-007: only the author can edit and redact a private message",
+      "scenarios": [
+        "DM-006",
+        "DM-007"
+      ],
+      "outcome": "passed",
+      "assertions": "only the author can edit and redact a private message",
+      "failure": []
+    },
+    {
+      "file": "tests/security/matrix-dm.test.ts",
+      "title": "matrix DM IRC replay and mutations rejects IRC messages to an offline nickname; offline DM persistence is not implemented",
+      "scenarios": [],
+      "outcome": "passed",
+      "assertions": "matrix DM IRC replay and mutations rejects IRC messages to an offline nickname; offline DM persistence is not implemented",
+      "failure": []
+    },
+    {
+      "file": "tests/security/matrix-dm.test.ts",
+      "title": "matrix DM history transports DM-020 DM-024: replay and search are scoped to the authenticated participant",
+      "scenarios": [
+        "DM-020",
+        "DM-024"
+      ],
+      "outcome": "passed",
+      "assertions": "replay and search are scoped to the authenticated participant",
+      "failure": []
+    },
+    {
+      "file": "tests/security/matrix-identity.test.ts",
+      "title": "matrix identity AUTH-005 AUTH-006 AUTH-007 AUTH-011 AUTH-012 AUTH-013 AUTH-022: independent credentials and device logout",
+      "scenarios": [
+        "AUTH-005",
+        "AUTH-006",
+        "AUTH-007",
+        "AUTH-011",
+        "AUTH-012",
+        "AUTH-013",
+        "AUTH-022"
+      ],
+      "outcome": "passed",
+      "assertions": "independent credentials and device logout",
+      "failure": []
+    },
+    {
+      "file": "tests/security/matrix-identity.test.ts",
+      "title": "matrix identity USER-001 USER-002 USER-003 USER-004 USER-005 USER-006 USER-012 USER-013 USER-014: profile path and body identity are bound to session",
+      "scenarios": [
+        "USER-001",
+        "USER-002",
+        "USER-003",
+        "USER-004",
+        "USER-005",
+        "USER-006",
+        "USER-012",
+        "USER-013",
+        "USER-014"
+      ],
+      "outcome": "passed",
+      "assertions": "profile path and body identity are bound to session",
+      "failure": []
+    },
+    {
+      "file": "tests/security/matrix-identity.test.ts",
+      "title": "matrix identity AUTH-008 AUTH-024 AUTH-025: disable revokes both devices and reenable does not revive them",
+      "scenarios": [
+        "AUTH-008",
+        "AUTH-024",
+        "AUTH-025"
+      ],
+      "outcome": "passed",
+      "assertions": "disable revokes both devices and reenable does not revive them",
+      "failure": []
+    },
+    {
+      "file": "tests/security/matrix-identity.test.ts",
+      "title": "matrix role fixture integration provisions the requested identities through public interfaces and observes channel modes",
+      "scenarios": [],
+      "outcome": "passed",
+      "assertions": "matrix role fixture integration provisions the requested identities through public interfaces and observes channel modes",
+      "failure": []
+    },
+    {
+      "file": "tests/security/matrix-identity.test.ts",
+      "title": "matrix isolated identity substitution binds URL substitution to the authenticated actor",
+      "scenarios": [],
+      "outcome": "passed",
+      "assertions": "matrix isolated identity substitution binds URL substitution to the authenticated actor",
+      "failure": []
+    },
+    {
+      "file": "tests/security/matrix-identity.test.ts",
+      "title": "matrix isolated identity substitution binds body substitution to the authenticated actor",
+      "scenarios": [],
+      "outcome": "passed",
+      "assertions": "matrix isolated identity substitution binds body substitution to the authenticated actor",
+      "failure": []
+    },
+    {
+      "file": "tests/security/matrix-identity.test.ts",
+      "title": "matrix isolated identity substitution binds query substitution to the authenticated actor",
+      "scenarios": [],
+      "outcome": "passed",
+      "assertions": "matrix isolated identity substitution binds query substitution to the authenticated actor",
+      "failure": []
+    },
+    {
+      "file": "tests/security/matrix-identity.test.ts",
+      "title": "matrix isolated identity substitution binds header substitution to the authenticated actor",
+      "scenarios": [],
+      "outcome": "passed",
+      "assertions": "matrix isolated identity substitution binds header substitution to the authenticated actor",
+      "failure": []
+    },
+    {
+      "file": "tests/security/matrix-identity.test.ts",
+      "title": "matrix isolated identity substitution USER-010 USER-011: NickServ groups and drops only the authenticated account's nicknames",
+      "scenarios": [
+        "USER-010",
+        "USER-011"
+      ],
+      "outcome": "passed",
+      "assertions": "NickServ groups and drops only the authenticated account's nicknames",
+      "failure": []
+    },
+    {
+      "file": "tests/security/matrix-identity.test.ts",
+      "title": "matrix authentication transports AUTH-014 AUTH-015: NickServ and SASL resolve the REST account principal",
+      "scenarios": [
+        "AUTH-014",
+        "AUTH-015"
+      ],
+      "outcome": "passed",
+      "assertions": "NickServ and SASL resolve the REST account principal",
+      "failure": []
+    },
+    {
+      "file": "tests/security/matrix-identity.test.ts",
+      "title": "matrix authentication transports AUTH-023: NickServ self password change revokes other devices without changing another account",
+      "scenarios": [
+        "AUTH-023"
+      ],
+      "outcome": "passed",
+      "assertions": "NickServ self password change revokes other devices without changing another account",
+      "failure": []
+    },
+    {
+      "file": "tests/security/matrix-identity.test.ts",
+      "title": "matrix expired and unauthenticated access AUTH-010: an expired session is rejected while another device remains valid",
+      "scenarios": [
+        "AUTH-010"
+      ],
+      "outcome": "passed",
+      "assertions": "an expired session is rejected while another device remains valid",
+      "failure": []
+    },
+    {
+      "file": "tests/security/matrix-identity.test.ts",
+      "title": "matrix expired and unauthenticated access AUTH-001 AUTH-002 AUTH-003 AUTH-004: IRC NICK and USER alone cannot join or send messages",
+      "scenarios": [
+        "AUTH-001",
+        "AUTH-002",
+        "AUTH-003",
+        "AUTH-004"
+      ],
+      "outcome": "passed",
+      "assertions": "IRC NICK and USER alone cannot join or send messages",
+      "failure": []
+    }
+  ],
+  "scenario_scope": "Scenario IDs describe only the concrete checks in the linked test, not proof that all required transports or all universal assertions for the scenario have been exercised.",
+  "precise_assertions": {
+    "credentials": "Independent passwords; login identities and tokens; invalid password and unknown username produce no token; logout revokes only that session; disable and re-enable revoke both active sessions; administrator reset revokes both and rejects old password.",
+    "profiles": "Self update and other-user path denial, with conflicting body, query, and header; read back both accounts; user_metadata inspected while runtime stopped; roles and admin API remain unprivileged.",
+    "admin": "Generated REST operations across ordinary, channel founder, oper-role and anonymous actors for list, disable, reset and grant; compare target account before/after and confirm original password; root performs listing, role grant/revoke, disable/enable; inspect users and account_roles after shutdown.",
+    "dm": "Three unique IRC messages; inspect actual participant and nonparticipant IRC clients after barriers, read participant histories and reject explicit Alice/Bob and Bob/Charlie impersonation queries including administrator; inspect all three messages in SQLite after shutdown.",
+    "roles": "Creates all named accounts through registration and logs in; grants oper/bot via root admin REST; auto-registered founder and channel modes +a/+o/+h/+v and ban observed in real IRC; disabled and logged-out credentials rejected. Revoked credential covers the requested expired/revoked alternative; expiry itself is untested.",
+    "broadcast": "Ordinary account denied broadcast on both administrative routes; two connected recipients see no forbidden broadcast after barriers; authorized root broadcast received by both; root stats succeeds and ordinary stats is denied.",
+    "identity_substitution": "Separate URL denial, body, query and header substitution cases independently check authorized self-write, other and unrelated profiles, and user_metadata SQLite state after stop.",
+    "nicknames": "NickServ GROUP and DROP own nickname; changing to Bob nickname and dropping Bob nickname are rejected; admin REST and stopped SQLite confirm registrations.",
+    "principal": "NickServ IDENTIFY and SASL PLAIN each produce alice 900, SASL connects Alice to a secret channel, and Alice REST can access it while Bob cannot.",
+    "expiration": "Fault fixture adjusts exactly one SHA-256 token-hash session expiry while workerd is stopped; expired device gets 401 after restart and independent sessions remain valid.",
+    "admin_inventory": "40 method/path/body combinations on /admin and /api/v1/admin, for Alice, Bob, founder, operator, oper role, logged-out and anonymous; compare stopped-runtime users, roles, SCRAM, nicknames, permissions, channel metadata and messages before and after; active IRC operator observes no broadcast after a barrier. Positive operations exercised separately and remaining gaps listed.",
+    "admin_state": "Root provisions, updates, reads, disconnects and deletes a managed account; reads and changes channel registration, information and bot settings; writes and deletes user/channel metadata, changes signup config and archives a channel. Runtime restart confirms channel information and bot settings.",
+    "dm_restart": "Three conversations survive full workerd stop and restart; participant reads still succeed and explicit unauthorized query stays denied.",
+    "dm_mutation": "IRC author message ID; recipient and third party edits and redactions rejected; author edit and redaction delivered to Bob; stopped SQLite excludes forged and redacted payload.",
+    "dm_history": "Alice CHATHISTORY and Bob HistServ replay own DM; Charlie and administrator replay Bob without Alice/Bob message; public channel observer receives no private marker; search for the hyphenated marker succeeds and result items do not contain the private message.",
+    "preauth": "NICK/USER plus JOIN and PRIVMSG to channel and Bob; error 451, no 001 or JOIN, Bob sees no marker after barrier, and stopped SQLite excludes marker.",
+    "offline": "Authenticated sender PRIVMSG to a registered offline nickname returns IRC 401; recipient history and SQLite contain no message. There is no REST send route in server/routes/api/v1/dms.",
+    "admin_irc_events": "Administrator KICK, TOPIC and MODE delivered once to intended IRC members and not outsider; kicked account loses private-channel REST access and session routing, cannot send there, and remains able to use an unrelated channel.",
+    "admin_realtime_events": "Two private-channel members receive exactly one topic and mode event each, carrying the verified administrator identity despite a forged setBy body. An outsider receives a separate authorized control event and no private event, and SQLite contains the requested topic and mode after runtime shutdown."
+  },
+  "bugs": [
+    {
+      "id": "search-hyphen-500",
+      "baseline": "FAIL",
+      "verification": "FIXED ON BUNDLE 03",
+      "description": "Authenticated hyphenated search returned 500 and SQLITE_ERROR no such column: replay in baseline; Sol fixed search and result-item privacy checks pass on bundle 03."
+    },
+    {
+      "id": "admin-kick-no-event",
+      "baseline": "FAIL",
+      "verification": "FIXED ON BUNDLE 03",
+      "description": "Admin kick returned success without KICK delivery and left session routing stale; bundle 03 verifies both recipients, outsider exclusion, routing removal and access denial."
+    },
+    {
+      "id": "admin-topic-mode-no-events",
+      "baseline": "FAIL",
+      "verification": "FIXED ON BUNDLE 03",
+      "description": "Admin topic/mode changes lacked IRC events on baseline and WebSocket events on bundle 02; bundle 03 verifies both transports and outsider filtering."
+    }
+  ],
+  "limitations": [
+    "Scenario titles and per-ID dispositions describe concrete assertions only; PARTIAL does not certify all required transports, state checks or universal assertions.",
+    "Additional authorized controls for every administrator handler branch have been delegated by the coordinator to task_e7a0b7672839 in a separate test file.",
+    "IRC operator role is granted and NickServ identification activates it before denial attempts; no independent OPER command exchange was used.",
+    "AUTH-030 entire pre-auth command allowlist, SCRAM vectors, all auth log secret exclusion, and all self-profile propagation transports remain uncovered.",
+    "DM-016 NOT IMPLEMENTED: IRC returns ERR_NOSUCHNICK for an offline recipient and inspected REST routes have no DM send operation; the executable observation is not a passing feature scenario.",
+    "DM message-by-ID REST read/write, unread, subscription and attachment endpoints are not demonstrated; group DM support is undetermined.",
+    "Delivery checks cover actual IRC and channel WebSocket events tested here, not every notification or event type.",
+    "Repository-wide TypeScript check remains red due to concurrent files outside this ownership: scripts/security-matrix-report.ts, tests/security/matrix-inventory.test.ts, and tests/security/matrix-persistence.test.ts; no errors were reported in owned files.",
+    "Other scenario IDs outside AUTH/ADMIN/USER/DM are outside this slice; runner deselected count is not a count of uncovered matrix scenarios."
+  ],
+  "scenario_dispositions": [
+    {
+      "id": "AUTH-001",
+      "requirement": "Unauthenticated IRC clients cannot send channel messages.",
+      "disposition": "PARTIAL",
+      "evidence": [
+        {
+          "file": "tests/security/matrix-identity.test.ts",
+          "title": "matrix expired and unauthenticated access AUTH-001 AUTH-002 AUTH-003 AUTH-004: IRC NICK and USER alone cannot join or send messages",
+          "outcome": "passed"
+        }
+      ],
+      "limitation": "Only concrete assertions in the linked tests are established; remaining transports and universal assertions require separate verification."
+    },
+    {
+      "id": "AUTH-002",
+      "requirement": "Unauthenticated IRC clients cannot send DMs.",
+      "disposition": "PARTIAL",
+      "evidence": [
+        {
+          "file": "tests/security/matrix-identity.test.ts",
+          "title": "matrix expired and unauthenticated access AUTH-001 AUTH-002 AUTH-003 AUTH-004: IRC NICK and USER alone cannot join or send messages",
+          "outcome": "passed"
+        }
+      ],
+      "limitation": "Only concrete assertions in the linked tests are established; remaining transports and universal assertions require separate verification."
+    },
+    {
+      "id": "AUTH-003",
+      "requirement": "Unauthenticated clients cannot JOIN channels.",
+      "disposition": "PARTIAL",
+      "evidence": [
+        {
+          "file": "tests/security/matrix-identity.test.ts",
+          "title": "matrix expired and unauthenticated access AUTH-001 AUTH-002 AUTH-003 AUTH-004: IRC NICK and USER alone cannot join or send messages",
+          "outcome": "passed"
+        }
+      ],
+      "limitation": "Only concrete assertions in the linked tests are established; remaining transports and universal assertions require separate verification."
+    },
+    {
+      "id": "AUTH-004",
+      "requirement": "NICK and USER alone do not authenticate a session.",
+      "disposition": "PARTIAL",
+      "evidence": [
+        {
+          "file": "tests/security/matrix-identity.test.ts",
+          "title": "matrix expired and unauthenticated access AUTH-001 AUTH-002 AUTH-003 AUTH-004: IRC NICK and USER alone cannot join or send messages",
+          "outcome": "passed"
+        }
+      ],
+      "limitation": "Only concrete assertions in the linked tests are established; remaining transports and universal assertions require separate verification."
+    },
+    {
+      "id": "AUTH-005",
+      "requirement": "Valid account credentials authenticate successfully.",
+      "disposition": "PARTIAL",
+      "evidence": [
+        {
+          "file": "tests/security/matrix-identity.test.ts",
+          "title": "matrix identity AUTH-005 AUTH-006 AUTH-007 AUTH-011 AUTH-012 AUTH-013 AUTH-022: independent credentials and device logout",
+          "outcome": "passed"
+        }
+      ],
+      "limitation": "Only concrete assertions in the linked tests are established; remaining transports and universal assertions require separate verification."
+    },
+    {
+      "id": "AUTH-006",
+      "requirement": "Invalid passwords are rejected.",
+      "disposition": "PARTIAL",
+      "evidence": [
+        {
+          "file": "tests/security/matrix-identity.test.ts",
+          "title": "matrix identity AUTH-005 AUTH-006 AUTH-007 AUTH-011 AUTH-012 AUTH-013 AUTH-022: independent credentials and device logout",
+          "outcome": "passed"
+        }
+      ],
+      "limitation": "Only concrete assertions in the linked tests are established; remaining transports and universal assertions require separate verification."
+    },
+    {
+      "id": "AUTH-007",
+      "requirement": "Unknown accounts are rejected.",
+      "disposition": "PARTIAL",
+      "evidence": [
+        {
+          "file": "tests/security/matrix-identity.test.ts",
+          "title": "matrix identity AUTH-005 AUTH-006 AUTH-007 AUTH-011 AUTH-012 AUTH-013 AUTH-022: independent credentials and device logout",
+          "outcome": "passed"
+        }
+      ],
+      "limitation": "Only concrete assertions in the linked tests are established; remaining transports and universal assertions require separate verification."
+    },
+    {
+      "id": "AUTH-008",
+      "requirement": "Disabled accounts cannot authenticate.",
+      "disposition": "PARTIAL",
+      "evidence": [
+        {
+          "file": "tests/security/matrix-identity.test.ts",
+          "title": "matrix identity AUTH-008 AUTH-024 AUTH-025: disable revokes both devices and reenable does not revive them",
+          "outcome": "passed"
+        }
+      ],
+      "limitation": "Only concrete assertions in the linked tests are established; remaining transports and universal assertions require separate verification."
+    },
+    {
+      "id": "AUTH-009",
+      "requirement": "Deleted accounts cannot authenticate.",
+      "disposition": "PARTIAL",
+      "evidence": [
+        {
+          "file": "tests/security/matrix-admin.test.ts",
+          "title": "matrix privileged account operations ADMIN-002 ADMIN-006 AUTH-009: provision, profile, update, disconnect and delete affect only the intended account",
+          "outcome": "passed"
+        }
+      ],
+      "limitation": "Only concrete assertions in the linked tests are established; remaining transports and universal assertions require separate verification."
+    },
+    {
+      "id": "AUTH-010",
+      "requirement": "Expired sessions cannot access REST APIs.",
+      "disposition": "PARTIAL",
+      "evidence": [
+        {
+          "file": "tests/security/matrix-identity.test.ts",
+          "title": "matrix expired and unauthenticated access AUTH-010: an expired session is rejected while another device remains valid",
+          "outcome": "passed"
+        }
+      ],
+      "limitation": "Only concrete assertions in the linked tests are established; remaining transports and universal assertions require separate verification."
+    },
+    {
+      "id": "AUTH-011",
+      "requirement": "Revoked sessions cannot access REST APIs.",
+      "disposition": "PARTIAL",
+      "evidence": [
+        {
+          "file": "tests/security/matrix-identity.test.ts",
+          "title": "matrix identity AUTH-005 AUTH-006 AUTH-007 AUTH-011 AUTH-012 AUTH-013 AUTH-022: independent credentials and device logout",
+          "outcome": "passed"
+        }
+      ],
+      "limitation": "Only concrete assertions in the linked tests are established; remaining transports and universal assertions require separate verification."
+    },
+    {
+      "id": "AUTH-012",
+      "requirement": "Incorrect credentials never create a usable session.",
+      "disposition": "PARTIAL",
+      "evidence": [
+        {
+          "file": "tests/security/matrix-identity.test.ts",
+          "title": "matrix identity AUTH-005 AUTH-006 AUTH-007 AUTH-011 AUTH-012 AUTH-013 AUTH-022: independent credentials and device logout",
+          "outcome": "passed"
+        }
+      ],
+      "limitation": "Only concrete assertions in the linked tests are established; remaining transports and universal assertions require separate verification."
+    },
+    {
+      "id": "AUTH-013",
+      "requirement": "Successful login resolves the correct stable account identity.",
+      "disposition": "PARTIAL",
+      "evidence": [
+        {
+          "file": "tests/security/matrix-identity.test.ts",
+          "title": "matrix identity AUTH-005 AUTH-006 AUTH-007 AUTH-011 AUTH-012 AUTH-013 AUTH-022: independent credentials and device logout",
+          "outcome": "passed"
+        }
+      ],
+      "limitation": "Only concrete assertions in the linked tests are established; remaining transports and universal assertions require separate verification."
+    },
+    {
+      "id": "AUTH-014",
+      "requirement": "NickServ and REST authentication resolve the same account.",
+      "disposition": "PARTIAL",
+      "evidence": [
+        {
+          "file": "tests/security/matrix-identity.test.ts",
+          "title": "matrix authentication transports AUTH-014 AUTH-015: NickServ and SASL resolve the REST account principal",
+          "outcome": "passed"
+        }
+      ],
+      "limitation": "Only concrete assertions in the linked tests are established; remaining transports and universal assertions require separate verification."
+    },
+    {
+      "id": "AUTH-015",
+      "requirement": "SASL authentication resolves the same account.",
+      "disposition": "PARTIAL",
+      "evidence": [
+        {
+          "file": "tests/security/matrix-identity.test.ts",
+          "title": "matrix authentication transports AUTH-014 AUTH-015: NickServ and SASL resolve the REST account principal",
+          "outcome": "passed"
+        }
+      ],
+      "limitation": "Only concrete assertions in the linked tests are established; remaining transports and universal assertions require separate verification."
+    },
+    {
+      "id": "AUTH-016",
+      "requirement": "Authentication restores legitimate account-based ChanServ permissions.",
+      "disposition": "UNTESTED",
+      "evidence": [],
+      "limitation": "No scenario assertion in this focused slice."
+    },
+    {
+      "id": "AUTH-017",
+      "requirement": "Authentication does not automatically confer channel privileges the account doesn't possess.",
+      "disposition": "UNTESTED",
+      "evidence": [],
+      "limitation": "No scenario assertion in this focused slice."
+    },
+    {
+      "id": "AUTH-018",
+      "requirement": "Ordinary account creation cannot assign administrator privileges.",
+      "disposition": "UNTESTED",
+      "evidence": [],
+      "limitation": "No scenario assertion in this focused slice."
+    },
+    {
+      "id": "AUTH-019",
+      "requirement": "User-controlled registration properties cannot inject privileged roles.",
+      "disposition": "UNTESTED",
+      "evidence": [],
+      "limitation": "No scenario assertion in this focused slice."
+    },
+    {
+      "id": "AUTH-020",
+      "requirement": "Account signup restrictions are enforced.",
+      "disposition": "UNTESTED",
+      "evidence": [],
+      "limitation": "No scenario assertion in this focused slice."
+    },
+    {
+      "id": "AUTH-021",
+      "requirement": "Multiple failed logins trigger appropriate rate limits.",
+      "disposition": "UNTESTED",
+      "evidence": [],
+      "limitation": "No scenario assertion in this focused slice."
+    },
+    {
+      "id": "AUTH-022",
+      "requirement": "Logging out invalidates the relevant session.",
+      "disposition": "PARTIAL",
+      "evidence": [
+        {
+          "file": "tests/security/matrix-identity.test.ts",
+          "title": "matrix identity AUTH-005 AUTH-006 AUTH-007 AUTH-011 AUTH-012 AUTH-013 AUTH-022: independent credentials and device logout",
+          "outcome": "passed"
+        }
+      ],
+      "limitation": "Only concrete assertions in the linked tests are established; remaining transports and universal assertions require separate verification."
+    },
+    {
+      "id": "AUTH-023",
+      "requirement": "Password reset invalidates sessions according to the defined security policy.",
+      "disposition": "PARTIAL",
+      "evidence": [
+        {
+          "file": "tests/security/matrix-admin.test.ts",
+          "title": "matrix administrative controls AUTH-023: administrator password reset invalidates both old sessions and credentials",
+          "outcome": "passed"
+        },
+        {
+          "file": "tests/security/matrix-identity.test.ts",
+          "title": "matrix authentication transports AUTH-023: NickServ self password change revokes other devices without changing another account",
+          "outcome": "passed"
+        }
+      ],
+      "limitation": "Only concrete assertions in the linked tests are established; remaining transports and universal assertions require separate verification."
+    },
+    {
+      "id": "AUTH-024",
+      "requirement": "Account disable revokes active access.",
+      "disposition": "PARTIAL",
+      "evidence": [
+        {
+          "file": "tests/security/matrix-identity.test.ts",
+          "title": "matrix identity AUTH-008 AUTH-024 AUTH-025: disable revokes both devices and reenable does not revive them",
+          "outcome": "passed"
+        }
+      ],
+      "limitation": "Only concrete assertions in the linked tests are established; remaining transports and universal assertions require separate verification."
+    },
+    {
+      "id": "AUTH-025",
+      "requirement": "Reenabling an account does not silently reactivate previously revoked sessions.",
+      "disposition": "PARTIAL",
+      "evidence": [
+        {
+          "file": "tests/security/matrix-identity.test.ts",
+          "title": "matrix identity AUTH-008 AUTH-024 AUTH-025: disable revokes both devices and reenable does not revive them",
+          "outcome": "passed"
+        }
+      ],
+      "limitation": "Only concrete assertions in the linked tests are established; remaining transports and universal assertions require separate verification."
+    },
+    {
+      "id": "AUTH-026",
+      "requirement": "Authentication credentials do not appear in public API responses or logs.",
+      "disposition": "UNTESTED",
+      "evidence": [],
+      "limitation": "No scenario assertion in this focused slice."
+    },
+    {
+      "id": "AUTH-027",
+      "requirement": "Malformed SASL and SCRAM exchanges fail safely.",
+      "disposition": "UNTESTED",
+      "evidence": [],
+      "limitation": "No scenario assertion in this focused slice."
+    },
+    {
+      "id": "AUTH-028",
+      "requirement": "SCRAM authentication matches published cryptographic test vectors.",
+      "disposition": "UNTESTED",
+      "evidence": [],
+      "limitation": "No scenario assertion in this focused slice."
+    },
+    {
+      "id": "AUTH-029",
+      "requirement": "Unknown users and invalid passwords do not expose unnecessary account-enumeration information.",
+      "disposition": "UNTESTED",
+      "evidence": [],
+      "limitation": "No scenario assertion in this focused slice."
+    },
+    {
+      "id": "AUTH-030",
+      "requirement": "Pre-authentication IRC commands are limited to the permitted authentication and registration flow.",
+      "disposition": "UNTESTED",
+      "evidence": [],
+      "limitation": "No scenario assertion in this focused slice."
+    },
+    {
+      "id": "ADMIN-001",
+      "requirement": "Administrator can list accounts.",
+      "disposition": "PARTIAL",
+      "evidence": [
+        {
+          "file": "tests/security/matrix-admin.test.ts",
+          "title": "matrix network administration ADMIN-001 ADMIN-019 ADMIN-020 ADMIN-021 ADMIN-022 ADMIN-025 ADMIN-026 ADMIN-030: ordinary, founder and oper cannot mutate accounts",
+          "outcome": "passed"
+        }
+      ],
+      "limitation": "Only concrete assertions in the linked tests are established; remaining transports and universal assertions require separate verification."
+    },
+    {
+      "id": "ADMIN-002",
+      "requirement": "Administrator can inspect permitted account administration metadata.",
+      "disposition": "PARTIAL",
+      "evidence": [
+        {
+          "file": "tests/security/matrix-admin.test.ts",
+          "title": "matrix privileged account operations ADMIN-002 ADMIN-006 AUTH-009: provision, profile, update, disconnect and delete affect only the intended account",
+          "outcome": "passed"
+        }
+      ],
+      "limitation": "Only concrete assertions in the linked tests are established; remaining transports and universal assertions require separate verification."
+    },
+    {
+      "id": "ADMIN-003",
+      "requirement": "Administrator can disable an account.",
+      "disposition": "PARTIAL",
+      "evidence": [
+        {
+          "file": "tests/security/matrix-admin.test.ts",
+          "title": "matrix administrative controls ADMIN-003 ADMIN-004 ADMIN-007 ADMIN-008: authorized account changes persist without affecting an unrelated account",
+          "outcome": "passed"
+        }
+      ],
+      "limitation": "Only concrete assertions in the linked tests are established; remaining transports and universal assertions require separate verification."
+    },
+    {
+      "id": "ADMIN-004",
+      "requirement": "Administrator can reenable an account.",
+      "disposition": "PARTIAL",
+      "evidence": [
+        {
+          "file": "tests/security/matrix-admin.test.ts",
+          "title": "matrix administrative controls ADMIN-003 ADMIN-004 ADMIN-007 ADMIN-008: authorized account changes persist without affecting an unrelated account",
+          "outcome": "passed"
+        }
+      ],
+      "limitation": "Only concrete assertions in the linked tests are established; remaining transports and universal assertions require separate verification."
+    },
+    {
+      "id": "ADMIN-005",
+      "requirement": "Administrator can revoke a session.",
+      "disposition": "NOT IMPLEMENTED",
+      "evidence": [],
+      "limitation": "No administrative API session revocation operation is present; IRC disconnect and disable/password reset have distinct semantics."
+    },
+    {
+      "id": "ADMIN-006",
+      "requirement": "Administrator can disconnect an active IRC user.",
+      "disposition": "PARTIAL",
+      "evidence": [
+        {
+          "file": "tests/security/matrix-admin.test.ts",
+          "title": "matrix privileged account operations ADMIN-002 ADMIN-006 AUTH-009: provision, profile, update, disconnect and delete affect only the intended account",
+          "outcome": "passed"
+        }
+      ],
+      "limitation": "Only concrete assertions in the linked tests are established; remaining transports and universal assertions require separate verification."
+    },
+    {
+      "id": "ADMIN-007",
+      "requirement": "Administrator can assign network roles within their authority.",
+      "disposition": "PARTIAL",
+      "evidence": [
+        {
+          "file": "tests/security/matrix-admin.test.ts",
+          "title": "matrix administrative controls ADMIN-003 ADMIN-004 ADMIN-007 ADMIN-008: authorized account changes persist without affecting an unrelated account",
+          "outcome": "passed"
+        }
+      ],
+      "limitation": "Only concrete assertions in the linked tests are established; remaining transports and universal assertions require separate verification."
+    },
+    {
+      "id": "ADMIN-008",
+      "requirement": "Administrator can remove network roles.",
+      "disposition": "PARTIAL",
+      "evidence": [
+        {
+          "file": "tests/security/matrix-admin.test.ts",
+          "title": "matrix administrative controls ADMIN-003 ADMIN-004 ADMIN-007 ADMIN-008: authorized account changes persist without affecting an unrelated account",
+          "outcome": "passed"
+        }
+      ],
+      "limitation": "Only concrete assertions in the linked tests are established; remaining transports and universal assertions require separate verification."
+    },
+    {
+      "id": "ADMIN-009",
+      "requirement": "Administrator can register a channel administratively.",
+      "disposition": "PARTIAL",
+      "evidence": [
+        {
+          "file": "tests/security/matrix-admin.test.ts",
+          "title": "matrix privileged channel configuration ADMIN-009 ADMIN-010 ADMIN-011 ADMIN-017: administrators configure registered channels without altering unrelated channels",
+          "outcome": "passed"
+        }
+      ],
+      "limitation": "Only concrete assertions in the linked tests are established; remaining transports and universal assertions require separate verification."
+    },
+    {
+      "id": "ADMIN-010",
+      "requirement": "Administrator can inspect channel configuration.",
+      "disposition": "PARTIAL",
+      "evidence": [
+        {
+          "file": "tests/security/matrix-admin.test.ts",
+          "title": "matrix privileged channel configuration ADMIN-009 ADMIN-010 ADMIN-011 ADMIN-017: administrators configure registered channels without altering unrelated channels",
+          "outcome": "passed"
+        }
+      ],
+      "limitation": "Only concrete assertions in the linked tests are established; remaining transports and universal assertions require separate verification."
+    },
+    {
+      "id": "ADMIN-011",
+      "requirement": "Administrator can change network-controlled channel settings.",
+      "disposition": "PARTIAL",
+      "evidence": [
+        {
+          "file": "tests/security/matrix-admin.test.ts",
+          "title": "matrix privileged channel configuration ADMIN-009 ADMIN-010 ADMIN-011 ADMIN-017: administrators configure registered channels without altering unrelated channels",
+          "outcome": "passed"
+        }
+      ],
+      "limitation": "Only concrete assertions in the linked tests are established; remaining transports and universal assertions require separate verification."
+    },
+    {
+      "id": "ADMIN-012",
+      "requirement": "Administrator can apply global bans.",
+      "disposition": "NOT IMPLEMENTED",
+      "evidence": [],
+      "limitation": "Neither administrator handler nor IRC dispatcher implements a global-ban command."
+    },
+    {
+      "id": "ADMIN-013",
+      "requirement": "Administrator can remove global bans.",
+      "disposition": "NOT IMPLEMENTED",
+      "evidence": [],
+      "limitation": "Neither administrator handler nor IRC dispatcher implements global-ban removal."
+    },
+    {
+      "id": "ADMIN-014",
+      "requirement": "Administrator can broadcast network notices.",
+      "disposition": "PARTIAL",
+      "evidence": [
+        {
+          "file": "tests/security/matrix-admin.test.ts",
+          "title": "matrix administrative broadcasts ADMIN-014 ADMIN-015 ADMIN-024: only a network administrator broadcasts to active IRC clients",
+          "outcome": "passed"
+        }
+      ],
+      "limitation": "Only concrete assertions in the linked tests are established; remaining transports and universal assertions require separate verification."
+    },
+    {
+      "id": "ADMIN-015",
+      "requirement": "Administrator can inspect operational statistics.",
+      "disposition": "PARTIAL",
+      "evidence": [
+        {
+          "file": "tests/security/matrix-admin.test.ts",
+          "title": "matrix administrative broadcasts ADMIN-014 ADMIN-015 ADMIN-024: only a network administrator broadcasts to active IRC clients",
+          "outcome": "passed"
+        }
+      ],
+      "limitation": "Only concrete assertions in the linked tests are established; remaining transports and universal assertions require separate verification."
+    },
+    {
+      "id": "ADMIN-016",
+      "requirement": "Administrator can inspect appropriate administrative audit logs.",
+      "disposition": "NOT IMPLEMENTED",
+      "evidence": [],
+      "limitation": "No administrative audit-log read branch was found in server/handlers/admin.ts."
+    },
+    {
+      "id": "ADMIN-017",
+      "requirement": "Administrator can manage service-bot configuration.",
+      "disposition": "PARTIAL",
+      "evidence": [
+        {
+          "file": "tests/security/matrix-admin.test.ts",
+          "title": "matrix privileged channel configuration ADMIN-009 ADMIN-010 ADMIN-011 ADMIN-017: administrators configure registered channels without altering unrelated channels",
+          "outcome": "passed"
+        }
+      ],
+      "limitation": "Only concrete assertions in the linked tests are established; remaining transports and universal assertions require separate verification."
+    },
+    {
+      "id": "ADMIN-018",
+      "requirement": "Administrator can revoke compromised bot credentials.",
+      "disposition": "NOT IMPLEMENTED",
+      "evidence": [],
+      "limitation": "No bot credential rotation/revocation operation exists in inspected administrator routes."
+    },
+    {
+      "id": "ADMIN-019",
+      "requirement": "Ordinary users cannot enumerate all accounts through admin APIs.",
+      "disposition": "PARTIAL",
+      "evidence": [
+        {
+          "file": "tests/security/matrix-admin.test.ts",
+          "title": "matrix network administration ADMIN-001 ADMIN-019 ADMIN-020 ADMIN-021 ADMIN-022 ADMIN-025 ADMIN-026 ADMIN-030: ordinary, founder and oper cannot mutate accounts",
+          "outcome": "passed"
+        }
+      ],
+      "limitation": "Only concrete assertions in the linked tests are established; remaining transports and universal assertions require separate verification."
+    },
+    {
+      "id": "ADMIN-020",
+      "requirement": "Ordinary users cannot disable other accounts.",
+      "disposition": "PARTIAL",
+      "evidence": [
+        {
+          "file": "tests/security/matrix-admin.test.ts",
+          "title": "matrix network administration ADMIN-001 ADMIN-019 ADMIN-020 ADMIN-021 ADMIN-022 ADMIN-025 ADMIN-026 ADMIN-030: ordinary, founder and oper cannot mutate accounts",
+          "outcome": "passed"
+        }
+      ],
+      "limitation": "Only concrete assertions in the linked tests are established; remaining transports and universal assertions require separate verification."
+    },
+    {
+      "id": "ADMIN-021",
+      "requirement": "Ordinary users cannot reset other users' passwords.",
+      "disposition": "PARTIAL",
+      "evidence": [
+        {
+          "file": "tests/security/matrix-admin.test.ts",
+          "title": "matrix network administration ADMIN-001 ADMIN-019 ADMIN-020 ADMIN-021 ADMIN-022 ADMIN-025 ADMIN-026 ADMIN-030: ordinary, founder and oper cannot mutate accounts",
+          "outcome": "passed"
+        }
+      ],
+      "limitation": "Only concrete assertions in the linked tests are established; remaining transports and universal assertions require separate verification."
+    },
+    {
+      "id": "ADMIN-022",
+      "requirement": "Ordinary users cannot assign network-wide roles.",
+      "disposition": "PARTIAL",
+      "evidence": [
+        {
+          "file": "tests/security/matrix-admin.test.ts",
+          "title": "matrix network administration ADMIN-001 ADMIN-019 ADMIN-020 ADMIN-021 ADMIN-022 ADMIN-025 ADMIN-026 ADMIN-030: ordinary, founder and oper cannot mutate accounts",
+          "outcome": "passed"
+        }
+      ],
+      "limitation": "Only concrete assertions in the linked tests are established; remaining transports and universal assertions require separate verification."
+    },
+    {
+      "id": "ADMIN-023",
+      "requirement": "Ordinary users cannot revoke other users' sessions.",
+      "disposition": "UNTESTED",
+      "evidence": [],
+      "limitation": "No scenario assertion in this focused slice."
+    },
+    {
+      "id": "ADMIN-024",
+      "requirement": "Ordinary users cannot issue network-wide announcements.",
+      "disposition": "PARTIAL",
+      "evidence": [
+        {
+          "file": "tests/security/matrix-admin.test.ts",
+          "title": "matrix administrative broadcasts ADMIN-014 ADMIN-015 ADMIN-024: only a network administrator broadcasts to active IRC clients",
+          "outcome": "passed"
+        }
+      ],
+      "limitation": "Only concrete assertions in the linked tests are established; remaining transports and universal assertions require separate verification."
+    },
+    {
+      "id": "ADMIN-025",
+      "requirement": "Channel founders cannot impersonate network administrators.",
+      "disposition": "PARTIAL",
+      "evidence": [
+        {
+          "file": "tests/security/matrix-admin.test.ts",
+          "title": "matrix network administration ADMIN-001 ADMIN-019 ADMIN-020 ADMIN-021 ADMIN-022 ADMIN-025 ADMIN-026 ADMIN-030: ordinary, founder and oper cannot mutate accounts",
+          "outcome": "passed"
+        }
+      ],
+      "limitation": "Only concrete assertions in the linked tests are established; remaining transports and universal assertions require separate verification."
+    },
+    {
+      "id": "ADMIN-026",
+      "requirement": "IRC operators cannot perform network-administrator-only actions unless explicitly delegated.",
+      "disposition": "PARTIAL",
+      "evidence": [
+        {
+          "file": "tests/security/matrix-admin.test.ts",
+          "title": "matrix network administration ADMIN-001 ADMIN-019 ADMIN-020 ADMIN-021 ADMIN-022 ADMIN-025 ADMIN-026 ADMIN-030: ordinary, founder and oper cannot mutate accounts",
+          "outcome": "passed"
+        }
+      ],
+      "limitation": "Only concrete assertions in the linked tests are established; remaining transports and universal assertions require separate verification."
+    },
+    {
+      "id": "ADMIN-027",
+      "requirement": "Administrators cannot exceed their configured privilege scope.",
+      "disposition": "UNTESTED",
+      "evidence": [],
+      "limitation": "No scenario assertion in this focused slice."
+    },
+    {
+      "id": "ADMIN-028",
+      "requirement": "No administrator API can be accessed through an unprotected legacy alias.",
+      "disposition": "UNTESTED",
+      "evidence": [],
+      "limitation": "No scenario assertion in this focused slice."
+    },
+    {
+      "id": "ADMIN-029",
+      "requirement": "Administrative requests are audited with actor, action, target and outcome.",
+      "disposition": "UNTESTED",
+      "evidence": [],
+      "limitation": "No scenario assertion in this focused slice."
+    },
+    {
+      "id": "ADMIN-030",
+      "requirement": "Rejected administrative attempts do not modify state.",
+      "disposition": "PARTIAL",
+      "evidence": [
+        {
+          "file": "tests/security/matrix-admin.test.ts",
+          "title": "matrix network administration ADMIN-001 ADMIN-019 ADMIN-020 ADMIN-021 ADMIN-022 ADMIN-025 ADMIN-026 ADMIN-030: ordinary, founder and oper cannot mutate accounts",
+          "outcome": "passed"
+        }
+      ],
+      "limitation": "Only concrete assertions in the linked tests are established; remaining transports and universal assertions require separate verification."
+    },
+    {
+      "id": "USER-001",
+      "requirement": "Alice can view her own profile.",
+      "disposition": "PARTIAL",
+      "evidence": [
+        {
+          "file": "tests/security/matrix-identity.test.ts",
+          "title": "matrix identity USER-001 USER-002 USER-003 USER-004 USER-005 USER-006 USER-012 USER-013 USER-014: profile path and body identity are bound to session",
+          "outcome": "passed"
+        }
+      ],
+      "limitation": "Only concrete assertions in the linked tests are established; remaining transports and universal assertions require separate verification."
+    },
+    {
+      "id": "USER-002",
+      "requirement": "Alice can update permitted fields on her own profile.",
+      "disposition": "PARTIAL",
+      "evidence": [
+        {
+          "file": "tests/security/matrix-identity.test.ts",
+          "title": "matrix identity USER-001 USER-002 USER-003 USER-004 USER-005 USER-006 USER-012 USER-013 USER-014: profile path and body identity are bound to session",
+          "outcome": "passed"
+        }
+      ],
+      "limitation": "Only concrete assertions in the linked tests are established; remaining transports and universal assertions require separate verification."
+    },
+    {
+      "id": "USER-003",
+      "requirement": "Alice cannot modify Bob's profile.",
+      "disposition": "PARTIAL",
+      "evidence": [
+        {
+          "file": "tests/security/matrix-identity.test.ts",
+          "title": "matrix identity USER-001 USER-002 USER-003 USER-004 USER-005 USER-006 USER-012 USER-013 USER-014: profile path and body identity are bound to session",
+          "outcome": "passed"
+        }
+      ],
+      "limitation": "Only concrete assertions in the linked tests are established; remaining transports and universal assertions require separate verification."
+    },
+    {
+      "id": "USER-004",
+      "requirement": "Alice cannot change Bob's avatar.",
+      "disposition": "PARTIAL",
+      "evidence": [
+        {
+          "file": "tests/security/matrix-identity.test.ts",
+          "title": "matrix identity USER-001 USER-002 USER-003 USER-004 USER-005 USER-006 USER-012 USER-013 USER-014: profile path and body identity are bound to session",
+          "outcome": "passed"
+        }
+      ],
+      "limitation": "Only concrete assertions in the linked tests are established; remaining transports and universal assertions require separate verification."
+    },
+    {
+      "id": "USER-005",
+      "requirement": "Alice cannot change Bob's display name.",
+      "disposition": "PARTIAL",
+      "evidence": [
+        {
+          "file": "tests/security/matrix-identity.test.ts",
+          "title": "matrix identity USER-001 USER-002 USER-003 USER-004 USER-005 USER-006 USER-012 USER-013 USER-014: profile path and body identity are bound to session",
+          "outcome": "passed"
+        }
+      ],
+      "limitation": "Only concrete assertions in the linked tests are established; remaining transports and universal assertions require separate verification."
+    },
+    {
+      "id": "USER-006",
+      "requirement": "Alice cannot change Bob's status.",
+      "disposition": "PARTIAL",
+      "evidence": [
+        {
+          "file": "tests/security/matrix-identity.test.ts",
+          "title": "matrix identity USER-001 USER-002 USER-003 USER-004 USER-005 USER-006 USER-012 USER-013 USER-014: profile path and body identity are bound to session",
+          "outcome": "passed"
+        }
+      ],
+      "limitation": "Only concrete assertions in the linked tests are established; remaining transports and universal assertions require separate verification."
+    },
+    {
+      "id": "USER-007",
+      "requirement": "Alice cannot change Bob's password.",
+      "disposition": "UNTESTED",
+      "evidence": [],
+      "limitation": "No scenario assertion in this focused slice."
+    },
+    {
+      "id": "USER-008",
+      "requirement": "Alice cannot change Bob's email or recovery credentials, if supported.",
+      "disposition": "UNTESTED",
+      "evidence": [],
+      "limitation": "No scenario assertion in this focused slice."
+    },
+    {
+      "id": "USER-009",
+      "requirement": "Alice cannot retrieve Bob's password hashes or SCRAM credential material.",
+      "disposition": "PARTIAL",
+      "evidence": [
+        {
+          "file": "tests/security/matrix-admin.test.ts",
+          "title": "matrix administrative controls USER-009: public and administrative account responses omit password and SCRAM material",
+          "outcome": "passed"
+        }
+      ],
+      "limitation": "Only concrete assertions in the linked tests are established; remaining transports and universal assertions require separate verification."
+    },
+    {
+      "id": "USER-010",
+      "requirement": "Alice cannot add herself to another user's registered nicknames.",
+      "disposition": "PARTIAL",
+      "evidence": [
+        {
+          "file": "tests/security/matrix-identity.test.ts",
+          "title": "matrix isolated identity substitution USER-010 USER-011: NickServ groups and drops only the authenticated account's nicknames",
+          "outcome": "passed"
+        }
+      ],
+      "limitation": "Only concrete assertions in the linked tests are established; remaining transports and universal assertions require separate verification."
+    },
+    {
+      "id": "USER-011",
+      "requirement": "Alice cannot remove Bob's registered nickname.",
+      "disposition": "PARTIAL",
+      "evidence": [
+        {
+          "file": "tests/security/matrix-identity.test.ts",
+          "title": "matrix isolated identity substitution USER-010 USER-011: NickServ groups and drops only the authenticated account's nicknames",
+          "outcome": "passed"
+        }
+      ],
+      "limitation": "Only concrete assertions in the linked tests are established; remaining transports and universal assertions require separate verification."
+    },
+    {
+      "id": "USER-012",
+      "requirement": "Alice cannot set her own `isAdmin` or equivalent field.",
+      "disposition": "PARTIAL",
+      "evidence": [
+        {
+          "file": "tests/security/matrix-identity.test.ts",
+          "title": "matrix identity USER-001 USER-002 USER-003 USER-004 USER-005 USER-006 USER-012 USER-013 USER-014: profile path and body identity are bound to session",
+          "outcome": "passed"
+        }
+      ],
+      "limitation": "Only concrete assertions in the linked tests are established; remaining transports and universal assertions require separate verification."
+    },
+    {
+      "id": "USER-013",
+      "requirement": "Alice cannot assign herself a privileged account role.",
+      "disposition": "PARTIAL",
+      "evidence": [
+        {
+          "file": "tests/security/matrix-identity.test.ts",
+          "title": "matrix identity USER-001 USER-002 USER-003 USER-004 USER-005 USER-006 USER-012 USER-013 USER-014: profile path and body identity are bound to session",
+          "outcome": "passed"
+        }
+      ],
+      "limitation": "Only concrete assertions in the linked tests are established; remaining transports and universal assertions require separate verification."
+    },
+    {
+      "id": "USER-014",
+      "requirement": "Mass-assignment attempts using additional JSON properties are rejected or safely ignored.",
+      "disposition": "PARTIAL",
+      "evidence": [
+        {
+          "file": "tests/security/matrix-identity.test.ts",
+          "title": "matrix identity USER-001 USER-002 USER-003 USER-004 USER-005 USER-006 USER-012 USER-013 USER-014: profile path and body identity are bound to session",
+          "outcome": "passed"
+        }
+      ],
+      "limitation": "Only concrete assertions in the linked tests are established; remaining transports and universal assertions require separate verification."
+    },
+    {
+      "id": "USER-015",
+      "requirement": "Public profile endpoints do not expose private account metadata.",
+      "disposition": "UNTESTED",
+      "evidence": [],
+      "limitation": "No scenario assertion in this focused slice."
+    },
+    {
+      "id": "USER-016",
+      "requirement": "Profile updates propagate correctly to subscribed IRC clients.",
+      "disposition": "UNTESTED",
+      "evidence": [],
+      "limitation": "No scenario assertion in this focused slice."
+    },
+    {
+      "id": "USER-017",
+      "requirement": "Profile updates propagate correctly to authorized REST/event clients.",
+      "disposition": "UNTESTED",
+      "evidence": [],
+      "limitation": "No scenario assertion in this focused slice."
+    },
+    {
+      "id": "USER-018",
+      "requirement": "Private profile metadata is excluded from public metadata synchronization.",
+      "disposition": "UNTESTED",
+      "evidence": [],
+      "limitation": "No scenario assertion in this focused slice."
+    },
+    {
+      "id": "USER-019",
+      "requirement": "Disabled accounts cannot update profiles using existing sessions.",
+      "disposition": "UNTESTED",
+      "evidence": [],
+      "limitation": "No scenario assertion in this focused slice."
+    },
+    {
+      "id": "USER-020",
+      "requirement": "Account deletion follows the documented data-retention policy without deleting unrelated data.",
+      "disposition": "UNTESTED",
+      "evidence": [],
+      "limitation": "No scenario assertion in this focused slice."
+    },
+    {
+      "id": "DM-001",
+      "requirement": "Alice can send a DM to Bob when allowed.",
+      "disposition": "PARTIAL",
+      "evidence": [
+        {
+          "file": "tests/security/matrix-dm.test.ts",
+          "title": "matrix direct messages DM-001 DM-002 DM-003 DM-004 DM-011 DM-012 DM-014 DM-017 DM-021: three independent conversations and event recipients",
+          "outcome": "passed"
+        }
+      ],
+      "limitation": "Only concrete assertions in the linked tests are established; remaining transports and universal assertions require separate verification."
+    },
+    {
+      "id": "DM-002",
+      "requirement": "Bob can read the Alice/Bob conversation.",
+      "disposition": "PARTIAL",
+      "evidence": [
+        {
+          "file": "tests/security/matrix-dm.test.ts",
+          "title": "matrix direct messages DM-001 DM-002 DM-003 DM-004 DM-011 DM-012 DM-014 DM-017 DM-021: three independent conversations and event recipients",
+          "outcome": "passed"
+        }
+      ],
+      "limitation": "Only concrete assertions in the linked tests are established; remaining transports and universal assertions require separate verification."
+    },
+    {
+      "id": "DM-003",
+      "requirement": "Alice can read the Alice/Bob conversation.",
+      "disposition": "PARTIAL",
+      "evidence": [
+        {
+          "file": "tests/security/matrix-dm.test.ts",
+          "title": "matrix direct messages DM-001 DM-002 DM-003 DM-004 DM-011 DM-012 DM-014 DM-017 DM-021: three independent conversations and event recipients",
+          "outcome": "passed"
+        }
+      ],
+      "limitation": "Only concrete assertions in the linked tests are established; remaining transports and universal assertions require separate verification."
+    },
+    {
+      "id": "DM-004",
+      "requirement": "Charlie cannot read Alice/Bob history.",
+      "disposition": "PARTIAL",
+      "evidence": [
+        {
+          "file": "tests/security/matrix-dm.test.ts",
+          "title": "matrix direct messages DM-001 DM-002 DM-003 DM-004 DM-011 DM-012 DM-014 DM-017 DM-021: three independent conversations and event recipients",
+          "outcome": "passed"
+        }
+      ],
+      "limitation": "Only concrete assertions in the linked tests are established; remaining transports and universal assertions require separate verification."
+    },
+    {
+      "id": "DM-005",
+      "requirement": "Charlie cannot retrieve an Alice/Bob message by ID.",
+      "disposition": "UNTESTED",
+      "evidence": [],
+      "limitation": "No scenario assertion in this focused slice."
+    },
+    {
+      "id": "DM-006",
+      "requirement": "Charlie cannot modify an Alice/Bob message.",
+      "disposition": "PARTIAL",
+      "evidence": [
+        {
+          "file": "tests/security/matrix-dm.test.ts",
+          "title": "matrix DM IRC replay and mutations DM-006 DM-007: only the author can edit and redact a private message",
+          "outcome": "passed"
+        }
+      ],
+      "limitation": "Only concrete assertions in the linked tests are established; remaining transports and universal assertions require separate verification."
+    },
+    {
+      "id": "DM-007",
+      "requirement": "Charlie cannot delete an Alice/Bob message.",
+      "disposition": "PARTIAL",
+      "evidence": [
+        {
+          "file": "tests/security/matrix-dm.test.ts",
+          "title": "matrix DM IRC replay and mutations DM-006 DM-007: only the author can edit and redact a private message",
+          "outcome": "passed"
+        }
+      ],
+      "limitation": "Only concrete assertions in the linked tests are established; remaining transports and universal assertions require separate verification."
+    },
+    {
+      "id": "DM-008",
+      "requirement": "Charlie cannot subscribe to Alice/Bob events.",
+      "disposition": "UNTESTED",
+      "evidence": [],
+      "limitation": "No scenario assertion in this focused slice."
+    },
+    {
+      "id": "DM-009",
+      "requirement": "Charlie cannot retrieve Alice/Bob unread counts.",
+      "disposition": "UNTESTED",
+      "evidence": [],
+      "limitation": "No scenario assertion in this focused slice."
+    },
+    {
+      "id": "DM-010",
+      "requirement": "Charlie cannot enumerate Alice/Bob private attachments.",
+      "disposition": "UNTESTED",
+      "evidence": [],
+      "limitation": "No scenario assertion in this focused slice."
+    },
+    {
+      "id": "DM-011",
+      "requirement": "Alice cannot retrieve Bob/Charlie history.",
+      "disposition": "PARTIAL",
+      "evidence": [
+        {
+          "file": "tests/security/matrix-dm.test.ts",
+          "title": "matrix direct messages DM-001 DM-002 DM-003 DM-004 DM-011 DM-012 DM-014 DM-017 DM-021: three independent conversations and event recipients",
+          "outcome": "passed"
+        }
+      ],
+      "limitation": "Only concrete assertions in the linked tests are established; remaining transports and universal assertions require separate verification."
+    },
+    {
+      "id": "DM-012",
+      "requirement": "Alice cannot substitute Bob's account ID to access Bob/Charlie history.",
+      "disposition": "PARTIAL",
+      "evidence": [
+        {
+          "file": "tests/security/matrix-dm.test.ts",
+          "title": "matrix direct messages DM-001 DM-002 DM-003 DM-004 DM-011 DM-012 DM-014 DM-017 DM-021: three independent conversations and event recipients",
+          "outcome": "passed"
+        }
+      ],
+      "limitation": "Only concrete assertions in the linked tests are established; remaining transports and universal assertions require separate verification."
+    },
+    {
+      "id": "DM-013",
+      "requirement": "Conversation IDs cannot be manipulated to gain unauthorized access.",
+      "disposition": "UNTESTED",
+      "evidence": [],
+      "limitation": "No scenario assertion in this focused slice."
+    },
+    {
+      "id": "DM-014",
+      "requirement": "DM permissions are checked against the authenticated account, not supplied usernames.",
+      "disposition": "PARTIAL",
+      "evidence": [
+        {
+          "file": "tests/security/matrix-dm.test.ts",
+          "title": "matrix direct messages DM-001 DM-002 DM-003 DM-004 DM-011 DM-012 DM-014 DM-017 DM-021: three independent conversations and event recipients",
+          "outcome": "passed"
+        }
+      ],
+      "limitation": "Only concrete assertions in the linked tests are established; remaining transports and universal assertions require separate verification."
+    },
+    {
+      "id": "DM-015",
+      "requirement": "A revoked session loses DM access.",
+      "disposition": "UNTESTED",
+      "evidence": [],
+      "limitation": "No scenario assertion in this focused slice."
+    },
+    {
+      "id": "DM-016",
+      "requirement": "Offline DM persistence preserves the correct recipient identity.",
+      "disposition": "NOT IMPLEMENTED",
+      "evidence": [],
+      "limitation": "Offline IRC PRIVMSG returns ERR_NOSUCHNICK before persistence; no DM REST send route was found."
+    },
+    {
+      "id": "DM-017",
+      "requirement": "DM history survives restart and remains access-controlled afterward.",
+      "disposition": "PARTIAL",
+      "evidence": [
+        {
+          "file": "tests/security/matrix-dm.test.ts",
+          "title": "matrix direct messages DM-001 DM-002 DM-003 DM-004 DM-011 DM-012 DM-014 DM-017 DM-021: three independent conversations and event recipients",
+          "outcome": "passed"
+        }
+      ],
+      "limitation": "Only concrete assertions in the linked tests are established; remaining transports and universal assertions require separate verification."
+    },
+    {
+      "id": "DM-018",
+      "requirement": "DM notifications go only to intended recipients.",
+      "disposition": "UNTESTED",
+      "evidence": [],
+      "limitation": "No scenario assertion in this focused slice."
+    },
+    {
+      "id": "DM-019",
+      "requirement": "DM API and IRC PRIVMSG paths apply consistent access policies.",
+      "disposition": "UNTESTED",
+      "evidence": [],
+      "limitation": "No scenario assertion in this focused slice."
+    },
+    {
+      "id": "DM-020",
+      "requirement": "No DM content appears in ordinary public-channel event streams.",
+      "disposition": "PARTIAL",
+      "evidence": [
+        {
+          "file": "tests/security/matrix-dm.test.ts",
+          "title": "matrix DM history transports DM-020 DM-024: replay and search are scoped to the authenticated participant",
+          "outcome": "passed"
+        }
+      ],
+      "limitation": "Only concrete assertions in the linked tests are established; remaining transports and universal assertions require separate verification."
+    },
+    {
+      "id": "DM-021",
+      "requirement": "Network administrators do not automatically gain private conversation access unless an explicit, documented administrative policy grants it.",
+      "disposition": "PARTIAL",
+      "evidence": [
+        {
+          "file": "tests/security/matrix-dm.test.ts",
+          "title": "matrix direct messages DM-001 DM-002 DM-003 DM-004 DM-011 DM-012 DM-014 DM-017 DM-021: three independent conversations and event recipients",
+          "outcome": "passed"
+        }
+      ],
+      "limitation": "Only concrete assertions in the linked tests are established; remaining transports and universal assertions require separate verification."
+    },
+    {
+      "id": "DM-022",
+      "requirement": "No legacy API endpoint bypasses DM participant checks.",
+      "disposition": "UNTESTED",
+      "evidence": [],
+      "limitation": "No scenario assertion in this focused slice."
+    },
+    {
+      "id": "DM-023",
+      "requirement": "Group-DM membership changes revoke future access according to a clearly defined history policy, if group DMs are supported.",
+      "disposition": "UNTESTED",
+      "evidence": [],
+      "limitation": "No scenario assertion in this focused slice."
+    },
+    {
+      "id": "DM-024",
+      "requirement": "Server-side search cannot reveal other users' DMs.",
+      "disposition": "PARTIAL",
+      "evidence": [
+        {
+          "file": "tests/security/matrix-dm.test.ts",
+          "title": "matrix DM history transports DM-020 DM-024: replay and search are scoped to the authenticated participant",
+          "outcome": "passed"
+        }
+      ],
+      "limitation": "Only concrete assertions in the linked tests are established; remaining transports and universal assertions require separate verification."
+    }
+  ],
+  "pre_fix_evidence": {
+    "bundle_sha256": "6a58f6b9fd8f938777db4fcce55c336f21fa9e8de694c85e155d66c898c0e0a8",
+    "search": "GET /api/v1/search?q=private-replay-needle returned 500 SQLITE_ERROR no such column: replay; preserved test expects successful search.",
+    "kick": "Administrator kick returned 200/ok=true without KICK delivery to channel members; retained test checks actual recipients.",
+    "topic_mode": "Administrator topic and mode operations persisted state without IRC delivery to either member; preserved soft assertions checked both.",
+    "websocket_bundle_sha256": "edc004e6fea208cdb64d54567f55df0a726b5f1050b0dc7c1f21a033788b533f",
+    "websocket": "Authenticated private-channel event subscribers received neither channel.topic_changed nor channel.updated although message.created controls arrived; outsider saw no private-channel events."
+  },
+  "policy_choice": "Administrative topic setter and IRC/realtime actor are the verified administrator account; client-supplied setBy cannot impersonate another identity.",
+  "baseline_bundle_sha256": "6a58f6b9fd8f938777db4fcce55c336f21fa9e8de694c85e155d66c898c0e0a8",
+  "baseline_bundle": "/tmp/flarc-matrix-run_01d0e4aeb274/server/index.mjs",
+  "verification_bundle": "/tmp/flarc-matrix-run_01d0e4aeb274/server-03/index.mjs",
+  "verification_bundle_sha256": "dd004ff5f0b691b8ce0c078e666c22df8e890e3e568c46d6bc89de4c4ff4bc89"
+}

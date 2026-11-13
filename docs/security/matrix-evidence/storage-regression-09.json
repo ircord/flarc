@@ -1,0 +1,131 @@
+{
+  "version": 2,
+  "artifactKind": "historical-source09-storage-prerequisite-regression",
+  "scope": "Source09 settled focused execution only, before separately authorized source10 remediation; no unfiltered rerun and no rebuild performed by integrator.",
+  "bundleSha256": "5894497f55587e0e691458a6db9dad9472d93b36756e0bec50cdded299bf6446",
+  "reviewAuthority": {
+    "messageId": "msg_1ad5112ebd7e",
+    "decision": "Record actual failed prerequisite as MEDIA001 valid-upload/advertised-limit boundary; do not fail every quota/abuse label for unreachable phases."
+  },
+  "executionManifest": {
+    "version": 1,
+    "id": "media-quota-gaps-source09-settled",
+    "bundleSha256": "5894497f55587e0e691458a6db9dad9472d93b36756e0bec50cdded299bf6446",
+    "vitestJson": "./storage-regression-09.json"
+  },
+  "originalManifest": {
+    "path": "/tmp/flarc-matrix-run_01d0e4aeb274/media-quota-gaps-manifest-settled.json",
+    "sha256": "cdd58e2ddfe6cc822723d3bd2b4e6dfc4e5eaacf7e0f98c64f9457c6ba34e4c3"
+  },
+  "rawResult": {
+    "path": "/tmp/flarc-matrix-run_01d0e4aeb274/media-quota-gaps-results-settled.json",
+    "sha256": "91607171e7941a3c879a36e698ce33421ae5a76f7c2553a7278449e9e0d95ac8"
+  },
+  "testSourceSha256": {
+    "tests/security/matrix-media-quota-gaps.test.ts": "f152de6a06eb4fdde76b689a3c2577c6777483ec400017c27f077581894dbb86"
+  },
+  "temporaryDiagnostic": {
+    "path": "/tmp/flarc-matrix-run_01d0e4aeb274/media-quota-gaps-sqlite-diagnostic.json",
+    "sha256": "38f009902110299e239b59168bb8e66156474846a50df423548558236f74f957",
+    "meaning": "Earlier temporary logging wrapper observed SQLITE_TOOBIG; settled execution uses only a read-only metadata accessor."
+  },
+  "actualFocusedCounts": {
+    "passed": 2,
+    "failed": 1,
+    "skipped": 0,
+    "total": 3
+  },
+  "testResults": [
+    {
+      "name": "tests/security/matrix-media-quota-gaps.test.ts",
+      "assertionResults": [
+        {
+          "fullName": "sqlite 10485760 byte real upload limits MEDIA-009 MEDIA-012 ABUSE-007: oversized and exhausted quota denials are silent and inert across restart",
+          "title": "MEDIA-009 MEDIA-012 ABUSE-007: oversized and exhausted quota denials are silent and inert across restart",
+          "status": "failed",
+          "failureMessages": [
+            "AssertionError: block 0: {\n  \"error\": true,\n  \"status\": 403,\n  \"statusText\": \"Upload denied by scope, quota or storage policy\",\n  \"message\": \"Upload denied by scope, quota or storage policy\"\n}: expected 403 to be 201 // Object.is equality\n    at /Users/karbowiak/Projects/CFCord/tests/security/matrix-media-quota-gaps.test.ts:243:83\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///Users/karbowiak/Projects/CFCord/node_modules/vitest/dist/chunks/run.CjdgFZiW.js:2801:20"
+          ]
+        },
+        {
+          "fullName": "sqlite 1048576 byte real upload limits MEDIA-009 MEDIA-012 ABUSE-007: oversized and exhausted quota denials are silent and inert across restart",
+          "title": "MEDIA-009 MEDIA-012 ABUSE-007: oversized and exhausted quota denials are silent and inert across restart",
+          "status": "passed",
+          "failureMessages": []
+        },
+        {
+          "fullName": "r2 10485760 byte real upload limits MEDIA-009 MEDIA-012 ABUSE-007: oversized and exhausted quota denials are silent and inert across restart",
+          "title": "MEDIA-009 MEDIA-012 ABUSE-007: oversized and exhausted quota denials are silent and inert across restart",
+          "status": "passed",
+          "failureMessages": []
+        }
+      ]
+    }
+  ],
+  "evidence": [
+    {
+      "kind": "test",
+      "executionId": "media-quota-gaps-source09-settled",
+      "bundleSha256": "5894497f55587e0e691458a6db9dad9472d93b36756e0bec50cdded299bf6446",
+      "testFile": "tests/security/matrix-media-quota-gaps.test.ts",
+      "dimensionDisposition": {
+        "authorization": "required",
+        "state": "required",
+        "events": "required",
+        "transport": "required",
+        "restart": "required",
+        "unrelatedResources": "required"
+      },
+      "id": "MEDIA-001",
+      "testTitle": "sqlite 10485760 byte real upload limits MEDIA-009 MEDIA-012 ABUSE-007: oversized and exhausted quota denials are silent and inert across restart",
+      "outcome": "FAIL",
+      "scenarioScope": "Valid upload prerequisite at the advertised default boundary: first SQLite-backed channel-scoped 10 MiB raw upload should return201 but returns403",
+      "rationale": "Root source review confirmed a single-BLOB SQLITE_TOOBIG failure and blanket403 storage-error mapping; the exact settled test fails before its quota exhaustion, reclamation or restart phases.",
+      "assertionDetails": [
+        "Earlier oversized-denial probes ran, but the first permitted exactly10485760-byte SQLite upload is rejected403 where the test requires201.",
+        "The exact failed test title includes MEDIA009/MEDIA012/ABUSE007; those labels do not establish failed later phases, because execution stopped at this valid-upload prerequisite.",
+        "Independent SQLite1MiB and R2 10MiB cases passed and separately exercised100MiB quota and restart observers; they do not prove default maximum support for SQLite."
+      ],
+      "transports": [
+        "REST",
+        "workerd SQLite"
+      ],
+      "assertions": [
+        "authorization",
+        "transport"
+      ],
+      "sourceEvidence": {
+        "file": "docs/security/matrix-evidence/media-quota-gaps.json",
+        "sha256": "87302aebc89a69f1a009793c1399d1682bd6bc90078d3ec101e2578d3482834b",
+        "originalScenario": "MEDIA-009",
+        "originalExecutionId": "media-quota-gaps-source09-settled"
+      }
+    }
+  ],
+  "transformationAudit": [
+    {
+      "action": "Remap exact failure attribution from broad title tag MEDIA009 to reached prerequisite MEDIA001",
+      "originalEvidenceSha256": "87302aebc89a69f1a009793c1399d1682bd6bc90078d3ec101e2578d3482834b",
+      "originalId": "MEDIA-009",
+      "currentId": "MEDIA-001",
+      "unchangedExecutionId": "media-quota-gaps-source09-settled",
+      "unchangedBundleSha256": "5894497f55587e0e691458a6db9dad9472d93b36756e0bec50cdded299bf6446",
+      "outcome": "FAIL",
+      "reason": "No quota/reclamation/restart assertion in the failed case was reached after the failed valid upload."
+    }
+  ],
+  "unreachedInFailedCase": [
+    "100MiB cumulative quota boundary",
+    "Deletion and reclaimed capacity",
+    "Post-restart quota and recipient observers"
+  ],
+  "priorSnapshotsPreserved": [
+    "reconciliation-09.json",
+    "current-evidence-09.json",
+    "current-execution-09.json",
+    "reconciliation-09-expanded.json",
+    "expanded-evidence-09.json",
+    "expanded-execution-09.json"
+  ],
+  "nextSourceScope": "Authorized later fix and FILEHOST_MAX_UPLOAD_BYTES default10485760 require a new source10 build and distinct verification; no retrospective09 passing claim."
+}

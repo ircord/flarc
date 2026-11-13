@@ -9,12 +9,28 @@ import type { IRCMessage } from "~/protocol/irc/types";
 import { sendReadMarkerOnJoin, syncChannelMemberMetadataOnJoin } from "./extensions";
 import type { ISessionDO } from "./types";
 
+async function channelCommandGeneration(
+  session: ISessionDO,
+  attachment: SessionAttachment,
+  channel: string,
+): Promise<string | undefined> {
+  const bound = session
+    .getSessionChannels(attachment.sessionId)
+    .find((row) => row.canonicalChannel === canonicalizeIRCName(channel));
+  return (
+    (bound as { generation?: string } | undefined)?.generation ??
+    (await session.getChannelStub(channel).getExistingChannelGeneration()) ??
+    undefined
+  );
+}
+
 export async function handleJoin(
   session: ISessionDO,
   ws: WebSocket,
   attachment: SessionAttachment,
   msg: IRCMessage,
   labelTags?: Record<string, string | true>,
+  expectedGenerations?: Record<string, string>,
 ): Promise<void> {
   if (msg.params.length < 1 || !msg.params[0]) {
     session.sendNumeric(
@@ -77,6 +93,42 @@ export async function handleJoin(
     }
 
     const stub = session.getChannelStub(rawChannel);
+    if (
+      attachment.authenticated &&
+      !(await session
+        .getAccountsStub()
+        .authorizeAccountActor(
+          attachment.userId,
+          attachment.credentialVersion ?? 0,
+          "channel.join",
+          canonicalizeIRCName(rawChannel),
+        ))
+    ) {
+      session.sendNumeric(
+        ws,
+        attachment,
+        Numerics.ERR_NOPRIVILEGES,
+        ["Channel access denied"],
+        batchTagObj,
+      );
+      continue;
+    }
+    const expectedGeneration = expectedGenerations
+      ? expectedGenerations[canonicalizeIRCName(rawChannel)]
+      : await stub.getChannelGeneration(rawChannel);
+    if (
+      !expectedGeneration ||
+      (expectedGenerations && (await stub.getExistingChannelGeneration()) !== expectedGeneration)
+    ) {
+      session.sendNumeric(
+        ws,
+        attachment,
+        Numerics.ERR_NOSUCHCHANNEL,
+        [rawChannel, "Channel changed"],
+        batchTagObj,
+      );
+      continue;
+    }
     const isUserPersistent = attachment.authenticated
       ? await session.getAccountsStub().getPersistence(attachment.userId)
       : false;
@@ -93,6 +145,7 @@ export async function handleJoin(
       isOper: attachment.isOper,
       isPersistent: isUserPersistent,
       activeSessionIds: Array.from(session.sessionsById.keys()),
+      expectedGeneration,
     });
 
     if (!res.ok && res.forwardChannel && isValidChannelName(res.forwardChannel)) {
@@ -104,6 +157,35 @@ export async function handleJoin(
         batchTagObj,
       );
       const fwdStub = session.getChannelStub(res.forwardChannel);
+      if (
+        attachment.authenticated &&
+        !(await session
+          .getAccountsStub()
+          .authorizeAccountActor(
+            attachment.userId,
+            attachment.credentialVersion ?? 0,
+            "channel.join",
+            canonicalizeIRCName(res.forwardChannel),
+          ))
+      ) {
+        session.sendNumeric(
+          ws,
+          attachment,
+          Numerics.ERR_NOPRIVILEGES,
+          ["Channel access denied"],
+          batchTagObj,
+        );
+        continue;
+      }
+      const forwardGeneration = expectedGenerations
+        ? expectedGenerations[canonicalizeIRCName(res.forwardChannel)]
+        : await fwdStub.getChannelGeneration(res.forwardChannel);
+      if (
+        !forwardGeneration ||
+        (expectedGenerations &&
+          (await fwdStub.getExistingChannelGeneration()) !== forwardGeneration)
+      )
+        continue;
       res = await fwdStub.join({
         channelName: res.forwardChannel,
         sessionId: attachment.sessionId,
@@ -115,6 +197,7 @@ export async function handleJoin(
         realname: attachment.realname ?? attachment.username!,
         isOper: attachment.isOper,
         isPersistent: isUserPersistent,
+        expectedGeneration: forwardGeneration,
       });
     }
 
@@ -129,21 +212,42 @@ export async function handleJoin(
       continue;
     }
 
+    if (
+      !res.generation ||
+      (await session.getChannelStub(res.channelName).getExistingChannelGeneration()) !==
+        res.generation
+    )
+      continue;
+
     const canonChan = canonicalizeIRCName(res.channelName);
     session.sql.exec(
-      `INSERT OR REPLACE INTO session_channels (session_id, canonical_channel, channel_name)
-         VALUES (?, ?, ?)`,
+      `INSERT OR REPLACE INTO session_channels (session_id, canonical_channel, channel_name, generation)
+         VALUES (?, ?, ?, ?)`,
       attachment.sessionId,
       canonChan,
       res.channelName,
+      res.generation,
     );
+    if (res.generation)
+      await (session as any).bindSessionChannelGeneration(
+        attachment.sessionId,
+        res.channelName,
+        res.generation,
+      );
 
     if (attachment.authenticated) {
       const isPersistent = await session.getAccountsStub().getPersistence(attachment.userId);
       if (session.hasCap(attachment, "draft/auto-join") || isPersistent) {
-        await session.getAccountsStub().addAutoJoinChannel(attachment.userId, res.channelName, key);
+        await session
+          .getAccountsStub()
+          .addAutoJoinChannel(attachment.userId, res.channelName, key, res.generation);
       }
     }
+    if (
+      (await session.getChannelStub(res.channelName).getExistingChannelGeneration()) !==
+      res.generation
+    )
+      continue;
 
     const joinerPrefix = session.getUserPrefix(attachment);
     const nowIso = new Date().toISOString();
@@ -178,7 +282,7 @@ export async function handleJoin(
           ]
         : [res.channelName];
 
-      session.sendLine(
+      session.sendChannelLine(
         targetSess.ws,
         targetSess.attachment,
         encodeIRCMessage({
@@ -187,6 +291,8 @@ export async function handleJoin(
           command: "JOIN",
           params,
         }),
+        res.channelName,
+        res.generation,
       );
 
       if (
@@ -194,7 +300,7 @@ export async function handleJoin(
         member.sessionId !== attachment.sessionId &&
         session.hasCap(targetSess.attachment, "away-notify")
       ) {
-        session.sendLine(
+        session.sendChannelLine(
           targetSess.ws,
           targetSess.attachment,
           encodeIRCMessage({
@@ -202,6 +308,8 @@ export async function handleJoin(
             command: "AWAY",
             params: [attachment.awayMessage],
           }),
+          res.channelName,
+          res.generation,
         );
       }
     }
@@ -227,6 +335,11 @@ export async function handleJoin(
 
     // Send MARKREAD before RPL_ENDOFNAMES per draft/read-marker spec
     await sendReadMarkerOnJoin(session, ws, attachment, res.channelName, batchTagObj);
+    if (
+      (await session.getChannelStub(res.channelName).getExistingChannelGeneration()) !==
+      res.generation
+    )
+      continue;
 
     if (
       !session.hasCap(attachment, "no-implicit-names") &&
@@ -247,7 +360,7 @@ export async function handleJoin(
     await syncChannelMemberMetadataOnJoin(session, ws, attachment, res.channelName, res.members);
 
     if (res.fBotWelcome) {
-      session.sendLine(
+      session.sendChannelLine(
         ws,
         attachment,
         encodeIRCMessage({
@@ -255,6 +368,8 @@ export async function handleJoin(
           command: "NOTICE",
           params: [attachment.nickname ?? "*", `[${res.channelName}] ${res.fBotWelcome}`],
         }),
+        res.channelName,
+        res.generation,
       );
     }
 
@@ -267,9 +382,10 @@ export async function handleJoin(
 
     if (attachment.nickname) {
       session.sql.exec(
-        "DELETE FROM session_invites WHERE canon_nick = ? AND channel_name = ?",
+        "DELETE FROM session_invites WHERE canon_nick = ? AND channel_name = ? AND generation = ?",
         canonicalizeIRCName(attachment.nickname),
         res.channelName,
+        res.generation,
       );
     }
   }
@@ -387,7 +503,11 @@ export async function performPart(
   reason?: string,
 ): Promise<void> {
   const stub = session.getChannelStub(rawChannel);
-  const res = await stub.part(attachment.sessionId);
+  const bound = session
+    .getSessionChannels(attachment.sessionId)
+    .find((item) => item.canonicalChannel === canonicalizeIRCName(rawChannel));
+  const generation = (bound as { generation?: string } | undefined)?.generation;
+  const res = await stub.part(attachment.sessionId, undefined, false, generation);
   if (!res.ok) {
     session.sendNumeric(ws, attachment, Numerics.ERR_NOTONCHANNEL, [
       rawChannel,
@@ -398,25 +518,30 @@ export async function performPart(
 
   const canonChan = canonicalizeIRCName(res.channelName || rawChannel);
   session.sql.exec(
-    "DELETE FROM session_channels WHERE session_id = ? AND canonical_channel = ?",
+    "DELETE FROM session_channels WHERE session_id = ? AND canonical_channel = ? AND generation = ?",
     attachment.sessionId,
     canonChan,
+    generation ?? "",
   );
 
-  if (attachment.authenticated) {
+  if (attachment.authenticated && generation) {
     await session
       .getAccountsStub()
-      .removeAutoJoinChannel(attachment.userId, res.channelName || rawChannel);
+      .removeAutoJoinChannel(attachment.userId, res.channelName || rawChannel, generation);
   }
 
-  const partParams = reason ? [res.channelName, reason] : [res.channelName];
+  if (!generation || (await stub.getExistingChannelGeneration()) !== generation) return;
+
+  const partParams = reason !== undefined ? [res.channelName, reason] : [res.channelName];
   const prefix = session.getUserPrefix(attachment);
   const recipients = new Set<string>([attachment.sessionId, ...res.remainingSessionIds]);
 
   for (const sid of recipients) {
     const targetSess = session.sessionsById.get(sid);
     if (!targetSess) continue;
-    session.sendLine(
+    const leaving = sid === attachment.sessionId;
+    if (leaving && targetSess.attachment.userId !== res.partedUserId) continue;
+    session.sendChannelLine(
       targetSess.ws,
       targetSess.attachment,
       encodeIRCMessage({
@@ -424,6 +549,9 @@ export async function performPart(
         command: "PART",
         params: partParams,
       }),
+      res.channelName,
+      generation,
+      leaving,
     );
   }
 }
@@ -502,6 +630,7 @@ export async function handleTopic(
 
   const rawChannel = msg.params[0];
   const stub = session.getChannelStub(rawChannel);
+  const expectedGeneration = await channelCommandGeneration(session, attachment, rawChannel);
 
   if (msg.params.length === 1) {
     const summary = await stub.getChannelSummary(rawChannel);
@@ -546,6 +675,7 @@ export async function handleTopic(
     nickname: attachment.nickname!,
     topic: newTopic,
     isOper: attachment.isOper,
+    expectedGeneration,
   });
 
   if (!res.ok) {
@@ -555,6 +685,9 @@ export async function handleTopic(
     ]);
     return;
   }
+
+  if (!expectedGeneration || (await stub.getExistingChannelGeneration()) !== expectedGeneration)
+    return;
 
   const prefix = session.getUserPrefix(attachment);
   const nowIso = res.createdAt ? new Date(res.createdAt).toISOString() : new Date().toISOString();
@@ -566,7 +699,7 @@ export async function handleTopic(
   for (const sid of res.recipientSessionIds ?? []) {
     const targetSess = session.sessionsById.get(sid);
     if (targetSess) {
-      session.sendLine(
+      session.sendChannelLine(
         targetSess.ws,
         targetSess.attachment,
         encodeIRCMessage({
@@ -575,6 +708,8 @@ export async function handleTopic(
           command: "TOPIC",
           params: [res.channelName, newTopic],
         }),
+        res.channelName,
+        expectedGeneration,
       );
     }
   }
@@ -613,6 +748,7 @@ export async function handleMode(
   const target = msg.params[0];
   if (target.startsWith("#") || target.startsWith("&")) {
     const stub = session.getChannelStub(target);
+    const expectedGeneration = await channelCommandGeneration(session, attachment, target);
     const modeString = msg.params[1];
     const modeArgs = msg.params.slice(2);
 
@@ -672,6 +808,7 @@ export async function handleMode(
       modeString,
       modeArgs,
       isOper: attachment.isOper || isSamode,
+      expectedGeneration,
     });
 
     if (!res.ok) {
@@ -706,6 +843,9 @@ export async function handleMode(
       );
       return;
     }
+
+    if (!expectedGeneration || (await stub.getExistingChannelGeneration()) !== expectedGeneration)
+      return;
 
     if (res.currentModes) {
       session.sendNumeric(
@@ -777,7 +917,14 @@ export async function handleMode(
       for (const sid of res.recipientSessionIds ?? []) {
         const targetSess = session.sessionsById.get(sid);
         if (targetSess) {
-          session.sendLine(targetSess.ws, targetSess.attachment, modeLine);
+          session.sendChannelLine(
+            targetSess.ws,
+            targetSess.attachment,
+            modeLine,
+            res.channelName,
+            expectedGeneration,
+            !/[kf]/.test(res.appliedModeString),
+          );
         }
       }
     }
@@ -916,16 +1063,18 @@ export async function handleKick(
     }
   }
 
-  const reason = msg.params[2] || attachment.nickname!;
+  const reason = msg.params[2] ?? attachment.nickname!;
 
   for (const { channel, targetNick } of kicks) {
     const stub = session.getChannelStub(channel);
+    const expectedGeneration = await channelCommandGeneration(session, attachment, channel);
     const res = await stub.kickMember({
       channelName: channel,
       actorSessionId: attachment.sessionId,
       targetNick,
       reason,
       isOper: attachment.isOper,
+      expectedGeneration,
     });
 
     if (!res.ok) {
@@ -936,11 +1085,15 @@ export async function handleKick(
       continue;
     }
 
+    if (!expectedGeneration || (await stub.getExistingChannelGeneration()) !== expectedGeneration)
+      continue;
+
     if (res.kickedSessionId) {
       session.sql.exec(
-        "DELETE FROM session_channels WHERE session_id = ? AND canonical_channel = ?",
+        "DELETE FROM session_channels WHERE session_id = ? AND canonical_channel = ? AND generation = ?",
         res.kickedSessionId,
         canonicalizeIRCName(res.channelName),
+        expectedGeneration,
       );
     }
 
@@ -949,11 +1102,21 @@ export async function handleKick(
       command: "KICK",
       params: [res.channelName, res.kickedNick ?? targetNick, reason],
     });
+    const removedSessionIds = new Set(res.removedSessionIds ?? []);
 
     for (const sid of res.recipientSessionIds ?? []) {
       const targetSess = session.sessionsById.get(sid);
       if (targetSess) {
-        session.sendLine(targetSess.ws, targetSess.attachment, kickLine);
+        const removed = removedSessionIds.has(sid);
+        if (removed && targetSess.attachment.userId !== res.kickedUserId) continue;
+        session.sendChannelLine(
+          targetSess.ws,
+          targetSess.attachment,
+          kickLine,
+          res.channelName,
+          expectedGeneration,
+          removed,
+        );
       }
     }
   }
@@ -968,13 +1131,18 @@ export async function handleInvite(
   if (msg.params.length === 0) {
     const _canonNick = canonicalizeIRCName(attachment.nickname ?? "");
     const rows = session.sql
-      .exec<{ channel_name: string }>(
-        "SELECT channel_name FROM session_invites WHERE target_user_id = ? AND created_at > ?",
+      .exec<{ channel_name: string; generation: string | null }>(
+        "SELECT channel_name,generation FROM session_invites WHERE target_user_id = ? AND created_at > ?",
         attachment.userId,
         Date.now() - 24 * 60 * 60 * 1000,
       )
       .toArray();
     for (const row of rows) {
+      if (!row.generation) continue;
+      const snapshot = await session
+        .getChannelStub(row.channel_name)
+        .getInvitationSnapshot(attachment.userId);
+      if (!snapshot.invited || snapshot.generation !== row.generation) continue;
       session.sendNumeric(ws, attachment, "336", [row.channel_name]);
     }
     session.sendNumeric(ws, attachment, "337", ["End of /INVITE list"]);
@@ -1003,6 +1171,7 @@ export async function handleInvite(
 
   const targetSess = targetSessions[0];
   const stub = session.getChannelStub(rawChannel);
+  const expectedGeneration = await channelCommandGeneration(session, attachment, rawChannel);
   const res = await stub.inviteUser({
     channelName: rawChannel,
     actorSessionId: attachment.sessionId,
@@ -1010,6 +1179,7 @@ export async function handleInvite(
     targetNick: targetSess.attachment.nickname!,
     targetUserId: targetSess.attachment.userId,
     isOper: attachment.isOper,
+    expectedGeneration,
   });
 
   if (!res.ok) {
@@ -1028,19 +1198,23 @@ export async function handleInvite(
     return;
   }
 
+  if (!expectedGeneration || (await stub.getExistingChannelGeneration()) !== expectedGeneration)
+    return;
+
   session.sendNumeric(ws, attachment, Numerics.RPL_INVITING, [
     targetSess.attachment.nickname!,
     res.channelName,
   ]);
 
   session.sql.exec(
-    `INSERT INTO session_invites (canon_nick, channel_name, created_at, target_user_id)
-       VALUES (?, ?, ?, ?)
-       ON CONFLICT(canon_nick, channel_name) DO UPDATE SET created_at = excluded.created_at, target_user_id = excluded.target_user_id`,
+    `INSERT INTO session_invites (canon_nick, channel_name, created_at, target_user_id, generation)
+       VALUES (?, ?, ?, ?, ?)
+       ON CONFLICT(canon_nick, channel_name) DO UPDATE SET created_at = excluded.created_at, target_user_id = excluded.target_user_id, generation = excluded.generation`,
     canonicalizeIRCName(targetNick),
     res.channelName,
     Date.now(),
     targetSess.attachment.userId,
+    expectedGeneration,
   );
 
   const inviteTags: Record<string, string | true> = {
@@ -1100,11 +1274,33 @@ export async function handleUninvite(
   const targetNick = msg.params[0];
   const rawChannel = msg.params[1];
   const stub = session.getChannelStub(rawChannel);
+  const expectedGeneration = await channelCommandGeneration(session, attachment, rawChannel);
+  // Resolve the current nick before consulting historical invitation names: a
+  // reused nickname must never revoke a different account's invitation.
+  let targetUserId: string | undefined =
+    session.getAllSessionsForNick(targetNick)[0]?.attachment.userId;
+  targetUserId ??= (await session.getAccountsStub().getNickOwner(targetNick)) ?? undefined;
+  if (!targetUserId) {
+    const invitation = session.sql
+      .exec<{ channel_name: string; target_user_id: string | null; generation: string | null }>(
+        "SELECT channel_name, target_user_id, generation FROM session_invites WHERE canon_nick = ?",
+        canonicalizeIRCName(targetNick),
+      )
+      .toArray()
+      .find(
+        (row) =>
+          row.generation === expectedGeneration &&
+          canonicalizeIRCName(row.channel_name) === canonicalizeIRCName(rawChannel),
+      );
+    targetUserId = invitation?.target_user_id ?? undefined;
+  }
   const res = await stub.uninviteUser({
     channelName: rawChannel,
     actorSessionId: attachment.sessionId,
     targetNick,
+    targetUserId,
     isOper: attachment.isOper,
+    expectedGeneration,
   });
   if (!res.ok) {
     session.sendNumeric(
@@ -1116,11 +1312,24 @@ export async function handleUninvite(
     );
     return;
   }
-  session.sql.exec(
-    "DELETE FROM session_invites WHERE canon_nick = ? AND channel_name = ?",
-    canonicalizeIRCName(targetNick),
-    res.channelName,
-  );
+  if (!expectedGeneration || (await stub.getExistingChannelGeneration()) !== expectedGeneration)
+    return;
+  if (targetUserId) {
+    session.sql.exec(
+      "DELETE FROM session_invites WHERE channel_name = ? AND generation = ? AND (target_user_id = ? OR (target_user_id IS NULL AND canon_nick = ?))",
+      res.channelName,
+      expectedGeneration,
+      targetUserId,
+      canonicalizeIRCName(targetNick),
+    );
+  } else {
+    session.sql.exec(
+      "DELETE FROM session_invites WHERE canon_nick = ? AND channel_name = ? AND generation = ?",
+      canonicalizeIRCName(targetNick),
+      res.channelName,
+      expectedGeneration,
+    );
+  }
   session.sendAck(ws, attachment, labelTags);
 }
 
